@@ -152,12 +152,19 @@ globalThis.retryAsset=retryAsset;
 function assetImage(path,alt,className,width,height){return'<img class="'+esc(className||"")+'" src="'+esc(assetUrl(path))+'" data-asset-path="'+esc(path)+'" data-asset-retry="0" onerror="retryAsset(this)" alt="'+esc(alt||"")+'" width="'+width+'" height="'+height+'" loading="eager" decoding="async">'}
 function itemArt(id,alt,extra){var d=gear(id),art=d&&d.art?d.art:id;return id?'<span class="item-art '+(extra||"")+'">'+assetImage("items/"+art+".webp",alt||"","",256,256)+"</span>":'<span class="item-art empty-art '+(extra||"")+'" aria-hidden="true">—</span>'}
 function portraitArt(path,alt,extra){return'<div class="portrait">'+assetImage(path,alt,"portrait-art "+(extra||""),590,885)+"</div>"}
-var audioRoutes={},audioMissing={},audioHoverButton=null;
+var audioRoutes={},audioMissing={},audioHoverButton=null,audioLoopInstances={};
 function loadAudioRoutes(){
   try{
     var node=$("audioRoutes"),parsed=node&&node.textContent?JSON.parse(node.textContent):{};
-    Object.keys(parsed||{}).forEach(function(key){if(typeof parsed[key]==="string"&&parsed[key])audioRoutes[key]=parsed[key]})
+    Object.keys(parsed||{}).forEach(function(key){var value=parsed[key],clean;if(typeof value==="string"&&value)audioRoutes[key]=value;else if(Array.isArray(value)){clean=value.filter(function(path){return typeof path==="string"&&path});if(clean.length)audioRoutes[key]=clean}})
   }catch{}
+}
+function audioRouteList(name){
+  var route=audioRoutes[name];
+  if(Array.isArray(route))return route.slice();
+  if(typeof route==="string"&&route)return[route];
+  if(name!=="ui-click")return audioRouteList("ui-click");
+  return[]
 }
 function sfxVolume(name){
   if(!name)return .3;
@@ -168,15 +175,27 @@ function sfxVolume(name){
   if(name.indexOf("error")>=0||name.indexOf("disabled")>=0)return .24;
   return .28
 }
-function playSfx(name){
-  var path=audioRoutes[name]||audioRoutes["ui-click"];
-  if(!path||audioMissing[path]||typeof Audio==="undefined")return false;
+function playAudioRoute(name,options,index){
+  var routes=audioRouteList(name),path;options=options||{};index=index||0;
+  if(!routes.length||typeof Audio==="undefined")return false;
+  if(index>=routes.length)return false;
+  path=routes[index];if(audioMissing[path])return playAudioRoute(name,options,index+1);
   try{
-    var sound=new Audio(path);sound.preload="auto";sound.volume=sfxVolume(name);
-    sound.addEventListener("error",function(){audioMissing[path]=true},{once:true});
+    var sound=new Audio(path),nextSound;sound.preload="auto";sound.volume=options.volume!==undefined?options.volume:sfxVolume(name);sound.loop=!!options.loop;
+    sound.addEventListener("error",function(){audioMissing[path]=true;if(options.loop)delete audioLoopInstances[name];nextSound=playAudioRoute(name,options,index+1);if(options.loop&&nextSound)audioLoopInstances[name]=nextSound},{once:true});
     var started=sound.play();if(started&&started.catch)started.catch(function(){});
-    return true
-  }catch{return false}
+    return sound
+  }catch{audioMissing[path]=true;return playAudioRoute(name,options,index+1)}
+}
+function playSfx(name){
+  return !!playAudioRoute(name,{loop:false})
+}
+function startLoopSfx(name){
+  if(audioLoopInstances[name])return true;var sound=playAudioRoute(name,{loop:true,volume:sfxVolume(name)});
+  if(!sound)return false;audioLoopInstances[name]=sound;return true
+}
+function stopLoopSfx(name){
+  var sound=audioLoopInstances[name];if(!sound)return false;try{sound.pause();sound.currentTime=0}catch{}delete audioLoopInstances[name];return true
 }
 function buttonFromEvent(event){var target=event&&event.target;return target&&target.closest?target.closest("button"):null}
 function hoverSfxForButton(button){
@@ -260,9 +279,11 @@ function installAudioHooks(){
   if(typeof document==="undefined"||!document.addEventListener)return;
   document.addEventListener("pointerover",function(event){var button=buttonFromEvent(event);if(!button||button===audioHoverButton)return;audioHoverButton=button;var sfx=hoverSfxForButton(button);if(sfx)playSfx(sfx)},true);
   document.addEventListener("pointerout",function(event){var button=buttonFromEvent(event);if(button===audioHoverButton){try{if(event.relatedTarget&&button.contains(event.relatedTarget))return}catch{}audioHoverButton=null}},true);
-  document.addEventListener("click",function(event){var button=buttonFromEvent(event),sfx=clickSfxForButton(button);if(sfx)playSfx(sfx)},true)
+  document.addEventListener("click",function(event){var button=buttonFromEvent(event),sfx=clickSfxForButton(button);if(sfx)playSfx(sfx);if(button)startLoopSfx("ambience-title")},true)
 }
 globalThis.playSfx=playSfx;
+globalThis.startLoopSfx=startLoopSfx;
+globalThis.stopLoopSfx=stopLoopSfx;
 function bagCapacity(p){var pack=gear(p.equipment.backpack);return pack&&pack.capacity?pack.capacity:4}
 function bagUsed(p){return p&&p.bag?p.bag.reduce(function(sum,entry){return sum+Math.max(1,Number(entry.qty)||1)},0):0}
 function bagFree(p){return Math.max(0,bagCapacity(p)-bagUsed(p))}
