@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="23";
+var ASSET_REVISION="24";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -152,6 +152,117 @@ globalThis.retryAsset=retryAsset;
 function assetImage(path,alt,className,width,height){return'<img class="'+esc(className||"")+'" src="'+esc(assetUrl(path))+'" data-asset-path="'+esc(path)+'" data-asset-retry="0" onerror="retryAsset(this)" alt="'+esc(alt||"")+'" width="'+width+'" height="'+height+'" loading="eager" decoding="async">'}
 function itemArt(id,alt,extra){var d=gear(id),art=d&&d.art?d.art:id;return id?'<span class="item-art '+(extra||"")+'">'+assetImage("items/"+art+".webp",alt||"","",256,256)+"</span>":'<span class="item-art empty-art '+(extra||"")+'" aria-hidden="true">—</span>'}
 function portraitArt(path,alt,extra){return'<div class="portrait">'+assetImage(path,alt,"portrait-art "+(extra||""),590,885)+"</div>"}
+var audioRoutes={},audioMissing={},audioHoverButton=null;
+function loadAudioRoutes(){
+  try{
+    var node=$("audioRoutes"),parsed=node&&node.textContent?JSON.parse(node.textContent):{};
+    Object.keys(parsed||{}).forEach(function(key){if(typeof parsed[key]==="string"&&parsed[key])audioRoutes[key]=parsed[key]})
+  }catch{}
+}
+function sfxVolume(name){
+  if(!name)return .3;
+  if(name.indexOf("hover")>=0)return .12;
+  if(name.indexOf("ambience")===0)return .1;
+  if(name.indexOf("shot")>=0||name.indexOf("grenade")>=0||name.indexOf("emp")>=0)return .42;
+  if(name.indexOf("hp-")===0||name.indexOf("combat-")===0)return .34;
+  if(name.indexOf("error")>=0||name.indexOf("disabled")>=0)return .24;
+  return .28
+}
+function playSfx(name){
+  var path=audioRoutes[name]||audioRoutes["ui-click"];
+  if(!path||audioMissing[path]||typeof Audio==="undefined")return false;
+  try{
+    var sound=new Audio(path);sound.preload="auto";sound.volume=sfxVolume(name);
+    sound.addEventListener("error",function(){audioMissing[path]=true},{once:true});
+    var started=sound.play();if(started&&started.catch)started.catch(function(){});
+    return true
+  }catch{return false}
+}
+function buttonFromEvent(event){var target=event&&event.target;return target&&target.closest?target.closest("button"):null}
+function hoverSfxForButton(button){
+  if(!button||button.disabled)return null;
+  if(button.dataset.choice!==undefined)return"decision-hover";
+  if(button.dataset.lootEnemy!==undefined)return"loot-hover";
+  if(button.dataset.target!==undefined)return"combat-target";
+  return"ui-hover"
+}
+function weaponSfxForActor(){
+  var p=battleState&&state.party[battleState.actor],weapon=gear(p&&p.equipment.weapon);
+  if(!weapon)return"combat-melee";
+  if(weapon.category==="rifle")return"combat-shot-rifle";
+  if(weapon.category==="shotgun")return"combat-shot-shotgun";
+  if(weapon.category==="sidearm")return"combat-shot-9mm";
+  return"combat-melee"
+}
+function combatSkillSfx(){
+  var actor=battleState&&state.party[battleState.actor];
+  if(!actor)return"ui-click";
+  if(actor.id==="sara")return"hp-heal";
+  if(actor.id==="elias")return"combat-emp";
+  if(actor.id==="noa")return"combat-critical";
+  return"ui-click"
+}
+function craftSfx(id){
+  var recipe=(workshopRecipes||[]).filter(function(r){return r.id===id})[0];
+  if(recipe&&recipe.owner==="sara")return"craft-medical";
+  if(recipe&&recipe.owner==="noa")return"craft-tech";
+  return"craft-basic"
+}
+function clickSfxForButton(button){
+  if(!button)return null;
+  if(button.disabled)return"ui-disabled";
+  var id=button.id||"",data=button.dataset||{},text=(button.textContent||"").toLowerCase();
+  if(data.sfx)return data.sfx;
+  if(data.choice!==undefined){if(text.indexOf("combate")>=0)return"decision-combat";if(text.indexOf("moral")>=0||button.classList.contains("danger"))return"decision-danger";return"decision-confirm"}
+  if(data.action==="attack")return weaponSfxForActor();
+  if(data.action==="skill")return combatSkillSfx();
+  if(data.action==="defend")return"combat-defend";
+  if(data.action==="flee")return"combat-flee";
+  if(data.combatItem!==undefined){if(data.combatItem.indexOf("emp")>=0)return"combat-emp";if(data.combatItem.indexOf("grenade")>=0)return"combat-grenade";if(data.combatItem==="food")return"loadout-food";return"hp-heal"}
+  if(data.target!==undefined)return"combat-target";
+  if(data.lootEnemy!==undefined)return"loot-search";
+  if(data.takeLoot!==undefined)return"loot-take";
+  if(data.discardLoot!==undefined)return"loot-discard";
+  if(data.profile!==undefined||data.refugeProfile!==undefined)return"loadout-open";
+  if(data.profileTab!==undefined)return"ui-tab";
+  if(data.equip!==undefined)return"loadout-equip";
+  if(data.profileUse!==undefined)return"loadout-use";
+  if(data.repair!==undefined)return"loadout-repair";
+  if(data.craft!==undefined)return craftSfx(data.craft);
+  if(data.unlockSkill!==undefined)return"skill-unlock";
+  if(data.openArchive!==undefined)return"archive-open";
+  if(data.openWorldLore!==undefined)return"lore-open";
+  if(data.panel!==undefined)return"ui-open-panel";
+  if(data.sellItem!==undefined)return"trade-sell";
+  if(data.buyItem!==undefined){var offer=gear(data.buyItem);return offer&&offer.kind==="weapon"?"trade-weapon":"trade-buy"}
+  if(id==="enterTitle")return"start-title-enter";
+  if(id==="newGame"||id==="restart")return"start-new-game";
+  if(id==="continueGame")return"start-load-game";
+  if(id==="openWorldLore")return"lore-open";
+  if(id==="closeWorldLore"||id==="closeWorldLoreBottom")return"ui-close-panel";
+  if(id.indexOf("loreTab")===0||id.indexOf("factionTab")===0)return"lore-tab";
+  if(id==="introNext"||id==="introBack")return"lore-page";
+  if(id==="introStart"||id==="leaveRefuge")return"start-expedition";
+  if(id==="advance")return"decision-result";
+  if(id==="nextDay"||id==="refugeRest")return"refuge-rest";
+  if(id==="finalContinue")return"ending-summary";
+  if(id==="downloadPng")return"ui-download";
+  if(id==="npcTabMara"||id==="npcTabArmorer")return"refuge-npc";
+  if(id==="starterKit")return"refuge-supply";
+  if(id==="refugeRejoin")return"refuge-ready";
+  if(id==="itemsToggle")return"loadout-tray";
+  if(id==="takeAllLoot")return"loot-take-all";
+  if(id==="finishLoot")return"decision-result";
+  if(id==="closeLoot"||id==="closeDrawer"||id==="closeProfile"||id==="closeArchive"||id==="closeArchiveBottom")return"ui-close-panel";
+  return"ui-click"
+}
+function installAudioHooks(){
+  if(typeof document==="undefined"||!document.addEventListener)return;
+  document.addEventListener("pointerover",function(event){var button=buttonFromEvent(event);if(!button||button===audioHoverButton)return;audioHoverButton=button;var sfx=hoverSfxForButton(button);if(sfx)playSfx(sfx)},true);
+  document.addEventListener("pointerout",function(event){var button=buttonFromEvent(event);if(button===audioHoverButton){try{if(event.relatedTarget&&button.contains(event.relatedTarget))return}catch{}audioHoverButton=null}},true);
+  document.addEventListener("click",function(event){var button=buttonFromEvent(event),sfx=clickSfxForButton(button);if(sfx)playSfx(sfx)},true)
+}
+globalThis.playSfx=playSfx;
 function bagCapacity(p){var pack=gear(p.equipment.backpack);return pack&&pack.capacity?pack.capacity:4}
 function bagUsed(p){return p&&p.bag?p.bag.reduce(function(sum,entry){return sum+Math.max(1,Number(entry.qty)||1)},0):0}
 function bagFree(p){return Math.max(0,bagCapacity(p)-bagUsed(p))}
@@ -296,7 +407,7 @@ function renderProfile(i,feedback){
   $('profileContent').innerHTML='<div class="loadout-grid"><div class="loadout-side">'+slotHtml("Cabeza",i,"head")+slotHtml("Cuerpo",i,"body")+'</div><div class="loadout-person">'+assetImage("characters/"+p.id+"-loadout.webp",p.name+", "+p.role,"loadout-character-art",768,1152)+profileVitalFloat(feedback)+'<div class="profile-vitals '+(feedback?'fx-'+feedback.kind:"")+'"><div class="vital-row hp-row"><span>HP</span><div class="vital-track">'+profileVitalFill("hp",p.hp,p.maxHp,feedback,"")+'</div><b>'+p.hp+'/'+p.maxHp+'</b></div><div class="vital-row energy-row"><span>Energía</span><div class="vital-track">'+profileVitalFill("energy",p.hunger,100,feedback,hungerClass)+'</div><b>'+p.hunger+'%</b></div><div class="person-stats"><div class="person-stat">Rango<b>Lvl. '+p.level+'</b></div><div class="person-stat">XP<b>'+p.xp+'/'+xpNeeded(p)+'</b></div><div class="person-stat">Resistencia<b>−'+energyResist(p)+' gasto</b></div><div class="person-stat">Defensa<b>+'+gearDefense(p)+'</b></div></div></div></div><section class="loadout-hub">'+profileTabsHtml(p)+'<div id="profilePane-inventory" role="tabpanel" aria-labelledby="profileTab-inventory" class="profile-pane inventory '+(profileTab==="inventory"?'active':'')+'">'+inventory+'</div><div id="profilePane-crafting" role="tabpanel" aria-labelledby="profileTab-crafting" class="profile-pane crafting '+(profileTab==="crafting"?'active':'')+'">'+workshop+'</div><div id="profilePane-skills" role="tabpanel" aria-labelledby="profileTab-skills" class="profile-pane skills '+(profileTab==="skills"?'active':'')+'">'+skills+'</div></section></div>';
   Array.prototype.forEach.call(document.querySelectorAll("[data-equip]"),function(b){b.addEventListener("click",function(){equipBagItem(i,Number(b.dataset.equip))})});
   Array.prototype.forEach.call(document.querySelectorAll("[data-profile-use]"),function(b){b.addEventListener("click",function(){useProfileItem(i,Number(b.dataset.profileUse))})});
-  Array.prototype.forEach.call(document.querySelectorAll("[data-transfer]"),function(s){s.addEventListener("change",function(){if(s.value!=="")transferBagItem(i,Number(s.dataset.transfer),Number(s.value))})});
+  Array.prototype.forEach.call(document.querySelectorAll("[data-transfer]"),function(s){s.addEventListener("change",function(){if(s.value!==""){playSfx("loadout-transfer");transferBagItem(i,Number(s.dataset.transfer),Number(s.value))}})});
   Array.prototype.forEach.call(document.querySelectorAll("[data-repair]"),function(b){b.addEventListener("click",function(){repairEquipment(i,b.dataset.repair)})});
   Array.prototype.forEach.call(document.querySelectorAll("[data-craft]"),function(b){b.addEventListener("click",function(){craftItem(i,b.dataset.craft)})});
   Array.prototype.forEach.call(document.querySelectorAll("[data-unlock-skill]"),function(b){b.addEventListener("click",function(){unlockSkill(i,b.dataset.unlockSkill)})});
@@ -399,6 +510,7 @@ function buildRunReport(){
 function animateScore(target){var step=0,total=32;function tick(){step++;var progress=step/total,eased=1-Math.pow(1-progress,3);$("finalScoreValue").textContent=Math.round(target*eased).toLocaleString("es-CL");if(step<total)setTimeout(tick,24)}tick()}
 function finish(kind){
   state.finished=true;state.ending=kind;var tier=endingTier(kind),story=endingNarrative(kind,tier.id),score=calculateScore(kind,tier.id),level=Math.max.apply(null,state.party.map(function(p){return p.level}));state.finalTier=tier.id;state.score=score;
+  playSfx(tier.id==="good"?"ending-good":tier.id==="bad"?"ending-bad":"ending-neutral");
   $("finalTier").textContent=tier.label;$("finalTier").className="ending-badge "+tier.id;$("finalTitle").textContent=story.title;$("finalText").textContent=story.lead;$("finalRefuge").textContent=story.refuge;$("finalGroup").textContent=story.group;$("finalWorld").textContent=story.world;$("finalRank").textContent="Rango "+scoreRank(score);$("finalStats").innerHTML=[["Moral",state.morale+"%"],["Amenaza",state.threat+"%"],["Combates",state.stats.wins+" / "+state.stats.battles],["Botín",state.stats.loot],["Misiones",completedMissionCount()+" / 4"],["Nivel máximo","Lvl. "+level]].map(function(x){return'<div class="result-chip">'+x[0]+"<strong>"+x[1]+"</strong></div>"}).join("");$("summary").classList.add("hidden");$("final").classList.remove("hidden");animateScore(score);save()
 }
 function metricSection(title,rows){return'<section class="summary-block"><h3>'+esc(title)+'</h3><div class="summary-metrics">'+rows.map(function(row){return'<div><span>'+esc(row[0])+'</span><b>'+esc(row[1])+'</b></div>'}).join("")+'</div></section>'}
@@ -434,7 +546,7 @@ function beginActorTurn(){
 }
 function statusHtml(tags){return'<div class="status-tags">'+(tags.length?tags.map(function(x){return'<span class="tag '+x[1]+'">'+esc(x[0])+'</span>'}).join(""):'<span class="tag">Estable</span>')+'</div>'}
 function recordHp(side,index,from,to,max){
-  if(!battleState||from===to)return;var fx=battleState.feedback.filter(function(x){return x.side===side&&x.index===index})[0];if(fx){fx.to=to;fx.delta+=to-from}else battleState.feedback.push({side:side,index:index,from:from,to:to,max:max,delta:to-from})
+  if(!battleState||from===to)return;if(to>from)playSfx(from<=0&&side==="ally"?"hp-revive":"hp-heal");else playSfx(to<=0?(side==="ally"?"hp-ally-down":"hp-enemy-down"):(side==="ally"?"hp-ally-damage":"hp-enemy-damage"));var fx=battleState.feedback.filter(function(x){return x.side===side&&x.index===index})[0];if(fx){fx.to=to;fx.delta+=to-from}else battleState.feedback.push({side:side,index:index,from:from,to:to,max:max,delta:to-from})
 }
 function hpFeedback(side,index){return battleState.feedback.filter(function(x){return x.side===side&&x.index===index})[0]||null}
 function criticalFeedback(index){return battleState.criticalFeedback.filter(function(x){return x.index===index})[0]||null}
@@ -518,7 +630,7 @@ function generateLoot(enemy){
 function beginLoot(i){
   if(!battleState||battleState.phase!=="loot"||battleState.busy)return;if(battleState.looter===null){toast("Primero selecciona quién saquea");return}var e=battleState.enemies[i];if(!e||e.looted||e.searching)return;
   e.searching=true;e.progress=0;battleState.busy=true;battleState.log.push(state.party[battleState.looter].name+" registra a "+e.name+".");renderBattle();var step=Math.max(2,Math.round(10000/e.lootMs));clearInterval(lootInterval);lootInterval=setInterval(function(){if(!battleState||battleState.phase!=="loot")return;e.progress=Math.min(96,e.progress+step);var bar=$("lootProgressBar-"+i),label=$("lootProgressText-"+i);if(bar)bar.style.width=e.progress+"%";if(label)label.textContent=e.progress+"%"},100);
-  setTimeout(function(){if(!battleState||battleState.phase!=="loot")return;clearInterval(lootInterval);e.progress=100;e.searching=false;e.looted=true;e.loot=generateLoot(e);battleState.lootMessage="";battleState.busy=false;renderBattle();renderLootModal(i)},e.lootMs)
+  setTimeout(function(){if(!battleState||battleState.phase!=="loot")return;clearInterval(lootInterval);e.progress=100;e.searching=false;e.looted=true;e.loot=generateLoot(e);battleState.lootMessage="";battleState.busy=false;playSfx("loot-found");renderBattle();renderLootModal(i)},e.lootMs)
 }
 function pendingLootUnits(loot){return(loot||[]).reduce(function(sum,drop){return sum+(drop.status==="pending"?Math.max(1,Number(drop.qty)||1):0)},0)}
 function canTakeAllLoot(p,loot){
@@ -594,6 +706,8 @@ function enterTitleScreen(){
 function newGame(){state=fresh();pending=null;battleState=null;archiveOpener=null;worldLoreOpener=null;clearInterval(lootInterval);["titleScreen","start","gameIntro","worldLoreModal","battle","final","summary","refuge","profileModal","lootModal","archiveModal"].forEach(function(id){$(id).classList.add("hidden")});render();save();showGameIntro(0)}
 function continueGame(){if(!load()){newGame();return}$("titleScreen").classList.add("hidden");$("start").classList.add("hidden");render();if(!state.introCompleted)showGameIntro(0);else if(state.finished&&state.ending){if(state.summarySeen)showRunSummary();else finish(state.ending)}else if(state.refuge.active)openRefuge(state.refuge.reason,true);else toast("Partida restaurada")}
 
+loadAudioRoutes();
+installAudioHooks();
 $("enterTitle").addEventListener("click",enterTitleScreen);$("newGame").addEventListener("click",newGame);$("continueGame").addEventListener("click",continueGame);$("openWorldLore").addEventListener("click",function(){openWorldLore($("openWorldLore"))});$("closeWorldLore").addEventListener("click",closeWorldLore);$("closeWorldLoreBottom").addEventListener("click",closeWorldLore);Object.keys(loreSections).forEach(function(key){$(loreSections[key][0]).addEventListener("click",function(){switchWorldLore(key)})});Object.keys(factionSections).forEach(function(key){$(factionSections[key][0]).addEventListener("click",function(){switchFaction(key)})});$("introNext").addEventListener("click",function(){showGameIntro(1)});$("introBack").addEventListener("click",function(){showGameIntro(0)});$("introStart").addEventListener("click",completeIntro);$("advance").addEventListener("click",advance);$("nextDay").addEventListener("click",function(){$("night").classList.add("hidden");if(state.morale<=0)openRefuge("morale");else{save();render()}});$("finalContinue").addEventListener("click",showRunSummary);$("downloadPng").addEventListener("click",downloadResultPng);$("restart").addEventListener("click",newGame);$("npcTabMara").addEventListener("click",function(){switchRefugeNpc("mara")});$("npcTabArmorer").addEventListener("click",function(){switchRefugeNpc("armorer")});$("starterKit").addEventListener("click",acceptStarterKit);$("refugeRest").addEventListener("click",restAtRefuge);$("refugeRejoin").addEventListener("click",rejoinAtRefuge);$("leaveRefuge").addEventListener("click",leaveRefuge);$("closeDrawer").addEventListener("click",closePanel);$("shade").addEventListener("click",closePanel);$("closeProfile").addEventListener("click",closeProfile);$("closeLoot").addEventListener("click",closeLootModal);$("closeArchive").addEventListener("click",closeArchive);$("closeArchiveBottom").addEventListener("click",closeArchive);$("takeAllLoot").addEventListener("click",takeAllLoot);$("finishLoot").addEventListener("click",finishLooting);$("itemsToggle").addEventListener("click",function(){if(battleState&&battleState.phase==="combat")$("itemTray").classList.toggle("hidden")});
 Array.prototype.forEach.call(document.querySelectorAll("[data-panel]"),function(b){b.addEventListener("click",function(){openPanel(b.dataset.panel)})});
 Array.prototype.forEach.call(document.querySelectorAll("[data-action]"),function(b){b.addEventListener("click",function(){combatAction(b.dataset.action)})});

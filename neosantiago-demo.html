@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#070a09">
   <title>NeoSantiago 2130 — Demo de tres días</title>
-  <link rel="preload" href="backgrounds/title-cover.webp?v=23" as="image" type="image/webp">
+  <link rel="preload" href="backgrounds/title-cover.webp?v=24" as="image" type="image/webp">
   <link rel="preload" href="characters/sara-loadout.webp" as="image" type="image/webp">
   <link rel="preload" href="characters/elias-loadout.webp" as="image" type="image/webp">
   <link rel="preload" href="characters/noa-loadout.webp" as="image" type="image/webp">
@@ -269,7 +269,7 @@
   </section>
 
   <section class="title-screen" id="titleScreen" aria-labelledby="titleScreenHeading">
-    <div class="title-screen-bg" aria-hidden="true"><img src="backgrounds/title-cover.webp?v=23" alt=""></div>
+    <div class="title-screen-bg" aria-hidden="true"><img src="backgrounds/title-cover.webp?v=24" alt=""></div>
     <div class="title-screen-copy">
       <p class="title-eyebrow">Experiencia narrativa de supervivencia</p>
       <h1 class="title-lockup" id="titleScreenHeading"><span>NeoSantiago</span><b>2130</b></h1>
@@ -852,6 +852,82 @@
   try{var saved=JSON.parse(localStorage.getItem(KEY));if(saved&&saved.version===1)$("continueGame").classList.remove("hidden")}catch(e){}
   render();
   */
+  </script>
+  <script id="audioRoutes" type="application/json">
+  {
+    "ui-hover": "audio/ui/hover-soft.mp3",
+    "ui-click": "audio/ui/click-metal.mp3",
+    "ui-disabled": "audio/ui/disabled-low.mp3",
+    "ui-open-panel": "audio/ui/open-panel.mp3",
+    "ui-close-panel": "audio/ui/close-panel.mp3",
+    "ui-error": "audio/ui/error-low.mp3",
+    "ui-tab": "audio/ui/tab-switch.mp3",
+    "ui-download": "audio/ui/download.mp3",
+    "start-title-enter": "audio/start/title-enter.mp3",
+    "start-new-game": "audio/start/new-game.mp3",
+    "start-load-game": "audio/start/load-game.mp3",
+    "start-expedition": "audio/start/expedition-start.mp3",
+    "lore-open": "audio/lore/archive-open.mp3",
+    "lore-page": "audio/lore/page-turn-digital.mp3",
+    "lore-tab": "audio/lore/tab-switch.mp3",
+    "decision-hover": "audio/decision/choice-hover.mp3",
+    "decision-confirm": "audio/decision/choice-confirm.mp3",
+    "decision-danger": "audio/decision/danger-choice.mp3",
+    "decision-combat": "audio/decision/combat-trigger.mp3",
+    "decision-result": "audio/decision/result-reveal.mp3",
+    "archive-open": "audio/archive/file-open.mp3",
+    "archive-close": "audio/archive/file-close.mp3",
+    "archive-switch": "audio/archive/dossier-switch.mp3",
+    "refuge-enter": "audio/refuge/refuge-enter.mp3",
+    "refuge-npc": "audio/refuge/npc-switch.mp3",
+    "refuge-supply": "audio/refuge/supply-given.mp3",
+    "refuge-rest": "audio/refuge/rest-soft.mp3",
+    "refuge-ready": "audio/refuge/group-ready.mp3",
+    "trade-sell": "audio/trade/item-sell.mp3",
+    "trade-buy": "audio/trade/item-buy.mp3",
+    "trade-weapon": "audio/trade/weapon-buy.mp3",
+    "loadout-open": "audio/loadout/profile-open.mp3",
+    "loadout-equip": "audio/loadout/equip-item.mp3",
+    "loadout-use": "audio/loadout/use-item.mp3",
+    "loadout-transfer": "audio/loadout/transfer-item.mp3",
+    "loadout-repair": "audio/loadout/repair-gear.mp3",
+    "loadout-tray": "audio/loadout/item-tray-open.mp3",
+    "loadout-food": "audio/loadout/use-food.mp3",
+    "craft-basic": "audio/crafting/craft-basic.mp3",
+    "craft-medical": "audio/crafting/craft-medical.mp3",
+    "craft-tech": "audio/crafting/craft-tech.mp3",
+    "skill-unlock": "audio/skills/skill-unlock.mp3",
+    "combat-target": "audio/combat/target-select.mp3",
+    "combat-melee": "audio/combat/melee-hit.mp3",
+    "combat-shot-9mm": "audio/combat/shot-9mm.mp3",
+    "combat-shot-rifle": "audio/combat/shot-rifle.mp3",
+    "combat-shot-shotgun": "audio/combat/shot-shotgun.mp3",
+    "combat-miss": "audio/combat/miss.mp3",
+    "combat-critical": "audio/combat/critical-hit.mp3",
+    "combat-defend": "audio/combat/defend-cover.mp3",
+    "combat-flee": "audio/combat/flee.mp3",
+    "combat-grenade": "audio/combat/grenade.mp3",
+    "combat-emp": "audio/combat/emp-pulse.mp3",
+    "hp-ally-damage": "audio/hp/ally-damage.mp3",
+    "hp-enemy-damage": "audio/hp/enemy-damage.mp3",
+    "hp-heal": "audio/hp/heal.mp3",
+    "hp-ally-down": "audio/hp/ally-down.mp3",
+    "hp-enemy-down": "audio/hp/enemy-down.mp3",
+    "hp-revive": "audio/hp/revive-pulse.mp3",
+    "loot-hover": "audio/loot/corpse-hover.mp3",
+    "loot-search": "audio/loot/search-start.mp3",
+    "loot-loop": "audio/loot/search-loop.mp3",
+    "loot-found": "audio/loot/loot-found.mp3",
+    "loot-take": "audio/loot/take-item.mp3",
+    "loot-discard": "audio/loot/discard-item.mp3",
+    "loot-take-all": "audio/loot/take-all.mp3",
+    "ending-good": "audio/ending/good-ending.mp3",
+    "ending-neutral": "audio/ending/neutral-ending.mp3",
+    "ending-bad": "audio/ending/bad-ending.mp3",
+    "ending-summary": "audio/ending/summary-open.mp3",
+    "ambience-title": "audio/ambience/title-rain-tunnel.mp3",
+    "ambience-archive": "audio/ambience/archive-static.mp3"
+  }
   </script>
   <script src="game-v2.js"></script>
 </body>
