@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="26";
+var ASSET_REVISION="27";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -152,7 +152,7 @@ globalThis.retryAsset=retryAsset;
 function assetImage(path,alt,className,width,height){return'<img class="'+esc(className||"")+'" src="'+esc(assetUrl(path))+'" data-asset-path="'+esc(path)+'" data-asset-retry="0" onerror="retryAsset(this)" alt="'+esc(alt||"")+'" width="'+width+'" height="'+height+'" loading="eager" decoding="async">'}
 function itemArt(id,alt,extra){var d=gear(id),art=d&&d.art?d.art:id;return id?'<span class="item-art '+(extra||"")+'">'+assetImage("items/"+art+".webp",alt||"","",256,256)+"</span>":'<span class="item-art empty-art '+(extra||"")+'" aria-hidden="true">—</span>'}
 function portraitArt(path,alt,extra){return'<div class="portrait">'+assetImage(path,alt,"portrait-art "+(extra||""),590,885)+"</div>"}
-var audioRoutes={},audioMissing={},audioHoverButton=null,audioLoopInstances={};
+var audioRoutes={},audioMissing={},audioHoverButton=null,audioLoopInstances={},audioUnlocked=false,sceneAmbienceRoutes=["ambience-title","ambience-battle","ambience-battle-victory"];
 function loadAudioRoutes(){
   try{
     var node=$("audioRoutes"),parsed=node&&node.textContent?JSON.parse(node.textContent):{};
@@ -197,6 +197,12 @@ function startLoopSfx(name){
 function stopLoopSfx(name){
   var sound=audioLoopInstances[name];if(!sound)return false;try{sound.pause();sound.currentTime=0}catch{}delete audioLoopInstances[name];return true
 }
+function setSceneAmbience(name){
+  sceneAmbienceRoutes.forEach(function(key){if(key!==name)stopLoopSfx(key)});if(name&&audioUnlocked)startLoopSfx(name)
+}
+function unlockAudioAmbience(){
+  audioUnlocked=true;if(battleState&&battleState.phase==="combat")setSceneAmbience("ambience-battle");else if(battleState&&battleState.phase==="loot")setSceneAmbience("ambience-battle-victory");else setSceneAmbience("ambience-title")
+}
 function buttonFromEvent(event){var target=event&&event.target;return target&&target.closest?target.closest("button"):null}
 function hoverSfxForButton(button){
   if(!button||button.disabled)return null;
@@ -237,7 +243,7 @@ function clickSfxForButton(button){
   if(data.action==="skill")return combatSkillSfx();
   if(data.action==="defend")return"combat-defend";
   if(data.action==="flee")return"combat-flee";
-  if(data.combatItem!==undefined){if(data.combatItem.indexOf("emp")>=0)return"combat-emp";if(data.combatItem.indexOf("grenade")>=0)return"combat-grenade";if(data.combatItem==="food")return"loadout-food";return"hp-heal"}
+  if(data.combatItem!==undefined){if(data.combatItem.indexOf("emp")>=0)return"combat-emp";if(data.combatItem.indexOf("grenade")>=0)return"combat-grenade";if(data.combatItem==="food")return"loadout-food";return"hp-medical-use"}
   if(data.target!==undefined)return null;
   if(data.lootEnemy!==undefined)return"loot-search";
   if(data.takeLoot!==undefined)return"loot-take";
@@ -245,7 +251,7 @@ function clickSfxForButton(button){
   if(data.profile!==undefined||data.refugeProfile!==undefined)return"loadout-open";
   if(data.profileTab!==undefined)return"ui-tab";
   if(data.equip!==undefined)return"loadout-equip";
-  if(data.profileUse!==undefined)return"loadout-use";
+  if(data.profileUse!==undefined)return null;
   if(data.repair!==undefined)return"loadout-repair";
   if(data.craft!==undefined)return craftSfx(data.craft);
   if(data.unlockSkill!==undefined)return"skill-unlock";
@@ -279,7 +285,7 @@ function installAudioHooks(){
   if(typeof document==="undefined"||!document.addEventListener)return;
   document.addEventListener("pointerover",function(event){var button=buttonFromEvent(event);if(!button||button===audioHoverButton)return;audioHoverButton=button;var sfx=hoverSfxForButton(button);if(sfx)playSfx(sfx)},true);
   document.addEventListener("pointerout",function(event){var button=buttonFromEvent(event);if(button===audioHoverButton){try{if(event.relatedTarget&&button.contains(event.relatedTarget))return}catch{}audioHoverButton=null}},true);
-  document.addEventListener("click",function(event){var button=buttonFromEvent(event),sfx=clickSfxForButton(button);if(sfx)playSfx(sfx);if(button)startLoopSfx("ambience-title")},true)
+  document.addEventListener("click",function(event){var button=buttonFromEvent(event),sfx=clickSfxForButton(button);if(sfx)playSfx(sfx);if(button)unlockAudioAmbience()},true)
 }
 globalThis.playSfx=playSfx;
 globalThis.startLoopSfx=startLoopSfx;
@@ -351,6 +357,7 @@ function renderRefuge(){
 }
 function switchRefugeNpc(npc){if(!state.refuge||!state.refuge.active||["mara","armorer"].indexOf(npc)<0)return false;state.refuge.npc=npc;state.refuge.message="";renderRefuge();save();return true}
 function openRefuge(reason,restoring){
+  setSceneAmbience("ambience-title");
   if(!restoring){var visits=(state.refuge&&state.refuge.visits||0)+1;state.refuge={active:true,reason:reason,rested:false,rejoined:false,visits:visits,npc:"mara",message:""};state.stats.refugeVisits++;}else{state.refuge.active=true;state.refuge.reason=reason||state.refuge.reason;state.refuge.npc=state.refuge.npc==="armorer"?"armorer":"mara"}
   state.party.forEach(function(p){p.guard=0;p.bleed=0});refreshTradeStock();battleState=null;pending=null;clearInterval(lootInterval);["gameIntro","worldLoreModal","battle","result","night","lootModal","final","summary"].forEach(function(id){$(id).classList.add("hidden")});$("refuge").classList.remove("hidden");renderRefuge();save()
 }
@@ -447,6 +454,7 @@ function useProfileItem(pIndex,bagIndex){
   if(id==="food"){var beforeHunger=p.hunger;p.hunger=clamp(p.hunger+40,0,100);feedback={kind:"energy",from:beforeHunger,to:p.hunger,delta:p.hunger-beforeHunger};message=p.name+" recupera "+feedback.delta+" de energía"}
   else if(id==="stimulant"){var stimulantHp=p.hp,stimulantEnergy=p.hunger;p.hp=Math.min(p.maxHp,p.hp+10);p.hunger=clamp(p.hunger+30,0,100);feedback={kind:p.hp>stimulantHp?"hp":"energy",from:p.hp>stimulantHp?stimulantHp:stimulantEnergy,to:p.hp>stimulantHp?p.hp:p.hunger,delta:p.hp>stimulantHp?p.hp-stimulantHp:p.hunger-stimulantEnergy};recordHealing(p.hp-stimulantHp,true);message=p.name+" recupera "+(p.hp-stimulantHp)+" HP y "+(p.hunger-stimulantEnergy)+" de energía"}
   else{var before=p.hp,heal=id==="traumaKit"?54:id==="medkit"?40:id==="meds"?26:14;p.hp=Math.min(p.maxHp,p.hp+heal);if(id==="bandage")p.bleed=0;feedback={kind:"hp",from:before,to:p.hp,delta:p.hp-before};recordHealing(feedback.delta,true);message=p.name+" recupera "+feedback.delta+" HP"+(id==="bandage"?" y detiene el sangrado":"")}
+  if(id==="food")playSfx("loadout-food");else playSfx("hp-medical-use");
   addStatItem("itemsUsed",id,1);
   entry.qty--;if(entry.qty<=0)p.bag.splice(bagIndex,1);save();renderMini();renderProfile(pIndex,feedback);if(state.refuge.active)renderRefuge();toast(message)
 }
@@ -493,7 +501,7 @@ function showResult(title,text,changes,roll,check){
   $("result").classList.remove("hidden");$("advance").focus()
 }
 function advance(){
-  if(!pending)return;var ending=pending.ending,returnToRefuge=pending.returnToRefuge;pending=null;$("result").classList.add("hidden");if(ending){finish(ending);return}
+  if(!pending)return;setSceneAmbience("ambience-title");var ending=pending.ending,returnToRefuge=pending.returnToRefuge;pending=null;$("result").classList.add("hidden");if(ending){finish(ending);return}
   var oldDay=events[state.index].day;state.index++;if(returnToRefuge){openRefuge(returnToRefuge);return}if(events[state.index].day!==oldDay){night(oldDay)}else{save();render()}
 }
 function night(day){
@@ -556,7 +564,7 @@ function startCombat(config,choice){
   state.party.forEach(function(p){var penalty=hungerPenalty(p);if(penalty)battleState.log.push(p.name+" entra fatigado por falta de energía: "+penalty+" a precisión.")});
   var rosters=config.encounters&&config.encounters.length?config.encounters:config.enemies?[config.enemies]:[],roster=rosters[rand(0,rosters.length-1)]||[];
   battleState.enemies=roster.map(function(id,i){var d=enemyDefs[id];return{id:id+"-"+i,type:id,lootGroup:d.lootGroup||id,name:d.name,role:d.role,hp:d.hp,maxHp:d.hp,attack:d.attack.slice(),accuracy:d.accuracy,def:d.def,armor:d.armor,mechanical:d.mechanical,lootMs:d.lootMs,xp:d.xp,stun:0,looted:false,searching:false,progress:0,loot:[]}});
-  battleState.log.push("Contacto confirmado: "+battleState.enemies.map(function(e){return e.name}).join(", ")+".");
+  battleState.log.push("Contacto confirmado: "+battleState.enemies.map(function(e){return e.name}).join(", ")+".");setSceneAmbience("ambience-battle");
   battleState.actor=firstAvailableActor();$("battle").dataset.day=ev.day;$("battleTitle").textContent=config.title;$("battleBrief").textContent=config.brief;$("battle").classList.remove("hidden");$("itemTray").classList.add("hidden");if(beginActorTurn())renderBattle()
 }
 function firstAvailableActor(){for(var i=0;i<state.party.length;i++)if(state.party[i].hp>0&&!battleState.acted[i])return i;return-1}
@@ -639,7 +647,7 @@ function enemyPhase(){
   var continueRound=function(){if(!state.party.some(function(p){return p.hp>0})){loseCombat(false);return}battleState.round++;battleState.acted={};battleState.actor=firstAvailableActor();battleState.busy=false;if(beginActorTurn())renderBattle()};if(lethalFeedback()){settleLethal(continueRound);return}continueRound()
 }
 function beginLootPhase(){
-  if(!battleState)return;battleState.phase="loot";battleState.busy=false;battleState.looter=null;battleState.feedback=[];battleState.log.push("No quedan hostiles. Selecciona quién registrará los cuerpos.");$("itemTray").classList.add("hidden");renderBattle()
+  if(!battleState)return;battleState.phase="loot";setSceneAmbience("ambience-battle-victory");battleState.busy=false;battleState.looter=null;battleState.feedback=[];battleState.log.push("No quedan hostiles. Selecciona quién registrará los cuerpos.");$("itemTray").classList.add("hidden");renderBattle()
 }
 function selectLooter(i){if(!battleState||battleState.phase!=="loot"||battleState.busy||!state.party[i]||state.party[i].hp<=0)return;battleState.looter=i;battleState.log.push(state.party[i].name+" se prepara para saquear.");renderBattle()}
 function addLootDrop(list,id,qty){var found=list.filter(function(x){return x.id===id})[0];if(found)found.qty+=qty;else list.push({id:id,qty:qty,status:"pending"})}
