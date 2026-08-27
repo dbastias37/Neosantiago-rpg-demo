@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="30";
+var ASSET_REVISION="31";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -249,7 +249,7 @@ function clickSfxForButton(button){
   if(data.action==="defend")return"combat-defend";
   if(data.action==="flee")return"combat-flee";
   if(data.combatItem!==undefined){if(data.combatItem.indexOf("emp")>=0)return"combat-emp";if(data.combatItem.indexOf("grenade")>=0)return"combat-grenade";if(data.combatItem==="food")return"loadout-food";return"hp-medical-use"}
-  if(data.target!==undefined)return null;
+  if(data.target!==undefined)return"combat-target";
   if(data.lootEnemy!==undefined)return"loot-search";
   if(data.takeLoot!==undefined)return"loot-take";
   if(data.discardLoot!==undefined)return"loot-discard";
@@ -686,7 +686,7 @@ function closeLootModal(){
 }
 function finishLooting(){if(!battleState||battleState.phase!=="loot"||battleState.busy)return;clearInterval(lootInterval);$("lootModal").classList.add("hidden");winCombat()}
 function winCombat(){
-  var b=battleState,choice=b.choice,out=choice.victory||choice;state.stats.battles++;state.stats.wins++;if(state.party.every(function(p){return p.hp>0}))state.stats.fullSquadWins++;state.party.forEach(function(p,i){if(p.hp>0){state.stats.xpFromVictories+=5;addPersonalXp(i,5,"sobrevivir al combate")}});awardFactionPoints(1,"combate ganado");var xpSummary=state.party.map(function(p,i){return(b.xpEarned[i]||0)>0?p.name+" +"+b.xpEarned[i]:""}).filter(Boolean).join(" · "),extra=[["Victoria","Hostiles neutralizados"],["Puntos de facción","+1 · combate ganado"],["XP personal",xpSummary||"Sin XP de combate"],["Botín",b.lootTaken?b.lootTaken+" objetos":"Sin recoger"]];if(b.levelUps.length)extra.push(["Subida de nivel",b.levelUps.join(", ")]);battleState=null;$("battle").classList.add("hidden");$("lootModal").classList.add("hidden");completeChoice(choice,out,null,null,extra)
+  var b=battleState,choice=b.choice,out=choice.victory||choice;state.stats.battles++;state.stats.wins++;if(state.party.every(function(p){return p.hp>0}))state.stats.fullSquadWins++;state.party.forEach(function(p,i){if(p.hp>0){state.stats.xpFromVictories+=5;addPersonalXp(i,5,"sobrevivir al combate")}});awardFactionPoints(1,"combate ganado");var xpSummary=state.party.map(function(p,i){return(b.xpEarned[i]||0)>0?p.name+" +"+b.xpEarned[i]:""}).filter(Boolean).join(" · "),extra=[["Victoria","Hostiles neutralizados"],["Puntos de facción","+1 · combate ganado"],["XP personal",xpSummary||"Sin XP de combate"],["Botín",b.lootTaken?b.lootTaken+" objetos":"Sin recoger"]];if(b.levelUps.length)extra.push(["Subida de nivel",b.levelUps.join(", ")]);battleState=null;setSceneAmbience("ambience-title",AUDIO_CROSSFADE_MS);$("battle").classList.add("hidden");$("lootModal").classList.add("hidden");completeChoice(choice,out,null,null,extra)
 }
 function loseCombat(fled){
   if(!battleState)return;var moraleCost=fled?8:12,threatCost=fled?4:6;state.stats.battles++;state.stats.retreats++;state.morale=clamp(state.morale-moraleCost,0,100);state.threat=clamp(state.threat+threatCost,0,100);state.party.forEach(function(p){p.guard=0;p.bleed=0});battleState=null;pending=null;$("battle").classList.add("hidden");openRefuge(fled?"fled":"exhausted");state.refuge.message=fled?"Retirarse cuesta "+moraleCost+" de moral y aumenta "+threatCost+" la amenaza. La situación sigue pendiente.":"El grupo completo quedó agotado: moral −"+moraleCost+" y amenaza +"+threatCost+". Descansa o utiliza medicina antes de regresar.";renderRefuge();save()
