@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="34";
+var ASSET_REVISION="35";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -284,8 +284,9 @@ function clickSfxForButton(button){
   if(id==="refugeRejoin")return"refuge-ready";
   if(id==="itemsToggle")return"loadout-tray";
   if(id==="takeAllLoot")return"loot-take-all";
-  if(id==="finishLoot")return"decision-result";
-  if(id==="closeLoot"||id==="closeDrawer"||id==="closeProfile"||id==="closeArchive"||id==="closeArchiveBottom")return"ui-close-panel";
+  if(id==="finishLoot")return"loot-exit";
+  if(id==="closeLoot")return"loot-exit";
+  if(id==="closeDrawer"||id==="closeProfile"||id==="closeArchive"||id==="closeArchiveBottom")return"ui-close-panel";
   return"ui-click"
 }
 function installAudioHooks(){
