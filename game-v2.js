@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="28";
+var ASSET_REVISION="29";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -179,16 +179,19 @@ function playAudioRoute(name,options,index){
   var routes=audioRouteList(name),path;options=options||{};index=index||0;
   if(!routes.length||typeof Audio==="undefined")return false;
   if(index>=routes.length)return false;
-  path=routes[index];if(audioMissing[path])return playAudioRoute(name,options,index+1);
+  if(options.random){var available=routes.filter(function(route){return !audioMissing[route]});if(!available.length)return false;path=available[Math.floor(Math.random()*available.length)]}else{path=routes[index];if(audioMissing[path])return playAudioRoute(name,options,index+1)}
   try{
     var sound=new Audio(path),nextSound;sound.preload="auto";sound.volume=options.volume!==undefined?options.volume:sfxVolume(name);sound.loop=!!options.loop;
-    sound.addEventListener("error",function(){audioMissing[path]=true;if(options.loop)delete audioLoopInstances[name];nextSound=playAudioRoute(name,options,index+1);if(options.loop&&nextSound)audioLoopInstances[name]=nextSound},{once:true});
+    sound.addEventListener("error",function(){audioMissing[path]=true;if(options.loop)delete audioLoopInstances[name];nextSound=playAudioRoute(name,options,options.random?0:index+1);if(options.loop&&nextSound)audioLoopInstances[name]=nextSound},{once:true});
     var started=sound.play();if(started&&started.catch)started.catch(function(){});
     return sound
   }catch{audioMissing[path]=true;return playAudioRoute(name,options,index+1)}
 }
 function playSfx(name){
   return !!playAudioRoute(name,{loop:false})
+}
+function playRandomSfx(name){
+  return !!playAudioRoute(name,{loop:false,random:true})
 }
 function fadeLoopVolume(name,target,ms,after){
   var sound=audioLoopInstances[name],from;if(!sound)return false;clearInterval(audioLoopFades[name]);target=clamp(target,0,1);if(!ms){sound.volume=target;if(after)after();return true}from=sound.volume;var started=Date.now();audioLoopFades[name]=setInterval(function(){var progress=clamp((Date.now()-started)/ms,0,1),eased=progress<.5?2*progress*progress:1-Math.pow(-2*progress+2,2)/2;sound.volume=from+(target-from)*eased;if(progress>=1){clearInterval(audioLoopFades[name]);delete audioLoopFades[name];sound.volume=target;if(after)after()}},40);return true
@@ -576,8 +579,8 @@ function beginActorTurn(){
   var p=state.party[battleState.actor];if(!p)return false;if(p.bleed>0){var before=p.hp,index=battleState.actor;p.hp=Math.max(0,p.hp-2);state.stats.damageTaken+=before-p.hp;recordHp("ally",index,before,p.hp,p.maxHp);p.bleed--;battleState.log.push(p.name+" pierde 2 HP por sangrado.");if(p.hp<=0){battleState.acted[index]=true;settleLethal(function(){var next=firstAvailableActor();if(next<0){enemyPhase();return}battleState.actor=next;if(beginActorTurn())renderBattle()});return false}}return true
 }
 function statusHtml(tags){return'<div class="status-tags">'+(tags.length?tags.map(function(x){return'<span class="tag '+x[1]+'">'+esc(x[0])+'</span>'}).join(""):'<span class="tag">Estable</span>')+'</div>'}
-function recordHp(side,index,from,to,max){
-  if(!battleState||from===to)return;if(to>from)playSfx(from<=0&&side==="ally"?"hp-revive":"hp-heal");else playSfx(to<=0?(side==="ally"?"hp-ally-down":"hp-enemy-down"):(side==="ally"?"hp-ally-damage":"hp-enemy-damage"));var fx=battleState.feedback.filter(function(x){return x.side===side&&x.index===index})[0];if(fx){fx.to=to;fx.delta+=to-from}else battleState.feedback.push({side:side,index:index,from:from,to:to,max:max,delta:to-from})
+function recordHp(side,index,from,to,max,damageSfx){
+  if(!battleState||from===to)return;if(to>from)playSfx(from<=0&&side==="ally"?"hp-revive":"hp-heal");else if(to<=0)playSfx(side==="ally"?"hp-ally-down":"hp-enemy-down");else if(damageSfx==="none"){}else if(damageSfx)playRandomSfx(damageSfx);else playSfx(side==="ally"?"hp-ally-damage":"hp-enemy-damage");var fx=battleState.feedback.filter(function(x){return x.side===side&&x.index===index})[0];if(fx){fx.to=to;fx.delta+=to-from}else battleState.feedback.push({side:side,index:index,from:from,to:to,max:max,delta:to-from})
 }
 function hpFeedback(side,index){return battleState.feedback.filter(function(x){return x.side===side&&x.index===index})[0]||null}
 function criticalFeedback(index){return battleState.criticalFeedback.filter(function(x){return x.index===index})[0]||null}
@@ -619,7 +622,7 @@ function renderBattle(){
   if(!lootPhase&&actor)renderCombatItems(actor,disabled);else $("itemsToggle").disabled=true;
   $("combatLog").innerHTML=battleState.log.slice(-7).map(function(x){return'<p>› '+esc(x)+'</p>'}).join("");$("combatLog").scrollTop=$("combatLog").scrollHeight;battleState.feedback=[];battleState.criticalFeedback=[]
 }
-function strike(enemy,damage,label,pIndex,critical){var dealt=Math.max(1,damage-enemy.armor),before=enemy.hp,index=battleState.enemies.indexOf(enemy);enemy.hp=Math.max(0,enemy.hp-dealt);state.stats.damageDealt+=before-enemy.hp;recordHp("enemy",index,before,enemy.hp,enemy.maxHp);if(before>0&&before-enemy.hp>0){if(!critical)playSfx("combat-hit-normal");state.stats.xpFromHits+=3;addPersonalXp(pIndex,3,"un impacto certero")}if(critical)recordCritical(index,pIndex);battleState.log.push(label+": "+dealt+" de daño a "+enemy.name+(critical?". Golpe crítico.":"."));if(before>0&&enemy.hp<=0){battleState.log.push(enemy.name+" queda fuera de combate.");state.stats.enemies++;addPersonalXp(pIndex,enemy.xp,"derribar a "+enemy.name);if(!livingEnemies().length)setSceneAmbience("ambience-battle-victory",AUDIO_CROSSFADE_MS)}}
+function strike(enemy,damage,label,pIndex,critical){var dealt=Math.max(1,damage-enemy.armor),before=enemy.hp,index=battleState.enemies.indexOf(enemy);enemy.hp=Math.max(0,enemy.hp-dealt);state.stats.damageDealt+=before-enemy.hp;recordHp("enemy",index,before,enemy.hp,enemy.maxHp,critical?"none":"combat-hit-normal");if(before>0&&before-enemy.hp>0){state.stats.xpFromHits+=3;addPersonalXp(pIndex,3,"un impacto certero")}if(critical)recordCritical(index,pIndex);battleState.log.push(label+": "+dealt+" de daño a "+enemy.name+(critical?". Golpe crítico.":"."));if(before>0&&enemy.hp<=0){battleState.log.push(enemy.name+" queda fuera de combate.");state.stats.enemies++;addPersonalXp(pIndex,enemy.xp,"derribar a "+enemy.name);if(!livingEnemies().length)setSceneAmbience("ambience-battle-victory",AUDIO_CROSSFADE_MS)}}
 function combatAction(type){
   if(!battleState||battleState.phase!=="combat"||battleState.busy)return;var p=state.party[battleState.actor],e=selectedEnemy();if(!p||p.hp<=0)return;
   if(type==="flee"){loseCombat(true);return}
@@ -644,7 +647,7 @@ function endPlayerTurn(){
 function enemyPhase(){
   if(!battleState)return;battleState.busy=true;livingEnemies().forEach(function(e){
     if(e.stun){e.stun=Math.max(0,e.stun-1);battleState.log.push(e.name+" pierde el turno por la descarga EMP.");return}
-    var live=state.party.filter(function(p){return p.hp>0});if(!live.length)return;var weakest=live.slice().sort(function(a,b){return a.hp/a.maxHp-b.hp/b.maxHp})[0],target=random()<.3?weakest:live[rand(0,live.length-1)],index=state.party.indexOf(target),attackRoll=d20(),hit=attackRoll+(e.accuracy||0)>=11;if(!hit){battleState.log.push(e.name+" falla su ataque contra "+target.name+".");return}var before=target.hp,raw=rand(e.attack[0],e.attack[1])+(attackRoll===20?3:0),cover=target.guard||0,armor=gearDefense(target),armorBlocked=Math.min(raw,armor),coverBlocked=Math.min(cover,Math.max(0,raw-armorBlocked)),blocked=armorBlocked+coverBlocked,damage=Math.max(0,raw-blocked);target.guard=Math.max(0,cover-coverBlocked);target.hp=Math.max(0,target.hp-damage);state.stats.damageTaken+=before-target.hp;recordHp("ally",index,before,target.hp,target.maxHp);if(attackRoll===20)playSfx("combat-critical");battleState.log.push(e.name+" ataca a "+target.name+": "+damage+" de daño recibido."+(attackRoll===20?" Golpe crítico.":""));if(blocked)battleState.log.push(target.name+" bloquea "+blocked+" entre cobertura y equipo.");if(armor>0&&damage>0)damageArmor(target,attackRoll===20?2:1);if(e.lootGroup==="merodeador"&&damage>=4&&target.hp>0&&random()<.24){target.bleed=2;battleState.log.push(target.name+" comienza a sangrar.")}
+    var live=state.party.filter(function(p){return p.hp>0});if(!live.length)return;var weakest=live.slice().sort(function(a,b){return a.hp/a.maxHp-b.hp/b.maxHp})[0],target=random()<.3?weakest:live[rand(0,live.length-1)],index=state.party.indexOf(target),attackRoll=d20(),hit=attackRoll+(e.accuracy||0)>=11;if(!hit){battleState.log.push(e.name+" falla su ataque contra "+target.name+".");return}var before=target.hp,raw=rand(e.attack[0],e.attack[1])+(attackRoll===20?3:0),cover=target.guard||0,armor=gearDefense(target),armorBlocked=Math.min(raw,armor),coverBlocked=Math.min(cover,Math.max(0,raw-armorBlocked)),blocked=armorBlocked+coverBlocked,damage=Math.max(0,raw-blocked);target.guard=Math.max(0,cover-coverBlocked);target.hp=Math.max(0,target.hp-damage);state.stats.damageTaken+=before-target.hp;recordHp("ally",index,before,target.hp,target.maxHp,attackRoll===20?"none":"combat-enemy-hit-normal");if(attackRoll===20)playSfx("combat-critical");battleState.log.push(e.name+" ataca a "+target.name+": "+damage+" de daño recibido."+(attackRoll===20?" Golpe crítico.":""));if(blocked)battleState.log.push(target.name+" bloquea "+blocked+" entre cobertura y equipo.");if(armor>0&&damage>0)damageArmor(target,attackRoll===20?2:1);if(e.lootGroup==="merodeador"&&damage>=4&&target.hp>0&&random()<.24){target.bleed=2;battleState.log.push(target.name+" comienza a sangrar.")}
   });
   var continueRound=function(){if(!state.party.some(function(p){return p.hp>0})){loseCombat(false);return}battleState.round++;battleState.acted={};battleState.actor=firstAvailableActor();battleState.busy=false;if(beginActorTurn())renderBattle()};if(lethalFeedback()){settleLethal(continueRound);return}continueRound()
 }
