@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="25";
+var ASSET_REVISION="26";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -238,7 +238,7 @@ function clickSfxForButton(button){
   if(data.action==="defend")return"combat-defend";
   if(data.action==="flee")return"combat-flee";
   if(data.combatItem!==undefined){if(data.combatItem.indexOf("emp")>=0)return"combat-emp";if(data.combatItem.indexOf("grenade")>=0)return"combat-grenade";if(data.combatItem==="food")return"loadout-food";return"hp-heal"}
-  if(data.target!==undefined)return"combat-target";
+  if(data.target!==undefined)return null;
   if(data.lootEnemy!==undefined)return"loot-search";
   if(data.takeLoot!==undefined)return"loot-take";
   if(data.discardLoot!==undefined)return"loot-discard";
@@ -609,7 +609,7 @@ function renderBattle(){
   if(!lootPhase&&actor)renderCombatItems(actor,disabled);else $("itemsToggle").disabled=true;
   $("combatLog").innerHTML=battleState.log.slice(-7).map(function(x){return'<p>› '+esc(x)+'</p>'}).join("");$("combatLog").scrollTop=$("combatLog").scrollHeight;battleState.feedback=[];battleState.criticalFeedback=[]
 }
-function strike(enemy,damage,label,pIndex,critical){var dealt=Math.max(1,damage-enemy.armor),before=enemy.hp,index=battleState.enemies.indexOf(enemy);enemy.hp=Math.max(0,enemy.hp-dealt);state.stats.damageDealt+=before-enemy.hp;recordHp("enemy",index,before,enemy.hp,enemy.maxHp);if(before>0&&before-enemy.hp>0){state.stats.xpFromHits+=3;addPersonalXp(pIndex,3,"un impacto certero")}if(critical)recordCritical(index,pIndex);battleState.log.push(label+": "+dealt+" de daño a "+enemy.name+(critical?". Golpe crítico.":"."));if(before>0&&enemy.hp<=0){battleState.log.push(enemy.name+" queda fuera de combate.");state.stats.enemies++;addPersonalXp(pIndex,enemy.xp,"derribar a "+enemy.name)}}
+function strike(enemy,damage,label,pIndex,critical){var dealt=Math.max(1,damage-enemy.armor),before=enemy.hp,index=battleState.enemies.indexOf(enemy);enemy.hp=Math.max(0,enemy.hp-dealt);state.stats.damageDealt+=before-enemy.hp;recordHp("enemy",index,before,enemy.hp,enemy.maxHp);if(before>0&&before-enemy.hp>0){if(!critical)playSfx("combat-hit-normal");state.stats.xpFromHits+=3;addPersonalXp(pIndex,3,"un impacto certero")}if(critical)recordCritical(index,pIndex);battleState.log.push(label+": "+dealt+" de daño a "+enemy.name+(critical?". Golpe crítico.":"."));if(before>0&&enemy.hp<=0){battleState.log.push(enemy.name+" queda fuera de combate.");state.stats.enemies++;addPersonalXp(pIndex,enemy.xp,"derribar a "+enemy.name)}}
 function combatAction(type){
   if(!battleState||battleState.phase!=="combat"||battleState.busy)return;var p=state.party[battleState.actor],e=selectedEnemy();if(!p||p.hp<=0)return;
   if(type==="flee"){loseCombat(true);return}
