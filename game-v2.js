@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="24";
+var ASSET_REVISION="25";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -202,7 +202,7 @@ function hoverSfxForButton(button){
   if(!button||button.disabled)return null;
   if(button.dataset.choice!==undefined)return"decision-hover";
   if(button.dataset.lootEnemy!==undefined)return"loot-hover";
-  if(button.dataset.target!==undefined)return"combat-target";
+  if(button.dataset.target!==undefined)return"combat-target-hover";
   return"ui-hover"
 }
 function weaponSfxForActor(){
@@ -217,8 +217,8 @@ function combatSkillSfx(){
   var actor=battleState&&state.party[battleState.actor];
   if(!actor)return"ui-click";
   if(actor.id==="sara")return"hp-heal";
-  if(actor.id==="elias")return"combat-emp";
-  if(actor.id==="noa")return"combat-critical";
+  if(actor.id==="elias")return"combat-skill-elias";
+  if(actor.id==="noa")return"combat-skill-noa";
   return"ui-click"
 }
 function craftSfx(id){
@@ -571,7 +571,7 @@ function recordHp(side,index,from,to,max){
 }
 function hpFeedback(side,index){return battleState.feedback.filter(function(x){return x.side===side&&x.index===index})[0]||null}
 function criticalFeedback(index){return battleState.criticalFeedback.filter(function(x){return x.index===index})[0]||null}
-function recordCritical(index,pIndex){battleState.criticalFeedback.push({index:index,pIndex:pIndex});state.stats.criticals++;addPersonalXp(pIndex,4,"un golpe crítico")}
+function recordCritical(index,pIndex){playSfx("combat-critical");battleState.criticalFeedback.push({index:index,pIndex:pIndex});state.stats.criticals++;addPersonalXp(pIndex,4,"un golpe crítico")}
 function hpBar(hp,max,fx){var to=Math.round(100*hp/max);if(!fx)return'<span style="width:'+to+'%"></span>';var from=Math.round(100*fx.from/fx.max);return'<span class="hp-shift" style="--hp-from:'+from+'%;--hp-to:'+to+'%;width:'+to+'%"></span>'}
 function hpFloat(fx){if(!fx)return"";var heal=fx.delta>0,amount=Math.abs(fx.delta);return'<span class="hp-float '+(heal?'heal':'damage')+'">'+(heal?'+':'−')+amount+' HP</span>'}
 function lethalFeedback(){return battleState&&battleState.feedback.some(function(x){return x.to<=0})}
@@ -634,7 +634,7 @@ function endPlayerTurn(){
 function enemyPhase(){
   if(!battleState)return;battleState.busy=true;livingEnemies().forEach(function(e){
     if(e.stun){e.stun=Math.max(0,e.stun-1);battleState.log.push(e.name+" pierde el turno por la descarga EMP.");return}
-    var live=state.party.filter(function(p){return p.hp>0});if(!live.length)return;var weakest=live.slice().sort(function(a,b){return a.hp/a.maxHp-b.hp/b.maxHp})[0],target=random()<.3?weakest:live[rand(0,live.length-1)],index=state.party.indexOf(target),attackRoll=d20(),hit=attackRoll+(e.accuracy||0)>=11;if(!hit){battleState.log.push(e.name+" falla su ataque contra "+target.name+".");return}var before=target.hp,raw=rand(e.attack[0],e.attack[1])+(attackRoll===20?3:0),cover=target.guard||0,armor=gearDefense(target),armorBlocked=Math.min(raw,armor),coverBlocked=Math.min(cover,Math.max(0,raw-armorBlocked)),blocked=armorBlocked+coverBlocked,damage=Math.max(0,raw-blocked);target.guard=Math.max(0,cover-coverBlocked);target.hp=Math.max(0,target.hp-damage);state.stats.damageTaken+=before-target.hp;recordHp("ally",index,before,target.hp,target.maxHp);battleState.log.push(e.name+" ataca a "+target.name+": "+damage+" de daño recibido."+(attackRoll===20?" Golpe crítico.":""));if(blocked)battleState.log.push(target.name+" bloquea "+blocked+" entre cobertura y equipo.");if(armor>0&&damage>0)damageArmor(target,attackRoll===20?2:1);if(e.lootGroup==="merodeador"&&damage>=4&&target.hp>0&&random()<.24){target.bleed=2;battleState.log.push(target.name+" comienza a sangrar.")}
+    var live=state.party.filter(function(p){return p.hp>0});if(!live.length)return;var weakest=live.slice().sort(function(a,b){return a.hp/a.maxHp-b.hp/b.maxHp})[0],target=random()<.3?weakest:live[rand(0,live.length-1)],index=state.party.indexOf(target),attackRoll=d20(),hit=attackRoll+(e.accuracy||0)>=11;if(!hit){battleState.log.push(e.name+" falla su ataque contra "+target.name+".");return}var before=target.hp,raw=rand(e.attack[0],e.attack[1])+(attackRoll===20?3:0),cover=target.guard||0,armor=gearDefense(target),armorBlocked=Math.min(raw,armor),coverBlocked=Math.min(cover,Math.max(0,raw-armorBlocked)),blocked=armorBlocked+coverBlocked,damage=Math.max(0,raw-blocked);target.guard=Math.max(0,cover-coverBlocked);target.hp=Math.max(0,target.hp-damage);state.stats.damageTaken+=before-target.hp;recordHp("ally",index,before,target.hp,target.maxHp);if(attackRoll===20)playSfx("combat-critical");battleState.log.push(e.name+" ataca a "+target.name+": "+damage+" de daño recibido."+(attackRoll===20?" Golpe crítico.":""));if(blocked)battleState.log.push(target.name+" bloquea "+blocked+" entre cobertura y equipo.");if(armor>0&&damage>0)damageArmor(target,attackRoll===20?2:1);if(e.lootGroup==="merodeador"&&damage>=4&&target.hp>0&&random()<.24){target.bleed=2;battleState.log.push(target.name+" comienza a sangrar.")}
   });
   var continueRound=function(){if(!state.party.some(function(p){return p.hp>0})){loseCombat(false);return}battleState.round++;battleState.acted={};battleState.actor=firstAvailableActor();battleState.busy=false;if(beginActorTurn())renderBattle()};if(lethalFeedback()){settleLethal(continueRound);return}continueRound()
 }
