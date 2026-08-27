@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="31";
+var ASSET_REVISION="32";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -188,7 +188,8 @@ function playAudioRoute(name,options,index){
   }catch{audioMissing[path]=true;return playAudioRoute(name,options,index+1)}
 }
 function playSfx(name){
-  return !!playAudioRoute(name,{loop:false})
+  var randomNames=["loot-take"];
+  return !!playAudioRoute(name,{loop:false,random:randomNames.indexOf(name)>=0})
 }
 function playRandomSfx(name){
   return !!playAudioRoute(name,{loop:false,random:true})
