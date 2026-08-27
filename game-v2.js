@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="27";
+var ASSET_REVISION="28";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -152,7 +152,7 @@ globalThis.retryAsset=retryAsset;
 function assetImage(path,alt,className,width,height){return'<img class="'+esc(className||"")+'" src="'+esc(assetUrl(path))+'" data-asset-path="'+esc(path)+'" data-asset-retry="0" onerror="retryAsset(this)" alt="'+esc(alt||"")+'" width="'+width+'" height="'+height+'" loading="eager" decoding="async">'}
 function itemArt(id,alt,extra){var d=gear(id),art=d&&d.art?d.art:id;return id?'<span class="item-art '+(extra||"")+'">'+assetImage("items/"+art+".webp",alt||"","",256,256)+"</span>":'<span class="item-art empty-art '+(extra||"")+'" aria-hidden="true">—</span>'}
 function portraitArt(path,alt,extra){return'<div class="portrait">'+assetImage(path,alt,"portrait-art "+(extra||""),590,885)+"</div>"}
-var audioRoutes={},audioMissing={},audioHoverButton=null,audioLoopInstances={},audioUnlocked=false,sceneAmbienceRoutes=["ambience-title","ambience-battle","ambience-battle-victory"];
+var audioRoutes={},audioMissing={},audioHoverButton=null,audioLoopInstances={},audioLoopFades={},audioUnlocked=false,sceneAmbienceRoutes=["ambience-title","ambience-battle","ambience-battle-victory"],AUDIO_CROSSFADE_MS=1600;
 function loadAudioRoutes(){
   try{
     var node=$("audioRoutes"),parsed=node&&node.textContent?JSON.parse(node.textContent):{};
@@ -190,15 +190,17 @@ function playAudioRoute(name,options,index){
 function playSfx(name){
   return !!playAudioRoute(name,{loop:false})
 }
-function startLoopSfx(name){
-  if(audioLoopInstances[name])return true;var sound=playAudioRoute(name,{loop:true,volume:sfxVolume(name)});
-  if(!sound)return false;audioLoopInstances[name]=sound;return true
+function fadeLoopVolume(name,target,ms,after){
+  var sound=audioLoopInstances[name],from;if(!sound)return false;clearInterval(audioLoopFades[name]);target=clamp(target,0,1);if(!ms){sound.volume=target;if(after)after();return true}from=sound.volume;var started=Date.now();audioLoopFades[name]=setInterval(function(){var progress=clamp((Date.now()-started)/ms,0,1),eased=progress<.5?2*progress*progress:1-Math.pow(-2*progress+2,2)/2;sound.volume=from+(target-from)*eased;if(progress>=1){clearInterval(audioLoopFades[name]);delete audioLoopFades[name];sound.volume=target;if(after)after()}},40);return true
 }
-function stopLoopSfx(name){
-  var sound=audioLoopInstances[name];if(!sound)return false;try{sound.pause();sound.currentTime=0}catch{}delete audioLoopInstances[name];return true
+function startLoopSfx(name,fadeMs){
+  var target=sfxVolume(name),sound;if(audioLoopInstances[name]){fadeLoopVolume(name,target,fadeMs||0);return true}sound=playAudioRoute(name,{loop:true,volume:fadeMs?0:target});if(!sound)return false;audioLoopInstances[name]=sound;if(fadeMs)fadeLoopVolume(name,target,fadeMs);return true
 }
-function setSceneAmbience(name){
-  sceneAmbienceRoutes.forEach(function(key){if(key!==name)stopLoopSfx(key)});if(name&&audioUnlocked)startLoopSfx(name)
+function stopLoopSfx(name,fadeMs){
+  var sound=audioLoopInstances[name];if(!sound)return false;clearInterval(audioLoopFades[name]);delete audioLoopFades[name];if(fadeMs){return fadeLoopVolume(name,0,fadeMs,function(){try{sound.pause();sound.currentTime=0}catch{}delete audioLoopInstances[name]})}try{sound.pause();sound.currentTime=0}catch{}delete audioLoopInstances[name];return true
+}
+function setSceneAmbience(name,fadeMs){
+  sceneAmbienceRoutes.forEach(function(key){if(key!==name)stopLoopSfx(key,fadeMs||0)});if(name&&audioUnlocked)startLoopSfx(name,fadeMs||0)
 }
 function unlockAudioAmbience(){
   audioUnlocked=true;if(battleState&&battleState.phase==="combat")setSceneAmbience("ambience-battle");else if(battleState&&battleState.phase==="loot")setSceneAmbience("ambience-battle-victory");else setSceneAmbience("ambience-title")
@@ -357,7 +359,7 @@ function renderRefuge(){
 }
 function switchRefugeNpc(npc){if(!state.refuge||!state.refuge.active||["mara","armorer"].indexOf(npc)<0)return false;state.refuge.npc=npc;state.refuge.message="";renderRefuge();save();return true}
 function openRefuge(reason,restoring){
-  setSceneAmbience("ambience-title");
+  setSceneAmbience("ambience-title",AUDIO_CROSSFADE_MS);
   if(!restoring){var visits=(state.refuge&&state.refuge.visits||0)+1;state.refuge={active:true,reason:reason,rested:false,rejoined:false,visits:visits,npc:"mara",message:""};state.stats.refugeVisits++;}else{state.refuge.active=true;state.refuge.reason=reason||state.refuge.reason;state.refuge.npc=state.refuge.npc==="armorer"?"armorer":"mara"}
   state.party.forEach(function(p){p.guard=0;p.bleed=0});refreshTradeStock();battleState=null;pending=null;clearInterval(lootInterval);["gameIntro","worldLoreModal","battle","result","night","lootModal","final","summary"].forEach(function(id){$(id).classList.add("hidden")});$("refuge").classList.remove("hidden");renderRefuge();save()
 }
@@ -501,7 +503,7 @@ function showResult(title,text,changes,roll,check){
   $("result").classList.remove("hidden");$("advance").focus()
 }
 function advance(){
-  if(!pending)return;setSceneAmbience("ambience-title");var ending=pending.ending,returnToRefuge=pending.returnToRefuge;pending=null;$("result").classList.add("hidden");if(ending){finish(ending);return}
+  if(!pending)return;setSceneAmbience("ambience-title",AUDIO_CROSSFADE_MS);var ending=pending.ending,returnToRefuge=pending.returnToRefuge;pending=null;$("result").classList.add("hidden");if(ending){finish(ending);return}
   var oldDay=events[state.index].day;state.index++;if(returnToRefuge){openRefuge(returnToRefuge);return}if(events[state.index].day!==oldDay){night(oldDay)}else{save();render()}
 }
 function night(day){
@@ -564,7 +566,7 @@ function startCombat(config,choice){
   state.party.forEach(function(p){var penalty=hungerPenalty(p);if(penalty)battleState.log.push(p.name+" entra fatigado por falta de energía: "+penalty+" a precisión.")});
   var rosters=config.encounters&&config.encounters.length?config.encounters:config.enemies?[config.enemies]:[],roster=rosters[rand(0,rosters.length-1)]||[];
   battleState.enemies=roster.map(function(id,i){var d=enemyDefs[id];return{id:id+"-"+i,type:id,lootGroup:d.lootGroup||id,name:d.name,role:d.role,hp:d.hp,maxHp:d.hp,attack:d.attack.slice(),accuracy:d.accuracy,def:d.def,armor:d.armor,mechanical:d.mechanical,lootMs:d.lootMs,xp:d.xp,stun:0,looted:false,searching:false,progress:0,loot:[]}});
-  battleState.log.push("Contacto confirmado: "+battleState.enemies.map(function(e){return e.name}).join(", ")+".");setSceneAmbience("ambience-battle");
+  battleState.log.push("Contacto confirmado: "+battleState.enemies.map(function(e){return e.name}).join(", ")+".");setSceneAmbience("ambience-battle",AUDIO_CROSSFADE_MS);
   battleState.actor=firstAvailableActor();$("battle").dataset.day=ev.day;$("battleTitle").textContent=config.title;$("battleBrief").textContent=config.brief;$("battle").classList.remove("hidden");$("itemTray").classList.add("hidden");if(beginActorTurn())renderBattle()
 }
 function firstAvailableActor(){for(var i=0;i<state.party.length;i++)if(state.party[i].hp>0&&!battleState.acted[i])return i;return-1}
@@ -617,7 +619,7 @@ function renderBattle(){
   if(!lootPhase&&actor)renderCombatItems(actor,disabled);else $("itemsToggle").disabled=true;
   $("combatLog").innerHTML=battleState.log.slice(-7).map(function(x){return'<p>› '+esc(x)+'</p>'}).join("");$("combatLog").scrollTop=$("combatLog").scrollHeight;battleState.feedback=[];battleState.criticalFeedback=[]
 }
-function strike(enemy,damage,label,pIndex,critical){var dealt=Math.max(1,damage-enemy.armor),before=enemy.hp,index=battleState.enemies.indexOf(enemy);enemy.hp=Math.max(0,enemy.hp-dealt);state.stats.damageDealt+=before-enemy.hp;recordHp("enemy",index,before,enemy.hp,enemy.maxHp);if(before>0&&before-enemy.hp>0){if(!critical)playSfx("combat-hit-normal");state.stats.xpFromHits+=3;addPersonalXp(pIndex,3,"un impacto certero")}if(critical)recordCritical(index,pIndex);battleState.log.push(label+": "+dealt+" de daño a "+enemy.name+(critical?". Golpe crítico.":"."));if(before>0&&enemy.hp<=0){battleState.log.push(enemy.name+" queda fuera de combate.");state.stats.enemies++;addPersonalXp(pIndex,enemy.xp,"derribar a "+enemy.name)}}
+function strike(enemy,damage,label,pIndex,critical){var dealt=Math.max(1,damage-enemy.armor),before=enemy.hp,index=battleState.enemies.indexOf(enemy);enemy.hp=Math.max(0,enemy.hp-dealt);state.stats.damageDealt+=before-enemy.hp;recordHp("enemy",index,before,enemy.hp,enemy.maxHp);if(before>0&&before-enemy.hp>0){if(!critical)playSfx("combat-hit-normal");state.stats.xpFromHits+=3;addPersonalXp(pIndex,3,"un impacto certero")}if(critical)recordCritical(index,pIndex);battleState.log.push(label+": "+dealt+" de daño a "+enemy.name+(critical?". Golpe crítico.":"."));if(before>0&&enemy.hp<=0){battleState.log.push(enemy.name+" queda fuera de combate.");state.stats.enemies++;addPersonalXp(pIndex,enemy.xp,"derribar a "+enemy.name);if(!livingEnemies().length)setSceneAmbience("ambience-battle-victory",AUDIO_CROSSFADE_MS)}}
 function combatAction(type){
   if(!battleState||battleState.phase!=="combat"||battleState.busy)return;var p=state.party[battleState.actor],e=selectedEnemy();if(!p||p.hp<=0)return;
   if(type==="flee"){loseCombat(true);return}
@@ -647,7 +649,7 @@ function enemyPhase(){
   var continueRound=function(){if(!state.party.some(function(p){return p.hp>0})){loseCombat(false);return}battleState.round++;battleState.acted={};battleState.actor=firstAvailableActor();battleState.busy=false;if(beginActorTurn())renderBattle()};if(lethalFeedback()){settleLethal(continueRound);return}continueRound()
 }
 function beginLootPhase(){
-  if(!battleState)return;battleState.phase="loot";setSceneAmbience("ambience-battle-victory");battleState.busy=false;battleState.looter=null;battleState.feedback=[];battleState.log.push("No quedan hostiles. Selecciona quién registrará los cuerpos.");$("itemTray").classList.add("hidden");renderBattle()
+  if(!battleState)return;battleState.phase="loot";setSceneAmbience("ambience-battle-victory",AUDIO_CROSSFADE_MS);battleState.busy=false;battleState.looter=null;battleState.feedback=[];battleState.log.push("No quedan hostiles. Selecciona quién registrará los cuerpos.");$("itemTray").classList.add("hidden");renderBattle()
 }
 function selectLooter(i){if(!battleState||battleState.phase!=="loot"||battleState.busy||!state.party[i]||state.party[i].hp<=0)return;battleState.looter=i;battleState.log.push(state.party[i].name+" se prepara para saquear.");renderBattle()}
 function addLootDrop(list,id,qty){var found=list.filter(function(x){return x.id===id})[0];if(found)found.qty+=qty;else list.push({id:id,qty:qty,status:"pending"})}
