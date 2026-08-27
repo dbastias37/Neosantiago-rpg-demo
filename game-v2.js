@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="35";
+var ASSET_REVISION="36";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -169,8 +169,9 @@ function audioRouteList(name){
 function sfxVolume(name){
   if(!name)return .3;
   if(name.indexOf("hover")>=0)return .12;
-  if(name.indexOf("ambience")===0)return .1;
-  if(name==="loot-loop")return .16;
+  if(name.indexOf("ambience")===0)return .16;
+  if(name==="loot-search")return .34;
+  if(name==="loot-loop")return .24;
   if(name.indexOf("shot")>=0||name.indexOf("grenade")>=0||name.indexOf("emp")>=0)return .42;
   if(name.indexOf("hp-")===0||name.indexOf("combat-")===0)return .34;
   if(name.indexOf("error")>=0||name.indexOf("disabled")>=0)return .24;
