@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="33";
+var ASSET_REVISION="34";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -199,7 +199,7 @@ function fadeLoopVolume(name,target,ms,after){
   var sound=audioLoopInstances[name],from;if(!sound)return false;clearInterval(audioLoopFades[name]);target=clamp(target,0,1);if(!ms){sound.volume=target;if(after)after();return true}from=sound.volume;var started=Date.now();audioLoopFades[name]=setInterval(function(){var progress=clamp((Date.now()-started)/ms,0,1),eased=progress<.5?2*progress*progress:1-Math.pow(-2*progress+2,2)/2;sound.volume=from+(target-from)*eased;if(progress>=1){clearInterval(audioLoopFades[name]);delete audioLoopFades[name];sound.volume=target;if(after)after()}},40);return true
 }
 function startLoopSfx(name,fadeMs){
-  var target=sfxVolume(name),sound;if(audioLoopInstances[name]){fadeLoopVolume(name,target,fadeMs||0);return true}sound=playAudioRoute(name,{loop:true,volume:fadeMs?0:target});if(!sound)return false;audioLoopInstances[name]=sound;if(fadeMs)fadeLoopVolume(name,target,fadeMs);return true
+  var target=sfxVolume(name),sound,randomLoop=name==="loot-loop";if(audioLoopInstances[name]){fadeLoopVolume(name,target,fadeMs||0);return true}sound=playAudioRoute(name,{loop:true,volume:fadeMs?0:target,random:randomLoop});if(!sound)return false;audioLoopInstances[name]=sound;if(fadeMs)fadeLoopVolume(name,target,fadeMs);return true
 }
 function stopLoopSfx(name,fadeMs){
   var sound=audioLoopInstances[name];if(!sound)return false;clearInterval(audioLoopFades[name]);delete audioLoopFades[name];if(fadeMs){return fadeLoopVolume(name,0,fadeMs,function(){try{sound.pause();sound.currentTime=0}catch{}delete audioLoopInstances[name]})}try{sound.pause();sound.currentTime=0}catch{}delete audioLoopInstances[name];return true
