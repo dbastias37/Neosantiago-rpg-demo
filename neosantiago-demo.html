@@ -489,6 +489,96 @@
       }
     }
 
+
+    /* Refugio: tarjetas de comercio fijas y footer siempre visible */
+    @media(min-width:901px){
+      .refuge-modal{
+        height:min(860px,calc(100dvh - 70px))!important;
+        padding-bottom:16px!important;
+      }
+      .refuge-main{
+        grid-template-rows:auto auto minmax(0,1fr) 88px!important;
+        overflow:hidden!important;
+      }
+      .refuge-main>.refuge-section:last-of-type{
+        min-height:0!important;
+        overflow:hidden!important;
+      }
+      .trade-ledger{
+        height:100%!important;
+        min-height:0!important;
+        overflow:hidden!important;
+        align-items:stretch!important;
+      }
+      .trade-column{
+        display:grid!important;
+        grid-template-rows:auto minmax(0,1fr)!important;
+        min-height:0!important;
+        overflow:hidden!important;
+      }
+      .trade-list{
+        display:flex!important;
+        flex-direction:column!important;
+        justify-content:flex-start!important;
+        align-content:flex-start!important;
+        align-items:stretch!important;
+        height:100%!important;
+        min-height:0!important;
+        max-height:none!important;
+        overflow-y:auto!important;
+        overflow-x:hidden!important;
+        gap:6px!important;
+        padding-right:6px!important;
+      }
+      .trade-card{
+        flex:0 0 72px!important;
+        min-height:72px!important;
+        max-height:72px!important;
+        align-content:center!important;
+      }
+      .trade-card .item-art.small{
+        width:48px!important;
+        height:48px!important;
+      }
+      .refuge-footer{
+        display:grid!important;
+        grid-template-columns:minmax(0,1fr) auto!important;
+        align-items:center!important;
+        height:88px!important;
+        min-height:88px!important;
+        max-height:88px!important;
+        padding:12px 0 0!important;
+        border-top:1px solid var(--line)!important;
+        background:linear-gradient(180deg,rgba(5,9,8,.2),rgba(5,9,8,.98) 32%)!important;
+      }
+      .refuge-footer .primary{
+        min-width:300px!important;
+        min-height:58px!important;
+        align-self:center!important;
+      }
+    }
+    @media(min-width:901px) and (max-height:760px){
+      .refuge-modal{
+        height:calc(100dvh - 56px)!important;
+      }
+      .refuge-main{
+        grid-template-rows:auto auto minmax(0,1fr) 76px!important;
+      }
+      .trade-card{
+        flex-basis:66px!important;
+        min-height:66px!important;
+        max-height:66px!important;
+      }
+      .refuge-footer{
+        height:76px!important;
+        min-height:76px!important;
+        max-height:76px!important;
+      }
+      .refuge-footer .primary{
+        min-height:50px!important;
+      }
+    }
+
     @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
     @media(max-width:600px){.trader-panel{grid-template-columns:1fr;grid-template-rows:auto 190px auto}.trader-art{height:190px;min-height:0}.npc-tabs{grid-column:1}.trader-copy{grid-column:1}}
   </style>
