@@ -223,6 +223,133 @@
     @media(min-width:901px){.loadout-modal{display:grid;grid-template-rows:auto minmax(0,1fr);width:min(1220px,calc(100% - 28px));height:min(760px,calc(100dvh - 28px));max-height:none;overflow:hidden}.loadout-head{margin-bottom:12px;padding-bottom:11px}.loadout-grid{height:100%;min-height:0;grid-template-columns:225px minmax(260px,1fr) 360px}.loadout-person{min-height:0}.loadout-hub{height:100%;min-height:0}.loadout-hub .loadout-inventory{grid-template-rows:128px minmax(0,1fr)}.loadout-hub .bag-item{min-height:104px}.loadout-hub .bag-slots{align-content:start}.loadout-hub .bag-actions{grid-template-columns:repeat(3,minmax(0,1fr))}}
     @media(min-width:901px) and (max-height:760px){.loadout-modal{height:calc(100dvh - 22px);padding:16px}.loadout-head h2{font-size:clamp(28px,4vw,46px)}.loadout-grid{grid-template-columns:210px minmax(240px,1fr) 350px;gap:10px}.loadout-side{gap:8px}.gear-slot{min-height:142px}.loadout-hub .bag-item{min-height:98px}}
 
+
+    .loadout-readable-fix{display:none}
+    .loadout-modal .gear-slot strong,
+    .loadout-modal .gear-slot small,
+    .loadout-modal .bag-item b,
+    .loadout-modal .bag-item small,
+    .loadout-modal .bag-item em,
+    .loadout-modal .person-stat b{
+      overflow:visible!important;
+      text-overflow:clip!important;
+      white-space:normal!important;
+      word-break:normal!important;
+      overflow-wrap:anywhere!important;
+      line-height:1.28!important;
+    }
+    .loadout-modal .bag-copy,
+    .loadout-modal .gear-copy{
+      overflow:visible!important;
+      max-width:none!important;
+    }
+    .loadout-modal .equip-btn,
+    .loadout-modal .profile-use-btn,
+    .loadout-modal .transfer-open-btn,
+    .loadout-modal .repair-btn{
+      min-height:28px!important;
+      padding:7px 6px!important;
+      white-space:normal!important;
+      text-overflow:clip!important;
+      line-height:1.15!important;
+      letter-spacing:.045em!important;
+      overflow:visible!important;
+    }
+    .loadout-modal .transfer-open-btn{
+      grid-column:1/-1!important;
+      font-size:7px!important;
+    }
+    @media(min-width:901px){
+      .loadout-modal{
+        width:min(1320px,calc(100% - 26px))!important;
+        height:min(800px,calc(100dvh - 24px))!important;
+      }
+      .loadout-grid{
+        grid-template-columns:240px minmax(300px,1fr) 430px!important;
+        gap:13px!important;
+      }
+      .loadout-hub .loadout-inventory{
+        grid-template-rows:142px minmax(0,1fr)!important;
+        gap:9px!important;
+      }
+      .loadout-hub .loadout-inventory .loadout-side{
+        grid-template-rows:142px!important;
+      }
+      .loadout-hub .gear-slot{
+        grid-template-columns:54px minmax(0,1fr)!important;
+        padding:9px!important;
+        gap:7px!important;
+      }
+      .loadout-hub .gear-slot .item-art{
+        width:54px!important;
+      }
+      .loadout-hub .gear-slot strong{
+        font-size:8px!important;
+      }
+      .loadout-hub .gear-slot small{
+        font-size:6.5px!important;
+      }
+      .loadout-hub .bag-panel{
+        padding:10px!important;
+      }
+      .loadout-hub .bag-slots{
+        grid-template-columns:repeat(2,minmax(0,1fr))!important;
+        gap:9px!important;
+        align-content:start!important;
+      }
+      .loadout-hub .bag-item{
+        grid-template-columns:52px minmax(0,1fr)!important;
+        min-height:148px!important;
+        padding:9px!important;
+        gap:8px!important;
+        overflow:hidden!important;
+      }
+      .loadout-hub .bag-item .item-art{
+        width:52px!important;
+      }
+      .loadout-hub .bag-item b{
+        font-size:8px!important;
+      }
+      .loadout-hub .bag-item small{
+        margin-top:5px!important;
+        font-size:6.7px!important;
+      }
+      .loadout-hub .bag-actions{
+        grid-template-columns:repeat(2,minmax(0,1fr))!important;
+        gap:6px!important;
+      }
+      .loadout-hub .profile-tabs button{
+        font-size:7px!important;
+        letter-spacing:.07em!important;
+      }
+    }
+    @media(min-width:901px) and (max-height:760px){
+      .loadout-modal{
+        height:calc(100dvh - 18px)!important;
+        padding:14px!important;
+      }
+      .loadout-grid{
+        grid-template-columns:220px minmax(280px,1fr) 420px!important;
+      }
+      .loadout-hub .bag-item{
+        min-height:140px!important;
+      }
+      .loadout-hub .loadout-inventory{
+        grid-template-rows:134px minmax(0,1fr)!important;
+      }
+      .loadout-hub .loadout-inventory .loadout-side{
+        grid-template-rows:134px!important;
+      }
+    }
+    @media(max-width:900px){
+      .loadout-modal .bag-actions{
+        grid-template-columns:repeat(2,minmax(0,1fr))!important;
+      }
+      .loadout-modal .transfer-open-btn{
+        grid-column:1/-1!important;
+      }
+    }
+
     @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
     @media(max-width:600px){.trader-panel{grid-template-columns:1fr;grid-template-rows:auto 190px auto}.trader-art{height:190px;min-height:0}.npc-tabs{grid-column:1}.trader-copy{grid-column:1}}
   </style>
