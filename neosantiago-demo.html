@@ -6,6 +6,11 @@
   <meta name="theme-color" content="#070a09">
   <title>NeoSantiago 2130 — Demo de tres días</title>
   <link rel="preload" href="backgrounds/title-cover.webp?v=24" as="image" type="image/webp">
+  <link rel="preload" href="backgrounds/station-ruins.webp?v=43" as="image" type="image/webp">
+  <link rel="preload" href="backgrounds/flooded-gallery.webp?v=43" as="image" type="image/webp">
+  <link rel="preload" href="backgrounds/drone-rooftop.webp?v=43" as="image" type="image/webp">
+  <link rel="preload" href="backgrounds/uno-corridor.webp?v=43" as="image" type="image/webp">
+  <link rel="preload" href="backgrounds/antenna-core-room.webp?v=43" as="image" type="image/webp">
   <link rel="preload" href="characters/sara-loadout.webp" as="image" type="image/webp">
   <link rel="preload" href="characters/elias-loadout.webp" as="image" type="image/webp">
   <link rel="preload" href="characters/noa-loadout.webp" as="image" type="image/webp">
@@ -52,6 +57,11 @@
     .stage[data-day="1"]{background-image:url("day1.webp?v=18")}
     .stage[data-day="2"]{background-image:url("day2.webp?v=18")}
     .stage[data-day="3"]{background-image:url("day3.webp?v=18")}
+    .stage[data-scene="station"]{background-image:url("backgrounds/station-ruins.webp?v=43")}
+    .stage[data-scene="flood"]{background-image:url("backgrounds/flooded-gallery.webp?v=43")}
+    .stage[data-scene="drone"]{background-image:url("backgrounds/drone-rooftop.webp?v=43")}
+    .stage[data-scene="uno"]{background-image:url("backgrounds/uno-corridor.webp?v=43")}
+    .stage[data-scene="antenna"]{background-image:url("backgrounds/antenna-core-room.webp?v=43")}
     .stage:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(1,3,3,.72),transparent 38%,transparent 68%,rgba(1,3,3,.64)),linear-gradient(0deg,rgba(1,3,3,.7),transparent 52%,rgba(1,3,3,.34))}
     .stage:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 76% 23%,rgba(71,190,195,.18),transparent 20%),radial-gradient(circle at 24% 82%,rgba(214,151,75,.2),transparent 22%);pointer-events:none}
     .where{position:absolute;z-index:2;top:clamp(18px,3vh,34px);left:clamp(18px,3vw,46px);text-shadow:0 4px 16px #000}
@@ -144,6 +154,7 @@
     .note{margin-top:17px;color:#71766f;font-size:9px;line-height:1.45;letter-spacing:.08em;text-transform:uppercase}
     .battle{position:fixed;inset:0;z-index:30;overflow:auto;background:#070a09 center/cover no-repeat}
     .battle[data-day="1"]{background-image:url("day1.webp?v=18")}.battle[data-day="2"]{background-image:url("day2.webp?v=18")}.battle[data-day="3"]{background-image:url("day3.webp?v=18")}
+    .battle[data-scene="station"]{background-image:url("backgrounds/station-ruins.webp?v=43")}.battle[data-scene="flood"]{background-image:url("backgrounds/flooded-gallery.webp?v=43")}.battle[data-scene="drone"]{background-image:url("backgrounds/drone-rooftop.webp?v=43")}.battle[data-scene="uno"]{background-image:url("backgrounds/uno-corridor.webp?v=43")}.battle[data-scene="antenna"]{background-image:url("backgrounds/antenna-core-room.webp?v=43")}
     .battle:before{content:"";position:fixed;inset:0;background:linear-gradient(180deg,rgba(3,6,6,.91),rgba(5,8,7,.78) 48%,rgba(2,4,4,.96)),radial-gradient(circle at 50% 35%,rgba(117,211,215,.11),transparent 35%);pointer-events:none}
     .battle-shell{position:relative;z-index:1;display:grid;grid-template-rows:auto auto minmax(260px,1fr) auto;gap:14px;width:min(1220px,calc(100% - 32px));min-height:100dvh;margin:auto;padding:calc(18px + var(--safe-t)) 0 calc(18px + var(--safe-b))}
     .battle-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;padding-bottom:13px;border-bottom:1px solid var(--line);text-transform:uppercase}
@@ -256,11 +267,11 @@
       overflow:visible!important;
       max-width:none!important;
     }
-      .loadout-modal .equip-btn,
-      .loadout-modal .profile-use-btn,
-      .loadout-modal .transfer-open-btn,
-      .loadout-modal .discard-open-btn,
-      .loadout-modal .repair-btn{
+    .loadout-modal .equip-btn,
+    .loadout-modal .profile-use-btn,
+    .loadout-modal .transfer-open-btn,
+    .loadout-modal .discard-open-btn,
+    .loadout-modal .repair-btn{
       min-height:28px!important;
       padding:7px 6px!important;
       white-space:normal!important;
@@ -269,13 +280,13 @@
       letter-spacing:.045em!important;
       overflow:visible!important;
     }
-      .loadout-modal .transfer-open-btn{
-        grid-column:1/-1!important;
-        font-size:7px!important;
-      }
-      .loadout-modal .discard-open-btn{
-        font-size:7px!important;
-      }
+    .loadout-modal .transfer-open-btn{
+      grid-column:1/-1!important;
+      font-size:7px!important;
+    }
+    .loadout-modal .discard-open-btn{
+      font-size:7px!important;
+    }
     @media(min-width:901px){
       .loadout-modal{
         width:min(1320px,calc(100% - 26px))!important;
@@ -607,7 +618,7 @@
       <div class="clock"><span id="day">Día 01 / 03</span> · <span id="time">07:10</span></div>
       <div class="threat"><span>Amenaza <strong id="threatValue">18%</strong></span><div class="meter"><span id="threatBar"></span></div></div>
     </header>
-    <main class="stage" id="stage" data-day="1">
+    <main class="stage" id="stage" data-day="1" data-scene="station">
       <div class="where"><p id="chapter">Día 1 · La señal</p><h1 id="location">Refugio Línea 1</h1><small id="progress">Situación 1 de 9</small></div>
       <div class="play">
         <article class="card">
@@ -631,7 +642,7 @@
     </nav>
   </div>
 
-  <section class="battle hidden" id="battle" data-day="1" aria-label="Combate táctico">
+  <section class="battle hidden" id="battle" data-day="1" data-scene="station" aria-label="Combate táctico">
     <div class="battle-shell">
       <header class="battle-head">
         <div><p>Contacto hostil</p><h2 id="battleTitle">Intercepción</h2></div>
@@ -1378,6 +1389,6 @@
     "ambience-archive": "audio/ambience/archive-static.mp3"
   }
   </script>
-  <script src="game-v2.js?v=42"></script>
+  <script src="game-v2.js?v=43"></script>
 </body>
 </html>

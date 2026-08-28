@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="42";
+var ASSET_REVISION="43";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -441,6 +441,7 @@ function personalDamageBonus(p,e){if(!p||p.id!=="noa")return 0;return(hasSkill(p
 function drainHunger(amount){state.party.forEach(function(p){p.hunger=clamp(p.hunger-Math.max(1,amount-energyResist(p)),0,100)})}
 function damageArmor(p,wear){var slots=["head","body"].filter(function(slot){var d=gear(p.equipment[slot]);return d&&d.maxDurability&&gearDurability(p,slot)>0});if(!slots.length)return;var slot=slots[rand(0,slots.length-1)],d=gear(p.equipment[slot]),before=gearDurability(p,slot);p.durability[slot]=Math.max(0,before-wear);battleState.log.push(d.name+" de "+p.name+" pierde "+(before-p.durability[slot])+" de durabilidad.");if(p.durability[slot]===0)battleState.log.push(d.name+" queda inutilizable hasta que Elías lo repare.")}
 function weaponLabel(p){var w=weaponFor(p),ammo=w.ammo?" · "+bagQty(p,w.ammo)+" cart.":" · cuerpo a cuerpo";return w.name+ammo}
+function sceneKeyForEvent(ev){var text=((ev.loc||"")+" "+(ev.type||"")+" "+(ev.title||"")).toLowerCase();if(/sala de antenas|soporte vital|cámara de núcleos|camara de nucleos|torre repetidora|última patrulla|ultima patrulla|mujer de la señal|exiliados regresan|núcleo expuesto|nucleo expuesto/.test(text))return"antenna";if(/perímetro|perimetro|gobierno|ministerio|corredor de hormigón|corredor de hormigon|continuidad|cascos morados|uno/.test(text))return"uno";if(/azotea|azoteas|alameda superior|alameda hundida|cielo abierto|dron|drones|nido|superficie|asfalto|semáforo|semaforo|cruce dieciocho|avenida|cazadores de pulsos/.test(text))return"drone";if(/inundada|agua sobre|casa de bombas|bomba|farmacia/.test(text))return"flood";return"station"}
 function repairCost(p,slot){var d=gear(p.equipment[slot]),dur=gearDurability(p,slot);if(!d||!d.maxDurability||dur>=d.maxDurability)return 0;return dur===0||d.maxDurability-dur>=Math.ceil(d.maxDurability/2)?2:1}
 function repairReady(p,slot){var cost=repairCost(p,slot);return cost>0&&state.party[1].hp>0&&state.engineeringUses>0&&hasPartyItem("tool")&&stockCount("scrap")>=cost}
 function slotHtml(label,pIndex,slot){var p=state.party[pIndex],id=p.equipment[slot],d=gear(id),dur=d&&d.maxDurability?gearDurability(p,slot):null,cost=repairCost(p,slot),durability=d&&d.maxDurability?'<span class="durability-copy"><span>Durabilidad</span><b>'+dur+'/'+d.maxDurability+'</b></span><span class="durability-bar"><span style="width:'+Math.round(100*dur/d.maxDurability)+'%"></span></span>'+(cost?'<button class="repair-btn" data-repair="'+slot+'" '+(!repairReady(p,slot)?'disabled':'')+'>Reparar · '+cost+' comp.</button>':""):"";return'<div class="gear-slot"><span class="slot-name">'+esc(label)+'</span>'+itemArt(id,d&&d.name)+ '<span class="gear-copy"><strong>'+esc(d?d.name:"Vacío")+'</strong><small>'+esc(d?d.desc:"Sin equipar")+'</small>'+durability+'</span></div>'}
@@ -650,7 +651,7 @@ function startCombat(config,choice){
   var rosters=config.encounters&&config.encounters.length?config.encounters:config.enemies?[config.enemies]:[],roster=rosters[rand(0,rosters.length-1)]||[];
   battleState.enemies=roster.map(function(id,i){var d=enemyDefs[id];return{id:id+"-"+i,type:id,lootGroup:d.lootGroup||id,name:d.name,role:d.role,hp:d.hp,maxHp:d.hp,attack:d.attack.slice(),accuracy:d.accuracy,def:d.def,armor:d.armor,mechanical:d.mechanical,lootMs:d.lootMs,xp:d.xp,stun:0,looted:false,searching:false,progress:0,loot:[]}});
   battleState.log.push("Contacto confirmado: "+battleState.enemies.map(function(e){return e.name}).join(", ")+".");setSceneAmbience("ambience-battle",AUDIO_CROSSFADE_MS);
-  battleState.actor=firstAvailableActor();$("battle").dataset.day=ev.day;$("battleTitle").textContent=config.title;$("battleBrief").textContent=config.brief;$("battle").classList.remove("hidden");$("itemTray").classList.add("hidden");if(beginActorTurn())renderBattle()
+  battleState.actor=firstAvailableActor();$("battle").dataset.day=ev.day;$("battle").dataset.scene=sceneKeyForEvent(ev);$("battleTitle").textContent=config.title;$("battleBrief").textContent=config.brief;$("battle").classList.remove("hidden");$("itemTray").classList.add("hidden");if(beginActorTurn())renderBattle()
 }
 function firstAvailableActor(){for(var i=0;i<state.party.length;i++)if(state.party[i].hp>0&&!battleState.acted[i])return i;return-1}
 function livingEnemies(){return battleState.enemies.filter(function(e){return e.hp>0})}
@@ -782,7 +783,7 @@ function useCombatItem(kind){
 }
 
 function render(){
-  var ev=events[state.index];$("day").textContent="Día "+String(ev.day).padStart(2,"0")+" / 03";$("time").textContent=ev.time;$("threatValue").textContent=state.threat+"%";$("threatBar").style.width=state.threat+"%";$("stage").dataset.day=ev.day;$("chapter").textContent=chapters[ev.day];$("location").textContent=ev.loc;$("progress").textContent="Situación "+(state.index+1)+" de "+events.length;$("eventType").textContent=ev.type;$("eventTitle").textContent=ev.title;$("eventText").textContent=ev.text;
+  var ev=events[state.index];$("day").textContent="Día "+String(ev.day).padStart(2,"0")+" / 03";$("time").textContent=ev.time;$("threatValue").textContent=state.threat+"%";$("threatBar").style.width=state.threat+"%";$("stage").dataset.day=ev.day;$("stage").dataset.scene=sceneKeyForEvent(ev);$("chapter").textContent=chapters[ev.day];$("location").textContent=ev.loc;$("progress").textContent="Situación "+(state.index+1)+" de "+events.length;$("eventType").textContent=ev.type;$("eventTitle").textContent=ev.title;$("eventText").textContent=ev.text;
   $("choices").innerHTML=ev.choices.map(function(c,i){var why=reason(c);return'<button class="choice" data-choice="'+i+'" '+(why?"disabled":"")+'><span class="num">'+(i+1)+'</span><span><strong>'+esc(c.label)+"</strong><small>"+esc(why||c.hint)+"</small></span><span class=\"cost\">"+esc(c.cost||"")+"</span></button>"}).join("");
   Array.prototype.forEach.call(document.querySelectorAll("[data-choice]"),function(b){b.addEventListener("click",function(){choose(Number(b.dataset.choice))})});renderMini()
 }
