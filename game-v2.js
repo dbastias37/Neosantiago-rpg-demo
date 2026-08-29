@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="45";
+var ASSET_REVISION="46";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -442,8 +442,8 @@ function drainHunger(amount){state.party.forEach(function(p){p.hunger=clamp(p.hu
 function damageArmor(p,wear){var slots=["head","body"].filter(function(slot){var d=gear(p.equipment[slot]);return d&&d.maxDurability&&gearDurability(p,slot)>0});if(!slots.length)return;var slot=slots[rand(0,slots.length-1)],d=gear(p.equipment[slot]),before=gearDurability(p,slot);p.durability[slot]=Math.max(0,before-wear);battleState.log.push(d.name+" de "+p.name+" pierde "+(before-p.durability[slot])+" de durabilidad.");if(p.durability[slot]===0)battleState.log.push(d.name+" queda inutilizable hasta que Elías lo repare.")}
 function weaponLabel(p){var w=weaponFor(p),ammo=w.ammo?" · "+bagQty(p,w.ammo)+" cart.":" · cuerpo a cuerpo";return w.name+ammo}
 function sceneKeyForEvent(ev){var text=((ev.loc||"")+" "+(ev.type||"")+" "+(ev.title||"")).toLowerCase();if(/perímetro de gobierno|perimetro de gobierno/.test(text))return"day-valley";if(/mercado subterráneo|mercado subterraneo/.test(text))return"day-market";if(/casa de cazadores|mesa para cuatro/.test(text))return"day-hunters";if(/escalera república|escalera republica|primera luz/.test(text))return"day-station";if(/alameda hundida|alameda superior|cruce dieciocho|semáforo|semaforo|asfalto|avenida|cielo abierto|cazadores de pulsos/.test(text))return"day-alameda";if(/sala de antenas|soporte vital|cámara de núcleos|camara de nucleos|torre repetidora|última patrulla|ultima patrulla|mujer de la señal|exiliados regresan|núcleo expuesto|nucleo expuesto/.test(text))return"antenna";if(/perímetro|perimetro|gobierno|ministerio|corredor de hormigón|corredor de hormigon|continuidad|cascos morados|uno/.test(text))return"uno";if(/azotea|azoteas|dron|drones|nido|superficie/.test(text))return"drone";if(/inundada|agua sobre|casa de bombas|bomba|farmacia/.test(text))return"flood";return"station"}
-function pulseStageFade(){
-  var node=$("stageFade");if(!node)return;clearTimeout(stageFadeTimer);node.classList.remove("active");void node.offsetWidth;node.classList.add("active");stageFadeTimer=setTimeout(function(){node.classList.remove("active")},760)
+function pulseStageFade(prevBackground){
+  var node=$("stagePrevBg");if(!node||!prevBackground||prevBackground==="none")return;clearTimeout(stageFadeTimer);node.classList.remove("active");node.style.backgroundImage=prevBackground;void node.offsetWidth;node.classList.add("active");stageFadeTimer=setTimeout(function(){node.classList.remove("active");node.style.backgroundImage=""},930)
 }
 function repairCost(p,slot){var d=gear(p.equipment[slot]),dur=gearDurability(p,slot);if(!d||!d.maxDurability||dur>=d.maxDurability)return 0;return dur===0||d.maxDurability-dur>=Math.ceil(d.maxDurability/2)?2:1}
 function repairReady(p,slot){var cost=repairCost(p,slot);return cost>0&&state.party[1].hp>0&&state.engineeringUses>0&&hasPartyItem("tool")&&stockCount("scrap")>=cost}
@@ -786,7 +786,7 @@ function useCombatItem(kind){
 }
 
 function render(){
-  var ev=events[state.index],stage=$("stage"),nextScene=sceneKeyForEvent(ev),currentScene=stage.dataset.scene||"";if(currentScene!==nextScene){stage.dataset.scene=nextScene;if(currentScene)pulseStageFade()}$("day").textContent="Día "+String(ev.day).padStart(2,"0")+" / 03";$("time").textContent=ev.time;$("threatValue").textContent=state.threat+"%";$("threatBar").style.width=state.threat+"%";stage.dataset.day=ev.day;$("chapter").textContent=chapters[ev.day];$("location").textContent=ev.loc;$("progress").textContent="Situación "+(state.index+1)+" de "+events.length;$("eventType").textContent=ev.type;$("eventTitle").textContent=ev.title;$("eventText").textContent=ev.text;
+  var ev=events[state.index],stage=$("stage"),nextScene=sceneKeyForEvent(ev),currentScene=stage.dataset.scene||"";if(currentScene!==nextScene){var prevBackground=getComputedStyle(stage).backgroundImage;stage.dataset.scene=nextScene;if(currentScene)pulseStageFade(prevBackground)}$("day").textContent="Día "+String(ev.day).padStart(2,"0")+" / 03";$("time").textContent=ev.time;$("threatValue").textContent=state.threat+"%";$("threatBar").style.width=state.threat+"%";stage.dataset.day=ev.day;$("chapter").textContent=chapters[ev.day];$("location").textContent=ev.loc;$("progress").textContent="Situación "+(state.index+1)+" de "+events.length;$("eventType").textContent=ev.type;$("eventTitle").textContent=ev.title;$("eventText").textContent=ev.text;
   $("choices").innerHTML=ev.choices.map(function(c,i){var why=reason(c);return'<button class="choice" data-choice="'+i+'" '+(why?"disabled":"")+'><span class="num">'+(i+1)+'</span><span><strong>'+esc(c.label)+"</strong><small>"+esc(why||c.hint)+"</small></span><span class=\"cost\">"+esc(c.cost||"")+"</span></button>"}).join("");
   Array.prototype.forEach.call(document.querySelectorAll("[data-choice]"),function(b){b.addEventListener("click",function(){choose(Number(b.dataset.choice))})});renderMini()
 }
