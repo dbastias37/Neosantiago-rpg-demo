@@ -296,6 +296,7 @@
     .loadout-modal .profile-use-btn,
     .loadout-modal .transfer-open-btn,
     .loadout-modal .discard-open-btn,
+    .loadout-modal .disassemble-btn,
     .loadout-modal .repair-btn{
       min-height:28px!important;
       padding:7px 6px!important;
@@ -416,6 +417,29 @@
     .logistics-warning{margin:0 26px 14px;padding:10px 12px;border-left:2px solid var(--amber2);color:#f2bd73;background:rgba(217,161,92,.06);font-size:9px;font-weight:900;line-height:1.45;text-transform:uppercase}
     .logistics-actions{display:flex;justify-content:space-between;gap:10px;padding:14px 26px 22px;border-top:1px solid rgba(217,161,92,.22)}
     @media(max-width:700px){.logistics-modal{height:calc(100dvh - 14px);width:calc(100% - 14px)}.logistics-head{padding:18px 16px 13px}.logistics-copy{padding:13px 16px}.logistics-grid{grid-template-columns:1fr;padding:0 16px 14px}.logistics-warning{margin:0 16px 12px}.logistics-actions{display:grid;padding:12px 16px 16px}.logistics-actions button{width:100%}}
+
+    .disassemble-btn{border-color:rgba(117,211,215,.5)!important;color:var(--cyan)!important;background:rgba(117,211,215,.045)!important}
+    .bag-actions,.loot-buttons{grid-template-columns:repeat(auto-fit,minmax(74px,1fr))}
+    .loot-drop.disassembled{border-color:rgba(117,211,215,.45);background:rgba(117,211,215,.035);opacity:.72}
+    .loot-drop.broken{border-color:rgba(223,74,74,.35);filter:grayscale(.85);opacity:.48}
+    .disassembly-layer{z-index:76;background:radial-gradient(circle at 50% 42%,rgba(117,211,215,.12),transparent 34%),rgba(2,4,4,.9)}
+    .disassembly-modal{display:grid;grid-template-rows:auto auto auto auto auto;width:min(760px,100%);padding:0;overflow:hidden}
+    .disassembly-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;padding:24px 26px 18px;border-bottom:1px solid rgba(117,211,215,.22);background:linear-gradient(90deg,rgba(117,211,215,.08),transparent)}
+    .disassembly-head h2{font-size:clamp(26px,4vw,44px)}
+    .disassembly-source{margin:8px 0 0;color:var(--muted);font-size:9px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+    .disassembly-item{display:grid;grid-template-columns:92px minmax(0,1fr);gap:12px;margin:20px 26px 14px;padding:11px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.02)}
+    .disassembly-item .item-art{width:92px}
+    .disassembly-item b,.disassembly-item small,.disassembly-item em{display:block;text-transform:uppercase}
+    .disassembly-item b{color:var(--amber2);font-size:12px}.disassembly-item small{margin-top:6px;color:var(--muted);font-size:8px;line-height:1.45}.disassembly-item em{margin-top:8px;color:var(--cyan);font-size:8px;font-style:normal;font-weight:900;line-height:1.35}
+    .disassembly-console{margin:0 26px 16px;padding:16px;border:1px solid rgba(117,211,215,.24);background:#070d0c}
+    .disassembly-meter{position:relative;height:34px;overflow:hidden;border:1px solid rgba(255,255,255,.12);background:linear-gradient(90deg,#151b19,#07100f)}
+    .disassembly-target{position:absolute;top:0;bottom:0;background:linear-gradient(90deg,rgba(117,211,215,.18),rgba(242,189,115,.38),rgba(117,211,215,.18));box-shadow:0 0 18px rgba(242,189,115,.32)}
+    .disassembly-marker{position:absolute;top:-5px;bottom:-5px;width:3px;background:var(--cyan);box-shadow:0 0 15px var(--cyan);transform:translateX(-50%)}
+    .disassembly-readout{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;margin-top:11px;color:var(--cyan);font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}.disassembly-readout span{color:var(--muted)}
+    .disassembly-feedback{min-height:40px;margin:0 26px 12px;color:#d8d3ca;font-family:Georgia,"Times New Roman",serif;font-size:14px;line-height:1.5}
+    .disassembly-rewards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:0 26px 12px}
+    .disassembly-actions{display:flex;justify-content:space-between;gap:10px;padding:14px 26px 24px;border-top:1px solid rgba(117,211,215,.18)}
+    @media(max-width:600px){.bag-actions,.loot-buttons{grid-template-columns:repeat(2,minmax(0,1fr))}.disassembly-modal{width:calc(100% - 14px)}.disassembly-head{padding:20px 18px 14px}.disassembly-item{grid-template-columns:74px minmax(0,1fr);margin:16px 18px 12px}.disassembly-item .item-art{width:74px}.disassembly-console{margin:0 18px 14px;padding:13px}.disassembly-rewards{grid-template-columns:1fr;margin:0 18px 12px}.disassembly-feedback{margin:0 18px 12px}.disassembly-actions{display:grid;padding:12px 18px 18px}.disassembly-actions button{width:100%}}
 
     .npc-dialogue-layer{z-index:68;place-items:end center;padding:clamp(10px,2vw,24px);background:linear-gradient(0deg,rgba(1,4,3,.96),rgba(1,4,3,.7) 48%,rgba(1,4,3,.2))}
     .npc-dialogue-modal{display:grid;grid-template-columns:minmax(165px,245px) minmax(0,1fr);gap:0;width:min(1050px,100%);max-height:calc(100dvh - 28px);padding:0;overflow:hidden;background:linear-gradient(145deg,#070b0b,#0a100f);border-color:rgba(117,211,215,.34)}
@@ -1100,6 +1124,33 @@
     </div>
   </section>
 
+  <section class="overlay hidden disassembly-layer" id="disassemblyModal" role="dialog" aria-modal="true" aria-labelledby="disassemblyTitle">
+    <article class="modal disassembly-modal">
+      <header class="disassembly-head">
+        <div>
+          <p class="kicker">Taller de Elías · Desarme fino</p>
+          <h2 id="disassemblyTitle">Desarmar objeto</h2>
+          <p class="disassembly-source" id="disassemblySource"></p>
+        </div>
+        <button class="close" id="closeDisassembly" aria-label="Cancelar desarme">×</button>
+      </header>
+      <div class="disassembly-item" id="disassemblyItem"></div>
+      <div class="disassembly-console">
+        <div class="disassembly-meter" aria-hidden="true">
+          <span class="disassembly-target" id="disassemblyTarget"></span>
+          <span class="disassembly-marker" id="disassemblyMarker"></span>
+        </div>
+        <div class="disassembly-readout"><span id="disassemblyAttempts">Intentos restantes: 3</span><b>Zona estable</b></div>
+      </div>
+      <p class="disassembly-feedback" id="disassemblyFeedback"></p>
+      <div class="disassembly-rewards" id="disassemblyRewards"></div>
+      <footer class="disassembly-actions">
+        <button class="secondary" id="disassemblyAttempt">Calibrar corte</button>
+        <button class="primary hidden" id="disassemblyDone">Continuar</button>
+      </footer>
+    </article>
+  </section>
+
   <section class="overlay hidden" id="archiveModal" role="dialog" aria-modal="true" aria-labelledby="archiveDocTitle">
     <article class="modal archive-reader">
       <header class="archive-reader-head">
@@ -1145,7 +1196,7 @@
   </aside>
   <div class="toast hidden" id="toast" role="status"></div>
 
-  <script src="campaign-v2.js?v=50"></script>
+  <script src="campaign-v2.js?v=51"></script>
   <script>
   "use strict";
   var KEY="neosantiago2130_demo_v3";
@@ -1460,6 +1511,6 @@
     "ambience-archive": "audio/ambience/archive-static.mp3"
   }
   </script>
-  <script src="game-v2.js?v=50"></script>
+  <script src="game-v2.js?v=51"></script>
 </body>
 </html>
