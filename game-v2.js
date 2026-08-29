@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="46";
+var ASSET_REVISION="47";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -7,23 +7,23 @@ var enemyDefs={
   merodeador3:{name:"Reconstruido",role:"Vanguardia con exoesqueleto",hp:46,attack:[8,12],accuracy:1,def:11,armor:1,mechanical:false,lootMs:2600,lootGroup:"merodeador",xp:23},
   merodeador4:{name:"Rastreadora",role:"Cazadora de núcleos",hp:38,attack:[7,11],accuracy:2,def:12,armor:0,mechanical:false,lootMs:1900,lootGroup:"merodeador",xp:20},
   merodeador5:{name:"Guardián exiliado",role:"Veterano de superficie",hp:50,attack:[9,13],accuracy:2,def:12,armor:1,mechanical:false,lootMs:2800,lootGroup:"merodeador",xp:25},
-  drone:{name:"Dron UNO",role:"Vigilancia mecánica",hp:46,attack:[7,11],accuracy:2,def:12,armor:1,mechanical:true,lootMs:2300,lootGroup:"drone",xp:22},
-  agent:{name:"Agente UNO",role:"Unidad de contención",hp:60,attack:[8,13],accuracy:3,def:13,armor:2,mechanical:false,lootMs:3000,lootGroup:"agent",xp:28},
-  agent2:{name:"Tirador UNO",role:"Unidad de precisión",hp:50,attack:[9,14],accuracy:4,def:13,armor:1,mechanical:false,lootMs:2700,lootGroup:"agent",xp:27},
-  agent3:{name:"Rastreador UNO",role:"Especialista SONAR",hp:54,attack:[8,12],accuracy:3,def:14,armor:1,mechanical:false,lootMs:2900,lootGroup:"agent",xp:29},
-  agent4:{name:"Comandante morado",role:"Guardia de perímetro",hp:68,attack:[10,15],accuracy:4,def:14,armor:2,mechanical:false,lootMs:3400,lootGroup:"agent",xp:35}
+  drone:{name:"Dron de la Red UNO",role:"Vigilancia mecánica",hp:46,attack:[7,11],accuracy:2,def:12,armor:1,mechanical:true,lootMs:2300,lootGroup:"drone",xp:22},
+  agent:{name:"Agente de la Red UNO",role:"Unidad de contención",hp:60,attack:[8,13],accuracy:3,def:13,armor:2,mechanical:false,lootMs:3000,lootGroup:"agent",xp:28},
+  agent2:{name:"Tirador de la Red UNO",role:"Unidad de precisión",hp:50,attack:[9,14],accuracy:4,def:13,armor:1,mechanical:false,lootMs:2700,lootGroup:"agent",xp:27},
+  agent3:{name:"Rastreador de la Red UNO",role:"Especialista SONAR",hp:54,attack:[8,12],accuracy:3,def:14,armor:1,mechanical:false,lootMs:2900,lootGroup:"agent",xp:29},
+  agent4:{name:"Comandante de la Red UNO",role:"Casco morado · guardia de perímetro",hp:68,attack:[10,15],accuracy:4,def:14,armor:2,mechanical:false,lootMs:3400,lootGroup:"agent",xp:35}
 };
 var equipmentDefs={
   knife:{name:"Cuchillo de servicio",kind:"weapon",slot:"weapon",category:"melee",damage:[7,10],accuracy:3,desc:"Arma silenciosa; no consume munición."},
   crowbar:{name:"Barra de rescate",kind:"weapon",slot:"weapon",category:"melee",damage:[8,12],accuracy:2,desc:"Herramienta pesada adaptada al combate."},
-  pistol9:{name:"Pistola UNO 9 mm",kind:"weapon",slot:"weapon",category:"sidearm",ammo:"ammo9",damage:[8,12],accuracy:4,desc:"Arma corta compatible con munición 9 mm."},
+  pistol9:{name:"Pistola 9 mm de la Red UNO",kind:"weapon",slot:"weapon",category:"sidearm",ammo:"ammo9",damage:[8,12],accuracy:4,desc:"Arma corta compatible con munición 9 mm."},
   revolver:{name:"Revólver recuperado",kind:"weapon",slot:"weapon",category:"sidearm",ammo:"ammo9",damage:[10,14],accuracy:3,desc:"Más daño, menor precisión y munición 9 mm."},
   shotgun12:{name:"Escopeta recortada",kind:"weapon",slot:"weapon",category:"shotgun",ammo:"shell12",damage:[12,18],accuracy:2,desc:"Gran impacto; utiliza cartuchos calibre 12."},
   rifle556:{name:"Carabina 5,56",kind:"weapon",slot:"weapon",category:"rifle",ammo:"ammo556",damage:[11,16],accuracy:4,desc:"Arma larga precisa; utiliza munición 5,56."},
   helmetWork:{name:"Casco de faena",kind:"gear",slot:"head",defense:1,maxDurability:8,desc:"Protección industrial ligera."},
-  helmetRiot:{name:"Casco antidisturbios",kind:"gear",slot:"head",defense:2,maxDurability:12,desc:"Blindaje UNO para cabeza y rostro."},
+  helmetRiot:{name:"Casco antidisturbios",kind:"gear",slot:"head",defense:2,maxDurability:12,desc:"Blindaje de la Red UNO para cabeza y rostro."},
   vestLight:{name:"Chaleco reforzado",kind:"gear",slot:"body",defense:1,maxDurability:10,desc:"Placas recuperadas cosidas al arnés."},
-  vestTactical:{name:"Chaleco táctico UNO",kind:"gear",slot:"body",defense:2,maxDurability:16,desc:"Protección balística de patrulla."},
+  vestTactical:{name:"Chaleco táctico de la Red UNO",kind:"gear",slot:"body",defense:2,maxDurability:16,desc:"Protección balística de patrulla."},
   packMedic:{name:"Mochila médica",kind:"gear",slot:"backpack",capacity:14,desc:"Catorce espacios de carga; cada unidad ocupa un espacio."},
   packRig:{name:"Mochila técnica",kind:"gear",slot:"backpack",capacity:18,desc:"Dieciocho espacios de carga; cada unidad ocupa un espacio."},
   packHunt:{name:"Mochila de caza",kind:"gear",slot:"backpack",capacity:14,desc:"Catorce espacios de carga; cada unidad ocupa un espacio."},
@@ -44,10 +44,10 @@ var equipmentDefs={
   battery:{name:"Celda de energía",kind:"resource",stack:true,desc:"Alimenta tecnología y descargas EMP."},
   scrap:{name:"Componentes metálicos",kind:"material",stack:true,desc:"Tornillos, placas y mecanismos reutilizables recuperados del equipo enemigo."},
   cloth:{name:"Tela recuperada",kind:"material",stack:true,desc:"Retazos resistentes obtenidos del equipo de los merodeadores."},
-  electronics:{name:"Materiales electrónicos",kind:"material",stack:true,desc:"Placas, bobinas y circuitos recuperados de tecnología UNO."},
+  electronics:{name:"Materiales electrónicos",kind:"material",stack:true,desc:"Placas, bobinas y circuitos recuperados de tecnología de la Red UNO."},
   pulseCore:{name:"Núcleo de pulso",kind:"material",stack:true,desc:"Emisor compacto necesario para fabricar cargas EMP."},
   tool:{name:"Herramienta multipropósito",kind:"mission",desc:"Llave, cortador y puente eléctrico de Elías."},
-  unoCard:{name:"Credencial UNO",kind:"mission",desc:"Acceso limitado a terminales y puertas de servicio."},
+  unoCard:{name:"Credencial de la Red UNO",kind:"mission",desc:"Acceso limitado a terminales y puertas de servicio."},
   droneCore:{name:"Núcleo de dron",kind:"mission",desc:"Memoria y transmisor de una unidad de vigilancia."},
   routeMap:{name:"Mapa de rutas",kind:"mission",desc:"Pasos de servicio borrados de los planos del refugio."},
   radio:{name:"Módulo de radio",kind:"mission",desc:"Amplía una transmisión o la convierte en un pulso dirigido."}
@@ -65,9 +65,9 @@ var skillTrees={
     {id:"elias_reinforce",branch:"Ingeniería táctica",tier:1,cost:1,minLevel:1,name:"Placas cruzadas",desc:"El equipo corporal operativo de Elías concede +1 de defensa adicional."},
     {id:"elias_ballistics",branch:"Ingeniería táctica",tier:2,cost:1,minLevel:2,requires:"elias_reinforce",name:"Calibración balística",desc:"Elías elimina su penalización al usar armas de fuego."},
     {id:"elias_overcharge",branch:"Ingeniería táctica",tier:3,cost:2,minLevel:3,requires:"elias_ballistics",name:"Sobrecarga violeta",desc:"Su habilidad EMP causa más daño y aturde por dos turnos."},
-    {id:"elias_armor",branch:"Taller UNO",tier:1,cost:1,minLevel:1,name:"Matriz balística",desc:"Desbloquea la fabricación del Chaleco táctico UNO."},
-    {id:"elias_helmet",branch:"Taller UNO",tier:2,cost:1,minLevel:2,requires:"elias_armor",name:"Visor de patrulla",desc:"Desbloquea la fabricación del Casco antidisturbios."},
-    {id:"elias_rifle",branch:"Taller UNO",tier:3,cost:2,minLevel:3,requires:"elias_helmet",name:"Banco de armas",desc:"Desbloquea la fabricación de una Carabina 5,56."}
+    {id:"elias_armor",branch:"Taller de la Red UNO",tier:1,cost:1,minLevel:1,name:"Matriz balística",desc:"Desbloquea la fabricación del Chaleco táctico de la Red UNO."},
+    {id:"elias_helmet",branch:"Taller de la Red UNO",tier:2,cost:1,minLevel:2,requires:"elias_armor",name:"Visor de patrulla",desc:"Desbloquea la fabricación del Casco antidisturbios."},
+    {id:"elias_rifle",branch:"Taller de la Red UNO",tier:3,cost:2,minLevel:3,requires:"elias_helmet",name:"Banco de armas",desc:"Desbloquea la fabricación de una Carabina 5,56."}
   ],
   noa:[
     {id:"noa_marksman",branch:"Caza de superficie",tier:1,cost:1,minLevel:1,name:"Pulso de cazadora",desc:"Noa obtiene +1 de precisión en todos sus ataques."},
@@ -114,7 +114,7 @@ var missionDefs=[
   {id:"signal",main:true,title:"Encontrar el origen de la señal",target:27,reward:"Desbloquea la decisión final sobre Neo Santiago."},
   {id:"squad",title:"Nadie queda atrás",description:"Gana un combate con Sara, Elías y Noa todavía en pie.",target:1,reward:"Moral +6"},
   {id:"salvage",title:"Reserva de superficie",description:"Recupera 8 unidades de botín desde enemigos derrotados.",target:8,reward:"Ración +1 · Medicina +1"},
-  {id:"archives",title:"Reconstruir la verdad",description:"Recupera 5 archivos sobre UNO y las comunidades ocultas.",target:5,reward:"Amenaza −6"},
+  {id:"archives",title:"Reconstruir la verdad",description:"Recupera 5 archivos sobre la Red UNO y las comunidades ocultas.",target:5,reward:"Amenaza −6"},
   {id:"veteran",title:"Aprender a sobrevivir",description:"Haz que cualquier aliado alcance Lvl. 2.",target:1,reward:"Energía +10 para el grupo"}
 ];
 
@@ -386,7 +386,7 @@ function logisticsRowsHtml(){
     ["Munición",ammoTotal(),"Cada disparo consume el cartucho correcto: 9 mm, 5,56 o calibre 12. Sin balas, el personaje cambia a arma blanca."],
     ["Componentes metálicos",stockCount("scrap"),"Sirven para reparar cascos/chalecos y fabricar equipo. Los merodeadores suelen soltar chatarra y tela."],
     ["Tela recuperada",stockCount("cloth"),"Sara la usa para vendas, medicina y botiquines. Si la gastas en una decisión, puede faltar para curar después."],
-    ["Electrónica",stockCount("electronics"),"Material clave para granadas avanzadas, EMP y piezas UNO. Se obtiene sobre todo de drones y agentes."],
+    ["Electrónica",stockCount("electronics"),"Material clave para granadas avanzadas, EMP y piezas de la Red UNO. Se obtiene sobre todo de drones y agentes."],
     ["Núcleos de pulso",stockCount("pulseCore"),"Permiten crear cargas EMP. Son escasos: si los gastas, quizá no puedas frenar drones más adelante."],
     ["Moral",state.morale+"%","Retirarse o tomar decisiones duras la reduce. Si llega a 0%, el grupo vuelve al refugio obligado."],
     ["Amenaza",state.threat+"%","Disparos, explosiones y rutas expuestas la elevan. Con amenaza alta, los finales y combates se vuelven más peligrosos."]
@@ -420,7 +420,7 @@ function addPersonalXp(pIndex,amount,source){
   while(p.xp>=xpNeeded(p)){p.xp-=xpNeeded(p);p.level++;p.maxHp+=6;p.hp=Math.min(p.maxHp,p.hp+6);leveled.push(p.name+" alcanza Lvl. "+p.level+": +6 HP máximo y −1 al gasto de energía.");if(battleState)battleState.levelUps.push(p.name+" · Lvl. "+p.level)}
   return leveled
 }
-function missionDescription(def){if(!def.main)return def.description;if(state.index<9)return"Traza una ruta segura desde la Línea 1 hasta la superficie.";if(state.index<18)return"Descubre quién utiliza la red UNO para mantener viva la transmisión.";return"Alcanza la Torre 6 y decide qué verdad regresará a los refugios."}
+function missionDescription(def){if(!def.main)return def.description;if(state.index<9)return"Traza una ruta segura desde la Línea 1 hasta la superficie.";if(state.index<18)return"Descubre quién utiliza la Red UNO para mantener viva la transmisión.";return"Alcanza la Torre 6 y decide qué verdad regresará a los refugios."}
 function missionProgress(def){if(def.id==="signal")return state.finished?def.target:Math.min(def.target,state.index+1);if(def.id==="squad")return Math.min(def.target,state.stats.fullSquadWins||0);if(def.id==="salvage")return Math.min(def.target,state.stats.loot||0);if(def.id==="archives")return Math.min(def.target,state.docs.length);if(def.id==="veteran")return state.party.some(function(p){return p.level>=2})?1:0;return 0}
 function rewardMission(def){
   if(def.id==="squad")state.morale=clamp(state.morale+6,0,100);
@@ -597,7 +597,7 @@ function night(day){
   var hadFood=stockCount("food")>0,hadWater=stockCount("water")>0;if(hadFood){consumeStock("food");addStatItem("itemsUsed","food",1)}if(hadWater)consumeStock("water");var penalty=(hadFood?0:5)+(hadWater?0:8);state.morale=clamp(state.morale-penalty,0,100);state.engineeringUses=3;state.medicalUses=3;state.ordnanceUses=3;
   var recovered=0;state.party.forEach(function(p){var before=p.hp;p.hp=Math.min(p.maxHp,p.hp>0?p.hp+8:12);recovered+=p.hp-before;p.hunger=clamp(p.hunger+(hadFood?24:-8),0,100);p.guard=0;p.bleed=0});state.stats.rests++;state.stats.restHpRecovered+=recovered;state.stats.hpRestored+=recovered;
   $("nightTitle").textContent=day===1?"La noche bajo Los Héroes":"La última noche del refugio";
-  $("nightText").textContent=penalty?"El grupo cura sus heridas, pero la falta de suministros convierte cada decisión en una discusión.":"El grupo comparte una ración, atiende sus heridas y ordena la información. Afuera, UNO continúa buscando la señal.";
+  $("nightText").textContent=penalty?"El grupo cura sus heridas, pero la falta de suministros convierte cada decisión en una discusión.":"El grupo comparte una ración, atiende sus heridas y ordena la información. Afuera, la Red UNO continúa buscando la señal.";
   $("nightChanges").innerHTML=[["Alimento común",hadFood?"−1":"Agotado"],["Energía",hadFood?"+24":"−8"],["Recuperación","+8 HP"],["Talleres profesionales","3 acciones"]].map(function(x){return'<div class="result-chip">'+x[0]+"<strong>"+x[1]+"</strong></div>"}).join("");
   $("night").classList.remove("hidden");save();render()
 }
@@ -610,9 +610,9 @@ function endingTier(kind){
 function endingNarrative(kind,tierId){
   var choice={broadcast:"La verdad fue transmitida a todos los refugios.",return:"Los archivos fueron llevados al consejo de los Rotos.",trade:"Los archivos fueron negociados con los Cosechadores."}[kind]||"La expedición decidió el destino de los archivos.";
   var endings={
-    good:{title:"La ciudad vuelve a contestar",lead:choice+" La expedición no solo regresó: cambió el equilibrio de NeoSantiago.",refuge:"El Andén 4 recibe información, rutas y pruebas suficientes para dejar de depender de la versión de UNO. Mara distribuye copias y suministros entre varias familias; destruir un solo archivo ya no bastará para devolverlos al silencio.",group:"Sara, Elías y Noa regresan con heridas y desacuerdos, pero todavía confían entre sí. Sus decisiones los convierten en la primera patrulla capaz de volver a la superficie por voluntad propia y no por una orden del consejo.",world:"La señal se transforma en una red de voces. Refugios desconocidos responden, los merodeadores dejan de ser una historia simple y UNO pierde el control absoluto de la memoria de Santiago. La siguiente expedición partirá hacia una ciudad despierta."},
-    normal:{title:"Una verdad incompleta",lead:choice+" El refugio sobrevive, aunque el viaje deja preguntas y deudas que nadie puede resolver todavía.",refuge:"La Línea 1 gana tiempo y conserva parte de lo descubierto, pero las rutas quedaron expuestas y los recursos siguen siendo escasos. El consejo acepta preparar otra salida antes de decidir cuánto de la verdad puede soportar la comunidad.",group:"El grupo vuelve completo, pero no intacto. Las retiradas, los secretos y las decisiones difíciles cambian la relación entre Sara, Elías y Noa. Seguirán trabajando juntos porque todavía se necesitan, no porque estén de acuerdo.",world:"UNO mantiene el control de gran parte de la superficie. Algunos refugios escucharon la señal y otros solo recibieron fragmentos. NeoSantiago conoce ahora una grieta en el sistema, pero aún no sabe si utilizarla para liberarse o para sobrevivir un día más."},
-    bad:{title:"El precio del silencio",lead:choice+" La expedición termina, pero la verdad deja de pertenecer a quienes arriesgaron la vida para encontrarla.",refuge:"El Andén 4 recibe suministros y una calma temporal, pero queda atado a nuevas deudas. Mara comprende que el refugio sobrevivió esta vez a cambio de entregar rutas, nombres o poder de negociación a una fuerza externa.",group:"Sara, Elías y Noa regresan agotados y sin una versión común de lo ocurrido. Nadie murió, pero la confianza quedó quebrada. Cada uno conserva una parte distinta de la historia y teme lo que los otros podrían hacer con ella.",world:"UNO conserva la ventaja mientras los Cosechadores convierten la información en mercancía. La señal se apaga, los demás refugios siguen aislados y NeoSantiago aprende que incluso la verdad puede ser utilizada como otra forma de control."}
+    good:{title:"La ciudad vuelve a contestar",lead:choice+" La expedición no solo regresó: cambió el equilibrio de NeoSantiago.",refuge:"El Andén 4 recibe información, rutas y pruebas suficientes para dejar de depender de la versión de la Red UNO. Mara distribuye copias y suministros entre varias familias; destruir un solo archivo ya no bastará para devolverlos al silencio.",group:"Sara, Elías y Noa regresan con heridas y desacuerdos, pero todavía confían entre sí. Sus decisiones los convierten en la primera patrulla capaz de volver a la superficie por voluntad propia y no por una orden del consejo.",world:"La señal se transforma en una red de voces. Refugios desconocidos responden, los merodeadores dejan de ser una historia simple y la Red UNO pierde el control absoluto de la memoria de Santiago. La siguiente expedición partirá hacia una ciudad despierta."},
+    normal:{title:"Una verdad incompleta",lead:choice+" El refugio sobrevive, aunque el viaje deja preguntas y deudas que nadie puede resolver todavía.",refuge:"La Línea 1 gana tiempo y conserva parte de lo descubierto, pero las rutas quedaron expuestas y los recursos siguen siendo escasos. El consejo acepta preparar otra salida antes de decidir cuánto de la verdad puede soportar la comunidad.",group:"El grupo vuelve completo, pero no intacto. Las retiradas, los secretos y las decisiones difíciles cambian la relación entre Sara, Elías y Noa. Seguirán trabajando juntos porque todavía se necesitan, no porque estén de acuerdo.",world:"La Red UNO mantiene el control de gran parte de la superficie. Algunos refugios escucharon la señal y otros solo recibieron fragmentos. NeoSantiago conoce ahora una grieta en el sistema, pero aún no sabe si utilizarla para liberarse o para sobrevivir un día más."},
+    bad:{title:"El precio del silencio",lead:choice+" La expedición termina, pero la verdad deja de pertenecer a quienes arriesgaron la vida para encontrarla.",refuge:"El Andén 4 recibe suministros y una calma temporal, pero queda atado a nuevas deudas. Mara comprende que el refugio sobrevivió esta vez a cambio de entregar rutas, nombres o poder de negociación a una fuerza externa.",group:"Sara, Elías y Noa regresan agotados y sin una versión común de lo ocurrido. Nadie murió, pero la confianza quedó quebrada. Cada uno conserva una parte distinta de la historia y teme lo que los otros podrían hacer con ella.",world:"La Red UNO conserva la ventaja mientras los Cosechadores convierten la información en mercancía. La señal se apaga, los demás refugios siguen aislados y NeoSantiago aprende que incluso la verdad puede ser utilizada como otra forma de control."}
   };return endings[tierId]
 }
 function calculateScore(kind,tierId){
@@ -806,7 +806,7 @@ function openWorldLore(opener){worldLoreOpener=opener||null;closePanel();switchW
 function closeWorldLore(){if($("worldLoreModal").classList.contains("hidden"))return;$("worldLoreModal").classList.add("hidden");if(worldLoreOpener&&worldLoreOpener.focus)worldLoreOpener.focus();worldLoreOpener=null}
 function openPanel(type){
   var list=[],title,html="";if(type==="missions"){title="Misiones";html=missionDefs.map(missionCardHtml).join("")}
-  else if(type==="archive"){title="Archivo";html='<article class="drawer-item archive-entry world-entry"><span class="archive-entry-copy"><strong>Archivo de mundo: NeoSantiago 2130</strong><small>Historia, vida bajo tierra, Gobernanza, UNO, facciones, tácticas y extractos reales de La ciudad de los rotos.</small></span><button data-open-world-lore>Conocer la historia</button></article>'+(state.docs.length?state.docs.map(function(id){var summary=archives[id],doc=archiveTexts[id];if(!summary||!doc)return"";return'<article class="drawer-item archive-entry"><span class="archive-entry-copy"><strong>'+esc(summary[0])+'</strong><small>'+esc(summary[1])+'</small></span><button data-open-archive="'+esc(id)+'">Leer archivo</button></article>'}).join(""):'<p class="empty">Todavía no has recuperado archivos. Explora, investiga y elige rutas que revelen información.</p>')}
+  else if(type==="archive"){title="Archivo";html='<article class="drawer-item archive-entry world-entry"><span class="archive-entry-copy"><strong>Archivo de mundo: NeoSantiago 2130</strong><small>Historia, vida bajo tierra, Gobernanza, la Red UNO, facciones, tácticas y extractos reales de La ciudad de los rotos.</small></span><button data-open-world-lore>Conocer la historia</button></article>'+(state.docs.length?state.docs.map(function(id){var summary=archives[id],doc=archiveTexts[id];if(!summary||!doc)return"";return'<article class="drawer-item archive-entry"><span class="archive-entry-copy"><strong>'+esc(summary[0])+'</strong><small>'+esc(summary[1])+'</small></span><button data-open-archive="'+esc(id)+'">Leer archivo</button></article>'}).join(""):'<p class="empty">Todavía no has recuperado archivos. Explora, investiga y elige rutas que revelen información.</p>')}
   else if(type==="group"){title="Grupo";state.party.forEach(function(p){list.push([p.name+" · "+p.role+" · Lvl. "+p.level,p.hp+"/"+p.maxHp+" HP · "+p.xp+"/"+xpNeeded(p)+" XP · Energía "+p.hunger+"% · Resistencia al gasto "+energyResist(p)+". "+weaponLabel(p)+". Habilidades "+p.skills.length+"/6."])});list.push(["Puntos de facción: "+state.factionPoints,"Se comparten entre los tres perfiles; invertirlos define la especialización de esta partida."]);list.push(["Estado colectivo: "+state.morale+"%",state.morale>=60?"El grupo todavía confía en sus decisiones compartidas.":"Las decisiones están erosionando la confianza."])}
   else{title="Historial";state.history.slice().reverse().forEach(function(x){list.push(["Día "+x.day+" · "+x.loc,x.choice+". "+x.result+"."])})}
   if(type!=="missions"&&type!=="archive")html=list.length?list.map(function(x){return'<article class="drawer-item"><strong>'+esc(x[0])+"</strong><p>"+esc(x[1])+"</p></article>"}).join(""):'<p class="empty">Todavía no hay registros en esta sección.</p>';
