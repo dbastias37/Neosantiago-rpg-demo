@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="44";
+var ASSET_REVISION="45";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -786,7 +786,7 @@ function useCombatItem(kind){
 }
 
 function render(){
-  var ev=events[state.index],stage=$("stage"),nextScene=sceneKeyForEvent(ev);if(stage.dataset.scene!==nextScene)stage.dataset.scene=nextScene;pulseStageFade();$("day").textContent="Día "+String(ev.day).padStart(2,"0")+" / 03";$("time").textContent=ev.time;$("threatValue").textContent=state.threat+"%";$("threatBar").style.width=state.threat+"%";stage.dataset.day=ev.day;$("chapter").textContent=chapters[ev.day];$("location").textContent=ev.loc;$("progress").textContent="Situación "+(state.index+1)+" de "+events.length;$("eventType").textContent=ev.type;$("eventTitle").textContent=ev.title;$("eventText").textContent=ev.text;
+  var ev=events[state.index],stage=$("stage"),nextScene=sceneKeyForEvent(ev),currentScene=stage.dataset.scene||"";if(currentScene!==nextScene){stage.dataset.scene=nextScene;if(currentScene)pulseStageFade()}$("day").textContent="Día "+String(ev.day).padStart(2,"0")+" / 03";$("time").textContent=ev.time;$("threatValue").textContent=state.threat+"%";$("threatBar").style.width=state.threat+"%";stage.dataset.day=ev.day;$("chapter").textContent=chapters[ev.day];$("location").textContent=ev.loc;$("progress").textContent="Situación "+(state.index+1)+" de "+events.length;$("eventType").textContent=ev.type;$("eventTitle").textContent=ev.title;$("eventText").textContent=ev.text;
   $("choices").innerHTML=ev.choices.map(function(c,i){var why=reason(c);return'<button class="choice" data-choice="'+i+'" '+(why?"disabled":"")+'><span class="num">'+(i+1)+'</span><span><strong>'+esc(c.label)+"</strong><small>"+esc(why||c.hint)+"</small></span><span class=\"cost\">"+esc(c.cost||"")+"</span></button>"}).join("");
   Array.prototype.forEach.call(document.querySelectorAll("[data-choice]"),function(b){b.addEventListener("click",function(){choose(Number(b.dataset.choice))})});renderMini()
 }
