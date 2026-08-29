@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="48";
+var ASSET_REVISION="49";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -12,6 +12,12 @@ var enemyDefs={
   agent2:{name:"Tirador de la Red UNO",role:"Unidad de precisión",hp:50,attack:[9,14],accuracy:4,def:13,armor:1,mechanical:false,lootMs:2700,lootGroup:"agent",xp:27},
   agent3:{name:"Rastreador de la Red UNO",role:"Especialista SONAR",hp:54,attack:[8,12],accuracy:3,def:14,armor:1,mechanical:false,lootMs:2900,lootGroup:"agent",xp:29},
   agent4:{name:"Comandante de la Red UNO",role:"Casco morado · guardia de perímetro",hp:68,attack:[10,15],accuracy:4,def:14,armor:2,mechanical:false,lootMs:3400,lootGroup:"agent",xp:35}
+};
+var npcDialogueDefs={
+  lira:{name:"Lira",role:"Merodeadora exiliada · núcleo abierto",portrait:"portraits/npc-lira.svg"},
+  matias:{name:"Matías",role:"Sobreviviente de superficie · testigo de rutas",portrait:"portraits/npc-matias.svg"},
+  unit7:{name:"Unidad S-7",role:"Dron de la Red UNO · núcleo inestable",portrait:"portraits/npc-unit7.svg"},
+  operator:{name:"Irene",role:"Operadora de la señal · soporte vital",portrait:"portraits/npc-operator.svg"}
 };
 var equipmentDefs={
   knife:{name:"Cuchillo de servicio",kind:"weapon",slot:"weapon",category:"melee",damage:[7,10],accuracy:3,desc:"Arma silenciosa; no consume munición."},
@@ -124,7 +130,7 @@ function fresh(){return{version:3,campaignRevision:3,inventoryRevision:5,progres
   {id:"noa",name:"Noa",role:"Cazadora",hp:38,maxHp:38,hunger:88,xp:0,level:1,skills:[],guard:0,bleed:0,categories:["rifle","sidearm","melee"],equipment:{head:null,body:"vestLight",weapon:"rifle556",backpack:"packHunt"},durability:{head:null,body:10},bag:[{id:"ammo556",qty:6},{id:"grenade",qty:1},{id:"food",qty:1}]}
 ],inv:[],docs:["signal"],flags:{},missionRewards:{},history:[],stats:{battles:0,wins:0,enemies:0,loot:0,lootItems:{},fullSquadWins:0,criticals:0,retreats:0,refugeVisits:0,trades:0,creditsEarned:0,attacks:0,hits:0,misses:0,shots:0,damageDealt:0,damageTaken:0,medicineUsed:0,hpRestored:0,restHpRecovered:0,rests:0,skillsUsed:0,revives:0,defends:0,crafts:0,craftedItems:{},itemsUsed:{},xpFromHits:0,xpFromCrafting:0,xpFromVictories:0,factionEarned:0,factionSpent:0,skillsUnlocked:0},seed:2130,ending:null,finished:false}}
 
-var state=fresh(),pending=null,battleState=null,transferDraft=null,discardDraft=null,toastTimer=null,lootInterval=null,archiveOpener=null,worldLoreOpener=null,introStep=0,profileTab="inventory",stageFadeTimer=null;
+var state=fresh(),pending=null,battleState=null,transferDraft=null,discardDraft=null,toastTimer=null,lootInterval=null,npcDialogueState=null,npcDialogueTimer=null,archiveOpener=null,worldLoreOpener=null,introStep=0,profileTab="inventory",stageFadeTimer=null;
 var loreSections={history:["loreTabHistory","lorePanelHistory"],tunnels:["loreTabTunnels","lorePanelTunnels"],governance:["loreTabGovernance","lorePanelGovernance"],factions:["loreTabFactions","lorePanelFactions"],extracts:["loreTabExtracts","lorePanelExtracts"]};
 var factionSections={rotos:["factionTabRotos","factionPanelRotos"],hunters:["factionTabHunters","factionPanelHunters"],uno:["factionTabUno","factionPanelUno"],agents:["factionTabAgents","factionPanelAgents"],marauders:["factionTabMarauders","factionPanelMarauders"],valley:["factionTabValley","factionPanelValley"]};
 function clamp(n,a,b){return Math.min(b,Math.max(a,n))}
@@ -143,7 +149,7 @@ function load(){
   }catch{return false}
 }
 function pushUnique(list,values){(values||[]).forEach(function(v){if(list.indexOf(v)<0)list.push(v)})}
-function resName(k){return{food:"Alimento",water:"Agua",meds:"Medicina",ammo:"Munición",battery:"Batería"}[k]||k}
+function resName(k){return{food:"Alimento",water:"Agua",meds:"Medicina",ammo:"Munición",battery:"Batería",cloth:"Tela",scrap:"Componentes",electronics:"Electrónica",pulseCore:"Núcleo de pulso",ammo9:"Munición 9 mm",ammo556:"Munición 5,56",shell12:"Cartuchos 12"}[k]||k}
 function esc(v){return String(v).replace(/[&<>'"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]})}
 function gear(id){return id&&equipmentDefs[id]?equipmentDefs[id]:null}
 function assetUrl(path){return path+(path.indexOf("?")>=0?"&":"?")+"v="+ASSET_REVISION}
@@ -247,6 +253,7 @@ function clickSfxForButton(button){
   var id=button.id||"",data=button.dataset||{},text=(button.textContent||"").toLowerCase();
   if(data.sfx)return data.sfx;
   if(data.choice!==undefined){if(text.indexOf("combate")>=0)return"decision-combat";if(text.indexOf("moral")>=0||button.classList.contains("danger"))return"decision-danger";return"decision-confirm"}
+  if(data.dialogueChoice!==undefined)return"decision-confirm";
   if(data.action==="attack")return weaponSfxForActor();
   if(data.action==="skill")return combatSkillSfx();
   if(data.action==="defend")return"combat-defend";
@@ -279,6 +286,8 @@ function clickSfxForButton(button){
   if(id==="closeWorldLore"||id==="closeWorldLoreBottom")return"ui-close-panel";
   if(id.indexOf("loreTab")===0||id.indexOf("factionTab")===0)return"lore-tab";
   if(id==="introNext"||id==="introBack")return"lore-page";
+  if(id==="dialogueSkip")return"lore-page";
+  if(id==="dialogueContinue")return"decision-result";
   if(id==="introStart"||id==="leaveRefuge"||id==="confirmLogistics")return"start-expedition";
   if(id==="advance")return"decision-result";
   if(id==="nextDay"||id==="refugeRest")return"refuge-rest";
@@ -650,7 +659,7 @@ function choose(i){
 }
 function completeChoice(choice,out,roll,check,extra){
   var ev=events[state.index],changes=(extra||[]).concat(apply(out)),factionReward=storyDecisionBenefit(out)?1:0,missionChanges=checkMissions();if(factionReward)changes=awardFactionPoints(factionReward,"decisión con impacto").concat(changes);changes=missionChanges.concat(changes);if(choice.ending)state.ending=choice.ending;
-  state.history.push({day:ev.day,loc:ev.loc,choice:choice.label,result:out.title||choice.title,faction:factionReward});pending={ending:choice.ending||null,returnToRefuge:null};
+  state.history.push({day:ev.day,loc:ev.loc,choice:choice.label,result:out.title||choice.title,faction:factionReward});pending={ending:choice.ending||null,returnToRefuge:null,dialogue:out.dialogue||choice.dialogue||null,dialogueSeen:false};
   if(state.morale<=0&&!choice.ending){pending.returnToRefuge="morale";changes.unshift(["Cohesión","Regreso obligatorio al refugio"])}
   showResult(out.title||choice.title,out.result||choice.result,changes,roll,check);render();save()
 }
@@ -661,9 +670,34 @@ function showResult(title,text,changes,roll,check){
   $("resultChanges").innerHTML=(changes.length?changes:[["Registro","Actualizado"]]).slice(0,6).map(function(x){return'<div class="result-chip">'+esc(x[0])+"<strong>"+esc(x[1])+"</strong></div>"}).join("");
   $("result").classList.remove("hidden");$("advance").focus()
 }
-function advance(){
-  if(!pending)return;setSceneAmbience("ambience-title",AUDIO_CROSSFADE_MS);var ending=pending.ending,returnToRefuge=pending.returnToRefuge;pending=null;$("result").classList.add("hidden");if(ending){finish(ending);return}
+function npcDef(input){return typeof input==="string"?npcDialogueDefs[input]||{}:input||{}}
+function revealNpcDialogueText(){
+  if(!npcDialogueState)return;clearInterval(npcDialogueTimer);npcDialogueTimer=null;$("npcDialogueText").textContent=npcDialogueState.text;$("npcDialogueChoices").classList.remove("hidden");var first=$("npcDialogueChoices").querySelector("button:not(:disabled)");if(first)first.focus()
+}
+function typeNpcDialogue(){
+  var text=npcDialogueState?npcDialogueState.text:"",i=0;clearInterval(npcDialogueTimer);$("npcDialogueText").textContent="";$("npcDialogueChoices").classList.add("hidden");$("dialogueChanges").classList.add("hidden");$("dialogueContinueRow").classList.add("hidden");npcDialogueTimer=setInterval(function(){if(!npcDialogueState){clearInterval(npcDialogueTimer);npcDialogueTimer=null;return}i+=2;$("npcDialogueText").textContent=text.slice(0,i);if(i>=text.length)revealNpcDialogueText()},22)
+}
+function renderNpcDialogueChoices(){
+  var choices=$("npcDialogueChoices"),options=npcDialogueState.options;choices.innerHTML=options.map(function(opt,i){var block=reason(opt),hint=block||opt.hint||"Sin costo inmediato";return'<button class="npc-dialogue-choice" data-dialogue-choice="'+i+'" '+(block?"disabled":"")+'><strong>'+esc(opt.label)+'</strong><em>'+esc(block||opt.cost||"Elegir")+'</em><small>'+esc(hint)+'</small></button>'}).join("");
+  Array.prototype.forEach.call(choices.querySelectorAll("[data-dialogue-choice]"),function(b){b.addEventListener("click",function(){selectNpcDialogueChoice(Number(b.dataset.dialogueChoice))})})
+}
+function openNpcDialogue(dialogue){
+  var npc=npcDef(dialogue.npc);npcDialogueState={dialogue:dialogue,npc:npc,text:dialogue.text||"",options:dialogue.options||[],selected:false};
+  $("result").classList.add("hidden");$("npcDialogueKicker").textContent=dialogue.kicker||"Conversación";$("npcDialogueName").textContent=npc.name||"Contacto";$("npcDialogueRole").textContent=npc.role||"";$("npcDialoguePortrait").src=assetUrl(npc.portrait||"portraits/noa.webp");$("npcDialoguePortrait").alt=npc.name||"NPC";renderNpcDialogueChoices();$("npcDialogueModal").classList.remove("hidden");$("dialogueSkip").focus();typeNpcDialogue()
+}
+function selectNpcDialogueChoice(i){
+  if(!npcDialogueState)return;if(npcDialogueTimer){revealNpcDialogueText();return}var opt=npcDialogueState.options[i];if(!opt||reason(opt))return;var changes=apply(opt),factionReward=storyDecisionBenefit(opt)?1:0,missionChanges=checkMissions();if(factionReward)changes=awardFactionPoints(factionReward,"diálogo").concat(changes);changes=missionChanges.concat(changes);if(state.morale<=0&&pending&&!pending.ending){pending.returnToRefuge="morale";changes.unshift(["Cohesión","Regreso obligatorio al refugio"])}var last=state.history[state.history.length-1];if(last){last.dialogue=(npcDialogueState.npc.name||"NPC")+": "+opt.label;last.faction=(last.faction||0)+factionReward}
+  $("npcDialogueChoices").classList.add("hidden");$("dialogueChanges").innerHTML=(changes.length?changes:[["Registro","Conversación guardada"]]).slice(0,6).map(function(x){return'<div class="result-chip">'+esc(x[0])+"<strong>"+esc(x[1])+"</strong></div>"}).join("");$("dialogueChanges").classList.remove("hidden");$("dialogueContinueRow").classList.remove("hidden");renderMini();save();$("dialogueContinue").focus()
+}
+function continuePendingAdvance(){
+  var ending=pending.ending,returnToRefuge=pending.returnToRefuge;pending=null;if(ending){finish(ending);return}
   var oldDay=events[state.index].day;state.index++;if(returnToRefuge){openRefuge(returnToRefuge);return}if(events[state.index].day!==oldDay){night(oldDay)}else{save();render()}
+}
+function closeNpcDialogueAndContinue(){
+  if(!npcDialogueState)return;if(npcDialogueTimer){revealNpcDialogueText();return}clearInterval(npcDialogueTimer);npcDialogueTimer=null;npcDialogueState=null;$("npcDialogueModal").classList.add("hidden");if(pending)continuePendingAdvance()
+}
+function advance(){
+  if(!pending)return;setSceneAmbience("ambience-title",AUDIO_CROSSFADE_MS);$("result").classList.add("hidden");if(pending.dialogue&&!pending.dialogueSeen){pending.dialogueSeen=true;openNpcDialogue(pending.dialogue);save();return}continuePendingAdvance()
 }
 function night(day){
   var hadFood=stockCount("food")>0,hadWater=stockCount("water")>0;if(hadFood){consumeStock("food");addStatItem("itemsUsed","food",1)}if(hadWater)consumeStock("water");var penalty=(hadFood?0:5)+(hadWater?0:8);state.morale=clamp(state.morale-penalty,0,100);state.engineeringUses=3;state.medicalUses=3;state.ordnanceUses=3;
@@ -895,16 +929,16 @@ function enterTitleScreen(){
   var title=$("titleScreen");if(title.classList.contains("hidden")||title.classList.contains("leaving"))return;
   title.classList.add("leaving");setTimeout(function(){title.classList.add("hidden");title.classList.remove("leaving");$("start").classList.remove("hidden");(!$("continueGame").classList.contains("hidden")?$("continueGame"):$("newGame")).focus()},560)
 }
-function newGame(){state=fresh();pending=null;battleState=null;transferDraft=null;discardDraft=null;archiveOpener=null;worldLoreOpener=null;clearInterval(lootInterval);["titleScreen","start","gameIntro","worldLoreModal","battle","final","summary","refuge","profileModal","transferModal","discardModal","lootModal","logisticsModal","archiveModal"].forEach(function(id){$(id).classList.add("hidden")});render();save();showGameIntro(0)}
+function newGame(){state=fresh();pending=null;battleState=null;transferDraft=null;discardDraft=null;npcDialogueState=null;archiveOpener=null;worldLoreOpener=null;clearInterval(lootInterval);clearInterval(npcDialogueTimer);["titleScreen","start","gameIntro","worldLoreModal","battle","final","summary","refuge","profileModal","transferModal","discardModal","lootModal","logisticsModal","archiveModal","npcDialogueModal"].forEach(function(id){$(id).classList.add("hidden")});render();save();showGameIntro(0)}
 function continueGame(){if(!load()){newGame();return}$("titleScreen").classList.add("hidden");$("start").classList.add("hidden");render();if(!state.introCompleted)showGameIntro(0);else if(state.finished&&state.ending){if(state.summarySeen)showRunSummary();else finish(state.ending)}else if(state.refuge.active)openRefuge(state.refuge.reason,true);else toast("Partida restaurada")}
 
 loadAudioRoutes();
 installAudioHooks();
-$("enterTitle").addEventListener("click",enterTitleScreen);$("newGame").addEventListener("click",newGame);$("continueGame").addEventListener("click",continueGame);$("openWorldLore").addEventListener("click",function(){openWorldLore($("openWorldLore"))});$("closeWorldLore").addEventListener("click",closeWorldLore);$("closeWorldLoreBottom").addEventListener("click",closeWorldLore);Object.keys(loreSections).forEach(function(key){$(loreSections[key][0]).addEventListener("click",function(){switchWorldLore(key)})});Object.keys(factionSections).forEach(function(key){$(factionSections[key][0]).addEventListener("click",function(){switchFaction(key)})});$("introNext").addEventListener("click",function(){showGameIntro(1)});$("introBack").addEventListener("click",function(){showGameIntro(0)});$("introStart").addEventListener("click",completeIntro);$("advance").addEventListener("click",advance);$("nextDay").addEventListener("click",function(){$("night").classList.add("hidden");if(state.morale<=0)openRefuge("morale");else{save();render()}});$("finalContinue").addEventListener("click",showRunSummary);$("downloadPng").addEventListener("click",downloadResultPng);$("restart").addEventListener("click",newGame);$("npcTabMara").addEventListener("click",function(){switchRefugeNpc("mara")});$("npcTabArmorer").addEventListener("click",function(){switchRefugeNpc("armorer")});$("starterKit").addEventListener("click",acceptStarterKit);$("refugeRest").addEventListener("click",restAtRefuge);$("refugeRejoin").addEventListener("click",rejoinAtRefuge);$("leaveRefuge").addEventListener("click",leaveRefuge);$("closeLogistics").addEventListener("click",closeLogisticsBriefing);$("backToRefuge").addEventListener("click",closeLogisticsBriefing);$("confirmLogistics").addEventListener("click",confirmLeaveRefuge);$("logisticsModal").addEventListener("click",function(e){if(e.target===$("logisticsModal"))closeLogisticsBriefing()});$("closeDrawer").addEventListener("click",closePanel);$("shade").addEventListener("click",closePanel);$("closeProfile").addEventListener("click",closeProfile);$("closeTransfer").addEventListener("click",closeTransferModal);$("transferModal").addEventListener("click",function(e){if(e.target===$("transferModal"))closeTransferModal()});$("closeDiscard").addEventListener("click",closeDiscardModal);$("cancelDiscard").addEventListener("click",closeDiscardModal);$("confirmDiscard").addEventListener("click",confirmDiscardProfileItem);$("discardModal").addEventListener("click",function(e){if(e.target===$("discardModal"))closeDiscardModal()});$("closeLoot").addEventListener("click",closeLootModal);$("closeArchive").addEventListener("click",closeArchive);$("closeArchiveBottom").addEventListener("click",closeArchive);$("takeAllLoot").addEventListener("click",takeAllLoot);$("finishLoot").addEventListener("click",finishLooting);$("itemsToggle").addEventListener("click",function(){if(battleState&&battleState.phase==="combat")$("itemTray").classList.toggle("hidden")});
+$("enterTitle").addEventListener("click",enterTitleScreen);$("newGame").addEventListener("click",newGame);$("continueGame").addEventListener("click",continueGame);$("openWorldLore").addEventListener("click",function(){openWorldLore($("openWorldLore"))});$("closeWorldLore").addEventListener("click",closeWorldLore);$("closeWorldLoreBottom").addEventListener("click",closeWorldLore);Object.keys(loreSections).forEach(function(key){$(loreSections[key][0]).addEventListener("click",function(){switchWorldLore(key)})});Object.keys(factionSections).forEach(function(key){$(factionSections[key][0]).addEventListener("click",function(){switchFaction(key)})});$("introNext").addEventListener("click",function(){showGameIntro(1)});$("introBack").addEventListener("click",function(){showGameIntro(0)});$("introStart").addEventListener("click",completeIntro);$("advance").addEventListener("click",advance);$("dialogueSkip").addEventListener("click",revealNpcDialogueText);$("dialogueContinue").addEventListener("click",closeNpcDialogueAndContinue);$("nextDay").addEventListener("click",function(){$("night").classList.add("hidden");if(state.morale<=0)openRefuge("morale");else{save();render()}});$("finalContinue").addEventListener("click",showRunSummary);$("downloadPng").addEventListener("click",downloadResultPng);$("restart").addEventListener("click",newGame);$("npcTabMara").addEventListener("click",function(){switchRefugeNpc("mara")});$("npcTabArmorer").addEventListener("click",function(){switchRefugeNpc("armorer")});$("starterKit").addEventListener("click",acceptStarterKit);$("refugeRest").addEventListener("click",restAtRefuge);$("refugeRejoin").addEventListener("click",rejoinAtRefuge);$("leaveRefuge").addEventListener("click",leaveRefuge);$("closeLogistics").addEventListener("click",closeLogisticsBriefing);$("backToRefuge").addEventListener("click",closeLogisticsBriefing);$("confirmLogistics").addEventListener("click",confirmLeaveRefuge);$("logisticsModal").addEventListener("click",function(e){if(e.target===$("logisticsModal"))closeLogisticsBriefing()});$("closeDrawer").addEventListener("click",closePanel);$("shade").addEventListener("click",closePanel);$("closeProfile").addEventListener("click",closeProfile);$("closeTransfer").addEventListener("click",closeTransferModal);$("transferModal").addEventListener("click",function(e){if(e.target===$("transferModal"))closeTransferModal()});$("closeDiscard").addEventListener("click",closeDiscardModal);$("cancelDiscard").addEventListener("click",closeDiscardModal);$("confirmDiscard").addEventListener("click",confirmDiscardProfileItem);$("discardModal").addEventListener("click",function(e){if(e.target===$("discardModal"))closeDiscardModal()});$("closeLoot").addEventListener("click",closeLootModal);$("closeArchive").addEventListener("click",closeArchive);$("closeArchiveBottom").addEventListener("click",closeArchive);$("takeAllLoot").addEventListener("click",takeAllLoot);$("finishLoot").addEventListener("click",finishLooting);$("itemsToggle").addEventListener("click",function(){if(battleState&&battleState.phase==="combat")$("itemTray").classList.toggle("hidden")});
 Array.prototype.forEach.call(document.querySelectorAll("[data-panel]"),function(b){b.addEventListener("click",function(){openPanel(b.dataset.panel)})});
 Array.prototype.forEach.call(document.querySelectorAll("[data-action]"),function(b){b.addEventListener("click",function(){combatAction(b.dataset.action)})});
 Array.prototype.forEach.call(document.querySelectorAll("[data-combat-item]"),function(b){b.addEventListener("click",function(){useCombatItem(b.dataset.combatItem)})});
-document.addEventListener("keydown",function(e){if(!$("titleScreen").classList.contains("hidden")&&(e.key==="Enter"||e.key===" ")){e.preventDefault();enterTitleScreen();return}if(e.key==="Escape"&&!$("worldLoreModal").classList.contains("hidden")){closeWorldLore();return}if(e.key==="Escape"&&!$("archiveModal").classList.contains("hidden")){closeArchive();return}if(e.key==="Escape"&&!$("discardModal").classList.contains("hidden")){closeDiscardModal();return}if(e.key==="Escape"&&!$("transferModal").classList.contains("hidden")){closeTransferModal();return}if(e.key==="Escape"&&!$("logisticsModal").classList.contains("hidden")){closeLogisticsBriefing();return}if(e.key==="Escape"&&!battleState){closePanel();closeProfile()}if(battleState||!$("titleScreen").classList.contains("hidden")||!$("start").classList.contains("hidden")||!$("gameIntro").classList.contains("hidden")||!$("worldLoreModal").classList.contains("hidden")||!$("result").classList.contains("hidden")||!$("night").classList.contains("hidden")||!$("final").classList.contains("hidden")||!$("summary").classList.contains("hidden")||!$("refuge").classList.contains("hidden")||!$("profileModal").classList.contains("hidden")||!$("logisticsModal").classList.contains("hidden")||!$("archiveModal").classList.contains("hidden"))return;if(["1","2","3"].indexOf(e.key)>=0)choose(Number(e.key)-1)});
+document.addEventListener("keydown",function(e){if(!$("titleScreen").classList.contains("hidden")&&(e.key==="Enter"||e.key===" ")){e.preventDefault();enterTitleScreen();return}if(!$("npcDialogueModal").classList.contains("hidden")){if((e.key==="Enter"||e.key===" ")&&npcDialogueTimer){e.preventDefault();revealNpcDialogueText()}return}if(e.key==="Escape"&&!$("worldLoreModal").classList.contains("hidden")){closeWorldLore();return}if(e.key==="Escape"&&!$("archiveModal").classList.contains("hidden")){closeArchive();return}if(e.key==="Escape"&&!$("discardModal").classList.contains("hidden")){closeDiscardModal();return}if(e.key==="Escape"&&!$("transferModal").classList.contains("hidden")){closeTransferModal();return}if(e.key==="Escape"&&!$("logisticsModal").classList.contains("hidden")){closeLogisticsBriefing();return}if(e.key==="Escape"&&!battleState){closePanel();closeProfile()}if(battleState||!$("titleScreen").classList.contains("hidden")||!$("start").classList.contains("hidden")||!$("gameIntro").classList.contains("hidden")||!$("worldLoreModal").classList.contains("hidden")||!$("result").classList.contains("hidden")||!$("night").classList.contains("hidden")||!$("final").classList.contains("hidden")||!$("summary").classList.contains("hidden")||!$("refuge").classList.contains("hidden")||!$("profileModal").classList.contains("hidden")||!$("logisticsModal").classList.contains("hidden")||!$("archiveModal").classList.contains("hidden"))return;if(["1","2","3"].indexOf(e.key)>=0)choose(Number(e.key)-1)});
 try{var saved=JSON.parse(localStorage.getItem(KEY));if(saved&&saved.version===3)$("continueGame").classList.remove("hidden")}catch{}
 render();
 showTitleScreen();

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 590 885" role="img" aria-label="Lira, merodeadora exiliada">
+  <defs>
+    <filter id="noise">
+      <feTurbulence type="fractalNoise" baseFrequency=".78" numOctaves="2" seed="7"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="table" tableValues="0 .13"/></feComponentTransfer>
+    </filter>
+    <linearGradient id="shade" x1="0" x2="1" y1="0" y2="1">
+      <stop stop-color="#75d3d7" stop-opacity=".22"/>
+      <stop offset=".5" stop-color="#09100f" stop-opacity=".05"/>
+      <stop offset="1" stop-color="#df4a4a" stop-opacity=".28"/>
+    </linearGradient>
+  </defs>
+  <rect width="590" height="885" fill="#070b0b"/>
+  <image href="merodeador4.webp" width="590" height="885" preserveAspectRatio="xMidYMid slice"/>
+  <rect width="590" height="885" fill="url(#shade)"/>
+  <rect width="590" height="885" filter="url(#noise)"/>
+  <path d="M42 760h506v58H42z" fill="#050807" opacity=".82"/>
+  <path d="M42 760h506" stroke="#75d3d7" stroke-width="3" opacity=".65"/>
+  <text x="66" y="795" fill="#f2bd73" font-family="Arial Narrow, Arial, sans-serif" font-size="26" font-weight="900" letter-spacing="5">LIRA</text>
+  <text x="66" y="820" fill="#75d3d7" font-family="Arial, sans-serif" font-size="12" font-weight="900" letter-spacing="2">NUCLEO ABIERTO</text>
+</svg>

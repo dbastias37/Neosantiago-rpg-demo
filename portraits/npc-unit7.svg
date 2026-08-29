@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 590 885" role="img" aria-label="Unidad S-7, dron de la Red UNO">
+  <defs>
+    <filter id="noise">
+      <feTurbulence type="fractalNoise" baseFrequency=".84" numOctaves="2" seed="49"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="table" tableValues="0 .1"/></feComponentTransfer>
+    </filter>
+    <linearGradient id="shade" x1="0" x2="1" y1="0" y2="1">
+      <stop stop-color="#75d3d7" stop-opacity=".35"/>
+      <stop offset=".5" stop-color="#09100f" stop-opacity=".02"/>
+      <stop offset="1" stop-color="#6b5cff" stop-opacity=".25"/>
+    </linearGradient>
+  </defs>
+  <rect width="590" height="885" fill="#070b0b"/>
+  <image href="drone.webp" width="590" height="885" preserveAspectRatio="xMidYMid slice"/>
+  <rect width="590" height="885" fill="url(#shade)"/>
+  <rect width="590" height="885" filter="url(#noise)"/>
+  <path d="M42 760h506v58H42z" fill="#050807" opacity=".82"/>
+  <path d="M42 760h506" stroke="#75d3d7" stroke-width="3" opacity=".7"/>
+  <text x="66" y="795" fill="#f2bd73" font-family="Arial Narrow, Arial, sans-serif" font-size="26" font-weight="900" letter-spacing="5">S-7</text>
+  <text x="66" y="820" fill="#75d3d7" font-family="Arial, sans-serif" font-size="12" font-weight="900" letter-spacing="2">DRON DE LA RED UNO</text>
+</svg>
