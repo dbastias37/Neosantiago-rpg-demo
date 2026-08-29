@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="52";
+var ASSET_REVISION="53";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -186,7 +186,7 @@ function fresh(){return{version:3,campaignRevision:3,inventoryRevision:5,progres
   {id:"noa",name:"Noa",role:"Cazadora",hp:38,maxHp:38,hunger:88,xp:0,level:1,skills:[],guard:0,bleed:0,psyche:{stress:1,empathy:0,resolve:2,pragmatism:1},categories:["rifle","sidearm","melee"],equipment:{head:null,body:"vestLight",weapon:"rifle556",backpack:"packHunt"},durability:{head:null,body:10},bag:[{id:"ammo556",qty:6},{id:"grenade",qty:1},{id:"food",qty:1}]}
 ],inv:[],docs:["signal"],flags:{},missionRewards:{},history:[],stats:{battles:0,wins:0,enemies:0,loot:0,lootItems:{},fullSquadWins:0,criticals:0,retreats:0,refugeVisits:0,trades:0,creditsEarned:0,attacks:0,hits:0,misses:0,shots:0,damageDealt:0,damageTaken:0,medicineUsed:0,hpRestored:0,restHpRecovered:0,rests:0,skillsUsed:0,revives:0,defends:0,crafts:0,craftedItems:{},itemsUsed:{},disassembled:0,disassembleFailures:0,mentalShifts:0,xpFromHits:0,xpFromCrafting:0,xpFromVictories:0,factionEarned:0,factionSpent:0,skillsUnlocked:0},seed:2130,ending:null,finished:false}}
 
-var state=fresh(),pending=null,battleState=null,transferDraft=null,discardDraft=null,disassemblyState=null,disassemblyTimer=null,toastTimer=null,lootInterval=null,npcDialogueState=null,npcDialogueTimer=null,archiveOpener=null,worldLoreOpener=null,introStep=0,profileTab="inventory",stageFadeTimer=null;
+var state=fresh(),pending=null,battleState=null,transferDraft=null,discardDraft=null,disassemblyState=null,disassemblyTimer=null,toastTimer=null,lootInterval=null,npcDialogueState=null,npcDialogueTimer=null,archiveOpener=null,worldLoreOpener=null,introStep=0,profileTab="inventory",psychPanelExpanded=false,stageFadeTimer=null;
 var loreSections={history:["loreTabHistory","lorePanelHistory"],tunnels:["loreTabTunnels","lorePanelTunnels"],governance:["loreTabGovernance","lorePanelGovernance"],factions:["loreTabFactions","lorePanelFactions"],extracts:["loreTabExtracts","lorePanelExtracts"]};
 var factionSections={rotos:["factionTabRotos","factionPanelRotos"],hunters:["factionTabHunters","factionPanelHunters"],uno:["factionTabUno","factionPanelUno"],agents:["factionTabAgents","factionPanelAgents"],marauders:["factionTabMarauders","factionPanelMarauders"],valley:["factionTabValley","factionPanelValley"]};
 function clamp(n,a,b){return Math.min(b,Math.max(a,n))}
@@ -670,7 +670,7 @@ function psychTrack(label,value){
   var pct=clamp(50+value*7,8,92);return'<span class="psych-track-row"><b>'+esc(label)+'</b><i><span style="width:'+pct+'%"></span></i><em>'+((value>0?"+":"")+value)+'</em></span>'
 }
 function psychPanelHtml(p){
-  var psyche=normalizePsyche(p),stateDef=psychState(p);return'<aside class="psych-panel '+(stateDef.tone||"")+'"><header><span>Estado psicológico</span><strong>'+esc(stateDef.name)+'</strong></header><p>'+esc(stateDef.desc)+'</p><div class="psych-tracks">'+psychTrack("Tensión",psyche.stress)+psychTrack("Empatía",psyche.empathy)+psychTrack("Decisión",psyche.resolve)+psychTrack("Táctica",psyche.pragmatism)+'</div><small>'+esc(stateDef.effects)+'</small></aside>'
+  var psyche=normalizePsyche(p),stateDef=psychState(p),open=psychPanelExpanded;return'<aside class="psych-panel '+(stateDef.tone||"")+' '+(open?'expanded':'compact')+'"><header><span>Estado psicológico</span><strong>'+esc(stateDef.name)+'</strong><button class="psych-panel-toggle" data-psych-toggle aria-expanded="'+(open?'true':'false')+'" aria-label="'+(open?'Contraer estado psicológico':'Expandir estado psicológico')+'">'+(open?'−':'+')+'</button></header><div class="psych-panel-body"><p>'+esc(stateDef.desc)+'</p><div class="psych-tracks">'+psychTrack("Tensión",psyche.stress)+psychTrack("Empatía",psyche.empathy)+psychTrack("Decisión",psyche.resolve)+psychTrack("Táctica",psyche.pragmatism)+'</div><small>'+esc(stateDef.effects)+'</small></div></aside>'
 }
 function psychTeamLine(){return state.party.map(function(p){return p.name+": "+psychState(p).name}).join(" · ")}
 function professionWorkshopHtml(p){
@@ -703,6 +703,7 @@ function renderProfile(i,feedback){
   Array.prototype.forEach.call(document.querySelectorAll("[data-transfer-open]"),function(b){b.addEventListener("click",function(){openTransferModal(i,Number(b.dataset.transferOpen))})});
   Array.prototype.forEach.call(document.querySelectorAll("[data-discard-profile]"),function(b){b.addEventListener("click",function(){openDiscardModal(i,Number(b.dataset.discardProfile))})});
   Array.prototype.forEach.call(document.querySelectorAll("[data-profile-switch]"),function(b){b.addEventListener("click",function(){switchProfile(i,Number(b.dataset.profileSwitch))})});
+  Array.prototype.forEach.call(document.querySelectorAll("[data-psych-toggle]"),function(b){b.addEventListener("click",function(){psychPanelExpanded=!psychPanelExpanded;renderProfile(i);var toggle=document.querySelector("[data-psych-toggle]");if(toggle)toggle.focus()})});
   Array.prototype.forEach.call(document.querySelectorAll("[data-repair]"),function(b){b.addEventListener("click",function(){repairEquipment(i,b.dataset.repair)})});
   Array.prototype.forEach.call(document.querySelectorAll("[data-craft]"),function(b){b.addEventListener("click",function(){craftItem(i,b.dataset.craft)})});
   Array.prototype.forEach.call(document.querySelectorAll("[data-unlock-skill]"),function(b){b.addEventListener("click",function(){unlockSkill(i,b.dataset.unlockSkill)})});
@@ -794,8 +795,8 @@ function attemptDisassembly(){
 function closeDisassemblyModal(){
   clearInterval(disassemblyTimer);disassemblyState=null;$("disassemblyModal").classList.add("hidden")
 }
-function openProfile(i){if(battleState)return;profileTab="inventory";renderProfile(i);$('profileModal').classList.remove('hidden');$('closeProfile').focus()}
-function closeProfile(){closeTransferModal();closeDiscardModal();if(disassemblyState&&disassemblyState.source.type==="profile")closeDisassemblyModal();$('profileModal').classList.add('hidden');if(state.refuge.active)renderRefuge()}
+function openProfile(i){if(battleState)return;profileTab="inventory";psychPanelExpanded=false;renderProfile(i);$('profileModal').classList.remove('hidden');$('closeProfile').focus()}
+function closeProfile(){closeTransferModal();closeDiscardModal();psychPanelExpanded=false;if(disassemblyState&&disassemblyState.source.type==="profile")closeDisassemblyModal();$('profileModal').classList.add('hidden');if(state.refuge.active)renderRefuge()}
 function equipBagItem(pIndex,bagIndex){
   var p=state.party[pIndex],entry=p&&p.bag[bagIndex],d=entry&&gear(entry.id);if(!p||!entry||!canEquip(p,d)){toast("Ese superviviente no domina esa categoría");return}
   var old=p.equipment[d.slot],oldDur=d.slot==="head"||d.slot==="body"?gearDurability(p,d.slot):null,newDur=d.maxDurability?(Number.isFinite(Number(entry.durability))?Number(entry.durability):d.maxDurability):null,futureUsed=bagUsed(p)-1+(old?1:0);if(d.slot==="backpack"&&d.capacity<futureUsed){toast("La mochila nueva no puede contener la carga resultante");return}
