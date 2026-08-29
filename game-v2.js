@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="47";
+var ASSET_REVISION="48";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -266,6 +266,7 @@ function clickSfxForButton(button){
   if(data.repair!==undefined)return"loadout-repair";
   if(data.craft!==undefined)return craftSfx(data.craft);
   if(data.unlockSkill!==undefined)return"skill-unlock";
+  if(data.contextArchive!==undefined)return"archive-open";
   if(data.openArchive!==undefined)return"archive-open";
   if(data.openWorldLore!==undefined)return"lore-open";
   if(data.panel!==undefined)return"ui-open-panel";
@@ -444,6 +445,77 @@ function weaponLabel(p){var w=weaponFor(p),ammo=w.ammo?" · "+bagQty(p,w.ammo)+"
 function sceneKeyForEvent(ev){var text=((ev.loc||"")+" "+(ev.type||"")+" "+(ev.title||"")).toLowerCase();if(/perímetro de gobierno|perimetro de gobierno/.test(text))return"day-valley";if(/mercado subterráneo|mercado subterraneo/.test(text))return"day-market";if(/casa de cazadores|mesa para cuatro/.test(text))return"day-hunters";if(/escalera república|escalera republica|primera luz/.test(text))return"day-station";if(/alameda hundida|alameda superior|cruce dieciocho|semáforo|semaforo|asfalto|avenida|cielo abierto|cazadores de pulsos/.test(text))return"day-alameda";if(/sala de antenas|soporte vital|cámara de núcleos|camara de nucleos|torre repetidora|última patrulla|ultima patrulla|mujer de la señal|exiliados regresan|núcleo expuesto|nucleo expuesto/.test(text))return"antenna";if(/perímetro|perimetro|gobierno|ministerio|corredor de hormigón|corredor de hormigon|continuidad|cascos morados|uno/.test(text))return"uno";if(/azotea|azoteas|dron|drones|nido|superficie/.test(text))return"drone";if(/inundada|agua sobre|casa de bombas|bomba|farmacia/.test(text))return"flood";return"station"}
 function pulseStageFade(prevBackground){
   var node=$("stagePrevBg");if(!node||!prevBackground||prevBackground==="none")return;clearTimeout(stageFadeTimer);node.classList.remove("active");node.style.backgroundImage=prevBackground;void node.offsetWidth;node.classList.add("active");stageFadeTimer=setTimeout(function(){node.classList.remove("active");node.style.backgroundImage=""},930)
+}
+var eventDossiers=[
+  ["signal","protocol"],
+  ["signal","exiles"],
+  ["protocol","sonar"],
+  ["hunterMarks","signal"],
+  ["redEyes","cores"],
+  ["sonar","cores"],
+  ["hunterMarks","coreRite"],
+  ["coreRite","hunterMarks"],
+  ["matias","signal"],
+  ["sonar","protocol"],
+  ["hunterMarks","sonar"],
+  ["sonar","protocol"],
+  ["hunterMarks","redEyes"],
+  ["protocol","names"],
+  ["sonar","purpleHelmets"],
+  ["cores","exiles"],
+  ["sonar","redEyes"],
+  ["hunterMarks","names"],
+  ["names","sonar"],
+  ["purpleHelmets","exiles"],
+  ["sonar","purpleHelmets"],
+  ["truce","coreRite"],
+  ["protocol","purpleHelmets"],
+  ["sonar","protocol"],
+  ["origin","names"],
+  ["exiles","truce","coreRite"],
+  ["origin","names","protocol"]
+];
+var dossierNotes={
+  signal:"La señal no es solo un objetivo: define si conviene responder, ocultarse o investigar antes de gastar recursos.",
+  matias:"Matías conecta rutas humanas con desvíos de la Red UNO; su testimonio ayuda a valorar rescate, abandono o negociación.",
+  protocol:"El protocolo muestra cómo piensa la Red UNO: no protege a todos por igual, clasifica cuerpos, refugios y rutas.",
+  names:"El listado de refugios vuelve peligrosa cualquier decisión sobre coordenadas, transmisión o intercambio de información.",
+  origin:"El origen de la señal explica quién está interviniendo la red y por qué liberar información puede salvar o exponer comunidades.",
+  exiles:"El acta de los exiliados cambia el sentido de cada encuentro con merodeadores: no son una amenaza nacida de la nada.",
+  hunterMarks:"Las marcas de cazadores revelan rutas de confianza, deudas y formas de sobrevivir sin emitir señales rastreables.",
+  redEyes:"Las ópticas rojas ayudan a leer si una emboscada es cacería, frontera o defensa de un territorio propio.",
+  cores:"Los núcleos implantados son memoria y supervivencia, no simple botín tecnológico.",
+  coreRite:"El rito de recuperación vuelve moralmente más pesada cualquier decisión sobre saquear, defender o abandonar cuerpos.",
+  sonar:"SONAR explica por qué respirar, correr, disparar o quedarse quieto son decisiones tácticas frente a la Red UNO.",
+  purpleHelmets:"Los cascos morados responden a una jerarquía distinta: entenderlos ayuda a decidir cuándo combatir, mentir o rodear.",
+  truce:"La tregua borrada demuestra que cazadores y exiliados ya cooperaron; puede cambiar cómo se juzga una alianza imposible."
+};
+function archiveUnlocked(id){return state.docs.indexOf(id)>=0}
+function dossierIdsForEvent(ev){
+  var ids=(eventDossiers[state.index]||[]).slice(),text=((ev.title||"")+" "+(ev.text||"")+" "+(ev.loc||"")+" "+(ev.type||"")).toLowerCase();
+  if(!ids.length)ids.push("signal");
+  if(/dron|sonar|pulso|rastread|respiraci/.test(text))ids.push("sonar");
+  if(/exiliad|merodeador|núcleo|nucleo/.test(text))ids.push("exiles");
+  if(/cazador|cosechador|marca/.test(text))ids.push("hunterMarks");
+  if(/operadora|señal|senal|transmis/.test(text))ids.push("origin");
+  return ids.filter(function(id,i,list){return archives[id]&&list.indexOf(id)===i}).slice(0,3)
+}
+function contextArchiveHtml(id){
+  var summary=archives[id],unlocked=archiveUnlocked(id);
+  return'<button class="context-archive '+(unlocked?'unlocked':'locked')+'" data-context-archive="'+esc(id)+'"><span><b>'+esc(summary[0])+'</b><small>'+esc(dossierNotes[id]||summary[1])+'</small><em>'+(unlocked?'Recuperado · leer completo':'Pista parcial · abrir')+'</em></span></button>'
+}
+function renderContextArchives(ev){
+  var node=$("contextArchives"),ids=node?dossierIdsForEvent(ev):[];if(!node)return;
+  if(!ids.length){node.classList.add("hidden");node.innerHTML="";return}
+  node.classList.remove("hidden");
+  node.innerHTML='<header><span>Expedientes para decidir</span><span>Consulta antes de elegir</span></header><div class="context-archive-list">'+ids.map(contextArchiveHtml).join("")+'</div>';
+  Array.prototype.forEach.call(document.querySelectorAll("[data-context-archive]"),function(b){b.addEventListener("click",function(){openContextArchive(b.dataset.contextArchive,b)})})
+}
+function openContextArchive(id,opener){
+  var summary=archives[id],doc=archiveTexts[id],unlocked=archiveUnlocked(id),body;if(!summary||!doc)return;
+  if(unlocked){openArchive(id,opener);return}
+  body=[dossierNotes[id]||summary[1],doc.body&&doc.body[0]?doc.body[0]:"La información completa sigue fragmentada. La expedición deberá recuperar el archivo para confirmar esta pista.","Lectura parcial: este expediente ayuda a decidir la escena actual, pero no se suma al archivo recuperado de la partida."];
+  archiveOpener=opener||null;$("archiveDocClass").textContent="Dossier contextual · no recuperado";$("archiveDocTitle").textContent=summary[0];$("archiveDocSource").textContent=doc.source;$("archiveDocDate").textContent=doc.date;$("archiveDocSummary").textContent=summary[1];$("archiveDocBody").innerHTML=body.map(function(p){return"<p>"+esc(p)+"</p>"}).join("");$("archiveModal").classList.remove("hidden");$("archiveReaderScroll").scrollTop=0;$("closeArchive").focus()
 }
 function repairCost(p,slot){var d=gear(p.equipment[slot]),dur=gearDurability(p,slot);if(!d||!d.maxDurability||dur>=d.maxDurability)return 0;return dur===0||d.maxDurability-dur>=Math.ceil(d.maxDurability/2)?2:1}
 function repairReady(p,slot){var cost=repairCost(p,slot);return cost>0&&state.party[1].hp>0&&state.engineeringUses>0&&hasPartyItem("tool")&&stockCount("scrap")>=cost}
@@ -786,7 +858,7 @@ function useCombatItem(kind){
 }
 
 function render(){
-  var ev=events[state.index],stage=$("stage"),nextScene=sceneKeyForEvent(ev),currentScene=stage.dataset.scene||"";if(currentScene!==nextScene){var prevBackground=getComputedStyle(stage).backgroundImage;stage.dataset.scene=nextScene;if(currentScene)pulseStageFade(prevBackground)}$("day").textContent="Día "+String(ev.day).padStart(2,"0")+" / 03";$("time").textContent=ev.time;$("threatValue").textContent=state.threat+"%";$("threatBar").style.width=state.threat+"%";stage.dataset.day=ev.day;$("chapter").textContent=chapters[ev.day];$("location").textContent=ev.loc;$("progress").textContent="Situación "+(state.index+1)+" de "+events.length;$("eventType").textContent=ev.type;$("eventTitle").textContent=ev.title;$("eventText").textContent=ev.text;
+  var ev=events[state.index],stage=$("stage"),nextScene=sceneKeyForEvent(ev),currentScene=stage.dataset.scene||"";if(currentScene!==nextScene){var prevBackground=getComputedStyle(stage).backgroundImage;stage.dataset.scene=nextScene;if(currentScene)pulseStageFade(prevBackground)}$("day").textContent="Día "+String(ev.day).padStart(2,"0")+" / 03";$("time").textContent=ev.time;$("threatValue").textContent=state.threat+"%";$("threatBar").style.width=state.threat+"%";stage.dataset.day=ev.day;$("chapter").textContent=chapters[ev.day];$("location").textContent=ev.loc;$("progress").textContent="Situación "+(state.index+1)+" de "+events.length;$("eventType").textContent=ev.type;$("eventTitle").textContent=ev.title;$("eventText").textContent=ev.text;renderContextArchives(ev);
   $("choices").innerHTML=ev.choices.map(function(c,i){var why=reason(c);return'<button class="choice" data-choice="'+i+'" '+(why?"disabled":"")+'><span class="num">'+(i+1)+'</span><span><strong>'+esc(c.label)+"</strong><small>"+esc(why||c.hint)+"</small></span><span class=\"cost\">"+esc(c.cost||"")+"</span></button>"}).join("");
   Array.prototype.forEach.call(document.querySelectorAll("[data-choice]"),function(b){b.addEventListener("click",function(){choose(Number(b.dataset.choice))})});renderMini()
 }
