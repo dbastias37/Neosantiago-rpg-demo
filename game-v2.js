@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="55";
+var ASSET_REVISION="56";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -14,21 +14,21 @@ var enemyDefs={
   agent4:{name:"Comandante de la Red UNO",role:"Casco morado · guardia de perímetro",hp:68,attack:[10,15],accuracy:4,def:14,armor:2,mechanical:false,lootMs:3400,lootGroup:"agent",xp:35}
 };
 var npcDialogueDefs={
-  elder:{name:"Varela",role:"Anciana del consejo · memoria del refugio",portrait:"portraits/sara.webp"},
+  elder:{name:"Varela",role:"Anciana del consejo · memoria del refugio",portrait:"portraits/npc-varela.webp"},
   mara:{name:"Mara",role:"Intercambista del Andén 4",portrait:"characters/mara-trader.webp"},
   armorer:{name:"Bruno",role:"Armero de túnel · taller del refugio",portrait:"characters/armero-trader.webp"},
   sara:{name:"Sara",role:"Médico de la expedición",portrait:"portraits/sara.webp"},
   elias:{name:"Elías",role:"Ingeniero de campo",portrait:"portraits/elias.webp"},
   noa:{name:"Noa",role:"Cazadora de superficie",portrait:"portraits/noa.webp"},
-  rosa:{name:"Rosa",role:"Cazadora civil · madre del andén",portrait:"portraits/noa.webp"},
-  lira:{name:"Lira",role:"Merodeadora exiliada · núcleo abierto",portrait:"portraits/npc-lira.svg"},
-  matias:{name:"Matías",role:"Sobreviviente de superficie · testigo de rutas",portrait:"portraits/npc-matias.svg"},
-  unit7:{name:"Unidad S-7",role:"Dron de la Red UNO · núcleo inestable",portrait:"portraits/npc-unit7.svg"},
-  unit12:{name:"Unidad H-12",role:"Dron de altura · barrido SONAR",portrait:"portraits/drone.webp"},
-  tracker:{name:"Rastreador Vega",role:"Agente de la Red UNO · control de identidad",portrait:"portraits/agent3.webp"},
-  commander:{name:"Comandante Ortega",role:"Casco morado de la Red UNO",portrait:"portraits/agent4.webp"},
-  vera:{name:"Vera",role:"Jefa cosechadora · rutas de mercado",portrait:"portraits/merodeador2.webp"},
-  operator:{name:"Irene",role:"Operadora de la señal · soporte vital",portrait:"portraits/npc-operator.svg"}
+  rosa:{name:"Rosa",role:"Cazadora civil · madre del andén",portrait:"portraits/npc-rosa.webp"},
+  lira:{name:"Lira",role:"Merodeadora exiliada · núcleo abierto",portrait:"portraits/npc-lira.webp"},
+  matias:{name:"Matías",role:"Sobreviviente de superficie · testigo de rutas",portrait:"portraits/npc-matias.webp"},
+  unit7:{name:"Unidad S-7",role:"Dron de la Red UNO · núcleo inestable",portrait:"portraits/npc-unit7.webp"},
+  unit12:{name:"Unidad H-12",role:"Dron de altura · barrido SONAR",portrait:"portraits/npc-unit12.webp"},
+  tracker:{name:"Rastreador Vega",role:"Agente de la Red UNO · control de identidad",portrait:"portraits/npc-vega.webp"},
+  commander:{name:"Comandante Ortega",role:"Casco morado de la Red UNO",portrait:"portraits/npc-ortega.webp"},
+  vera:{name:"Vera",role:"Jefa cosechadora · rutas de mercado",portrait:"portraits/npc-vera.webp"},
+  operator:{name:"Irene",role:"Operadora de la señal · soporte vital",portrait:"portraits/npc-irene.webp"}
 };
 var branchDialogueDefs={
   rosaWater:{npc:"rosa",kicker:"La fiebre de Iara",start:"start",nodes:{
