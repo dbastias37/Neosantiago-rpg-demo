@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="53";
+var ASSET_REVISION="54";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -987,11 +987,14 @@ function lethalFeedback(){return battleState&&battleState.feedback.some(function
 function settleLethal(next){
   var current=battleState;if(!current)return;current.busy=true;renderBattle();setTimeout(function(){if(battleState!==current)return;var alive=livingEnemies(),target=current.enemies[current.target];if(alive.length&&(!target||target.hp<=0))current.target=current.enemies.indexOf(alive[0]);renderBattle();setTimeout(function(){if(battleState===current){current.busy=false;next()}},160)},680)
 }
+function bagUsageBar(p){
+  var used=bagUsed(p),capacity=bagCapacity(p),free=bagFree(p),pct=capacity?clamp(Math.round(100*used/capacity),0,100):100,mode=free<=0?"full":pct>=80?"warn":"";return'<div class="barline bagline '+mode+'" title="Mochila '+used+' de '+capacity+' espacios · '+pct+'% utilizado"><span>Moch</span><div class="bar bag"><span style="width:'+pct+'%"></span></div><b>'+pct+'%</b></div>'
+}
 function allyUnitHtml(p,i,lootPhase){
-  var need=xpNeeded(p),xp=Math.round(100*p.xp/need),tags=[],fx=hpFeedback("ally",i),falling=p.hp<=0&&fx,selected=lootPhase&&battleState.looter===i;
+  var need=xpNeeded(p),xp=Math.round(100*p.xp/need),tags=[],fx=hpFeedback("ally",i),falling=p.hp<=0&&fx,selected=lootPhase&&battleState.looter===i,bagLine=lootPhase?bagUsageBar(p):"";
   var fatigue=hungerPenalty(p),weapon=weaponFor(p),mind=psychState(p);tags.push([mind.name,mind.tone]);if(p.hp<=0)tags.push(["Agotado","bad"]);if(p.bleed)tags.push(["Sangrado "+p.bleed,"bad"]);if(fatigue)tags.push([p.hunger<=10?"Energía crítica · −4":"Fatiga · precisión −2","bad"]);if(weaponAccuracyPenalty(p,weapon))tags.push(["Arma de fuego · precisión −2","bad"]);if(gear(p.equipment.head)&&gearDurability(p,"head")===0||gear(p.equipment.body)&&gearDurability(p,"body")===0)tags.push(["Equipo roto","bad"]);if(p.guard)tags.push(["Cobertura +"+p.guard,"good"]);if(!lootPhase&&i===battleState.actor&&p.hp>0)tags.push(["Actúa","good"]);if(lootPhase&&p.hp>0)tags.push([selected?"Saqueador":"Disponible",selected?"good":""]);
   var tag=lootPhase&&p.hp>0?"button":"article",attrs=lootPhase&&p.hp>0?' data-looter="'+i+'"':"";
-  return'<'+tag+' class="unit '+(!lootPhase&&i===battleState.actor&&p.hp>0?"active ":"")+(lootPhase&&p.hp>0?"looter-choice ":"")+(selected?"looter-selected ":"")+(p.hp<=0?(falling?"dying ":"down "):"")+(fx?(fx.delta>0?"fx-heal":"fx-damage"):"")+'"'+attrs+'>'+hpFloat(fx)+portraitArt("portraits/"+p.id+".webp",p.name,"ally-portrait-art")+'<div class="unit-info"><h3>'+esc(p.name)+'</h3><small>'+esc(p.role)+' · Lvl. '+p.level+'</small><div class="barline"><span>HP</span><div class="bar">'+hpBar(p.hp,p.maxHp,fx)+'</div><b>'+p.hp+'/'+p.maxHp+'</b></div><div class="barline"><span>XP</span><div class="bar xp"><span style="width:'+xp+'%"></span></div><b>'+p.xp+'/'+need+'</b></div>'+statusHtml(tags)+'</div></'+tag+'>'
+  return'<'+tag+' class="unit '+(lootPhase?"loot-mode ":"")+(!lootPhase&&i===battleState.actor&&p.hp>0?"active ":"")+(lootPhase&&p.hp>0?"looter-choice ":"")+(selected?"looter-selected ":"")+(p.hp<=0?(falling?"dying ":"down "):"")+(fx?(fx.delta>0?"fx-heal":"fx-damage"):"")+'"'+attrs+'>'+hpFloat(fx)+portraitArt("portraits/"+p.id+".webp",p.name,"ally-portrait-art")+'<div class="unit-info"><h3>'+esc(p.name)+'</h3><small>'+esc(p.role)+' · Lvl. '+p.level+'</small><div class="barline"><span>HP</span><div class="bar">'+hpBar(p.hp,p.maxHp,fx)+'</div><b>'+p.hp+'/'+p.maxHp+'</b></div><div class="barline"><span>XP</span><div class="bar xp"><span style="width:'+xp+'%"></span></div><b>'+p.xp+'/'+need+'</b></div>'+bagLine+statusHtml(tags)+'</div></'+tag+'>'
 }
 function enemyUnitHtml(e,i,lootPhase){
   var tags=[],fx=hpFeedback("enemy",i),critical=criticalFeedback(i),falling=e.hp<=0&&fx;if(e.stun)tags.push(["Aturdido","bad"]);if(e.armor)tags.push(["Armadura "+e.armor,""]);
