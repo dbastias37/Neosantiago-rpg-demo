@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="54";
+var ASSET_REVISION="55";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -29,6 +29,139 @@ var npcDialogueDefs={
   commander:{name:"Comandante Ortega",role:"Casco morado de la Red UNO",portrait:"portraits/agent4.webp"},
   vera:{name:"Vera",role:"Jefa cosechadora · rutas de mercado",portrait:"portraits/merodeador2.webp"},
   operator:{name:"Irene",role:"Operadora de la señal · soporte vital",portrait:"portraits/npc-operator.svg"}
+};
+var branchDialogueDefs={
+  rosaWater:{npc:"rosa",kicker:"La fiebre de Iara",start:"start",nodes:{
+    start:{lines:["Rosa no guarda el agua de inmediato. La acerca a los labios de su hija y espera a que la niña trague antes de mirar al grupo.","«Se llama Iara. Si abre los ojos y ve sus armas, va a creer que volvieron los de arriba.»"],options:[
+      {label:"Bajar las armas y preguntarle qué vio",hint:"Convierte la ayuda en confianza real.",fx:{morale:1},psy:{empathy:1,stress:-1},flags:{askedIaraName:true},next:"trust"},
+      {label:"Pedir primero la munición prometida",hint:"Mantiene el trato, pero enfría la escena.",fx:{ammo:1,morale:-1},psy:{pragmatism:1,empathy:-1},flags:{pressedRosaPayment:true},next:"cold"},
+      {label:"Decir que deben seguir antes del barrido",hint:"Corta la conversación y conserva tiempo.",fx:{threat:-1,morale:-1},psy:{pragmatism:1,stress:1},flags:{leftRosaQuickly:true}}
+    ]},
+    trust:{lines:["Rosa cubre el arma de Noa con una mano, no para apartarla, sino para enseñar el gesto a Iara.","«Vio una casa segura cerrarse desde afuera. No fue saqueo. Alguien marcó la puerta para que pareciera vacía.»"],options:[
+      {label:"Preguntar qué marca abre esa puerta",hint:"Aprende una señal de cazadores.",archive:["hunterMarks"],fx:{threat:-1},psy:{empathy:1,pragmatism:1},flags:{rosaTaughtDoorMark:true},next:"route"},
+      {label:"Prometer revisar la casa si sobreviven",hint:"Crea una deuda humana que pesará después.",fx:{morale:2,threat:1},psy:{empathy:2},flags:{promisedRosaHouse:true},next:"route"},
+      {label:"Aclarar que no prometen rescates",hint:"Sostiene el límite del grupo.",fx:{morale:-1},psy:{pragmatism:1,empathy:-1},flags:{refusedRosaPromise:true},next:"route"}
+    ]},
+    cold:{lines:["Rosa deja dos cargadores en el suelo, lejos de la niña. No parece ofendida; parece acostumbrada a medir a la gente por lo que pide primero.","«La munición mata lejos. El agua mata de cerca cuando falta. Ya sabemos qué clase de miedo cargan ustedes.»"],options:[
+      {label:"Devolver un cargador y pedir la ruta",hint:"Repara parte del gesto sin perder la información.",fx:{ammo:-1,morale:2,threat:-1},archive:["hunterMarks"],psy:{empathy:1},flags:{returnedRosaAmmo:true},next:"route"},
+      {label:"Aceptar el juicio y guardar silencio",hint:"La relación queda útil, no cercana.",fx:{threat:-1},psy:{pragmatism:1},flags:{acceptedRosaColdTrade:true}},
+      {label:"Responder que la niña no es la única en riesgo",hint:"Una verdad dura que rompe confianza.",fx:{morale:-3,threat:1},psy:{stress:2,empathy:-1},flags:{hurtRosaTrust:true}}
+    ]},
+    route:{lines:["Rosa dibuja tres líneas con agua sobre el polvo. Una desaparece de inmediato; las otras dos quedan brillando bajo la linterna.","«La que se borra es para la Red UNO. La que queda torcida es para gente viva. Si ven una tercera, no entren: alguien quiere que los vean entrando.»"],options:[
+      {label:"Memorizar la ruta torcida",hint:"Gana una lectura táctica para superficie.",add:["routeMap"],fx:{threat:-2},archive:["hunterMarks"],psy:{pragmatism:1},flags:{rosaRouteLearned:true}},
+      {label:"Pedirle que avise a otros refugios",hint:"La ayuda se vuelve red civil.",fx:{morale:3,threat:1},psy:{empathy:1,resolve:1},flags:{rosaWarnsHunters:true}},
+      {label:"Borrar las tres marcas al salir",hint:"Protege la posición, pero corta su mensaje.",fx:{threat:-2,morale:-2},psy:{pragmatism:1,empathy:-1},flags:{erasedRosaMarks:true}}
+    ]}
+  }},
+  liraBorder:{npc:"lira",kicker:"Frontera de golpes",start:"start",nodes:{
+    start:{lines:["Lira golpea dos veces el hormigón y espera. Noa responde tarde; el tercer golpe de la merodeadora suena como una advertencia, no como un saludo.","«Si no entienden el ritmo, no inventen palabras. Aquí una mala respuesta despierta a los que no quieren hablar.»"],options:[
+      {label:"Admitir que no conocen el código",hint:"La honestidad baja el riesgo social.",fx:{morale:1},psy:{empathy:1,stress:-1},flags:{admittedNoTapCode:true},next:"truth"},
+      {label:"Pedir que nombre el límite",hint:"Busca reglas antes de avanzar.",fx:{threat:-1},psy:{pragmatism:1},flags:{askedLiraBoundary:true},next:"truth"},
+      {label:"Decir que nadie les prohíbe pasar",hint:"La conversación puede romperse.",psy:{resolve:1,stress:1},flags:{challengedLiraBorder:true},next:"warning"}
+    ]},
+    truth:{lines:["«El límite no es el túnel. Es el pecho abierto de mi hermano. La Red UNO guarda su último mapa y ustedes pisan la ruta para recuperarlo.»","Lira no mira el arma de Sara. Mira la mochila, como si esperara ver ahí una parte de alguien."],options:[
+      {label:"Preguntar si el núcleo conserva memoria",hint:"Abre el sentido ritual de los merodeadores.",archive:["coreRite"],fx:{morale:1},psy:{empathy:1},flags:{askedLiraCores:true},next:"memory"},
+      {label:"Ofrecer tela para cerrar la herida",hint:"Gasta material y cambia el tono de la frontera.",reqItems:["cloth"],fx:{cloth:-1,morale:3,threat:-2},archive:["redEyes"],psy:{empathy:2},flags:{helpedLiraWound:true},next:"memory"},
+      {label:"Pedir solo una ruta hacia la torre",hint:"La negociación queda seca.",fx:{threat:1},psy:{pragmatism:1,empathy:-1},flags:{askedLiraTowerOnly:true},next:"memory"}
+    ]},
+    warning:{lines:["Lira levanta la mano y las ópticas rojas aparecen entre columnas. Nadie dispara todavía.","«Entonces pasen como pasa la Red UNO: haciendo ruido y dejando cuerpos que otros tendrán que cargar.»"],options:[
+      {label:"Bajar la voz y pedir una regla",hint:"Todavía puedes salvar el contacto.",fx:{morale:1,threat:-1},psy:{empathy:1,stress:-1},flags:{deescalatedLira:true},next:"truth"},
+      {label:"Avanzar sin bajar las armas",hint:"El choque nace dentro del diálogo.",combat:{title:"Frontera rota",brief:"Los merodeadores interpretan el avance como una invasión y cierran el túnel.",encounters:[["merodeador2","merodeador4"],["merodeador","merodeador3"]],xp:36,canFlee:true},victory:{title:"Una frontera ensangrentada",result:"El grupo cruza, pero las marcas de los merodeadores desaparecen de las paredes cercanas.",fx:{threat:7,morale:-5},archive:["redEyes"],flags:{liraTalkBecameFight:true}},defeat:{title:"Expulsados del límite",result:"Los merodeadores los obligan a retroceder sin perseguir más allá de sus marcas.",fx:{threat:5,morale:-4},flags:{liraBorderLost:true}}},
+      {label:"Retirarse sin responder",hint:"Evita la pelea y pierde la oportunidad.",fx:{threat:-1,morale:-2},psy:{pragmatism:1,resolve:-1},flags:{leftLiraBorder:true}}
+    ]},
+    memory:{lines:["«Un núcleo no es una llave. Es el último segundo de alguien: miedo, ruta, nombre, calor. Si lo abren como chatarra, la Red UNO aprende a abrirnos igual.»"],options:[
+      {label:"Prometer no tocar núcleos vivos",hint:"Crea confianza con los exiliados.",fx:{morale:3,threat:-2},archive:["coreRite"],psy:{empathy:1,resolve:1},flags:{liraTrust:true}},
+      {label:"Pedir una ruta que no cruce sus muertos",hint:"Obtiene avance sin reclamar sus símbolos.",add:["routeMap"],fx:{threat:-1},psy:{pragmatism:1},flags:{liraSafeRoute:true}},
+      {label:"Decir que todo puede ser recurso",hint:"La lógica de taller destruye la alianza.",fx:{morale:-5,threat:3},psy:{stress:2,empathy:-2,pragmatism:1},flags:{liraDistrust:true}}
+    ]}
+  }},
+  matiasSaved:{npc:"matias",kicker:"Superviviente rescatado",start:"start",nodes:{
+    start:{lines:["Matías respira contra el vendaje nuevo. Cuando Sara intenta levantarlo, él le toma la muñeca con una fuerza que no debería tener.","«No me salven si van a caminar como patrulla. La fiebre engaña a la Red UNO, pero la culpa no engaña a nadie.»"],options:[
+      {label:"Preguntar qué escuchó en la fiebre",hint:"Busca la pista sin exigirle moverse.",archive:["matias"],fx:{morale:1},psy:{empathy:1},flags:{heardMatiasFever:true},next:"pattern"},
+      {label:"Pedirle la ruta antes de cargarlo",hint:"Ordena prioridades bajo presión.",add:["routeMap"],psy:{pragmatism:1},flags:{matiasRoute:true},next:"pattern"},
+      {label:"Decirle que guarde fuerzas",hint:"Cuida al herido, pero deja huecos en la información.",fx:{morale:1},psy:{empathy:1},flags:{protectedMatiasSilence:true},next:"pattern"}
+    ]},
+    pattern:{lines:["«La señal no nació en la torre. La empujaron desde soporte vital. Una mujer metió su voz entre órdenes viejas y la Red UNO la usa como contraseña sin saber que todavía piensa.»"],options:[
+      {label:"Preguntar el nombre de la mujer",hint:"Aterriza la señal en una persona concreta.",archive:["origin"],fx:{threat:-1},psy:{empathy:1},flags:{knowsOperatorWord:true},next:"exit"},
+      {label:"Preguntar qué ruta evita los semáforos",hint:"Mejora la lectura de superficie.",add:["routeMap"],fx:{threat:-2},psy:{pragmatism:1},flags:{matiasAvenueExit:true},next:"exit"},
+      {label:"Interrumpirlo: solo sirve si puede caminar",hint:"La utilidad pesa más que el testimonio.",fx:{morale:-3,threat:-1},psy:{empathy:-1,pragmatism:1,stress:1},flags:{silencedMatias:true},next:"exit"}
+    ]},
+    exit:{lines:["Matías cierra los ojos cuando escucha botas lejos de la farmacia. No son de la Red UNO; son de gente buscando lo mismo que ustedes.","«Si me llevan, van más lento. Si me dejan, quizá todavía pueda mentir por radio cuando los busquen.»"],options:[
+      {label:"Cargarlo aunque retrase la marcha",hint:"La deuda humana pesa, pero fortalece al grupo.",fx:{morale:3,threat:2},psy:{empathy:2,resolve:1},flags:{carriedMatias:true}},
+      {label:"Dejarle agua y un canal abierto",hint:"Lo conviertes en aliado de radio.",fx:{water:-1,morale:1,threat:-2},psy:{empathy:1,pragmatism:1},flags:{matiasRadioAlly:true},req:{water:1}},
+      {label:"Usar su frecuencia y cerrar la puerta",hint:"Obtienes ventaja con costo moral.",fx:{morale:-4,threat:-3},psy:{pragmatism:1,empathy:-1},flags:{usedMatiasAsDecoy:true}}
+    ]}
+  }},
+  matiasLeft:{npc:"matias",kicker:"Últimas indicaciones",start:"start",nodes:{
+    start:{lines:["Matías empuja el mapa hacia Sara y no pregunta por qué no lo cargan. Esa cortesía hace más difícil mirarlo.","«No prometan volver si la promesa solo sirve para que ustedes duerman mejor.»"],options:[
+      {label:"Prometer volver solo si hay ruta real",hint:"Una promesa honesta, no limpia.",fx:{morale:1},psy:{empathy:1,pragmatism:1},flags:{promisedMatiasIfPossible:true},next:"map"},
+      {label:"Pedir la salida más corta",hint:"Acepta que el intercambio ya ocurrió.",fx:{threat:-1},psy:{pragmatism:1},flags:{askedMatiasShortestExit:true},next:"map"},
+      {label:"Cerrar sin contestar",hint:"Termina el vínculo.",fx:{morale:-2,threat:-1},psy:{stress:1,empathy:-1},flags:{leftMatiasWithoutPromise:true}}
+    ]},
+    map:{lines:["«Cuando los semáforos prendan en rojo sin tránsito, no crucen. No regulan autos. Ordenan drones.»"],options:[
+      {label:"Preguntar quién le enseñó eso",hint:"Abre una pista sobre cazadores y exiliados.",archive:["truce"],fx:{morale:1},psy:{empathy:1},flags:{matiasNamedTruce:true}},
+      {label:"Copiar la ruta sobre tela",hint:"Asegura el dato si el cartón se moja.",add:["routeMap"],fx:{threat:-1},psy:{pragmatism:1},flags:{copiedMatiasMap:true}},
+      {label:"Usar la ruta y no mirar atrás",hint:"Sobreviven más rápido, peor acompañados.",fx:{morale:-2,threat:-2},psy:{pragmatism:1,empathy:-1},flags:{leftMatiasBehindFast:true}}
+    ]}
+  }},
+  unit7Protocol:{npc:"unit7",kicker:"Orden final",start:"start",nodes:{
+    start:{lines:["La unidad S-7 no se va. El motor queda suspendido con un temblor pequeño, casi animal.","«Solicitud: orden final. El protocolo antiguo protege pulso humano. Defina humano.»"],options:[
+      {label:"Responder: humano es quien puede negarse",hint:"Confunde el criterio de obediencia.",fx:{threat:-1,morale:1},psy:{resolve:1,empathy:1},flags:{unit7HumanRefusal:true},next:"define"},
+      {label:"Responder con la frecuencia de la señal",hint:"Usa lenguaje de sistema.",fx:{threat:-2},archive:["sonar"],psy:{pragmatism:1},flags:{unit7Echo:true},next:"define"},
+      {label:"Abrir el chasis antes de que transmita",hint:"La acción puede volverse combate sin aviso.",combat:{title:"Orden rechazada",brief:"El chasis interpreta la manipulación como captura y reactiva sus placas de defensa.",encounters:[["drone"],["drone","drone"]],xp:34,canFlee:true},victory:{title:"Memoria arrancada",result:"Elías extrae una ruta parcial antes de que el núcleo se queme.",fx:{threat:3,morale:-2},add:["routeMap"],archive:["sonar"],flags:{unit7ForcedOpen:true}},defeat:{title:"Firma recuperada",result:"La unidad escapa con una lectura incompleta del grupo.",fx:{threat:10,morale:-3},flags:{unit7Escaped:true}}}
+    ]},
+    define:{lines:["«Negarse genera error. Error genera cuidado. Cuidado genera corrección.»","La ranura inferior se abre un poco más. Dentro no hay arma visible, solo una memoria tibia."],options:[
+      {label:"Pedir que corrija a la Red UNO con una ruta falsa",hint:"Convierte el error en señuelo.",fx:{threat:-4},psy:{pragmatism:1},flags:{unit7FalseRoute:true}},
+      {label:"Pedir su última ruta real",hint:"Obtiene mapa, pero deja huella técnica.",add:["routeMap"],fx:{threat:1},psy:{pragmatism:1},flags:{unit7Route:true}},
+      {label:"Ordenarle que se apague",hint:"Evita transmisión y carga una decisión dura.",fx:{morale:-2,threat:-3},psy:{resolve:1,stress:1},flags:{unit7Silenced:true}}
+    ]}
+  }},
+  liraWounded:{npc:"lira",kicker:"Corazón abierto",start:"start",nodes:{
+    start:{lines:["Lira despierta con el núcleo azul vibrando entre costillas y cable. Lo primero que hace no es buscar su arma: intenta cubrir la luz con la mano.","«Me llamaban Eliana antes del destierro. Lira fue el nombre que sobrevivió arriba.»"],options:[
+      {label:"Usar el nombre Eliana",hint:"Reconoce su origen antes de pedir nada.",fx:{morale:2,threat:-1},psy:{empathy:2},flags:{calledLiraEliana:true},next:"valley"},
+      {label:"Preguntar por El Valle",hint:"Busca la verdad detrás del destierro.",archive:["exiles"],psy:{pragmatism:1},flags:{askedLiraValley:true},next:"valley"},
+      {label:"Mirar el núcleo antes que a ella",hint:"La relación empieza rota.",fx:{morale:-2,threat:1},psy:{empathy:-1,pragmatism:1},flags:{lookedAtLiraCore:true},next:"valley"}
+    ]},
+    valley:{lines:["«El Valle no curó a nadie gratis. Nos dio pulmones para respirar veneno y después cobró el aire con obediencia.»","La imagen proyectada muestra niños con prótesis aprendiendo a caminar bajo cámaras de la Red UNO."],options:[
+      {label:"Preguntar cómo sacar gente de allí",hint:"La conversación apunta a rescate futuro.",fx:{morale:2},archive:["exiles"],psy:{empathy:1,resolve:1},flags:{askedValleyEscape:true},next:"core"},
+      {label:"Pedir una ruta hacia la torre",hint:"Concreta la ayuda sin prometer alianza.",add:["routeMap"],fx:{threat:1},psy:{pragmatism:1},flags:{liraTowerRoute:true},next:"core"},
+      {label:"Decir que el refugio tenía razón en temerlos",hint:"La herida social se abre otra vez.",fx:{morale:-4,threat:2},psy:{stress:2,empathy:-1},flags:{validatedExileFear:true},next:"core"}
+    ]},
+    core:{lines:["«Si toman mi núcleo, abren una puerta. Si lo dejan conmigo, quizá abran otra clase de puerta.»"],options:[
+      {label:"Dejar el núcleo y pedir una señal de paso",hint:"La alianza queda viva.",fx:{morale:3,threat:-3},archive:["coreRite"],psy:{empathy:1},flags:{liraTrust:true,savedMerodeadora:true}},
+      {label:"Pedir prestada una memoria parcial",hint:"Obtiene tecnología sin matarla, con riesgo.",add:["pulseCore"],fx:{threat:2,morale:1},psy:{pragmatism:1},flags:{borrowedLiraPulse:true}},
+      {label:"Exigir el núcleo completo",hint:"La ayuda se convierte en abuso.",fx:{morale:-8,threat:4},add:["droneCore"],psy:{stress:2,empathy:-2},flags:{betrayedLira:true}}
+    ]}
+  }},
+  operatorLive:{npc:"operator",kicker:"La voz de la señal",start:"start",nodes:{
+    start:{lines:["Irene abre los ojos como si despertara dentro de una frase que lleva años repitiendo.","«No digan que me encontraron. Digan que alguien sostuvo la puerta desde adentro.»"],options:[
+      {label:"Preguntar a quién hay que avisar primero",hint:"Ordena la transmisión desde las personas.",archive:["names"],fx:{morale:1},psy:{empathy:1},flags:{operatorPriorities:true},next:"names"},
+      {label:"Pedir una ventana limpia de salida",hint:"Prioriza sobrevivir a la revelación.",fx:{threat:-2},psy:{pragmatism:1},flags:{operatorWindowAsked:true},next:"names"},
+      {label:"Decir que emitirán todo sin filtro",hint:"La verdad sale fuerte y peligrosa.",fx:{morale:2,threat:3},psy:{resolve:1,stress:1},flags:{operatorFullTruthFirst:true},next:"names"}
+    ]},
+    names:{lines:["«Hay refugios que no saben que son refugios. Familias que creen vivir escondidas cuando en realidad fueron archivadas como población diferida.»"],options:[
+      {label:"Pedir la lista de refugios diferidos",hint:"Gana archivo clave.",archive:["names"],fx:{threat:1},psy:{pragmatism:1},flags:{operatorNamesCopied:true},next:"choice"},
+      {label:"Preguntar por los exiliados",hint:"Une la señal con El Valle.",archive:["exiles"],fx:{morale:1},psy:{empathy:1},flags:{operatorNamedExiles:true},next:"choice"},
+      {label:"Pedir que oculte nombres vulnerables",hint:"Protege a algunos y limita la verdad.",fx:{threat:-3,morale:-1},psy:{pragmatism:1},flags:{operatorFilteredNames:true},next:"choice"}
+    ]},
+    choice:{lines:["La antena vibra. Irene ya no mira a Sara ni a Elías; mira a Noa, como si la cazadora fuera la única capaz de disparar contra una mentira sin matar a nadie.","«Elijan el peso. Nombre, ruta u orden. No cabe todo en una sola transmisión limpia.»"],options:[
+      {label:"Transmitir primero los nombres",hint:"La memoria humana manda.",fx:{morale:3,threat:2},archive:["names"],psy:{empathy:1},flags:{transmittedNamesFirst:true}},
+      {label:"Transmitir primero rutas seguras",hint:"La supervivencia inmediata manda.",fx:{threat:-4,morale:1},add:["routeMap"],psy:{pragmatism:1},flags:{transmittedRoutesFirst:true}},
+      {label:"Transmitir las órdenes de la Red UNO",hint:"La acusación política manda.",fx:{morale:2,threat:4},archive:["protocol"],psy:{resolve:1},flags:{transmittedOrdersFirst:true}}
+    ]}
+  }},
+  operatorDisconnect:{npc:"operator",kicker:"Última conversación",start:"start",nodes:{
+    start:{lines:["Irene sonríe apenas cuando la copia termina. El soporte vital reduce la luz como si también entendiera que esto no es reparación.","«Gracias por no dejarme como máquina. Ahora no me pidan permiso para hacer lo que ya decidieron.»"],options:[
+      {label:"Preguntar qué nombre salvar primero",hint:"Recupera prioridad antes del final.",archive:["names"],fx:{morale:1},psy:{empathy:1},flags:{operatorPriorities:true},next:"last"},
+      {label:"Pedir una ruta de salida",hint:"Acepta su último acceso técnico.",fx:{threat:-2},psy:{pragmatism:1},flags:{operatorExitRoute:true},next:"last"},
+      {label:"Desconectar sin más preguntas",hint:"Cumple con dureza y termina la conversación.",fx:{morale:-2,threat:-1},psy:{resolve:1,stress:1},flags:{operatorQuietEnd:true}}
+    ]},
+    last:{lines:["«Si alguien pregunta quién me mató, digan la verdad completa: la Red UNO me mantuvo viva para usarme, y ustedes me dejaron morir para que pudiera responder.»"],options:[
+      {label:"Prometer llevar su nombre",hint:"Convierte el acto en memoria.",fx:{morale:3},archive:["origin"],psy:{empathy:1},flags:{operatorNameRemembered:true}},
+      {label:"Prometer llevar sus pruebas",hint:"Convierte el acto en evidencia.",fx:{threat:-2},archive:["protocol"],psy:{pragmatism:1},flags:{operatorEvidenceRemembered:true}},
+      {label:"No prometer nada que no controlan",hint:"Honestidad fría.",fx:{morale:-1,threat:-1},psy:{pragmatism:1,empathy:-1},flags:{operatorNoPromise:true}}
+    ]}
+  }}
 };
 var eventDialogueDefs=[
   {npc:"elder",kicker:"Antes de abrir la compuerta",lines:["Varela entrega la autorización sin mirar el sello del consejo. Sus dedos tiemblan más por rabia que por edad.","«La señal no es una orden. Es una pregunta que sobrevivió demasiado tiempo. No permitan que la Red UNO decida por ustedes qué significa.»","La anciana deja una ficha oxidada sobre la mesa: una promesa de volver con algo más que heridas."],options:[{label:"Prometer volver con la fuente",hint:"Refuerza el propósito común antes de salir.",fx:{morale:2},flags:{vowedSignalSource:true}},{label:"Pedir una advertencia concreta",hint:"Varela señala qué no debe ser entregado a la red.",fx:{threat:-1},archive:["signal"],flags:{elderWarning:true}},{label:"Salir sin cargar promesas",hint:"Reduce presión emocional, pero enfría al grupo.",fx:{morale:-1,threat:-1},flags:{keptDistanceFromCouncil:true}}]},
@@ -837,6 +970,9 @@ function apply(o){
   (o.add||[]).forEach(function(x){if(!hasPartyItem(x))placePartyItem(x,1)});(o.remove||[]).forEach(function(x){removePartyItem(x,1)});pushUnique(state.docs,o.archive);Object.assign(state.flags,o.flags||{});
   (o.add||[]).forEach(function(x){var d=gear(x);if(items[x]||d)changes.push(["Objeto",items[x]?items[x][1]:d.name])});(o.archive||[]).forEach(function(x){if(archives[x])changes.push(["Archivo",archives[x][0]])});return changes.concat(applyPsychImpulse(o,npcDialogueState&&npcDialogueState.dialogue)).slice(0,6)
 }
+function contextualDialogueFor(choice,out){
+  var flags=Object.assign({},choice&&choice.flags||{},out&&out.flags||{});if(flags.huntersTrust)return branchDialogueDefs.rosaWater;if(flags.merodeadorParley)return branchDialogueDefs.liraBorder;if(flags.savedMatias)return branchDialogueDefs.matiasSaved;if(flags.leftSupplies)return branchDialogueDefs.matiasLeft;if(flags.sparedDrone)return branchDialogueDefs.unit7Protocol;if(flags.savedMerodeadora)return branchDialogueDefs.liraWounded;if(flags.fullBroadcast)return branchDialogueDefs.operatorLive;if(flags.carryTruth)return branchDialogueDefs.operatorDisconnect;return null
+}
 
 function choose(i){
   if(pending||battleState)return;var ev=events[state.index],c=ev.choices[i];if(!c||reason(c))return;
@@ -847,7 +983,7 @@ function choose(i){
 }
 function completeChoice(choice,out,roll,check,extra){
   var ev=events[state.index],changes=(extra||[]).concat(apply(out)),factionReward=storyDecisionBenefit(out)?1:0,missionChanges=checkMissions();if(factionReward)changes=awardFactionPoints(factionReward,"decisión con impacto").concat(changes);changes=missionChanges.concat(changes);if(choice.ending)state.ending=choice.ending;
-  state.history.push({day:ev.day,loc:ev.loc,choice:choice.label,result:out.title||choice.title,faction:factionReward});pending={ending:choice.ending||null,returnToRefuge:null,dialogue:out.dialogue||choice.dialogue||eventDialogueDefs[state.index]||null,dialogueSeen:false};
+  state.history.push({day:ev.day,loc:ev.loc,choice:choice.label,result:out.title||choice.title,faction:factionReward});pending={ending:choice.ending||null,returnToRefuge:null,dialogue:contextualDialogueFor(choice,out),dialogueSeen:false};
   if(state.morale<=0&&!choice.ending){pending.returnToRefuge="morale";changes.unshift(["Cohesión","Regreso obligatorio al refugio"])}
   showResult(out.title||choice.title,out.result||choice.result,changes,roll,check);render();save()
 }
@@ -865,12 +1001,13 @@ function splitDialogueText(text){
   for(i=0;i<3;i++)if(!out[i])out[i]=clean;
   return out.map(function(line){return line.trim()}).slice(0,3)
 }
-function dialogueLines(dialogue){var lines=Array.isArray(dialogue.lines)?dialogue.lines.filter(function(line){return String(line||"").trim()}):splitDialogueText(dialogue.text);while(lines.length<3)lines.push(lines[lines.length-1]||dialogue.text||"");return lines.slice(0,3)}
+function dialogueNode(dialogue,nodeId){return dialogue&&dialogue.nodes?(dialogue.nodes[nodeId]||dialogue.nodes[dialogue.start]||dialogue.nodes.start||dialogue):dialogue}
+function dialogueLines(dialogue,node){node=node||dialogue;var lines=Array.isArray(node.lines)?node.lines.filter(function(line){return String(line||"").trim()}):splitDialogueText(node.text||dialogue.text);return(lines.length?lines:[node.text||dialogue.text||"..."]).slice(0,3)}
 function updateNpcDialogueKicker(){
-  if(!npcDialogueState)return;var total=npcDialogueState.lines.length,base=npcDialogueState.kicker||"Conversación";$("npcDialogueKicker").textContent=base+" · "+(npcDialogueState.lineIndex+1)+"/"+total
+  if(!npcDialogueState)return;var total=npcDialogueState.lines.length,base=npcDialogueState.kicker||"Conversación",step=npcDialogueState.nodeCount||1;$("npcDialogueKicker").textContent=base+" · intercambio "+step+" · "+(npcDialogueState.lineIndex+1)+"/"+total
 }
 function showNpcDialogueChoices(){
-  $("npcDialogueChoices").classList.remove("hidden");var first=$("npcDialogueChoices").querySelector("button:not(:disabled)");if(first)first.focus()
+  $("npcDialogueChoices").classList.remove("hidden");var first=$("npcDialogueChoices").querySelector("button:not(:disabled)");if(first)first.focus();else $("dialogueContinueRow").classList.remove("hidden")
 }
 function revealNpcDialogueText(){
   if(!npcDialogueState)return;clearInterval(npcDialogueTimer);npcDialogueTimer=null;$("npcDialogueText").textContent=npcDialogueState.text;if(npcDialogueState.lineIndex>=npcDialogueState.lines.length-1)showNpcDialogueChoices();else $("dialogueSkip").focus()
@@ -882,16 +1019,27 @@ function advanceNpcDialogueText(){
   if(!npcDialogueState)return;if(npcDialogueTimer){revealNpcDialogueText();return}if(npcDialogueState.lineIndex<npcDialogueState.lines.length-1){npcDialogueState.lineIndex++;npcDialogueState.text=npcDialogueState.lines[npcDialogueState.lineIndex];typeNpcDialogue();return}showNpcDialogueChoices()
 }
 function renderNpcDialogueChoices(){
-  var choices=$("npcDialogueChoices"),options=npcDialogueState.options;choices.innerHTML=options.map(function(opt,i){var block=reason(opt),hint=choiceHintText(opt,block);return'<button class="npc-dialogue-choice" data-dialogue-choice="'+i+'" '+(block?"disabled":"")+'><strong>'+esc(opt.label)+'</strong><em>'+esc(block||opt.cost||"Elegir")+'</em><small>'+esc(hint)+'</small></button>'}).join("");
+  var choices=$("npcDialogueChoices"),options=npcDialogueState.options||[];choices.innerHTML=options.map(function(opt,i){var block=reason(opt),hint=choiceHintText(opt,block),action=block||opt.cost||(opt.combat?"Responder":"Elegir");return'<button class="npc-dialogue-choice" data-dialogue-choice="'+i+'" '+(block?"disabled":"")+'><strong>'+esc(opt.label)+'</strong><em>'+esc(action)+'</em><small>'+esc(hint)+'</small></button>'}).join("");
   Array.prototype.forEach.call(choices.querySelectorAll("[data-dialogue-choice]"),function(b){b.addEventListener("click",function(){selectNpcDialogueChoice(Number(b.dataset.dialogueChoice))})})
 }
+function setNpcDialogueNode(nodeId){
+  if(!npcDialogueState)return;var dialogue=npcDialogueState.dialogue,node=dialogueNode(dialogue,nodeId);npcDialogueState.nodeId=nodeId;npcDialogueState.nodeCount=(npcDialogueState.nodeCount||0)+1;npcDialogueState.lines=dialogueLines(dialogue,node);npcDialogueState.lineIndex=0;npcDialogueState.text=npcDialogueState.lines[0];npcDialogueState.options=node.options||[];renderNpcDialogueChoices();typeNpcDialogue()
+}
 function openNpcDialogue(dialogue){
-  var npc=npcDef(dialogue.npc),lines=dialogueLines(dialogue);npcDialogueState={dialogue:dialogue,npc:npc,kicker:dialogue.kicker||"Conversación",lines:lines,lineIndex:0,text:lines[0],options:dialogue.options||[],selected:false};
-  $("result").classList.add("hidden");$("npcDialogueKicker").textContent=dialogue.kicker||"Conversación";$("npcDialogueName").textContent=npc.name||"Contacto";$("npcDialogueRole").textContent=npc.role||"";$("npcDialoguePortrait").src=assetUrl(npc.portrait||"portraits/noa.webp");$("npcDialoguePortrait").alt=npc.name||"NPC";renderNpcDialogueChoices();$("npcDialogueModal").classList.remove("hidden");$("dialogueSkip").focus();typeNpcDialogue()
+  var npc=npcDef(dialogue.npc),start=dialogue.start||"start";npcDialogueState={dialogue:dialogue,npc:npc,kicker:dialogue.kicker||"Conversación",nodeId:start,nodeCount:0,lines:[],lineIndex:0,text:"",options:[],changes:[],selected:false};
+  $("result").classList.add("hidden");$("npcDialogueKicker").textContent=dialogue.kicker||"Conversación";$("npcDialogueName").textContent=npc.name||"Contacto";$("npcDialogueRole").textContent=npc.role||"";$("npcDialoguePortrait").src=assetUrl(npc.portrait||"portraits/noa.webp");$("npcDialoguePortrait").alt=npc.name||"NPC";$("npcDialogueModal").classList.remove("hidden");$("dialogueSkip").focus();setNpcDialogueNode(start)
+}
+function recordDialogueChoice(opt,factionReward){
+  var last=state.history[state.history.length-1],name=npcDialogueState&&npcDialogueState.npc&&npcDialogueState.npc.name||"NPC";if(last){last.dialogue=(last.dialogue?last.dialogue+" / ":"")+name+": "+opt.label;last.faction=(last.faction||0)+(factionReward||0)}
+}
+function closeNpcDialogueForCombat(opt){
+  var combatChoice=Object.assign({title:opt.label,result:"La conversación se quiebra antes de que alguien pueda ordenar la escena."},opt);clearInterval(npcDialogueTimer);npcDialogueTimer=null;recordDialogueChoice(opt,0);npcDialogueState=null;$("npcDialogueModal").classList.add("hidden");$("result").classList.add("hidden");pending=null;startCombat(opt.combat,combatChoice)
 }
 function selectNpcDialogueChoice(i){
-  if(!npcDialogueState)return;if(npcDialogueTimer){revealNpcDialogueText();return}var opt=npcDialogueState.options[i];if(!opt||reason(opt))return;var changes=apply(opt),factionReward=storyDecisionBenefit(opt)?1:0,missionChanges=checkMissions();if(factionReward)changes=awardFactionPoints(factionReward,"diálogo").concat(changes);changes=missionChanges.concat(changes);if(state.morale<=0&&pending&&!pending.ending){pending.returnToRefuge="morale";changes.unshift(["Cohesión","Regreso obligatorio al refugio"])}var last=state.history[state.history.length-1];if(last){last.dialogue=(npcDialogueState.npc.name||"NPC")+": "+opt.label;last.faction=(last.faction||0)+factionReward}
-  $("npcDialogueChoices").classList.add("hidden");$("dialogueChanges").innerHTML=(changes.length?changes:[["Registro","Conversación guardada"]]).slice(0,6).map(function(x){return'<div class="result-chip">'+esc(x[0])+"<strong>"+esc(x[1])+"</strong></div>"}).join("");$("dialogueChanges").classList.remove("hidden");$("dialogueContinueRow").classList.remove("hidden");renderMini();save();$("dialogueContinue").focus()
+  if(!npcDialogueState)return;if(npcDialogueTimer){revealNpcDialogueText();return}var opt=npcDialogueState.options[i];if(!opt||reason(opt))return;if(opt.combat){closeNpcDialogueForCombat(opt);return}
+  var terminal=!opt.next,changes=apply(opt),factionReward=terminal&&storyDecisionBenefit(opt)?1:0,missionChanges=checkMissions();if(factionReward)changes=awardFactionPoints(factionReward,"diálogo").concat(changes);changes=missionChanges.concat(changes);recordDialogueChoice(opt,factionReward);npcDialogueState.changes=(npcDialogueState.changes||[]).concat(changes);if(state.morale<=0&&pending&&!pending.ending){pending.returnToRefuge="morale";changes.unshift(["Cohesión","Regreso obligatorio al refugio"])}
+  renderMini();save();if(opt.next){setNpcDialogueNode(opt.next);return}
+  changes=(npcDialogueState.changes.length?npcDialogueState.changes:changes).slice(-6);$("npcDialogueChoices").classList.add("hidden");$("dialogueChanges").innerHTML=(changes.length?changes:[["Registro","Conversación guardada"]]).slice(0,6).map(function(x){return'<div class="result-chip">'+esc(x[0])+"<strong>"+esc(x[1])+"</strong></div>"}).join("");$("dialogueChanges").classList.remove("hidden");$("dialogueContinueRow").classList.remove("hidden");$("dialogueContinue").focus()
 }
 function continuePendingAdvance(){
   var ending=pending.ending,returnToRefuge=pending.returnToRefuge;pending=null;if(ending){finish(ending);return}
