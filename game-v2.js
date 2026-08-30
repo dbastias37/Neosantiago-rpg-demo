@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="56";
+var ASSET_REVISION="57";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -114,6 +114,96 @@ var branchDialogueDefs={
       {label:"Pedir que corrija a la Red UNO con una ruta falsa",hint:"Convierte el error en señuelo.",fx:{threat:-4},psy:{pragmatism:1},flags:{unit7FalseRoute:true}},
       {label:"Pedir su última ruta real",hint:"Obtiene mapa, pero deja huella técnica.",add:["routeMap"],fx:{threat:1},psy:{pragmatism:1},flags:{unit7Route:true}},
       {label:"Ordenarle que se apague",hint:"Evita transmisión y carga una decisión dura.",fx:{morale:-2,threat:-3},psy:{resolve:1,stress:1},flags:{unit7Silenced:true}}
+    ]}
+  }},
+  varelaArchives:{npc:"elder",kicker:"Memoria del consejo",start:"start",nodes:{
+    start:{lines:["Varela espera detrás del archivo con una lámpara cubierta por tela roja. No parece sorprendida por la decisión del grupo; parece cansada de haberla esperado.","«El consejo llama secreto a todo lo que todavía no sabe enterrar. Si leen esos nombres, ya no van a poder decir que la superficie está vacía.»"],options:[
+      {label:"Preguntar por qué ocultaron a los exiliados",hint:"Convierte el archivo en una pregunta política.",archive:["exiles"],fx:{morale:1},psy:{resolve:1},flags:{varelaNamedCouncilLie:true},next:"debt"},
+      {label:"Pedir solo lo necesario para sobrevivir",hint:"Prioriza la misión sin abrir todo el conflicto.",fx:{threat:-1},psy:{pragmatism:1},flags:{varelaPracticalBrief:true},next:"debt"},
+      {label:"Decir que el consejo ya eligió por todos",hint:"La respuesta rompe confianza con los ancianos.",fx:{morale:-2},psy:{stress:1,resolve:1},flags:{varelaCouncilChallenged:true},next:"debt"}
+    ]},
+    debt:{lines:["La anciana abre una carpeta con fotografías pegadas a mano. Algunas caras tienen implantes; otras llevan uniformes del refugio.","«No fueron monstruos cuando se fueron. Los volvimos monstruos para dormir mejor bajo tierra.»"],options:[
+      {label:"Preguntar quién dio la orden de expulsión",hint:"Recupera una pieza incómoda del origen.",archive:["protocol"],fx:{morale:1,threat:1},psy:{resolve:1},flags:{askedExpulsionOrder:true},next:"charge"},
+      {label:"Pedir nombres, no culpas",hint:"Sostiene la memoria sin dividir al refugio todavía.",archive:["names"],fx:{morale:2},psy:{empathy:1},flags:{askedVarelaNames:true},next:"charge"},
+      {label:"Cerrar la carpeta y salir",hint:"Evita cargar más contexto antes de la expedición.",fx:{threat:-1,morale:-1},psy:{pragmatism:1,empathy:-1},flags:{closedElderArchive:true}}
+    ]},
+    charge:{lines:["Varela deja una ficha oxidada en la mano de Sara. El metal conserva una marca de la Red UNO limada hasta quedar casi invisible.","«Si la torre pregunta quién autorizó la verdad, no digan mi nombre. Digan que alguien se cansó de administrar miedo.»"],options:[
+      {label:"Prometer volver con la fuente de la señal",hint:"Refuerza propósito y cohesión.",fx:{morale:3},psy:{resolve:1,empathy:1},flags:{vowedSignalSource:true}},
+      {label:"Pedir una advertencia concreta",hint:"Gana una lectura útil contra protocolos viejos.",fx:{threat:-2},archive:["signal"],psy:{pragmatism:1},flags:{elderWarning:true}},
+      {label:"Guardar la ficha sin prometer nada",hint:"Mantiene margen emocional.",fx:{morale:-1,threat:-1},psy:{pragmatism:1},flags:{keptVarelaTokenQuiet:true}}
+    ]}
+  }},
+  unit12Sweep:{npc:"unit12",kicker:"Barrido de altura",start:"start",nodes:{
+    start:{lines:["La Unidad H-12 queda suspendida sobre la avenida como una campana negra. El altavoz no grita; ordena con la paciencia de una máquina acostumbrada a ser obedecida.","«Permanezcan visibles. La invisibilidad civil será tratada como sabotaje. La Red UNO agradece su cooperación.»"],options:[
+      {label:"Pedir a Elías que mida el retraso",hint:"Busca una falla técnica antes de responder.",fx:{threat:-1},psy:{pragmatism:1},flags:{measuredH12Lag:true},next:"lag"},
+      {label:"Responder con una firma falsa",hint:"Usa el error como máscara.",fx:{threat:-2},archive:["sonar"],psy:{pragmatism:1},flags:{answeredH12WithGhost:true},next:"lag"},
+      {label:"Gritar que no son ciudadanos de la Red UNO",hint:"Descarga rabia, pero deja una firma clara.",fx:{morale:1,threat:3},psy:{stress:2,resolve:1},flags:{defiedH12Aloud:true},next:"warning"}
+    ]},
+    lag:{lines:["Elías levanta dos dedos. La voz llega antes que el giro de los sensores; durante medio segundo, la orden y el ojo no pertenecen al mismo cuerpo.","«Inconsistencia aceptable. Repita estado: visible, útil, corregible.»"],options:[
+      {label:"Decir visible no significa obediente",hint:"La respuesta contamina la clasificación.",fx:{morale:2,threat:-1},psy:{resolve:1},flags:{h12VisibleNotObedient:true},next:"route"},
+      {label:"Pedir que escolte una firma vacía",hint:"Convierte el dron en señuelo breve.",fx:{threat:-4},psy:{pragmatism:1},flags:{h12EscortedGhost:true},next:"route"},
+      {label:"Intentar forzar su núcleo en vuelo",hint:"Puede convertir el diálogo en combate.",combat:{title:"Barrido quebrado",brief:"La Unidad H-12 interpreta la intrusión como sabotaje y llama drones menores desde la azotea.",encounters:[["drone","drone"],["drone","drone","drone"]],xp:48,canFlee:true},victory:{title:"Cielo sin altavoz",result:"El barrido cae lejos de la avenida y su memoria conserva una ruta de vuelo hacia la torre.",fx:{threat:4,morale:1},add:["droneCore"],archive:["sonar"],flags:{h12ShotDown:true}},defeat:{title:"Marcados por altura",result:"La unidad asciende con una lectura limpia de los tres supervivientes.",fx:{threat:14,morale:-4},flags:{h12MarkedGroup:true}}}
+    ]},
+    warning:{lines:["El dron tarda demasiado en responder. Cuando lo hace, la voz ya no usa el tono civil.","«La emoción no registrada aumenta probabilidad de contagio social. Recomiende aislamiento.»"],options:[
+      {label:"Callar y dejar que la firma falsa hable",hint:"Recupera control después del impulso.",fx:{threat:-2,morale:-1},psy:{pragmatism:1,stress:-1},flags:{recoveredFromH12Defiance:true},next:"route"},
+      {label:"Sostener la provocación",hint:"La escena se rompe hacia combate.",combat:{title:"Aislamiento aéreo",brief:"El barrido desciende y abre fuego para fijar al grupo en la avenida.",encounters:[["drone","drone"],["drone"]],xp:42,canFlee:true},victory:{title:"Orden en el suelo",result:"El altavoz chisporrotea una última instrucción antes de apagarse.",fx:{threat:5,morale:2},add:["droneCore"],flags:{h12DefiedAndDropped:true}},defeat:{title:"Avenida cerrada",result:"El grupo escapa por una boca de metro mientras el barrido reclama la calle.",fx:{threat:12,morale:-5},flags:{h12ClosedAvenue:true}}},
+      {label:"Retirarse bajo la marquesina",hint:"Evita pelear y pierde la ventana.",fx:{threat:1,morale:-2},psy:{stress:-1,resolve:-1},flags:{hidFromH12:true}}
+    ]},
+    route:{lines:["La luz cyan del barrido se desvía hacia una torre equivocada. Por primera vez, una máquina de la Red UNO protege una mentira humana.","«Ruta civil no encontrada. Registrando ausencia.»"],options:[
+      {label:"Usar la ausencia como camino",hint:"Baja amenaza y deja una ruta útil.",add:["routeMap"],fx:{threat:-3},psy:{pragmatism:1},flags:{h12AbsenceRoute:true}},
+      {label:"Guardar el eco para Irene",hint:"La señal gana una pieza técnica.",archive:["sonar"],fx:{morale:1},psy:{empathy:1},flags:{h12EchoForIrene:true}},
+      {label:"Borrar el rastro al cruzar",hint:"Protege al grupo, pero desperdicia información.",fx:{threat:-2,morale:-1},psy:{pragmatism:1},flags:{erasedH12Track:true}}
+    ]}
+  }},
+  trackerCredential:{npc:"tracker",kicker:"Control de identidad",start:"start",nodes:{
+    start:{lines:["El Rastreador Vega no mira la credencial: mira las manos de Sara, el respirador de Elías y la forma en que Noa calcula salidas.","«Los documentos mienten mal. Los cuerpos mienten mejor. Digan qué son antes de que mi equipo lo decida por ustedes.»"],options:[
+      {label:"Responder: técnicos de continuidad",hint:"Sostiene la mentira oficial.",fx:{threat:-1},psy:{pragmatism:1},flags:{claimedContinuityTechs:true},next:"audit"},
+      {label:"Responder: supervivientes en tránsito",hint:"Arriesga verdad parcial.",fx:{morale:1,threat:1},psy:{resolve:1},flags:{toldVegaTransitTruth:true},next:"audit"},
+      {label:"Preguntar qué cuerpo está buscando",hint:"Devuelve el interrogatorio.",archive:["sonar"],psy:{pragmatism:1},flags:{askedVegaTarget:true},next:"audit"}
+    ]},
+    audit:{lines:["Vega acerca un lector al pecho de Noa. La pantalla no muestra nombres; muestra deuda, pulso y probabilidad de obediencia.","«Tres firmas vivas. Una coincide con archivo muerto. Una no debería haber salido del refugio. Una ya fue escuchada por la señal.»"],options:[
+      {label:"Pedir que corrija el archivo muerto",hint:"Abre una contradicción administrativa.",fx:{threat:-2},archive:["names"],psy:{pragmatism:1},flags:{vegaCorrectedDeadFile:true},next:"break"},
+      {label:"Decir que la señal eligió cuerpos vivos",hint:"Convierte el control en disputa moral.",fx:{morale:2,threat:1},psy:{resolve:1,empathy:1},flags:{vegaHeardSignalClaim:true},next:"break"},
+      {label:"Empujar el lector lejos",hint:"Puede iniciar combate desde la conversación.",combat:{title:"Control roto",brief:"Vega retrocede y la escolta interpreta el gesto como agresión contra protocolo.",encounters:[["agent3","agent2"],["agent3","drone"],["agent2","drone"]],xp:50,canFlee:true},victory:{title:"Identidad arrancada",result:"El grupo destruye el lector antes de que suba el registro completo.",fx:{threat:6,morale:1},archive:["sonar"],flags:{vegaReaderDestroyed:true}},defeat:{title:"Firmas comprometidas",result:"La patrulla transmite una lectura parcial antes de que el grupo escape.",fx:{threat:15,morale:-5},flags:{signaturesKnown:true}}}
+    ]},
+    break:{lines:["El rastreador guarda silencio cuando el sistema acepta una contradicción. Por un instante, la Red UNO parece menos una autoridad que una oficina con miedo a equivocarse.","«Pueden pasar. Pero el perímetro morado no negocia con errores: los archiva.»"],options:[
+      {label:"Pedir la ruta menos vigilada",hint:"Obtiene una ventaja concreta.",add:["routeMap"],fx:{threat:-3},psy:{pragmatism:1},flags:{vegaLowWatchRoute:true}},
+      {label:"Preguntar por los cascos morados",hint:"Gana contexto del cordón de Ortega.",archive:["purpleHelmets"],fx:{morale:1},psy:{resolve:1},flags:{vegaWarnedOrtega:true}},
+      {label:"Advertirle que también está archivado",hint:"Golpea su seguridad y sube riesgo.",fx:{morale:1,threat:3},psy:{resolve:1,stress:1},flags:{vegaThreatenedWithArchive:true}}
+    ]}
+  }},
+  ortegaLine:{npc:"commander",kicker:"Cordón morado",start:"start",nodes:{
+    start:{lines:["El comandante Ortega escucha el nombre de Lira sin bajar el arma. Sus cascos morados no apuntan al grupo: apuntan al espacio entre el grupo y la puerta.","«Una identidad exiliada no abre El Valle. Solo demuestra que alguien olvidó terminar una eliminación.»"],options:[
+      {label:"Mostrar que el protocolo aún la reconoce",hint:"Usa la ley contra la Red UNO.",fx:{threat:-1},archive:["purpleHelmets"],psy:{pragmatism:1},flags:{showedOrtegaProtocolGap:true},next:"doctrine"},
+      {label:"Decir que Lira sigue viva",hint:"Vuelve personal la contradicción.",fx:{morale:2,threat:1},psy:{empathy:1,resolve:1},flags:{toldOrtegaLiraLives:true},next:"doctrine"},
+      {label:"Pedir paso sin discutir el archivo",hint:"Busca resultado rápido.",fx:{threat:1},psy:{pragmatism:1},flags:{askedOrtegaFastPass:true},next:"doctrine"}
+    ]},
+    doctrine:{lines:["Ortega levanta la visera lo justo para que vean una cicatriz antigua. No parece dudar; parece recordar cuándo aprendió a no hacerlo.","«La continuidad no protege personas. Protege la versión de ciudad que todavía puede obedecer.»"],options:[
+      {label:"Preguntar cuánto de la ciudad queda ahí",hint:"Lo obliga a nombrar la ruina.",archive:["protocol"],fx:{morale:1},psy:{resolve:1},flags:{askedOrtegaCityCost:true},next:"breach"},
+      {label:"Responder que una ciudad no obedece, vive",hint:"Eleva moral y tensión.",fx:{morale:3,threat:2},psy:{resolve:2},flags:{challengedOrtegaDoctrine:true},next:"breach"},
+      {label:"Ofrecer borrar la ruta de Lira si abre paso",hint:"Una negociación oscura con costo moral.",fx:{threat:-4,morale:-4},psy:{pragmatism:1,empathy:-1},flags:{offeredToEraseLira:true},next:"breach"}
+    ]},
+    breach:{lines:["El comandante consulta el canal interno. Las puertas no se abren del todo; apenas lo suficiente para que el grupo decida si cruza como excepción o como amenaza.","«Última clasificación: error tolerado, enemigo declarado o recurso aprovechable.»"],options:[
+      {label:"Cruzar como error tolerado",hint:"Evita combate y conserva la contradicción viva.",fx:{threat:-4},psy:{pragmatism:1},flags:{crossedAsToleratedError:true}},
+      {label:"Declararse enemigos de la Red UNO",hint:"Puede convertir la conversación en combate.",combat:{title:"Error declarado",brief:"Ortega cierra el puño y el cordón morado abre fuego antes de que la puerta termine de cerrarse.",encounters:[["agent4","agent2"],["agent4","agent3","agent2"]],xp:62,canFlee:true},victory:{title:"Cordón quebrado",result:"El perímetro cae y deja un acceso brutal hacia la torre.",fx:{threat:12,morale:5},archive:["purpleHelmets"],flags:{purpleLineBroken:true,towerEntered:true}},defeat:{title:"Archivados por fuerza",result:"El grupo se salva por una galería lateral, pero la torre registra su llegada.",fx:{threat:14,morale:-7},flags:{purpleDetour:true}}},
+      {label:"Usar la excepción para entrar sin hablar más",hint:"Avanza con frialdad y baja exposición.",fx:{threat:-2,morale:-1},psy:{pragmatism:1},flags:{usedOrtegaException:true}}
+    ]}
+  }},
+  veraRoutePrice:{npc:"vera",kicker:"El precio de la ruta",start:"start",nodes:{
+    start:{lines:["Vera revisa el mapa sin tocarlo. Sus ojos siguen las curvas falsas, las verdaderas y las que nadie se atreve a dibujar.","«Una ruta no cuesta por lo que mide. Cuesta por la gente que queda expuesta cuando alguien la usa.»"],options:[
+      {label:"Preguntar qué comunidad está comprando",hint:"Desnuda la lógica del trato.",archive:["hunterMarks"],fx:{morale:1},psy:{empathy:1},flags:{askedVeraWhoPays:true},next:"ledger"},
+      {label:"Defender que el mapa protege a los débiles",hint:"Sostiene una mentira útil si ya la usaste.",fx:{morale:2,threat:1},psy:{resolve:1},flags:{defendedFalseRoute:true},next:"ledger"},
+      {label:"Pedir el módulo y cerrar el trato",hint:"Prioriza el objetivo técnico.",fx:{threat:-1},psy:{pragmatism:1},flags:{askedVeraForModule:true},next:"ledger"}
+    ]},
+    ledger:{lines:["La jefa cosechadora gira una libreta cubierta de nombres. Algunos están tachados con tinta, otros con tierra seca.","«Yo vendo comida, no inocencia. Si quieren una salida limpia, vinieron tarde al fin del mundo.»"],options:[
+      {label:"Ofrecer reparar una bomba por el módulo",hint:"Cambia deuda por trabajo.",fx:{scrap:-1,morale:2,threat:-2},req:{scrap:1},psy:{pragmatism:1,empathy:1},flags:{veraWorkTrade:true},next:"route"},
+      {label:"Invocar la deuda de Rosa y los cazadores",hint:"La comunidad pesa más que la mercancía.",fx:{morale:3,threat:-1},psy:{empathy:1},flags:{veraHonorsHunterDebt:true},next:"route"},
+      {label:"Aceptar que alguien pagará el costo",hint:"La honestidad es útil, pero fría.",fx:{morale:-2,threat:-2},psy:{pragmatism:1,empathy:-1},flags:{acceptedVeraCost:true},next:"route"}
+    ]},
+    route:{lines:["Vera deja el módulo en la mesa y apaga la lámpara que iluminaba el mapa. En la oscuridad, solo quedan visibles los puntos marcados con fósforo.","«Si traen verdad, no la entreguen completa al primer grupo hambriento. El hambre también aprende a gobernar.»"],options:[
+      {label:"Prometer que la verdad no será mercancía",hint:"Refuerza la línea moral del grupo.",fx:{morale:3},psy:{resolve:1,empathy:1},flags:{truthNotForSale:true}},
+      {label:"Pedir una ruta que no venda refugios",hint:"Obtiene salida con menos amenaza.",add:["routeMap"],fx:{threat:-3},psy:{pragmatism:1},flags:{veraCleanRoute:true}},
+      {label:"Aceptar comida a cambio de silencio parcial",hint:"Gana recursos con costo ético.",fx:{food:2,morale:-4,threat:-1},psy:{pragmatism:1,empathy:-1},flags:{veraBoughtSilence:true}}
     ]}
   }},
   liraWounded:{npc:"lira",kicker:"Corazón abierto",start:"start",nodes:{
@@ -971,7 +1061,7 @@ function apply(o){
   (o.add||[]).forEach(function(x){var d=gear(x);if(items[x]||d)changes.push(["Objeto",items[x]?items[x][1]:d.name])});(o.archive||[]).forEach(function(x){if(archives[x])changes.push(["Archivo",archives[x][0]])});return changes.concat(applyPsychImpulse(o,npcDialogueState&&npcDialogueState.dialogue)).slice(0,6)
 }
 function contextualDialogueFor(choice,out){
-  var flags=Object.assign({},choice&&choice.flags||{},out&&out.flags||{});if(flags.huntersTrust)return branchDialogueDefs.rosaWater;if(flags.merodeadorParley)return branchDialogueDefs.liraBorder;if(flags.savedMatias)return branchDialogueDefs.matiasSaved;if(flags.leftSupplies)return branchDialogueDefs.matiasLeft;if(flags.sparedDrone)return branchDialogueDefs.unit7Protocol;if(flags.savedMerodeadora)return branchDialogueDefs.liraWounded;if(flags.fullBroadcast)return branchDialogueDefs.operatorLive;if(flags.carryTruth)return branchDialogueDefs.operatorDisconnect;return null
+  var flags=Object.assign({},choice&&choice.flags||{},out&&out.flags||{});if(flags.knowsExiles||flags.partyOwnsTruth)return branchDialogueDefs.varelaArchives;if(flags.huntersTrust)return branchDialogueDefs.rosaWater;if(flags.merodeadorParley)return branchDialogueDefs.liraBorder;if(flags.savedMatias)return branchDialogueDefs.matiasSaved;if(flags.leftSupplies)return branchDialogueDefs.matiasLeft;if(flags.sparedDrone)return branchDialogueDefs.unit7Protocol;if(flags.alamedaClear)return branchDialogueDefs.unit12Sweep;if(flags.trackerCredential)return branchDialogueDefs.trackerCredential;if(flags.savedMerodeadora)return branchDialogueDefs.liraWounded;if(flags.fooledHunters||flags.huntersAlliance||flags.soldRefuge||flags.veraFinalPact)return branchDialogueDefs.veraRoutePrice;if(flags.purpleLineBypassed)return branchDialogueDefs.ortegaLine;if(flags.fullBroadcast)return branchDialogueDefs.operatorLive;if(flags.carryTruth)return branchDialogueDefs.operatorDisconnect;return null
 }
 
 function choose(i){
