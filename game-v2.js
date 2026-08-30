@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="57";
+var ASSET_REVISION="58";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -598,7 +598,7 @@ globalThis.stopLoopSfx=stopLoopSfx;
 function bagCapacity(p){var pack=gear(p.equipment.backpack);return pack&&pack.capacity?pack.capacity:4}
 function bagUsed(p){return p&&p.bag?p.bag.reduce(function(sum,entry){return sum+Math.max(1,Number(entry.qty)||1)},0):0}
 function bagFree(p){return Math.max(0,bagCapacity(p)-bagUsed(p))}
-function bagQty(p,id){var entry=p.bag.filter(function(x){return x.id===id})[0];return entry?entry.qty:0}
+function bagQty(p,id){return p&&p.bag?p.bag.reduce(function(sum,entry){return sum+(entry&&entry.id===id?Math.max(0,Number(entry.qty)||0):0)},0):0}
 function canReceive(p,id,qty){return !!(p&&bagFree(p)>=Math.max(1,Number(qty)||1))}
 function ammoTotal(){return state.res.ammo+state.party.reduce(function(total,p){return total+bagQty(p,"ammo9")+bagQty(p,"shell12")+bagQty(p,"ammo556")},0)}
 function stockCount(id){
