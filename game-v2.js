@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="58";
+var ASSET_REVISION="59";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -1010,7 +1010,7 @@ function consumeDisassemblySource(s){
 function resolveDisassembly(success){
   if(!disassemblyState||disassemblyState.finished)return;var s=disassemblyState,e=elias();clearInterval(disassemblyTimer);s.finished=true;s.success=success;if(!consumeDisassemblySource(s)){s.feedback="El objeto ya no está disponible.";renderDisassemblyModal();return}
   if(success){rewardList(s.recipe).forEach(function(x){addToBag(e,x.id,x.qty);recordLoot(x.id,x.qty)});state.stats.disassembled++;state.stats.xpFromCrafting+=6;addPersonalXp(eliasIndex(),6,"desarmar "+s.item.name);s.feedback="Elías separa el núcleo sin romper la matriz. Las piezas quedan guardadas en su mochila."}else{state.stats.disassembleFailures++;s.feedback="La presión pasa el límite y el elemento queda inutilizable. No se recupera nada."}
-  if(battleState&&s.source.type==="loot")battleState.lootTaken+=success?rewardUnits(s.recipe):0;save();renderMini();if(!$("profileModal").classList.contains("hidden"))renderProfile(s.source.type==="profile"?s.source.pIndex:eliasIndex());if(battleState&&s.source.type==="loot")renderLootModal(s.source.enemyIndex);renderDisassemblyModal();$("disassemblyDone").focus()
+  if(battleState&&s.source.type==="loot")battleState.lootTaken+=success?rewardUnits(s.recipe):0;save();renderMini();if(s.source.type==="profile"&&!state.refuge.active)render();if(!$("profileModal").classList.contains("hidden"))renderProfile(s.source.type==="profile"?s.source.pIndex:eliasIndex());if(battleState&&s.source.type==="loot")renderLootModal(s.source.enemyIndex);renderDisassemblyModal();$("disassemblyDone").focus()
 }
 function attemptDisassembly(){
   if(!disassemblyState||disassemblyState.finished)return;var s=disassemblyState,hit=s.pos>=s.targetStart&&s.pos<=s.targetEnd;if(hit){resolveDisassembly(true);return}s.attempts++;if(s.attempts>=3){resolveDisassembly(false);return}s.feedback="Fuera de rango. Elías estabiliza la pieza: quedan "+(3-s.attempts)+" intentos.";s.targetStart=clamp(s.targetStart+rand(-7,7),8,82);s.targetEnd=Math.min(94,s.targetStart+(s.recipe.window||16));renderDisassemblyModal()
@@ -1046,7 +1046,7 @@ function craftItem(pIndex,id){
 }
 function reason(c){
   var k;if(c.req){for(k in c.req)if(stockCount(k)<c.req[k])return"Falta "+resName(k).toLowerCase()}
-  if(c.reqItems&&!c.reqItems.every(function(x){return hasPartyItem(x)}))return"Falta un objeto";
+  if(c.reqItems){for(k=0;k<c.reqItems.length;k++)if(!hasPartyItem(c.reqItems[k])){var missing=gear(c.reqItems[k]);return"Falta "+(missing?missing.name.toLowerCase():"un objeto")}}
   if(c.reqAny&&!c.reqAny.some(function(x){return hasPartyItem(x)}))return"Falta tecnología";
   if(c.reqFlags&&!c.reqFlags.some(function(x){return !!state.flags[x]}))return"Ruta no descubierta";
   return""
