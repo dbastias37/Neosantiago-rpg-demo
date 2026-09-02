@@ -16,6 +16,9 @@
   <link rel="preload" href="backgrounds/day-hunter-house.webp?v=44" as="image" type="image/webp">
   <link rel="preload" href="backgrounds/day-market.webp?v=44" as="image" type="image/webp">
   <link rel="preload" href="backgrounds/day-valley-perimeter.webp?v=44" as="image" type="image/webp">
+  <link rel="preload" href="narrative/matias/matias-01-farmacia.png?v=62" as="image" type="image/png">
+  <link rel="preload" href="narrative/matias/matias-02-tunel.png?v=62" as="image" type="image/png">
+  <link rel="preload" href="narrative/matias/matias-03-enfermeria.png?v=62" as="image" type="image/png">
   <link rel="preload" href="characters/sara-loadout.webp" as="image" type="image/webp">
   <link rel="preload" href="characters/elias-loadout.webp" as="image" type="image/webp">
   <link rel="preload" href="characters/noa-loadout.webp" as="image" type="image/webp">
@@ -490,6 +493,29 @@
     .dialogue-continue-row{display:flex;justify-content:flex-end;margin-top:0}
     @media(min-width:901px) and (max-height:700px){.npc-dialogue-modal{grid-template-columns:190px minmax(0,1fr)}.npc-dialogue-portrait{min-height:260px}.npc-dialogue-frame{gap:9px;padding:18px 22px}.npc-dialogue-text{min-height:88px;padding:13px 15px;font-size:15px}.npc-dialogue-choice{min-height:44px;padding:9px 11px}.npc-dialogue-choice small{font-size:8px}.dialogue-skip{min-height:34px}}
     @media(max-width:700px){.npc-dialogue-layer{place-items:center;padding:7px}.npc-dialogue-modal{display:grid;grid-template-columns:1fr;height:calc(100dvh - 14px);width:calc(100% - 14px)}.npc-dialogue-portrait{min-height:180px;max-height:215px;border-right:0;border-bottom:1px solid rgba(117,211,215,.22)}.npc-dialogue-frame{grid-template-rows:auto minmax(105px,auto) auto auto auto;padding:17px}.npc-dialogue-text{font-size:15px}.dialogue-change-grid{grid-template-columns:1fr}.dialogue-continue-row{display:grid}.dialogue-continue-row button{width:100%}}
+
+    .route-narrative-layer{z-index:69;padding:clamp(10px,2vw,24px);background:radial-gradient(circle at 72% 20%,rgba(117,211,215,.12),transparent 24%),linear-gradient(0deg,rgba(1,4,3,.96),rgba(1,4,3,.72))}
+    .route-narrative-modal{display:grid;grid-template-rows:minmax(0,1fr) auto;width:min(1180px,100%);height:min(820px,calc(100dvh - 28px));max-height:none;padding:0;overflow:hidden;border-color:rgba(217,161,92,.42);background:linear-gradient(145deg,#070b0b,#0a100f)}
+    .route-scene-art{position:relative;min-height:0;margin:0;overflow:hidden;background:#060908;border-bottom:1px solid rgba(117,211,215,.24)}
+    .route-scene-art img{display:block;width:100%;height:100%;object-fit:cover;filter:contrast(1.06) saturate(.92)}
+    .route-scene-art:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(4,8,7,.72),transparent 38%),linear-gradient(90deg,rgba(2,4,4,.34),transparent 24%,transparent 74%,rgba(2,4,4,.3));pointer-events:none}
+    .route-narrative-panel{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:13px;padding:18px 22px 20px;border-top:1px solid rgba(217,161,92,.16);background:linear-gradient(180deg,rgba(7,11,11,.96),rgba(6,9,8,.99))}
+    .route-narrative-copy{min-width:0}.route-narrative-copy h2{margin:0;color:var(--amber2);font-size:clamp(24px,3.2vw,42px);letter-spacing:.07em;text-transform:uppercase}
+    .route-narrative-text{min-height:86px;margin:12px 0 13px;padding:14px 16px;border:1px solid rgba(217,161,92,.24);border-left:3px solid var(--amber2);color:#ece7dc;background:rgba(217,161,92,.035);font-family:Georgia,"Times New Roman",serif;font-size:17px;line-height:1.55}
+    .route-narrative-choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+    .route-choice{position:relative;display:grid;grid-template-columns:27px minmax(0,1fr);gap:5px 10px;min-height:78px;padding:10px;border:1px solid rgba(117,211,215,.28);color:inherit;background:rgba(255,255,255,.018);cursor:pointer;text-align:left}
+    .route-choice:hover:not(:disabled){border-color:var(--cyan);background:rgba(117,211,215,.075)}
+    .route-choice.default{border-color:rgba(242,189,115,.72);box-shadow:inset 0 -2px rgba(242,189,115,.35)}
+    .route-choice:disabled{opacity:.38;cursor:not-allowed}.route-choice strong{display:block;color:var(--paper);font-size:10px;letter-spacing:.08em;line-height:1.25;text-transform:uppercase}
+    .route-choice small{display:block;margin-top:4px;color:var(--muted);font-size:8px;line-height:1.35}.route-choice em{grid-column:2;color:var(--amber2);font-size:7px;font-style:normal;font-weight:900;letter-spacing:.09em;text-transform:uppercase}.route-choice>b{position:absolute;right:8px;top:7px;color:var(--amber2);font-size:6px;letter-spacing:.1em;text-transform:uppercase}
+    .route-narrative-actions{display:grid;grid-template-rows:auto auto minmax(0,auto);align-content:end;gap:9px;width:230px}
+    .route-clock{display:grid;gap:6px;color:var(--cyan);font-size:7px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+    .route-clock-track{height:6px;overflow:hidden;border:1px solid rgba(117,211,215,.26);background:rgba(117,211,215,.06)}
+    .route-clock-track span{display:block;width:100%;height:100%;background:linear-gradient(90deg,var(--cyan),var(--amber2));box-shadow:0 0 14px rgba(117,211,215,.42);transition:width .12s linear}
+    .route-narrative-actions .primary{width:100%}.route-narrative-actions .primary:disabled{opacity:.45;cursor:not-allowed}
+    .route-change-grid{display:grid;grid-template-columns:1fr;gap:6px}
+    @media(min-width:901px) and (max-height:760px){.route-narrative-modal{height:calc(100dvh - 22px)}.route-narrative-panel{padding:13px 18px 15px}.route-narrative-copy h2{font-size:clamp(24px,2.8vw,34px)}.route-narrative-text{min-height:66px;margin:8px 0 9px;padding:11px 13px;font-size:14px;line-height:1.42}.route-choice{min-height:62px;padding:8px}.route-choice small{display:none}.route-narrative-actions{width:205px}}
+    @media(max-width:700px){.route-narrative-layer{padding:7px}.route-narrative-modal{width:calc(100% - 8px);height:calc(100dvh - 14px)}.route-scene-art{height:34vh}.route-narrative-panel{grid-template-columns:1fr;gap:10px;padding:14px}.route-narrative-copy h2{font-size:23px;line-height:1.05}.route-narrative-text{min-height:104px;margin:9px 0 10px;padding:12px;font-size:14px;line-height:1.5}.route-narrative-choices{grid-template-columns:1fr;gap:6px}.route-choice{min-height:64px}.route-narrative-actions{width:100%}.route-change-grid{grid-template-columns:1fr}.route-narrative-actions .primary{min-height:46px}}
 
 
     #profileContent{min-height:0}
@@ -1296,6 +1322,30 @@
     </article>
   </section>
 
+  <section class="overlay hidden route-narrative-layer" id="routeNarrativeModal" role="dialog" aria-modal="true" aria-labelledby="routeNarrativeTitle">
+    <article class="modal route-narrative-modal">
+      <figure class="route-scene-art">
+        <img id="routeNarrativeImage" src="" alt="" width="1600" height="900">
+      </figure>
+      <div class="route-narrative-panel">
+        <section class="route-narrative-copy">
+          <p class="kicker" id="routeNarrativeKicker">Desvío de ruta</p>
+          <h2 id="routeNarrativeTitle">Escena narrativa</h2>
+          <p class="route-narrative-text" id="routeNarrativeText" aria-live="polite"></p>
+          <div class="route-narrative-choices hidden" id="routeNarrativeChoices"></div>
+        </section>
+        <aside class="route-narrative-actions">
+          <div class="route-clock hidden" id="routeNarrativeClock">
+            <span>Tiempo de decisión</span>
+            <div class="route-clock-track"><span id="routeNarrativeTimeBar"></span></div>
+          </div>
+          <button class="primary" id="routeNarrativeButton">Avanzar texto</button>
+          <div class="route-change-grid hidden" id="routeNarrativeChanges"></div>
+        </aside>
+      </div>
+    </article>
+  </section>
+
   <div class="drawer-shade hidden" id="shade"></div>
   <aside class="drawer hidden" id="drawer">
     <div class="drawer-head"><h2 id="drawerTitle">Misiones</h2><button class="close" id="closeDrawer" aria-label="Cerrar">×</button></div>
@@ -1303,7 +1353,7 @@
   </aside>
   <div class="toast hidden" id="toast" role="status"></div>
 
-  <script src="campaign-v2.js?v=61"></script>
+  <script src="campaign-v2.js?v=62"></script>
   <script>
   "use strict";
   var KEY="neosantiago2130_demo_v3";
@@ -1618,6 +1668,6 @@
     "ambience-archive": "audio/ambience/archive-static.mp3"
   }
   </script>
-  <script src="game-v2.js?v=61"></script>
+  <script src="game-v2.js?v=62"></script>
 </body>
 </html>
