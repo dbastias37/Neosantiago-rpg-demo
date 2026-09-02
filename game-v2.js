@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="62";
+var ASSET_REVISION="63";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -49,7 +49,7 @@ var branchDialogueDefs={
     ]},
     route:{lines:["Rosa dibuja tres líneas con agua sobre el polvo. Una desaparece de inmediato; las otras dos quedan brillando bajo la linterna.","«La que se borra es para la Red UNO. La que queda torcida es para gente viva. Si ven una tercera, no entren: alguien quiere que los vean entrando.»"],options:[
       {label:"Memorizar la ruta torcida",hint:"Gana una lectura táctica para superficie.",add:["routeMap"],fx:{threat:-2},archive:["hunterMarks"],psy:{pragmatism:1},flags:{rosaRouteLearned:true}},
-      {label:"Pedirle que avise a otros refugios",hint:"La ayuda se vuelve red civil.",fx:{morale:3,threat:1},psy:{empathy:1,resolve:1},flags:{rosaWarnsHunters:true}},
+      {label:"Acompañarla hasta la casa marcada",hint:"Abre un desvío narrativo con Rosa e Iara antes de volver a la ruta principal.",fx:{morale:2,threat:2},psy:{empathy:2,resolve:1},flags:{rosaEscortAccepted:true},routeScene:"rosaIaraRoute"},
       {label:"Borrar las tres marcas al salir",hint:"Protege la posición, pero corta su mensaje.",fx:{threat:-2,morale:-2},psy:{pragmatism:1,empathy:-1},flags:{erasedRosaMarks:true}}
     ]}
   }},
@@ -254,7 +254,7 @@ var branchDialogueDefs={
   }}
 };
 var routeNarrativeDefs={
-  matiasRescue:{title:"Desvío de Matías",defaultChoice:0,scenes:[
+  matiasRescue:{title:"Desvío de Matías",endLoc:"Línea 1",combatResult:"El ruido obliga al grupo a defender la camilla antes de llegar al refugio.",defaultChoice:0,scenes:[
     {kicker:"Desvío de ruta · Farmacia del enlace",title:"Matías bajo el mostrador",image:"narrative/matias/matias-01-farmacia.png",timeLimit:17000,lines:[
       "La farmacia queda en silencio cuando Sara termina el vendaje. Matías no pesa como un cuerpo: pesa como una decisión que ya no cabe en el mapa.",
       "Elías revisa la frecuencia que el herido aprieta contra el pecho. Noa mira la puerta. Afuera, la Red UNO sigue moviendo sus rastreos de señal como si la ciudad respirara por turnos."
@@ -278,6 +278,32 @@ var routeNarrativeDefs={
       {label:"Aceptar la ampolla sellada",hint:"Recupera medicina para compensar el rescate.",fx:{meds:1,morale:1},psy:{empathy:1},flags:{matiasAtRefuge:true,matiasLateStart:true,matiasRewardMeds:true},end:true},
       {label:"Aceptar la frecuencia de fiebre",hint:"Convierte su advertencia en ventaja contra futuros rastreos.",fx:{threat:-4,morale:1},archive:["sonar"],psy:{pragmatism:1,empathy:1},flags:{matiasAtRefuge:true,matiasLateStart:true,matiasFeverSignal:true},end:true},
       {label:"Aceptar el mapa parcial de República",hint:"Asegura una salida alternativa para la superficie.",add:["routeMap"],fx:{threat:-1},archive:["matias"],psy:{pragmatism:1},flags:{matiasAtRefuge:true,matiasLateStart:true,matiasRewardMap:true},end:true}
+    ]}
+  ]},
+  rosaIaraRoute:{title:"Desvío de Rosa",endLoc:"Casa de cazadores",combatResult:"El ruido rompe la ruta civil y obliga al grupo a proteger a Rosa e Iara antes de alcanzar la casa marcada.",defaultChoice:0,scenes:[
+    {kicker:"Desvío de ruta · Último andén habitado",title:"El agua de Iara",image:"narrative/rosa/rosa-01-agua-iara.png",timeLimit:17000,lines:[
+      "Iara bebe sin abrir del todo los ojos. Rosa no agradece de inmediato: cuenta respiraciones, mira las armas y decide si el grupo acaba de comprar una ruta o de entrar en una deuda.",
+      "Noa reconoce tres marcas pequeñas bajo la banca del andén. No indican un escondite; indican una salida que solo funciona si alguien camina como familia y no como patrulla."
+    ],options:[
+      {label:"Esperar a que baje la fiebre",hint:"La calma protege a Iara, pero alarga la exposición en el andén.",fx:{morale:2,threat:2},psy:{empathy:2,stress:-1},flags:{rosaWaitedForIara:true},nextScene:1},
+      {label:"Pedir a Rosa que guíe el paso",hint:"Acepta su autoridad en rutas de cazadores.",fx:{threat:-1,morale:1},archive:["hunterMarks"],psy:{empathy:1,pragmatism:1},flags:{rosaLeadsRoute:true},nextScene:1},
+      {label:"Repartir peso y avanzar ahora",hint:"Gana tiempo, pero obliga a moverse con Iara todavía débil.",fx:{morale:1,threat:3},psy:{resolve:1,stress:1},flags:{rosaRushedIara:true},nextScene:1}
+    ]},
+    {kicker:"Desvío de ruta · Puerta sin nombre",title:"La marca torcida",image:"narrative/rosa/rosa-02-marca-torcida.png",timeLimit:15000,lines:[
+      "La salida no parece una salida. Es una puerta oxidada marcada para parecer inútil: tres líneas de agua seca, una cruz incompleta y una sombra pintada donde la Red UNO espera ver muro.",
+      "Rosa levanta a Iara contra su pecho. «La línea recta es para los mapas. La torcida es para gente viva. Si la tercera marca aparece, alguien quiere que los vean entrando»."
+    ],options:[
+      {label:"Seguir la línea torcida",hint:"Confía en el código de Rosa y reduce el rastreo.",fx:{threat:-4,morale:1},archive:["hunterMarks"],psy:{pragmatism:1,empathy:1},flags:{rosaTrustedMark:true},nextScene:2},
+      {label:"Enfriar la fiebre con más agua",hint:"Oculta el pulso térmico de Iara antes de cruzar.",cost:"Agua −1",req:{water:1},fx:{water:-1,threat:-3,morale:2},psy:{empathy:2,pragmatism:1},flags:{iaraPulseHidden:true},nextScene:2},
+      {label:"Correr por la escalera visible",hint:"El ruido puede convertir la ayuda en combate.",cost:"Combate",fx:{morale:1,threat:3},psy:{resolve:1,stress:1},flags:{rosaNoisyCrossing:true},combat:{title:"Marca descubierta",brief:"Un dron viejo despierta al leer la fiebre de Iara y baja por la escalera antes de que la puerta termine de cerrar.",encounters:[["drone"],["drone","drone"]],xp:34,canFlee:true},victory:{title:"La puerta vuelve a cerrarse",result:"El grupo derriba la unidad antes de que complete el rastreo. Rosa borra una marca con la manga y deja otra más pequeña, destinada a quien venga detrás.",fx:{threat:4,morale:2},archive:["sonar","hunterMarks"],flags:{rosaDroneAmbushWon:true}},nextScene:2}
+    ]},
+    {kicker:"Desvío de ruta · Casa marcada",title:"La mesa para cuatro",image:"narrative/rosa/rosa-03-mesa-para-cuatro.png",timeLimit:19000,lines:[
+      "La casa segura conserva cuatro platos, una olla tapada y una silla caída hacia la puerta. Rosa deja a Iara sobre mantas secas antes de revisar ventanas, suelo y techo: madre primero, cazadora enseguida.",
+      "Antes de despedirse, empuja tres posibles pagos sobre la mesa. Un código de casas seguras, un mensaje para otros refugios y munición envuelta en tela. No puede entregar todo sin dejar a su gente desnuda."
+    ],options:[
+      {label:"Aceptar el código de casas seguras",hint:"La ruta de Rosa mejora futuros cruces de superficie.",add:["routeMap"],fx:{threat:-4,morale:1},archive:["hunterMarks"],psy:{pragmatism:1,empathy:1},flags:{rosaSafeHouseMarked:true,iaraAtSafeHouse:true},end:true},
+      {label:"Pedir que Rosa active la red civil",hint:"La ayuda se vuelve aviso para otros refugios.",fx:{morale:4,threat:1},archive:["hunterMarks"],psy:{empathy:2,resolve:1},flags:{rosaCivilNetwork:true,iaraAtSafeHouse:true},end:true},
+      {label:"Aceptar munición y cerrar la deuda",hint:"Recupera recursos, pero deja la relación como intercambio.",fx:{ammo:1,morale:-1},psy:{pragmatism:1,empathy:-1},flags:{rosaDebtClosed:true,iaraAtSafeHouse:true},end:true}
     ]}
   ]}
 };
@@ -1192,8 +1218,8 @@ function routeDefaultChoice(scene,def){
   var options=scene.options||[],preferred=scene.defaultChoice!==undefined?scene.defaultChoice:def.defaultChoice,first=0,i;if(options[preferred]&&!reason(options[preferred]))return preferred;for(i=0;i<options.length;i++)if(!reason(options[i]))return i;return first
 }
 function routeChoiceCost(opt,blocked){return blocked||opt.cost||(opt.combat?"Combate":"Elegir")}
-function routeChoiceHistory(opt){
-  var last=state.history[state.history.length-1];if(last)last.route=(last.route?last.route+" / ":"")+"Desvío de Matías: "+opt.label
+function routeChoiceHistory(opt,routeId){
+  var def=routeNarrativeDef(routeId||(routeNarrativeState&&routeNarrativeState.id)),name=def&&def.title?def.title:"Desvío de ruta",last=state.history[state.history.length-1];if(last)last.route=(last.route?last.route+" / ":"")+name+": "+opt.label
 }
 function renderRouteNarrativeChanges(changes){
   $("routeNarrativeChanges").innerHTML=(changes||[]).slice(-6).map(function(x){return'<div class="result-chip">'+esc(x[0])+"<strong>"+esc(x[1])+"</strong></div>"}).join("");
@@ -1222,8 +1248,8 @@ function finishRouteNarrative(){
 }
 function selectRouteNarrativeChoice(i){
   if(!routeNarrativeState)return;if(routeNarrativeTypeTimer){revealRouteNarrativeText();return}var scene=currentRouteNarrativeScene(),opt=scene&&scene.options&&scene.options[i];if(!opt||reason(opt))return;clearInterval(routeNarrativeTimer);routeNarrativeTimer=null;var changes=apply(opt).concat(checkMissions());routeChoiceHistory(opt);renderMini();save();
-  if(opt.combat){var combatChoice=Object.assign({title:opt.label,result:"El ruido obliga al grupo a defender la camilla antes de llegar al refugio."},opt,{psy:null,_routeNarrative:{id:routeNarrativeState.id,nextScene:opt.nextScene===undefined?routeNarrativeState.sceneIndex+1:opt.nextScene,changes:changes}});routeNarrativeState=null;$("routeNarrativeModal").classList.add("hidden");startCombat(opt.combat,combatChoice);return}
-  if(opt.end){var routeFaction=storyDecisionBenefit(opt)?1:0;if(routeFaction)changes=awardFactionPoints(routeFaction,"desvío de ruta").concat(changes);state.history.push({day:events[state.index].day,loc:"Línea 1",choice:"Desvío de Matías",result:opt.label,faction:routeFaction});routeNarrativeState.finished=true;routeNarrativeState.optionsVisible=false;routeNarrativeState.changes=changes;$("routeNarrativeChoices").classList.add("hidden");$("routeNarrativeClock").classList.add("hidden");$("routeNarrativeButton").disabled=false;$("routeNarrativeButton").textContent="Continuar expedición";renderRouteNarrativeChanges(changes);$("routeNarrativeButton").focus();return}
+  if(opt.combat){var def=routeNarrativeDef(routeNarrativeState.id),combatChoice=Object.assign({title:opt.label,result:def&&def.combatResult?def.combatResult:"El ruido obliga al grupo a defender el desvío antes de volver a la ruta principal."},opt,{psy:null,_routeNarrative:{id:routeNarrativeState.id,nextScene:opt.nextScene===undefined?routeNarrativeState.sceneIndex+1:opt.nextScene,changes:changes}});routeNarrativeState=null;$("routeNarrativeModal").classList.add("hidden");startCombat(opt.combat,combatChoice);return}
+  if(opt.end){var endDef=routeNarrativeDef(routeNarrativeState.id),routeFaction=storyDecisionBenefit(opt)?1:0;if(routeFaction)changes=awardFactionPoints(routeFaction,"desvío de ruta").concat(changes);state.history.push({day:events[state.index].day,loc:endDef&&endDef.endLoc?endDef.endLoc:"Ruta desviada",choice:endDef&&endDef.title?endDef.title:"Desvío de ruta",result:opt.label,faction:routeFaction});routeNarrativeState.finished=true;routeNarrativeState.optionsVisible=false;routeNarrativeState.changes=changes;$("routeNarrativeChoices").classList.add("hidden");$("routeNarrativeClock").classList.add("hidden");$("routeNarrativeButton").disabled=false;$("routeNarrativeButton").textContent="Continuar expedición";renderRouteNarrativeChanges(changes);$("routeNarrativeButton").focus();return}
   openRouteNarrative(routeNarrativeState.id,opt.nextScene===undefined?routeNarrativeState.sceneIndex+1:opt.nextScene,changes)
 }
 function advanceRouteNarrative(){
@@ -1259,7 +1285,7 @@ function endingNarrative(kind,tierId){
     good:{title:"La ciudad vuelve a contestar",lead:choice+" La expedición no solo regresó: cambió el equilibrio de NeoSantiago.",refuge:"El Andén 4 recibe información, rutas y pruebas suficientes para dejar de depender de la versión de la Red UNO. Mara distribuye copias y suministros entre varias familias; destruir un solo archivo ya no bastará para devolverlos al silencio.",group:"Sara, Elías y Noa regresan con heridas y desacuerdos, pero todavía confían entre sí. Sus decisiones los convierten en la primera patrulla capaz de volver a la superficie por voluntad propia y no por una orden del consejo.",world:"La señal se transforma en una red de voces. Refugios desconocidos responden, los merodeadores dejan de ser una historia simple y la Red UNO pierde el control absoluto de la memoria de Santiago. La siguiente expedición partirá hacia una ciudad despierta."},
     normal:{title:"Una verdad incompleta",lead:choice+" El refugio sobrevive, aunque el viaje deja preguntas y deudas que nadie puede resolver todavía.",refuge:"La Línea 1 gana tiempo y conserva parte de lo descubierto, pero las rutas quedaron expuestas y los recursos siguen siendo escasos. El consejo acepta preparar otra salida antes de decidir cuánto de la verdad puede soportar la comunidad.",group:"El grupo vuelve completo, pero no intacto. Las retiradas, los secretos y las decisiones difíciles cambian la relación entre Sara, Elías y Noa. Seguirán trabajando juntos porque todavía se necesitan, no porque estén de acuerdo.",world:"La Red UNO mantiene el control de gran parte de la superficie. Algunos refugios escucharon la señal y otros solo recibieron fragmentos. NeoSantiago conoce ahora una grieta en el sistema, pero aún no sabe si utilizarla para liberarse o para sobrevivir un día más."},
     bad:{title:"El precio del silencio",lead:choice+" La expedición termina, pero la verdad deja de pertenecer a quienes arriesgaron la vida para encontrarla.",refuge:"El Andén 4 recibe suministros y una calma temporal, pero queda atado a nuevas deudas. Mara comprende que el refugio sobrevivió esta vez a cambio de entregar rutas, nombres o poder de negociación a una fuerza externa.",group:"Sara, Elías y Noa regresan agotados y sin una versión común de lo ocurrido. Nadie murió, pero la confianza quedó quebrada. Cada uno conserva una parte distinta de la historia y teme lo que los otros podrían hacer con ella.",world:"La Red UNO conserva la ventaja mientras los Cosechadores convierten la información en mercancía. La señal se apaga, los demás refugios siguen aislados y NeoSantiago aprende que incluso la verdad puede ser utilizada como otra forma de control."}
-  };var story=Object.assign({},endings[tierId]);if(state.flags.matiasAtRefuge)story.refuge+=" Matías permanece en la enfermería como prueba viva de que una ruta puede desviarse por alguien y no solo por recursos.";if(state.flags.matiasFeverSignal)story.world+=" La frecuencia de fiebre que dejó permite a otros refugios reconocer cuándo un cielo quieto es en realidad un rastreo.";return story
+  };var story=Object.assign({},endings[tierId]);if(state.flags.matiasAtRefuge)story.refuge+=" Matías permanece en la enfermería como prueba viva de que una ruta puede desviarse por alguien y no solo por recursos.";if(state.flags.matiasFeverSignal)story.world+=" La frecuencia de fiebre que dejó permite a otros refugios reconocer cuándo un cielo quieto es en realidad un rastreo.";if(state.flags.iaraAtSafeHouse)story.refuge+=" Iara llegó a una casa marcada, y Rosa dejó de ser solo una deuda del andén: ahora es un contacto vivo entre refugios y cazadores.";if(state.flags.rosaCivilNetwork)story.world+=" La red civil de Rosa empieza a repetir avisos con marcas, agua y mensajes que la Red UNO no puede leer como transmisión abierta.";return story
 }
 function calculateScore(kind,tierId){
   var s=state.stats,level=Math.max.apply(null,state.party.map(function(p){return p.level})),tierBonus={good:2000,normal:900,bad:0}[tierId]||0;
@@ -1422,7 +1448,7 @@ function closeLootModal(){
 function finishLooting(){if(!battleState||battleState.phase!=="loot"||battleState.busy)return;clearInterval(lootInterval);stopLoopSfx("loot-loop",160);$("lootModal").classList.add("hidden");winCombat()}
 function winCombat(){
   stopLoopSfx("loot-loop",160);
-  var b=battleState,choice=b.choice,out=choice.victory||choice,route=choice._routeNarrative;state.stats.battles++;state.stats.wins++;if(state.party.every(function(p){return p.hp>0}))state.stats.fullSquadWins++;state.party.forEach(function(p,i){if(p.hp>0){state.stats.xpFromVictories+=5;addPersonalXp(i,5,"sobrevivir al combate")}});awardFactionPoints(1,"combate ganado");var xpSummary=state.party.map(function(p,i){return(b.xpEarned[i]||0)>0?p.name+" +"+b.xpEarned[i]:""}).filter(Boolean).join(" · "),extra=[["Victoria","Hostiles neutralizados"],["Puntos de facción","+1 · combate ganado"],["XP personal",xpSummary||"Sin XP de combate"],["Botín",b.lootTaken?b.lootTaken+" objetos":"Sin recoger"]];extra=extra.concat(applyPsychImpulse({label:"Victoria del grupo",hint:"Sobrevivir refuerza la decisión colectiva.",fx:{morale:1,threat:-1},psy:{stress:-1,resolve:1}},null));if(b.levelUps.length)extra.push(["Subida de nivel",b.levelUps.join(", ")]);battleState=null;setSceneAmbience("ambience-title",AUDIO_CROSSFADE_MS);$("battle").classList.add("hidden");$("lootModal").classList.add("hidden");if(route){var changes=(route.changes||[]).concat(extra,apply(out),checkMissions()).slice(-6);routeChoiceHistory({label:out.title||choice.title||"Combate del desvío"});openRouteNarrative(route.id,route.nextScene,changes);return}completeChoice(choice,out,null,null,extra)
+  var b=battleState,choice=b.choice,out=choice.victory||choice,route=choice._routeNarrative;state.stats.battles++;state.stats.wins++;if(state.party.every(function(p){return p.hp>0}))state.stats.fullSquadWins++;state.party.forEach(function(p,i){if(p.hp>0){state.stats.xpFromVictories+=5;addPersonalXp(i,5,"sobrevivir al combate")}});awardFactionPoints(1,"combate ganado");var xpSummary=state.party.map(function(p,i){return(b.xpEarned[i]||0)>0?p.name+" +"+b.xpEarned[i]:""}).filter(Boolean).join(" · "),extra=[["Victoria","Hostiles neutralizados"],["Puntos de facción","+1 · combate ganado"],["XP personal",xpSummary||"Sin XP de combate"],["Botín",b.lootTaken?b.lootTaken+" objetos":"Sin recoger"]];extra=extra.concat(applyPsychImpulse({label:"Victoria del grupo",hint:"Sobrevivir refuerza la decisión colectiva.",fx:{morale:1,threat:-1},psy:{stress:-1,resolve:1}},null));if(b.levelUps.length)extra.push(["Subida de nivel",b.levelUps.join(", ")]);battleState=null;setSceneAmbience("ambience-title",AUDIO_CROSSFADE_MS);$("battle").classList.add("hidden");$("lootModal").classList.add("hidden");if(route){var changes=(route.changes||[]).concat(extra,apply(out),checkMissions()).slice(-6);routeChoiceHistory({label:out.title||choice.title||"Combate del desvío"},route.id);openRouteNarrative(route.id,route.nextScene,changes);return}completeChoice(choice,out,null,null,extra)
 }
 function loseCombat(fled){
   stopLoopSfx("loot-loop",160);
@@ -1438,6 +1464,7 @@ function useCombatItem(kind){
 
 function eventDisplay(ev,index){
   if(state.flags.matiasLateStart&&index===9)return Object.assign({},ev,{time:"09:35",text:"La expedición sale más tarde desde Línea 1. Matías queda en la enfermería, febril pero vivo, y su advertencia viaja con el grupo: no crucen cuando el cielo parezca quieto. En el túnel de servicio, una unidad de la Red UNO desciende y bloquea la subida; no busca movimiento, mide temperatura, respiración y ritmo cardíaco."});
+  if(state.flags.rosaSafeHouseMarked&&index===12)return Object.assign({},ev,{text:"La casa marcada por Rosa conserva mantas secas, una cocina de alcohol y cuatro platos preparados. Ya no parece un botín anónimo: es parte de una red civil que sobrevive dejando señales donde la Red UNO solo ve ruina."});
   return ev
 }
 function render(){
