@@ -1,5 +1,5 @@
 "use strict";
-var ASSET_REVISION="63";
+var ASSET_REVISION="64";
 
 var enemyDefs={
   merodeador:{name:"Merodeador",role:"Asaltante de los túneles",hp:40,attack:[7,11],accuracy:1,def:11,armor:0,mechanical:false,lootMs:1800,lootGroup:"merodeador",xp:18},
@@ -70,7 +70,7 @@ var branchDialogueDefs={
       {label:"Retirarse sin responder",hint:"Evita la pelea y pierde la oportunidad.",fx:{threat:-1,morale:-2},psy:{pragmatism:1,resolve:-1},flags:{leftLiraBorder:true}}
     ]},
     memory:{lines:["«Un núcleo no es una llave. Es el último segundo de alguien: miedo, ruta, nombre, calor. Si lo abren como chatarra, la Red UNO aprende a abrirnos igual.»"],options:[
-      {label:"Prometer no tocar núcleos vivos",hint:"Crea confianza con los exiliados.",fx:{morale:3,threat:-2},archive:["coreRite"],psy:{empathy:1,resolve:1},flags:{liraTrust:true}},
+      {label:"Ayudar a Lira a recuperar el núcleo exiliado",hint:"Abre un desvío narrativo hacia el túnel donde la Red UNO guarda la memoria de su hermano.",fx:{morale:2,threat:2},archive:["coreRite"],psy:{empathy:2,resolve:1},flags:{liraTrust:true,liraRecoveryAccepted:true},routeScene:"liraExiledCore"},
       {label:"Pedir una ruta que no cruce sus muertos",hint:"Obtiene avance sin reclamar sus símbolos.",add:["routeMap"],fx:{threat:-1},psy:{pragmatism:1},flags:{liraSafeRoute:true}},
       {label:"Decir que todo puede ser recurso",hint:"La lógica de taller destruye la alianza.",fx:{morale:-5,threat:3},psy:{stress:2,empathy:-2,pragmatism:1},flags:{liraDistrust:true}}
     ]}
@@ -255,7 +255,7 @@ var branchDialogueDefs={
 };
 var routeNarrativeDefs={
   matiasRescue:{title:"Desvío de Matías",endLoc:"Línea 1",combatResult:"El ruido obliga al grupo a defender la camilla antes de llegar al refugio.",defaultChoice:0,scenes:[
-    {kicker:"Desvío de ruta · Farmacia del enlace",title:"Matías bajo el mostrador",image:"narrative/matias/matias-01-farmacia.png",timeLimit:17000,lines:[
+    {kicker:"Desvío de ruta · Farmacia del enlace",title:"Matías bajo el mostrador",image:"narrative/matias/matias-01-farmacia.webp",timeLimit:17000,lines:[
       "La farmacia queda en silencio cuando Sara termina el vendaje. Matías no pesa como un cuerpo: pesa como una decisión que ya no cabe en el mapa.",
       "Elías revisa la frecuencia que el herido aprieta contra el pecho. Noa mira la puerta. Afuera, la Red UNO sigue moviendo sus rastreos de señal como si la ciudad respirara por turnos."
     ],options:[
@@ -263,7 +263,7 @@ var routeNarrativeDefs={
       {label:"Pedirle la ruta antes de levantarlo",hint:"Obtiene una pista táctica, pero alarga la exposición.",fx:{threat:1},add:["routeMap"],archive:["matias"],psy:{pragmatism:1},flags:{matiasRouteBeforeLift:true},nextScene:1},
       {label:"Salir de inmediato con él",hint:"Gana tiempo al costo de moverse con menos preparación.",fx:{morale:1,threat:3},psy:{resolve:1,stress:1},flags:{matiasRushedExit:true},nextScene:1}
     ]},
-    {kicker:"Desvío de ruta · Túnel quieto",title:"El cielo no hace ruido",image:"narrative/matias/matias-02-tunel.png",timeLimit:14500,lines:[
+    {kicker:"Desvío de ruta · Túnel quieto",title:"El cielo no hace ruido",image:"narrative/matias/matias-02-tunel.webp",timeLimit:14500,lines:[
       "El regreso no parece una huida. Parece una operación hecha con respiraciones medidas. Cada paso de la camilla levanta agua negra entre los rieles.",
       "Arriba, donde el túnel se abre hacia la superficie, tres luces rojas permanecen quietas. Matías murmura sin abrir los ojos: «cuando el cielo parezca quieto, no crucen como vivos»."
     ],options:[
@@ -271,7 +271,7 @@ var routeNarrativeDefs={
       {label:"Apagar señales con una batería",hint:"Elías fuerza una zona muda alrededor de la camilla.",cost:"Batería −1",req:{battery:1},fx:{battery:-1,threat:-5},psy:{pragmatism:2},flags:{matiasSignalMasked:true},nextScene:2},
       {label:"Correr antes del rastreo",hint:"El ruido puede convertir el rescate en combate.",cost:"Combate",fx:{morale:1,threat:3},psy:{resolve:1,stress:1},flags:{matiasNoisyCrossing:true},combat:{title:"Rastreo de fiebre",brief:"Los drones detectan el pulso alterado de Matías y bajan al túnel antes de que la camilla alcance la curva.",encounters:[["drone"],["drone","drone"]],xp:36,canFlee:true},victory:{title:"El cielo queda atrás",result:"El grupo derriba los drones el tiempo justo para sacar a Matías del túnel. La Red UNO pierde la lectura, pero el ruido deja una cicatriz en la ruta.",fx:{threat:4,morale:2},archive:["sonar"],flags:{matiasDroneAmbushWon:true}},nextScene:2}
     ]},
-    {kicker:"Desvío de ruta · Enfermería Línea 1",title:"La advertencia de Matías",image:"narrative/matias/matias-03-enfermeria.png",timeLimit:19000,lines:[
+    {kicker:"Desvío de ruta · Enfermería Línea 1",title:"La advertencia de Matías",image:"narrative/matias/matias-03-enfermeria.webp",timeLimit:19000,lines:[
       "Matías queda en la enfermería del refugio, febril pero vivo. La expedición sale más tarde. La Red UNO ya cambió algunos rastreos de señal, pero Matías dejó una advertencia grabada: no crucen cuando el cielo parezca quieto.",
       "Antes de perder otra vez la conciencia, empuja tres cosas hacia Sara: una ampolla sellada, una frecuencia marcada con pulso febril y un mapa húmedo de República. No puede entregar todo; apenas puede sostener la mano."
     ],options:[
@@ -281,7 +281,7 @@ var routeNarrativeDefs={
     ]}
   ]},
   rosaIaraRoute:{title:"Desvío de Rosa",endLoc:"Casa de cazadores",combatResult:"El ruido rompe la ruta civil y obliga al grupo a proteger a Rosa e Iara antes de alcanzar la casa marcada.",defaultChoice:0,scenes:[
-    {kicker:"Desvío de ruta · Último andén habitado",title:"El agua de Iara",image:"narrative/rosa/rosa-01-agua-iara.png",timeLimit:17000,lines:[
+    {kicker:"Desvío de ruta · Último andén habitado",title:"El agua de Iara",image:"narrative/rosa/rosa-01-agua-iara.webp",timeLimit:17000,lines:[
       "Iara bebe sin abrir del todo los ojos. Rosa no agradece de inmediato: cuenta respiraciones, mira las armas y decide si el grupo acaba de comprar una ruta o de entrar en una deuda.",
       "Noa reconoce tres marcas pequeñas bajo la banca del andén. No indican un escondite; indican una salida que solo funciona si alguien camina como familia y no como patrulla."
     ],options:[
@@ -289,7 +289,7 @@ var routeNarrativeDefs={
       {label:"Pedir a Rosa que guíe el paso",hint:"Acepta su autoridad en rutas de cazadores.",fx:{threat:-1,morale:1},archive:["hunterMarks"],psy:{empathy:1,pragmatism:1},flags:{rosaLeadsRoute:true},nextScene:1},
       {label:"Repartir peso y avanzar ahora",hint:"Gana tiempo, pero obliga a moverse con Iara todavía débil.",fx:{morale:1,threat:3},psy:{resolve:1,stress:1},flags:{rosaRushedIara:true},nextScene:1}
     ]},
-    {kicker:"Desvío de ruta · Puerta sin nombre",title:"La marca torcida",image:"narrative/rosa/rosa-02-marca-torcida.png",timeLimit:15000,lines:[
+    {kicker:"Desvío de ruta · Puerta sin nombre",title:"La marca torcida",image:"narrative/rosa/rosa-02-marca-torcida.webp",timeLimit:15000,lines:[
       "La salida no parece una salida. Es una puerta oxidada marcada para parecer inútil: tres líneas de agua seca, una cruz incompleta y una sombra pintada donde la Red UNO espera ver muro.",
       "Rosa levanta a Iara contra su pecho. «La línea recta es para los mapas. La torcida es para gente viva. Si la tercera marca aparece, alguien quiere que los vean entrando»."
     ],options:[
@@ -297,13 +297,39 @@ var routeNarrativeDefs={
       {label:"Enfriar la fiebre con más agua",hint:"Oculta el pulso térmico de Iara antes de cruzar.",cost:"Agua −1",req:{water:1},fx:{water:-1,threat:-3,morale:2},psy:{empathy:2,pragmatism:1},flags:{iaraPulseHidden:true},nextScene:2},
       {label:"Correr por la escalera visible",hint:"El ruido puede convertir la ayuda en combate.",cost:"Combate",fx:{morale:1,threat:3},psy:{resolve:1,stress:1},flags:{rosaNoisyCrossing:true},combat:{title:"Marca descubierta",brief:"Un dron viejo despierta al leer la fiebre de Iara y baja por la escalera antes de que la puerta termine de cerrar.",encounters:[["drone"],["drone","drone"]],xp:34,canFlee:true},victory:{title:"La puerta vuelve a cerrarse",result:"El grupo derriba la unidad antes de que complete el rastreo. Rosa borra una marca con la manga y deja otra más pequeña, destinada a quien venga detrás.",fx:{threat:4,morale:2},archive:["sonar","hunterMarks"],flags:{rosaDroneAmbushWon:true}},nextScene:2}
     ]},
-    {kicker:"Desvío de ruta · Casa marcada",title:"La mesa para cuatro",image:"narrative/rosa/rosa-03-mesa-para-cuatro.png",timeLimit:19000,lines:[
+    {kicker:"Desvío de ruta · Casa marcada",title:"La mesa para cuatro",image:"narrative/rosa/rosa-03-mesa-para-cuatro.webp",timeLimit:19000,lines:[
       "La casa segura conserva cuatro platos, una olla tapada y una silla caída hacia la puerta. Rosa deja a Iara sobre mantas secas antes de revisar ventanas, suelo y techo: madre primero, cazadora enseguida.",
       "Antes de despedirse, empuja tres posibles pagos sobre la mesa. Un código de casas seguras, un mensaje para otros refugios y munición envuelta en tela. No puede entregar todo sin dejar a su gente desnuda."
     ],options:[
       {label:"Aceptar el código de casas seguras",hint:"La ruta de Rosa mejora futuros cruces de superficie.",add:["routeMap"],fx:{threat:-4,morale:1},archive:["hunterMarks"],psy:{pragmatism:1,empathy:1},flags:{rosaSafeHouseMarked:true,iaraAtSafeHouse:true},end:true},
       {label:"Pedir que Rosa active la red civil",hint:"La ayuda se vuelve aviso para otros refugios.",fx:{morale:4,threat:1},archive:["hunterMarks"],psy:{empathy:2,resolve:1},flags:{rosaCivilNetwork:true,iaraAtSafeHouse:true},end:true},
       {label:"Aceptar munición y cerrar la deuda",hint:"Recupera recursos, pero deja la relación como intercambio.",fx:{ammo:1,morale:-1},psy:{pragmatism:1,empathy:-1},flags:{rosaDebtClosed:true,iaraAtSafeHouse:true},end:true}
+    ]}
+  ]},
+  liraExiledCore:{title:"Desvío de Lira",endLoc:"Cámara de recuperación",combatResult:"La lectura despierta a la Red UNO y obliga al grupo a proteger al hermano de Lira antes de alcanzar la Cámara de recuperación.",defaultChoice:0,scenes:[
+    {kicker:"Desvío de ruta · Túnel de los núcleos",title:"El descenso de Lira",image:"narrative/lira/lira-01-tunel-nucleos.webp",timeLimit:17000,lines:[
+      "Lira avanza pegada al muro y levanta una mano. Un sensor rojo todavía respira entre cables húmedos. El túnel no fue construido para viajeros: las correas y los rieles bajos delatan que la Red UNO trasladaba cuerpos por aquí.",
+      "Sara reconoce sujeciones médicas arrancadas. Elías mide una señal que aparece y desaparece con el pulso azul del pecho de Lira. Noa cubre la retaguardia mientras la merodeadora señala una abertura: «Mi hermano cruzó vivo. Lo archivaron antes de que terminara de morir»."
+    ],options:[
+      {label:"Cubrir el sensor con tela conductora",hint:"Oculta los cuatro pulsos y conserva el acceso clandestino.",cost:"Tela −1",reqItems:["cloth"],fx:{cloth:-1,threat:-4,morale:1},archive:["coreRite"],psy:{empathy:1,pragmatism:1},flags:{liraSensorCovered:true},nextScene:1},
+      {label:"Cegar el lector con una batería",hint:"Elías crea una zona muda alrededor del grupo.",cost:"Batería −1",req:{battery:1},fx:{battery:-1,threat:-5},psy:{pragmatism:2},flags:{liraSignalMasked:true},nextScene:1},
+      {label:"Cruzar antes de que cierre la ruta",hint:"El sensor puede despertar a las unidades que custodian el túnel.",cost:"Combate",fx:{morale:1,threat:3},psy:{resolve:1,stress:1},flags:{liraTunnelRushed:true},combat:{title:"El túnel despierta",brief:"La lectura incompleta activa una unidad de la Red UNO y el corredor se cierra detrás del grupo.",encounters:[["drone"],["drone","drone"]],xp:36,canFlee:true},victory:{title:"Una señal menos",result:"El grupo derriba las unidades antes de que transmitan el núcleo de Lira. El paso queda abierto, pero la Red UNO ya sabe que algo vivo cruzó el túnel.",fx:{threat:4,morale:2},archive:["sonar"],flags:{liraTunnelCombatWon:true}},nextScene:1}
+    ]},
+    {kicker:"Desvío de ruta · Clínica abandonada",title:"El exiliado que respira",image:"narrative/lira/lira-02-clinica-abandonada.webp",timeLimit:18000,lines:[
+      "La clínica conserva energía suficiente para fingir que aún funciona. En la única camilla conectada, un hombre respira por intervalos. El núcleo que vinieron a recuperar sigue abierto en su pecho y cada cable lo ata a una máquina distinta.",
+      "Lira se acerca sin tocarlo. «Es mi hermano. La Red UNO guardó su último mapa aquí dentro y dejó el cuerpo esperando que alguien confundiera memoria con chatarra». Sara confirma lo peor: todavía vive, pero moverlo sin preparación puede convertir el rescate en extracción."
+    ],options:[
+      {label:"Estabilizar al hermano de Lira",hint:"Sara gasta medicina para mantener unidos el cuerpo y la memoria.",cost:"Medicina −1",req:{meds:1},fx:{meds:-1,morale:5,threat:1},archive:["coreRite"],psy:{empathy:2,resolve:1},flags:{liraBrotherStabilized:true},nextScene:2},
+      {label:"Trasladarlo con soporte portátil",hint:"Una batería mantiene el núcleo conectado durante el trayecto.",cost:"Batería −1",req:{battery:1},fx:{battery:-1,threat:-2,morale:2},psy:{empathy:1,pragmatism:2},flags:{liraBrotherOnPortableSupport:true},nextScene:2},
+      {label:"Forzar una lectura desde la clínica",hint:"Obtiene una ruta parcial, pero anuncia la posición a la Red UNO.",cost:"Combate",fx:{morale:-1,threat:4},archive:["exiles"],psy:{pragmatism:1,stress:2},flags:{liraClinicReadForced:true},combat:{title:"Memoria no autorizada",brief:"El lector despierta una patrulla que entra a la clínica buscando el núcleo exiliado.",encounters:[["agent"],["agent3"],["agent","drone"]],xp:46,canFlee:true},victory:{title:"El pulso sigue conectado",result:"La patrulla cae antes de alcanzar la camilla. Elías conserva una copia fragmentaria y desconecta la clínica sin apagar al exiliado.",fx:{threat:6,morale:1},archive:["protocol","exiles"],flags:{liraClinicCombatWon:true}},nextScene:2}
+    ]},
+    {kicker:"Desvío de ruta · Cámara de recuperación",title:"Lo que todavía recuerda",image:"narrative/lira/lira-03-camara-recuperacion.webp",timeLimit:20000,lines:[
+      "La Cámara de recuperación lee el núcleo sin separarlo del cuerpo. Sobre la fosa aparece un mapa de túneles que converge en Nodo 14 y, entre sus líneas, rostros archivados como fallas: los primeros exiliados del refugio.",
+      "El hermano de Lira abre los ojos apenas. La proyección repite nombres que el consejo convirtió en monstruos y que la Red UNO convirtió en inventario. Lira no pide el núcleo. Pide que el grupo decida qué parte de una persona está dispuesto a llevarse."
+    ],options:[
+      {label:"Devolver el núcleo y proteger a su portador",hint:"Renuncia al recurso tecnológico y obtiene la alianza y la ruta oculta de los exiliados.",cost:"Sin núcleo tecnológico",add:["routeMap"],fx:{threat:-5,morale:4},archive:["exiles","coreRite","truce"],psy:{empathy:2,resolve:1},flags:{liraAlliance:true,liraSafeRoute:true,liraBrotherRecovered:true,exilesReturnAid:true,refugeDistrustExiles:true},end:true},
+      {label:"Copiar los recuerdos y devolverlo",hint:"Conserva el archivo y la ruta, pero deja una firma que la Red UNO puede seguir.",cost:"Amenaza +5",add:["routeMap"],fx:{threat:5,morale:1},archive:["exiles","protocol"],psy:{pragmatism:2,empathy:1,stress:1},flags:{liraCoreCopied:true,liraPartialTrust:true,liraBrotherRecovered:true},end:true},
+      {label:"Separar el núcleo y conservarlo",hint:"Obtiene tecnología a costa del hermano de Lira y de cualquier alianza futura.",cost:"Moral −7",add:["pulseCore"],fx:{morale:-7,threat:4},archive:["coreRite"],psy:{pragmatism:2,empathy:-2,stress:2},flags:{liraCoreClaimed:true,liraDistrust:true,liraBrotherLost:true},end:true}
     ]}
   ]}
 };
@@ -1285,7 +1311,7 @@ function endingNarrative(kind,tierId){
     good:{title:"La ciudad vuelve a contestar",lead:choice+" La expedición no solo regresó: cambió el equilibrio de NeoSantiago.",refuge:"El Andén 4 recibe información, rutas y pruebas suficientes para dejar de depender de la versión de la Red UNO. Mara distribuye copias y suministros entre varias familias; destruir un solo archivo ya no bastará para devolverlos al silencio.",group:"Sara, Elías y Noa regresan con heridas y desacuerdos, pero todavía confían entre sí. Sus decisiones los convierten en la primera patrulla capaz de volver a la superficie por voluntad propia y no por una orden del consejo.",world:"La señal se transforma en una red de voces. Refugios desconocidos responden, los merodeadores dejan de ser una historia simple y la Red UNO pierde el control absoluto de la memoria de Santiago. La siguiente expedición partirá hacia una ciudad despierta."},
     normal:{title:"Una verdad incompleta",lead:choice+" El refugio sobrevive, aunque el viaje deja preguntas y deudas que nadie puede resolver todavía.",refuge:"La Línea 1 gana tiempo y conserva parte de lo descubierto, pero las rutas quedaron expuestas y los recursos siguen siendo escasos. El consejo acepta preparar otra salida antes de decidir cuánto de la verdad puede soportar la comunidad.",group:"El grupo vuelve completo, pero no intacto. Las retiradas, los secretos y las decisiones difíciles cambian la relación entre Sara, Elías y Noa. Seguirán trabajando juntos porque todavía se necesitan, no porque estén de acuerdo.",world:"La Red UNO mantiene el control de gran parte de la superficie. Algunos refugios escucharon la señal y otros solo recibieron fragmentos. NeoSantiago conoce ahora una grieta en el sistema, pero aún no sabe si utilizarla para liberarse o para sobrevivir un día más."},
     bad:{title:"El precio del silencio",lead:choice+" La expedición termina, pero la verdad deja de pertenecer a quienes arriesgaron la vida para encontrarla.",refuge:"El Andén 4 recibe suministros y una calma temporal, pero queda atado a nuevas deudas. Mara comprende que el refugio sobrevivió esta vez a cambio de entregar rutas, nombres o poder de negociación a una fuerza externa.",group:"Sara, Elías y Noa regresan agotados y sin una versión común de lo ocurrido. Nadie murió, pero la confianza quedó quebrada. Cada uno conserva una parte distinta de la historia y teme lo que los otros podrían hacer con ella.",world:"La Red UNO conserva la ventaja mientras los Cosechadores convierten la información en mercancía. La señal se apaga, los demás refugios siguen aislados y NeoSantiago aprende que incluso la verdad puede ser utilizada como otra forma de control."}
-  };var story=Object.assign({},endings[tierId]);if(state.flags.matiasAtRefuge)story.refuge+=" Matías permanece en la enfermería como prueba viva de que una ruta puede desviarse por alguien y no solo por recursos.";if(state.flags.matiasFeverSignal)story.world+=" La frecuencia de fiebre que dejó permite a otros refugios reconocer cuándo un cielo quieto es en realidad un rastreo.";if(state.flags.iaraAtSafeHouse)story.refuge+=" Iara llegó a una casa marcada, y Rosa dejó de ser solo una deuda del andén: ahora es un contacto vivo entre refugios y cazadores.";if(state.flags.rosaCivilNetwork)story.world+=" La red civil de Rosa empieza a repetir avisos con marcas, agua y mensajes que la Red UNO no puede leer como transmisión abierta.";return story
+  };var story=Object.assign({},endings[tierId]);if(state.flags.matiasAtRefuge)story.refuge+=" Matías permanece en la enfermería como prueba viva de que una ruta puede desviarse por alguien y no solo por recursos.";if(state.flags.matiasFeverSignal)story.world+=" La frecuencia de fiebre que dejó permite a otros refugios reconocer cuándo un cielo quieto es en realidad un rastreo.";if(state.flags.iaraAtSafeHouse)story.refuge+=" Iara llegó a una casa marcada, y Rosa dejó de ser solo una deuda del andén: ahora es un contacto vivo entre refugios y cazadores.";if(state.flags.rosaCivilNetwork)story.world+=" La red civil de Rosa empieza a repetir avisos con marcas, agua y mensajes que la Red UNO no puede leer como transmisión abierta.";if(state.flags.refugeDistrustExiles)story.refuge+=" Parte del consejo recibe la alianza con Lira como una ruptura de autoridad y empieza a desconfiar de lo que la expedición negoció lejos del refugio.";if(state.flags.liraAlliance)story.world+=" Lira y los exiliados conservan una ruta que la Red UNO no puede rastrear; cuando la Cámara de núcleos vuelve a abrirse, ya no llegan como enemigos sino como custodios de sus muertos.";else if(state.flags.liraCoreCopied)story.world+=" La copia del núcleo exiliado conserva los nombres de los primeros desterrados, pero su firma deja a la Red UNO una nueva forma de seguir esa memoria.";else if(state.flags.liraCoreClaimed)story.group+=" El núcleo del hermano de Lira regresa como tecnología recuperada, y el silencio del grupo confirma que ningún recurso llega realmente vacío.";return story
 }
 function calculateScore(kind,tierId){
   var s=state.stats,level=Math.max.apply(null,state.party.map(function(p){return p.level})),tierBonus={good:2000,normal:900,bad:0}[tierId]||0;
@@ -1465,6 +1491,10 @@ function useCombatItem(kind){
 function eventDisplay(ev,index){
   if(state.flags.matiasLateStart&&index===9)return Object.assign({},ev,{time:"09:35",text:"La expedición sale más tarde desde Línea 1. Matías queda en la enfermería, febril pero vivo, y su advertencia viaja con el grupo: no crucen cuando el cielo parezca quieto. En el túnel de servicio, una unidad de la Red UNO desciende y bloquea la subida; no busca movimiento, mide temperatura, respiración y ritmo cardíaco."});
   if(state.flags.rosaSafeHouseMarked&&index===12)return Object.assign({},ev,{text:"La casa marcada por Rosa conserva mantas secas, una cocina de alcohol y cuatro platos preparados. Ya no parece un botín anónimo: es parte de una red civil que sobrevive dejando señales donde la Red UNO solo ve ruina."});
+  if(state.flags.liraSafeRoute&&ev.title==="La máquina que recuerda")return Object.assign({},ev,{text:"La ruta entregada por Lira desemboca detrás del Nodo 14, fuera del rastreo principal. El terminal conserva mapas de refugios, firmas cardíacas y el origen de la señal; entre sus pulsos reconoce el núcleo de su hermano como memoria no autorizada. Abrir una sección todavía puede borrar otra, pero la Red UNO tarda más en comprender quién entró."});
+  if(state.flags.liraCoreCopied&&ev.title==="La máquina que recuerda")return Object.assign({},ev,{text:"La copia del núcleo exiliado conduce al grupo hasta Nodo 14, pero también despierta una respuesta en el terminal. Su memoria conserva mapas de refugios, firmas cardíacas y el origen de la señal mientras una lectura remota intenta reconstruir el camino que siguieron."});
+  if(state.flags.liraAlliance&&ev.title==="Los exiliados regresan")return Object.assign({},ev,{text:"Lira entra primero en la Cámara de núcleos y repite el ritmo que abrió el Túnel de los núcleos. Los cinco exiliados reconocen al grupo que devolvió a su hermano y bajan las armas, aunque todavía exigen recuperar los nombres y memorias almacenados por la Red UNO."});
+  if(state.flags.liraCoreClaimed&&ev.title==="Los exiliados regresan")return Object.assign({},ev,{text:"Cinco exiliados entran en la torre siguiendo el pulso del núcleo separado del hermano de Lira. No vienen a negociar una pieza: vienen a recuperar a uno de los suyos. Cada luz roja de la cámara apunta ahora hacia la mochila del grupo."});
   return ev
 }
 function render(){
