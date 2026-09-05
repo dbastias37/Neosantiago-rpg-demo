@@ -819,6 +819,51 @@
     }
     @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
     @media(max-width:600px){.trader-panel{grid-template-columns:1fr;grid-template-rows:auto 190px auto}.trader-art{height:190px;min-height:0}.npc-tabs{grid-column:1}.trader-copy{grid-column:1}}
+
+    /* Guided opening: image, reading area and controls occupy separate tracks. */
+    #gameIntro{padding:14px}
+    #gameIntro .welcome-modal{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);width:min(1080px,100%);height:min(650px,calc(100dvh - 28px));max-height:none;padding:0;overflow:hidden}
+    .welcome-scene{position:relative;min-width:0;min-height:0;margin:0;overflow:hidden;border-right:1px solid var(--line);background:var(--ink)}
+    .welcome-scene img{width:100%;height:100%;object-fit:cover;display:block}
+    .welcome-scene figcaption{position:absolute;inset:auto 0 0;margin:0;padding:35px 22px 18px;background:linear-gradient(transparent,rgba(3,6,5,.95));color:var(--cyan);font-size:11px;font-weight:900;letter-spacing:.13em;text-transform:uppercase}
+    .welcome-content{display:grid;grid-template-rows:auto minmax(0,1fr) auto;min-width:0;min-height:0;padding:clamp(18px,3vw,32px);gap:18px}
+    .welcome-head h2{font-size:clamp(27px,3.2vw,42px);margin:0;overflow-wrap:anywhere}
+    .welcome-head .kicker{margin:0 0 10px}
+    .welcome-reading{min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+    .welcome-text{margin:0;color:var(--paper);font:clamp(16px,1.5vw,19px)/1.7 Georgia,"Times New Roman",serif;white-space:pre-line}
+    .welcome-accessible{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+    .welcome-footer{display:grid;grid-template-columns:1fr;gap:10px;padding-top:15px;border-top:1px solid var(--line)}
+    #introReveal,.welcome-actions{grid-column:1;grid-row:1}
+    .welcome-actions{display:flex;gap:10px;visibility:hidden;pointer-events:none}
+    .welcome-actions.ready{visibility:visible;pointer-events:auto;animation:welcomeActions .35s ease-out both}
+    .welcome-actions button{min-width:0;padding:11px 12px;font-size:11px;letter-spacing:.08em;overflow-wrap:anywhere}
+    .welcome-actions .primary{flex:1}
+    #introReveal{font-size:11px}
+    #introReveal.finished{visibility:hidden;pointer-events:none}
+    .welcome-lore{justify-self:start;min-height:44px;padding:8px 0;border:0;background:transparent;color:var(--muted);font:inherit;font-size:12px;text-decoration:underline;cursor:pointer}
+    .welcome-footer button:focus-visible,.welcome-reading:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+    @keyframes welcomeActions{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    #logisticsModal .logistics-modal{width:min(650px,100%);height:auto;max-height:calc(100dvh - 28px);grid-template-rows:auto minmax(0,1fr) auto}
+    .departure-reading{min-height:0;overflow:auto;overscroll-behavior:contain}
+    #logisticsModal .logistics-copy{font-size:16px;line-height:1.6}
+    #logisticsModal .logistics-warning{font-size:12px;text-transform:none;font-weight:normal}
+    @media(orientation:portrait){
+      #gameIntro .welcome-modal{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,.32fr) minmax(0,.68fr);height:min(880px,calc(100dvh - 28px))}
+      .welcome-scene{border-right:0;border-bottom:1px solid var(--line)}
+      .welcome-scene img{object-position:center 45%}
+      .welcome-content{padding:18px;gap:12px}
+      .welcome-head h2{font-size:28px}
+      .welcome-text{font-size:16px;line-height:1.65}
+      .welcome-footer{gap:4px;padding-top:10px}
+    }
+    @media(orientation:landscape) and (max-height:540px){
+      #gameIntro .welcome-modal{grid-template-columns:minmax(0,.65fr) minmax(0,1.35fr)}
+      .welcome-content{padding:14px 20px;gap:10px}.welcome-head h2{font-size:26px}.welcome-head .kicker{margin-bottom:6px}
+      .welcome-text{font-size:15px;line-height:1.5}.welcome-footer{padding-top:8px;gap:0}
+      #logisticsModal .logistics-head{padding:12px 20px}.logistics-head h2{font-size:26px}
+      #logisticsModal .logistics-actions{display:flex;padding:10px 20px}
+    }
+    @media(prefers-reduced-motion:reduce){.welcome-actions.ready{animation:none}}
   </style>
   <link rel="stylesheet" href="decision-v2.css?v=3">
 </head>
@@ -911,59 +956,31 @@
       <p class="kicker">Prototipo narrativo · 3 días</p>
       <h1>NeoSantiago<br>2130</h1>
       <p class="modal-copy">Un grupo de Rotos sale del refugio de la antigua Línea 1 tras detectar una señal dentro de la Red UNO. Tienen tres días para descubrir quién la envió, sobrevivir a sus guardianes y decidir qué hacer con la verdad.</p>
-      <div class="start-grid">
-        <div class="mini"><strong>Veintisiete situaciones</strong><span>Nueve instancias por día, con decisiones y consecuencias persistentes.</span></div>
-        <div class="mini"><strong>Misiones de campaña</strong><span>Objetivos principales y secundarios entregan propósito y recompensas medibles.</span></div>
-        <div class="mini"><strong>Progresión personal</strong><span>Cada baja y golpe crítico fortalece al aliado responsable.</span></div>
-        <div class="mini"><strong>Refugio y trueque</strong><span>Retírate, recupera aliados agotados y cambia el botín por suministros escasos.</span></div>
-      </div>
-      <div class="buttons"><button class="primary" id="newGame">Comenzar partida</button><button class="secondary hidden" id="continueGame">Continuar guardado</button></div>
+      <div class="buttons"><button class="primary" id="newGame">Nueva partida</button><button class="secondary hidden" id="continueGame">Continuar guardado</button></div>
       <p class="note">Controles narrativos: mouse o teclas 1, 2 y 3. En combate, selecciona un enemigo y una acción. Guardado automático fuera de los enfrentamientos.</p>
     </div>
   </section>
 
   <section class="overlay hidden intro-layer" id="gameIntro" role="dialog" aria-modal="true" aria-labelledby="introTitle">
-    <article class="modal intro-modal">
-      <nav class="intro-track" aria-label="Preparación de la partida">
-        <span class="active" id="introTrackWorld" data-step="01">Contexto</span>
-        <span id="introTrackRules" data-step="02">Cómo jugar</span>
-        <span id="introTrackRefuge" data-step="03">Preparación</span>
-      </nav>
-      <div class="intro-layout">
-        <aside class="intro-visual" aria-label="Ruinas de NeoSantiago">
-          <div class="intro-visual-copy"><span>Sector poniente · Superficie restringida</span><strong>La ciudad aún respira</strong><small>Bajo las ruinas, cada refugio conserva una versión distinta de lo ocurrido.</small></div>
-        </aside>
-        <div class="intro-content">
-          <section class="intro-step" id="introLore">
-            <p class="kicker">Año 2130 · Antes de la expedición</p>
-            <h2 id="introTitle">Esto es NeoSantiago</h2>
-            <p class="modal-copy">Santiago ya no es una ciudad: es una red de refugios enterrados bajo estaciones cerradas, edificios hundidos y zonas vigiladas por la Red UNO. Los Rotos sobreviven en los túneles de la antigua Línea 1 mientras agentes, drones y comunidades exiliadas disputan la superficie.</p>
-            <div class="lore-grid">
-              <article class="lore-card"><b>Los Rotos</b><p>Supervivientes que reconstruyeron comunidad bajo el Metro y desconfían de toda señal exterior.</p></article>
-              <article class="lore-card"><b>La Red UNO</b><p>Es el sistema de identificación, vigilancia y control de la Gobernanza Mundial; clasifica personas, rutas y refugios como recursos controlables.</p></article>
-              <article class="lore-card"><b>La señal</b><p>Una voz humana acaba de despertar dentro de la red: «todavía estamos aquí».</p></article>
-            </div>
-            <p class="tutorial-note">Sara, Elías y Noa tienen tres días para encontrar el origen de la transmisión y decidir qué verdad llevar de regreso.</p>
-            <div class="buttons"><button class="secondary" id="openWorldLore">Conocer más sobre la historia</button><button class="primary" id="introNext">Avanzar</button></div>
-          </section>
-          <section class="intro-step hidden" id="introRules" aria-labelledby="introRulesTitle">
-            <p class="kicker">Manual de expedición · Lectura rápida</p>
-            <h2 id="introRulesTitle">Cómo jugar</h2>
-            <div class="tutorial-grid">
-              <article class="tutorial-card"><span>01</span><div><b>Decide</b><p>Cada situación ofrece tres rutas. Tus recursos y archivos pueden desbloquear alternativas.</p></div></article>
-              <article class="tutorial-card"><span>02</span><div><b>Sobrevive</b><p>Vigila HP, energía, moral y amenaza. Las consecuencias persisten durante los tres días.</p></div></article>
-              <article class="tutorial-card"><span>03</span><div><b>Combate</b><p>Selecciona una amenaza y luego una acción. Disparar consume la munición adecuada.</p></div></article>
-              <article class="tutorial-card"><span>04</span><div><b>Recupera</b><p>Tras vencer, elige quién saquea. Cada objeto ocupa una unidad de mochila.</p></div></article>
-              <article class="tutorial-card"><span>05</span><div><b>Gestiona recursos</b><p>Comida, agua, medicina, materiales, munición, moral y amenaza afectan decisiones, descansos, crafteo y combate.</p></div></article>
-              <article class="tutorial-card"><span>06</span><div><b>Sube de nivel</b><p>Los impactos acertados, las bajas, las victorias y el crafteo entregan XP personal. Cada nivel aumenta HP y resistencia.</p></div></article>
-              <article class="tutorial-card"><span>07</span><div><b>Especializa al grupo</b><p>Las victorias y decisiones con impacto dan puntos de facción compartidos. Abre un loadout cuando parpadee y canjéalos en su árbol.</p></div></article>
-              <article class="tutorial-card"><span>08</span><div><b>Desbloquea ventajas</b><p>Las ramas mejoran combate y defensa o agregan recetas avanzadas. Pulso de retorno permite a Sara reanimar en batalla.</p></div></article>
-              <article class="tutorial-card"><span>09</span><div><b>Oculta el pulso</b><p>Sincroniza el inhibidor copiando códigos. Su reloj corre al explorar; tres errores alertan drones. Supera 27 situaciones para completar la misión.</p></div></article>
-            </div>
-            <p class="tutorial-note">0 HP significa agotamiento, no muerte. Antes de salir del refugio verás una guía logística con tus recursos actuales: úsala para decidir si conviene curar, reparar, comprar, craftear o guardar materiales para decisiones futuras. La partida se guarda automáticamente fuera del combate.</p>
-            <div class="buttons"><button class="secondary" id="introBack">Volver</button><button class="primary" id="introStart">Comenzar expedición</button></div>
-          </section>
+    <article class="modal welcome-modal">
+      <figure class="welcome-scene">
+        <img id="introImage" src="backgrounds/day-alameda.webp" alt="La Alameda recuperada por la naturaleza" decoding="async">
+        <figcaption id="introLocation">NeoSantiago · 2130</figcaption>
+      </figure>
+      <div class="welcome-content">
+        <header class="welcome-head"><p class="kicker" id="introChapter">Prólogo · La superficie</p><h2 id="introTitle">La ciudad que quedó</h2></header>
+        <div class="welcome-reading" id="introReading" tabindex="0" aria-label="Relato de introducción">
+          <p class="welcome-text" id="introText" aria-hidden="true"></p>
+          <p class="welcome-accessible" id="introAccessible" aria-live="polite" aria-atomic="true"></p>
         </div>
+        <footer class="welcome-footer">
+          <button class="secondary" id="introReveal">Mostrar texto completo</button>
+          <div class="welcome-actions" id="introActions" inert>
+            <button class="secondary" id="introBack">Volver</button>
+            <button class="primary" id="introNext">Avanzar</button>
+          </div>
+          <button class="welcome-lore" id="openWorldLore">Leer la historia completa</button>
+        </footer>
       </div>
     </article>
   </section>
@@ -1236,13 +1253,15 @@
   <section class="overlay hidden logistics-layer" id="logisticsModal" role="dialog" aria-modal="true" aria-labelledby="logisticsTitle">
     <div class="modal logistics-modal">
       <header class="logistics-head">
-        <div><p class="kicker">Antes de abrir la compuerta</p><h2 id="logisticsTitle">Cómo pesan los recursos</h2></div>
+        <div><p class="kicker">Antes de abrir la compuerta</p><h2 id="logisticsTitle">Antes de salir</h2></div>
         <button class="close" id="closeLogistics" aria-label="Cerrar guía logística">×</button>
       </header>
-      <p class="logistics-copy">Cada decisión puede gastar algo que más adelante sirve para sobrevivir. Si entregas la última ración, quizá falte comida al descansar; si usas núcleos para fabricar EMP, puede que no tengas cómo frenar un dron; si sube demasiado la amenaza, la Red UNO aprende tu ruta. Saquear enemigos, comerciar con Mara y encargar armas al Armero alimenta esta economía.</p>
-      <div class="logistics-grid" id="logisticsCards"></div>
-      <p class="logistics-warning" id="logisticsWarning"></p>
-      <footer class="logistics-actions"><button class="secondary" id="backToRefuge">Volver al refugio</button><button class="primary" id="confirmLogistics">Salir a expedición</button></footer>
+      <div class="departure-reading">
+        <p class="logistics-copy">Lleva comida y agua para el descanso, medicina para las heridas y munición para tus armas. Lo que recuperes al explorar puede servir para fabricar, reparar o intercambiar con Mara.</p>
+        <p class="logistics-copy">Al salir, Elías te guiará para ocultar al grupo de la Red UNO. Podrás revisar las mochilas desde las fichas de los personajes.</p>
+        <p class="logistics-warning" id="logisticsWarning"></p>
+      </div>
+      <footer class="logistics-actions"><button class="secondary" id="backToRefuge">Volver al refugio</button><button class="primary" id="confirmLogistics">Avanzar</button></footer>
     </div>
   </section>
 
@@ -1791,6 +1810,6 @@
   }
   </script>
   <script src="decision-v2.js?v=3"></script>
-  <script src="game-v2.js?v=73"></script>
+  <script src="game-v2.js?v=74"></script>
 </body>
 </html>
