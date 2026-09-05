@@ -543,7 +543,27 @@
     .route-narrative-actions .primary{width:100%}.route-narrative-actions .primary:disabled{opacity:.45;cursor:not-allowed}
     .route-change-grid{display:grid;grid-template-columns:1fr;gap:6px}
     @media(min-width:901px) and (max-height:760px){.route-narrative-modal{height:calc(100dvh - 22px)}.route-narrative-panel{padding:13px 18px 15px}.route-narrative-copy h2{font-size:clamp(24px,2.8vw,34px)}.route-narrative-text{min-height:66px;margin:8px 0 9px;padding:11px 13px;font-size:14px;line-height:1.42}.route-choice{min-height:62px;padding:8px}.route-choice small{display:none}.route-narrative-actions{width:205px}}
-    @media(max-width:700px){.route-narrative-layer{padding:7px}.route-narrative-modal{width:calc(100% - 8px);height:calc(100dvh - 14px)}.route-scene-art{height:34vh}.route-narrative-panel{grid-template-columns:1fr;gap:10px;padding:14px}.route-narrative-copy h2{font-size:23px;line-height:1.05}.route-narrative-text{min-height:104px;margin:9px 0 10px;padding:12px;font-size:14px;line-height:1.5}.route-narrative-choices{grid-template-columns:1fr;gap:6px}.route-choice{min-height:64px}.route-narrative-actions{width:100%}.route-change-grid{grid-template-columns:1fr}.route-narrative-actions .primary{min-height:46px}}
+    /* A single scrolling flow keeps the image above expanding text and choices. */
+    @media(max-width:700px),(orientation:portrait){
+      .route-narrative-layer{padding:max(7px,var(--safe-t)) max(7px,env(safe-area-inset-right,0px)) max(7px,var(--safe-b)) max(7px,env(safe-area-inset-left,0px))}
+      .route-narrative-modal{display:block;width:100%;height:100%;max-height:100%;min-height:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;clip-path:none;border-radius:10px;-webkit-overflow-scrolling:touch}
+      .route-scene-art{height:auto;aspect-ratio:16/9;width:100%;flex-shrink:0}
+      .route-scene-art img{height:100%;object-fit:contain}
+      .route-narrative-panel{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;padding:14px;background:#080d0c}
+      .route-narrative-copy h2{font-size:23px;line-height:1.15;overflow-wrap:anywhere}
+      .route-narrative-text{min-height:0;margin:10px 0 12px;padding:12px;font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+      .route-narrative-choices{grid-template-columns:minmax(0,1fr);gap:8px}
+      .route-choice{min-width:0;min-height:64px;padding:12px;align-items:start}
+      .route-choice.default{padding-top:24px}
+      .route-choice strong{font-size:12px;line-height:1.35;overflow-wrap:anywhere}
+      .route-choice small{display:block;font-size:11px;line-height:1.4;overflow-wrap:anywhere}
+      .route-choice em{font-size:10px;overflow-wrap:anywhere}
+      .route-narrative-actions{width:100%;min-width:0;grid-template-rows:auto auto auto;align-content:start}
+      .route-change-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+      .route-change-grid .result-chip{min-width:0;padding:9px;overflow-wrap:anywhere}
+      .route-change-grid .result-chip strong{font-size:14px}
+      .route-narrative-actions .primary{min-height:46px;white-space:normal}
+    }
 
 
     #profileContent{min-height:0}
@@ -1750,6 +1770,6 @@
     "ambience-archive": "audio/ambience/archive-static.mp3"
   }
   </script>
-  <script src="game-v2.js?v=69"></script>
+  <script src="game-v2.js?v=70"></script>
 </body>
 </html>
