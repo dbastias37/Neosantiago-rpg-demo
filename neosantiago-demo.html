@@ -67,12 +67,14 @@
     @keyframes titlePulse{0%,100%{opacity:.45}50%{opacity:1}}
     @keyframes titleLeave{0%{opacity:1;filter:none}70%{opacity:.25;filter:brightness(1.7)}100%{opacity:0;visibility:hidden}}
     @keyframes titleCopyLeave{to{opacity:0;transform:translate3d(-24px,0,0)}}
-    .hud{z-index:12;display:grid;grid-template-columns:minmax(190px,1fr) auto minmax(210px,1fr);align-items:center;gap:22px;min-height:64px;padding:calc(9px + var(--safe-t)) clamp(16px,3vw,46px) 9px;border-bottom:1px solid var(--line);background:rgba(5,8,7,.97);letter-spacing:.12em;text-transform:uppercase}
+    .hud{z-index:12;display:grid;grid-template-columns:minmax(190px,1fr) auto auto minmax(190px,1fr);align-items:center;gap:18px;min-height:64px;padding:calc(9px + var(--safe-t)) clamp(16px,3vw,46px) 9px;border-bottom:1px solid var(--line);background:rgba(5,8,7,.97);letter-spacing:.12em;text-transform:uppercase}
     .brand{color:var(--amber2);font-size:clamp(18px,2vw,28px);font-weight:900;letter-spacing:.16em;white-space:nowrap}
     .clock{font-size:13px;font-weight:800;text-align:center;white-space:nowrap}
     .threat{display:grid;grid-template-columns:auto minmax(80px,190px);justify-content:end;align-items:center;gap:12px;color:var(--amber);font-size:12px;font-weight:800;white-space:nowrap}
     .meter{height:5px;overflow:hidden;border:1px solid rgba(255,255,255,.15);background:#262b28}
     .meter span{display:block;width:18%;height:100%;background:var(--red);box-shadow:0 0 12px rgba(223,74,74,.6);transition:width .35s}
+    .signal-clock{display:grid;grid-template-columns:auto auto;gap:2px 9px;align-items:center;min-width:174px;padding:7px 10px;border:1px solid rgba(117,211,215,.38);color:var(--cyan);background:rgba(117,211,215,.045);cursor:pointer;text-align:left;text-transform:uppercase;transition:border-color .18s,background .18s,box-shadow .18s}.signal-clock span{font-size:7px;font-weight:900;letter-spacing:.17em}.signal-clock strong{grid-row:1/3;grid-column:2;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:18px;letter-spacing:.04em}.signal-clock em{font-size:6px;font-style:normal;font-weight:900;letter-spacing:.1em;white-space:nowrap}.signal-clock.active{border-color:rgba(117,211,215,.75);box-shadow:inset 0 -2px rgba(117,211,215,.42),0 0 20px rgba(117,211,215,.07)}.signal-clock.warning{border-color:rgba(242,189,115,.8);color:var(--amber2);background:rgba(217,161,92,.08);animation:signalPulse 1.3s ease-in-out infinite}.signal-clock.critical,.signal-clock.exposed{border-color:rgba(223,74,74,.84);color:#ef7777;background:rgba(223,74,74,.075);animation:signalPulse .72s ease-in-out infinite}.signal-clock:disabled{cursor:default;opacity:.45}.signal-clock:hover:not(:disabled){background:rgba(117,211,215,.11)}
+    @keyframes signalPulse{50%{box-shadow:0 0 22px currentColor}}
     .stage{position:relative;min-height:0;overflow:hidden;background:#0a0f0e center/cover no-repeat}
     .stage[data-day="1"]{background-image:url("day1.webp?v=18")}
     .stage[data-day="2"]{background-image:url("day2.webp?v=18")}
@@ -483,6 +485,20 @@
     .disassembly-actions{display:flex;justify-content:space-between;gap:10px;padding:14px 26px 24px;border-top:1px solid rgba(117,211,215,.18)}
     @media(max-width:600px){.bag-actions,.loot-buttons{grid-template-columns:repeat(2,minmax(0,1fr))}.disassembly-modal{width:calc(100% - 14px)}.disassembly-head{padding:20px 18px 14px}.disassembly-item{grid-template-columns:74px minmax(0,1fr);margin:16px 18px 12px}.disassembly-item .item-art{width:74px}.disassembly-console{margin:0 18px 14px;padding:13px}.disassembly-rewards{grid-template-columns:1fr;margin:0 18px 12px}.disassembly-feedback{margin:0 18px 12px}.disassembly-actions{display:grid;padding:12px 18px 18px}.disassembly-actions button{width:100%}}
 
+    .signal-layer{z-index:74;background:radial-gradient(circle at 50% 30%,rgba(117,211,215,.12),transparent 34%),rgba(2,4,4,.94)}
+    .signal-modal{width:min(760px,100%);padding:0;overflow:hidden;border-color:rgba(117,211,215,.45);background:linear-gradient(145deg,#07100f,#080b0a)}
+    .signal-modal:before{content:"";display:block;height:3px;background:linear-gradient(90deg,transparent,var(--cyan),var(--amber2),transparent);box-shadow:0 0 22px rgba(117,211,215,.4)}
+    .signal-head{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:16px;padding:25px 28px 17px;border-bottom:1px solid rgba(117,211,215,.18)}.signal-head h2{font-size:clamp(27px,4vw,45px)}.signal-round{padding:7px 9px;border:1px solid rgba(117,211,215,.34);color:var(--cyan);font-size:8px;font-weight:900;letter-spacing:.13em;text-transform:uppercase}
+    .signal-tutorial,.signal-game,.signal-outcome{margin:20px 28px}.signal-tutorial>p{margin:0;color:#d9d5cc;font-family:Georgia,"Times New Roman",serif;font-size:14px;line-height:1.55}.signal-tutorial-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:17px 0}.signal-tutorial-grid article{padding:11px;border:1px solid rgba(217,161,92,.22);background:rgba(217,161,92,.035)}.signal-tutorial-grid b,.signal-tutorial-grid span{display:block}.signal-tutorial-grid b{color:var(--amber2);font-size:8px;letter-spacing:.1em;text-transform:uppercase}.signal-tutorial-grid span{margin-top:6px;color:var(--muted);font-size:9px;line-height:1.42}.signal-key-hint{padding:9px 11px;border-left:2px solid var(--cyan);background:rgba(117,211,215,.05);color:#c8e9e8!important;font-family:inherit!important;font-size:8px!important;font-weight:900;letter-spacing:.09em;text-transform:uppercase}
+    .signal-readouts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.signal-readouts div{display:flex;align-items:end;justify-content:space-between;gap:10px;padding:10px 12px;border:1px solid rgba(255,255,255,.1);background:#060a09}.signal-readouts span{color:var(--muted);font-size:7px;font-weight:900;letter-spacing:.11em;text-transform:uppercase}.signal-readouts strong{color:var(--cyan);font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:20px}.signal-timer{height:7px;margin:9px 0 17px;overflow:hidden;border:1px solid rgba(117,211,215,.23);background:#111715}.signal-timer span{display:block;width:100%;height:100%;background:linear-gradient(90deg,var(--cyan),var(--amber2));box-shadow:0 0 15px rgba(117,211,215,.5);transition:width .08s linear}.signal-timer.critical span{background:var(--red);box-shadow:0 0 15px rgba(223,74,74,.62)}
+    .signal-instruction{margin:0 0 11px;color:var(--muted);font-size:8px;font-weight:900;letter-spacing:.12em;text-align:center;text-transform:uppercase}.signal-sequence,.signal-input{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;min-height:47px}.signal-sequence span,.signal-input span{display:grid;place-items:center;width:43px;height:43px;border:1px solid rgba(117,211,215,.35);color:var(--cyan);background:rgba(117,211,215,.045);font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:24px;font-weight:900}.signal-sequence span.done{border-color:rgba(217,161,92,.55);color:var(--amber2);background:rgba(217,161,92,.08)}.signal-sequence span.current{box-shadow:0 0 18px rgba(117,211,215,.25)}.signal-sequence span.error{border-color:var(--red);color:#ef7777;animation:signalShake .25s ease}.signal-input{min-height:31px;margin:8px 0}.signal-input span{width:29px;height:29px;font-size:16px}.signal-pad{display:grid;grid-template-columns:repeat(3,56px);grid-template-rows:repeat(2,49px);justify-content:center;gap:7px;margin-top:8px}.signal-pad button{border:1px solid rgba(217,161,92,.55);color:var(--amber2);background:rgba(217,161,92,.045);font-size:24px;font-weight:900;cursor:pointer;touch-action:manipulation;user-select:none;-webkit-tap-highlight-color:transparent}.signal-pad button:first-child{grid-column:2}.signal-pad button:nth-child(2){grid-row:2;grid-column:1}.signal-pad button:nth-child(3){grid-row:2;grid-column:2}.signal-pad button:nth-child(4){grid-row:2;grid-column:3}.signal-pad button:active{transform:translateY(2px);color:var(--ink);background:var(--amber2)}
+    .signal-outcome{text-align:center}.signal-outcome-mark{display:grid;place-items:center;width:68px;height:68px;margin:2px auto 16px;border:1px solid var(--cyan);border-radius:50%;color:var(--cyan);font-size:34px;box-shadow:0 0 30px rgba(117,211,215,.14)}.signal-outcome h3{margin:0;color:var(--amber2);font-size:clamp(23px,3vw,34px);letter-spacing:.07em;text-transform:uppercase}.signal-outcome p{max-width:560px;margin:12px auto 18px;color:#d8d3ca;font-family:Georgia,"Times New Roman",serif;font-size:14px;line-height:1.55}.signal-modal.failed .signal-outcome-mark{border-color:var(--red);color:#ef7777;box-shadow:0 0 30px rgba(223,74,74,.18)}.signal-modal.failed:before{background:linear-gradient(90deg,transparent,var(--red),transparent)}.signal-actions{display:flex;justify-content:flex-end;gap:10px;padding:15px 28px 24px;border-top:1px solid rgba(117,211,215,.18)}
+    .signal-warning-layer{z-index:73;background:rgba(2,4,4,.9)}.signal-warning-modal{display:grid;grid-template-columns:74px minmax(0,1fr);gap:4px 18px;width:min(650px,100%);border-color:rgba(223,74,74,.55)}.signal-warning-icon{grid-row:1/3;display:grid;place-items:center;width:68px;height:68px;border:1px solid var(--red);color:#ef7777;background:rgba(223,74,74,.06);font-size:36px;font-weight:900;box-shadow:0 0 26px rgba(223,74,74,.14);animation:signalPulse .8s ease-in-out infinite}.signal-warning-modal .modal-copy{margin-bottom:8px}.signal-risk{grid-column:1/-1;margin-top:11px;padding:11px 13px;border-left:2px solid var(--red);color:#efb0b0;background:rgba(223,74,74,.055);font-size:9px;font-weight:900;letter-spacing:.08em;line-height:1.5;text-transform:uppercase}.signal-warning-modal .buttons{grid-column:1/-1}.signal-warning-modal .buttons button{flex:1}
+    @keyframes signalShake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+    @media(max-width:900px){.hud{grid-template-columns:minmax(150px,1fr) auto auto;gap:10px}.clock{display:none}.signal-clock{min-width:150px}.signal-clock strong{font-size:16px}}
+    @media(max-width:600px){.hud{grid-template-columns:minmax(0,1fr) auto auto;gap:7px;min-height:58px;padding-top:calc(6px + var(--safe-t));padding-bottom:6px}.brand{font-size:13px;letter-spacing:.1em}.threat{display:block;font-size:7px;text-align:right}.threat .meter{width:64px;margin-top:4px}.signal-clock{grid-template-columns:auto;min-width:84px;padding:5px 7px;text-align:center}.signal-clock span{font-size:5px}.signal-clock strong{grid-row:auto;grid-column:auto;font-size:14px}.signal-clock em{display:none}.signal-layer,.signal-warning-layer{padding:7px}.signal-modal{width:calc(100% - 4px);max-height:calc(100dvh - 14px);overflow-y:auto}.signal-head{padding:18px 16px 12px}.signal-head h2{font-size:25px}.signal-tutorial,.signal-game,.signal-outcome{margin:14px 16px}.signal-tutorial-grid{grid-template-columns:1fr;gap:6px;margin:12px 0}.signal-tutorial-grid article{padding:8px}.signal-tutorial-grid span{margin-top:3px;font-size:8px}.signal-readouts strong{font-size:17px}.signal-sequence{gap:5px}.signal-sequence span{width:36px;height:36px;font-size:20px}.signal-pad{grid-template-columns:repeat(3,minmax(58px,74px));grid-template-rows:repeat(2,52px)}.signal-actions{display:grid;padding:12px 16px 17px}.signal-actions button{width:100%}.signal-warning-modal{grid-template-columns:52px minmax(0,1fr);padding:22px 18px}.signal-warning-icon{width:48px;height:48px;font-size:26px}.signal-warning-modal .buttons{display:grid}.signal-warning-modal .buttons button{width:100%}}
+    @media(max-height:620px) and (orientation:landscape){.signal-layer,.signal-warning-layer{padding:6px}.signal-layer .signal-modal{width:min(820px,calc(100% - 12px));max-height:calc(100dvh - 12px);overflow-y:auto}.signal-head{padding:10px 18px 8px}.signal-head h2{font-size:24px}.signal-tutorial,.signal-game,.signal-outcome{margin:8px 18px}.signal-tutorial>p,.signal-outcome p{font-size:11px;line-height:1.35}.signal-tutorial-grid{gap:6px;margin:8px 0}.signal-tutorial-grid article{padding:7px}.signal-key-hint{padding:6px 9px}.signal-readouts div{padding:6px 9px}.signal-readouts strong{font-size:15px}.signal-timer{margin:6px 0 8px}.signal-instruction{margin-bottom:6px}.signal-sequence,.signal-input{gap:4px;min-height:31px}.signal-sequence span{width:30px;height:30px;font-size:18px}.signal-input{min-height:21px;margin:4px 0}.signal-input span{width:21px;height:21px;font-size:13px}.signal-pad{grid-template-columns:repeat(3,54px);grid-template-rows:repeat(2,34px);gap:5px;margin-top:4px}.signal-pad button{font-size:18px}.signal-outcome-mark{width:46px;height:46px;margin-bottom:8px;font-size:25px}.signal-outcome h3{font-size:23px}.signal-actions{padding:8px 18px 10px}.signal-actions button{min-height:36px;padding:7px 13px}.signal-warning-modal{padding:16px 20px}.signal-warning-modal .buttons{margin-top:8px}}
+
     .npc-dialogue-layer{z-index:68;place-items:end center;padding:clamp(10px,2vw,24px);background:linear-gradient(0deg,rgba(1,4,3,.96),rgba(1,4,3,.7) 48%,rgba(1,4,3,.2))}
     .npc-dialogue-modal{display:grid;grid-template-columns:minmax(165px,245px) minmax(0,1fr);gap:0;width:min(1050px,100%);max-height:calc(100dvh - 28px);padding:0;overflow:hidden;background:linear-gradient(145deg,#070b0b,#0a100f);border-color:rgba(117,211,215,.34)}
     .npc-dialogue-portrait{position:relative;min-height:320px;overflow:hidden;background:#090d0c;border-right:1px solid rgba(117,211,215,.22)}
@@ -806,6 +822,7 @@
     <header class="hud">
       <div class="brand">NeoSantiago 2130</div>
       <div class="clock"><span id="day">Día 01 / 03</span> · <span id="time">07:10</span></div>
+      <button class="signal-clock exposed" id="signalClock" type="button" aria-label="Abrir inhibidor de señales"><span>Inhibidor</span><strong id="signalTime">--:--</strong><em id="signalStatus">Sin sincronizar</em></button>
       <div class="threat"><span>Amenaza <strong id="threatValue">18%</strong></span><div class="meter"><span id="threatBar"></span></div></div>
     </header>
     <main class="stage" id="stage" data-day="1" data-scene="station">
@@ -936,7 +953,7 @@
               <article class="tutorial-card"><span>06</span><div><b>Sube de nivel</b><p>Los impactos acertados, las bajas, las victorias y el crafteo entregan XP personal. Cada nivel aumenta HP y resistencia.</p></div></article>
               <article class="tutorial-card"><span>07</span><div><b>Especializa al grupo</b><p>Las victorias y decisiones con impacto dan puntos de facción compartidos. Abre un loadout cuando parpadee y canjéalos en su árbol.</p></div></article>
               <article class="tutorial-card"><span>08</span><div><b>Desbloquea ventajas</b><p>Las ramas mejoran combate y defensa o agregan recetas avanzadas. Pulso de retorno permite a Sara reanimar en batalla.</p></div></article>
-              <article class="tutorial-card"><span>09</span><div><b>Completa la misión</b><p>Supera 27 situaciones y decide el destino de la señal para alcanzar uno de tres finales.</p></div></article>
+              <article class="tutorial-card"><span>09</span><div><b>Oculta el pulso</b><p>Sincroniza el inhibidor copiando códigos. Su reloj corre al explorar; tres errores alertan drones. Supera 27 situaciones para completar la misión.</p></div></article>
             </div>
             <p class="tutorial-note">0 HP significa agotamiento, no muerte. Antes de salir del refugio verás una guía logística con tus recursos actuales: úsala para decidir si conviene curar, reparar, comprar, craftear o guardar materiales para decisiones futuras. La partida se guarda automáticamente fuera del combate.</p>
             <div class="buttons"><button class="secondary" id="introBack">Volver</button><button class="primary" id="introStart">Comenzar expedición</button></div>
@@ -1265,6 +1282,59 @@
         <button class="secondary" id="disassemblyAttempt">Calibrar corte</button>
         <button class="primary hidden" id="disassemblyDone">Continuar</button>
       </footer>
+    </article>
+  </section>
+
+  <section class="overlay hidden signal-layer" id="signalModal" role="dialog" aria-modal="true" aria-labelledby="signalTitle">
+    <article class="modal signal-modal" data-state="tutorial">
+      <header class="signal-head">
+        <div><p class="kicker" id="signalKicker">Inhibidor de Elías · Protocolo fantasma</p><h2 id="signalTitle">Ocultar señales vitales</h2></div>
+        <div class="signal-round" id="signalRound">Tutorial</div>
+      </header>
+      <div class="signal-tutorial" id="signalTutorial">
+        <p>La Red UNO rastrea temperatura, respiración y pulso. El inhibidor falsifica esas firmas, pero Elías debe mantener su código sincronizado.</p>
+        <div class="signal-tutorial-grid">
+          <article><b>01 · Copia</b><span>Repite la secuencia de flechas en el mismo orden.</span></article>
+          <article><b>02 · Resiste</b><span>Completa tres rondas antes de que cada reloj llegue a cero.</span></article>
+          <article><b>03 · No falles</b><span>Un error resta tiempo. Tres errores transmiten tu posición a los drones.</span></article>
+        </div>
+        <p class="signal-key-hint">Usa los botones táctiles, las flechas del teclado o W A S D.</p>
+      </div>
+      <div class="signal-game hidden" id="signalGame">
+        <div class="signal-readouts">
+          <div><span>Tiempo de enlace</span><strong id="signalRoundTime">00.0</strong></div>
+          <div><span>Errores de pulso</span><strong id="signalErrors">0 / 3</strong></div>
+        </div>
+        <div class="signal-timer"><span id="signalRoundBar"></span></div>
+        <p class="signal-instruction" id="signalInstruction">Repite el código antes de perder la ventana.</p>
+        <div class="signal-sequence" id="signalSequence" aria-label="Secuencia solicitada"></div>
+        <div class="signal-input" id="signalInput" aria-live="polite"></div>
+        <div class="signal-pad" aria-label="Controles del inhibidor">
+          <button data-signal-key="up" aria-label="Arriba">↑</button>
+          <button data-signal-key="left" aria-label="Izquierda">←</button>
+          <button data-signal-key="down" aria-label="Abajo">↓</button>
+          <button data-signal-key="right" aria-label="Derecha">→</button>
+        </div>
+      </div>
+      <div class="signal-outcome hidden" id="signalOutcome">
+        <div class="signal-outcome-mark" id="signalOutcomeMark">✓</div>
+        <h3 id="signalOutcomeTitle">Firma fantasma establecida</h3>
+        <p id="signalOutcomeText"></p>
+        <div class="result-grid" id="signalOutcomeStats"></div>
+      </div>
+      <footer class="signal-actions">
+        <button class="secondary hidden" id="signalSecondary">Continuar expuestos</button>
+        <button class="primary" id="signalPrimary">Entendido · iniciar</button>
+      </footer>
+    </article>
+  </section>
+
+  <section class="overlay hidden signal-warning-layer" id="signalWarningModal" role="alertdialog" aria-modal="true" aria-labelledby="signalWarningTitle">
+    <article class="modal signal-warning-modal">
+      <div class="signal-warning-icon">!</div>
+      <div><p class="kicker" id="signalWarningKicker">Advertencia de rastreo</p><h2 id="signalWarningTitle">El pulso vuelve a ser visible</h2><p class="modal-copy" id="signalWarningText"></p></div>
+      <div class="signal-risk" id="signalRisk"></div>
+      <div class="buttons"><button class="secondary" id="signalWarningSecondary">Seguir expuestos</button><button class="secondary" id="signalBattery">Usar batería · +90 s</button><button class="primary" id="signalWarningPrimary">Hackear ahora</button></div>
     </article>
   </section>
 
@@ -1680,6 +1750,6 @@
     "ambience-archive": "audio/ambience/archive-static.mp3"
   }
   </script>
-  <script src="game-v2.js?v=68"></script>
+  <script src="game-v2.js?v=69"></script>
 </body>
 </html>
