@@ -81,8 +81,46 @@ test('simplified departure preserves readiness checks and starts only one signal
   const starts=[...a.timers.values()].filter(t=>t.ms===260);assert.equal(starts.length,1);starts[0].fn();
   assert.equal(a.nodes.get('signalModal').classList.contains('hidden'),false);
 });
-test('every prologue scene uses an existing expedition background',()=>{
+test('prologue backgrounds and Mara portrait use existing assets',()=>{
   const a=boot();for(const page of a.ctx.introPages){
-    assert.ok(page.image.startsWith('backgrounds/'));assert.ok(fs.existsSync(path.join(root,page.image)));
+    if(page.speaker)assert.equal(page.image,'characters/mara-trader.webp');else assert.ok(page.image.startsWith('backgrounds/'));assert.ok(fs.existsSync(path.join(root,page.image)));
   }
+});
+test('help pauses typing, changes no run state and resumes at the same introduction page',()=>{
+  const a=boot(),c=a.ctx;c.newGame();c.showGameIntro(2);
+  const timer=c.introTypeTimer;a.timers.get(timer).fn();
+  const text=a.nodes.get('introText').textContent,before=JSON.stringify(c.state);
+  c.openGameHelp();assert.equal(a.nodes.get('gameHelpModal').classList.contains('hidden'),false);
+  assert.equal(a.nodes.get('gameIntro').getAttribute('inert'),'');
+  a.timers.get(timer).fn();assert.equal(a.nodes.get('introText').textContent,text);
+  for(let i=0;i<c.gameHelpPages.length;i++)c.showGameHelpPage(i);
+  assert.equal(JSON.stringify(c.state),before);assert.equal(c.introStep,2);
+  let prevented=false;c.introKeydown({key:'Escape',preventDefault(){prevented=true}});
+  assert.equal(prevented,true);assert.equal(c.document.activeElement,a.nodes.get('openGameHelp'));
+  assert.equal(a.nodes.get('gameIntro').getAttribute('inert'),undefined);
+  a.timers.get(timer).fn();assert.ok(a.nodes.get('introText').textContent.length>text.length);
+});
+test('help controls close the last page, block expedition shortcuts and reset on new game',()=>{
+  const a=boot(),c=a.ctx;c.newGame();c.openGameHelp();
+  const before=JSON.stringify(c.state);
+  for(const key of ['1','2','3'])a.listeners.keydown.forEach(fn=>fn({key,preventDefault(){}}));
+  assert.equal(JSON.stringify(c.state),before);
+  a.nodes.get('gameHelpNext').focus();let prevented=false;
+  c.introKeydown({key:'Tab',preventDefault(){prevented=true}});
+  assert.equal(prevented,true);assert.equal(c.document.activeElement,a.nodes.get('closeGameHelp'));
+  c.showGameHelpPage(c.gameHelpPages.length-1);
+  a.nodes.get('gameHelpNext').listeners.click.forEach(fn=>fn());
+  assert.equal(a.nodes.get('gameHelpModal').classList.contains('hidden'),true);
+  c.openGameHelp();c.newGame();
+  assert.equal(a.nodes.get('gameHelpModal').classList.contains('hidden'),true);
+  assert.equal(a.nodes.get('gameIntro').getAttribute('inert'),undefined);
+  assert.equal(c.introStep,0);
+});
+test('Mara has her own portrait and returning to the prologue restores the landscape image mode',()=>{
+  const a=boot(),c=a.ctx;c.newGame();reachMara(c);
+  assert.equal(a.nodes.get('introScene').classList.contains('is-speaker'),true);
+  assert.ok(a.nodes.get('introImage').src.includes('characters/mara-trader.webp'));
+  assert.equal(c.state.refuge.active,false);c.showGameIntro(0);
+  assert.equal(a.nodes.get('introScene').classList.contains('is-speaker'),false);
+  assert.ok(a.nodes.get('introImage').src.includes('backgrounds/day-alameda.webp'));
 });
