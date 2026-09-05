@@ -1,7 +1,7 @@
 /* Scoped to the narrative check. Existing portrait/landscape layouts stay intact. */
 .choice-check .cost{max-width:150px;white-space:normal;line-height:1.4}
-#decisionModal{z-index:74;padding:12px;background:rgba(2,4,4,.93)}
-#decisionModal .decision-modal{--decision-glow:var(--cyan);width:min(860px,100%);max-height:calc(100dvh - 24px - var(--safe-t) - var(--safe-b));padding:clamp(22px,3vw,34px);overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+#decisionModal{z-index:74;padding:12px;background:rgba(2,4,4,.93);font-family:inherit}
+#decisionModal .decision-modal{--decision-glow:var(--cyan);--decision-glow-rgb:117,211,215;width:min(860px,100%);max-height:calc(100dvh - 24px - var(--safe-t) - var(--safe-b));padding:clamp(22px,3vw,34px);overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
 #decisionModal .decision-modal h2{font-size:clamp(25px,4vw,39px);line-height:1.08;overflow-wrap:break-word}
 #decisionModal .kicker{font-size:10px;line-height:1.5}
 #decisionModal .decision-story{margin:17px 0;color:#ece7dc;font-family:Georgia,"Times New Roman",serif;font-size:16px;line-height:1.55}
@@ -21,26 +21,27 @@
 #decisionModal #decisionMath{margin:0 0 8px;font-size:12px;line-height:1.6;color:var(--paper)}
 #decisionModal .decision-console{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:center;margin:24px 0}
 #decisionModal .decision-wheel-box{position:relative;width:100%;max-width:286px;aspect-ratio:1;margin:10px auto;isolation:isolate}
-#decisionModal .decision-bezel{position:absolute;inset:0;border:1px solid var(--decision-glow);border-radius:50%;background:repeating-conic-gradient(rgba(117,211,215,.42) 0deg 1deg,transparent 1deg 10deg),#0c1412;box-shadow:0 0 9px rgba(117,211,215,.28),0 0 24px rgba(117,211,215,.16),inset 0 0 12px rgba(117,211,215,.16);transition:box-shadow .35s,border-color .35s}
-#decisionModal .decision-wheel{position:absolute;inset:9px;border-radius:50%}
-#decisionModal .decision-wheel-label{position:absolute;width:68px;text-align:center;font-size:11px;font-weight:900;letter-spacing:.015em;line-height:1.4;text-transform:uppercase;color:var(--paper);pointer-events:none;transform:translate(-50%,-50%)}
-#decisionModal .decision-center{position:absolute;inset:38%;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;background:#0a0f0e;color:var(--amber2);font-size:11px;font-weight:900;letter-spacing:.1em;text-align:center;line-height:1.5}
+#decisionModal .decision-bezel{position:absolute;inset:0;border:2px solid var(--decision-glow);border-radius:50%;background:repeating-conic-gradient(rgba(var(--decision-glow-rgb),.65) 0deg 1deg,transparent 1deg 10deg),#080e0d;box-shadow:0 0 5px rgba(var(--decision-glow-rgb),.95),0 0 19px rgba(var(--decision-glow-rgb),.6),0 0 42px rgba(var(--decision-glow-rgb),.26),inset 0 0 14px rgba(var(--decision-glow-rgb),.4);transition:box-shadow .35s,border-color .35s}
+#decisionModal .decision-wheel{position:absolute;inset:10px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(var(--decision-glow-rgb),.5)}
+#decisionModal .decision-wheel:before{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle,rgba(3,7,6,.62) 0%,transparent 64%,rgba(var(--decision-glow-rgb),.16) 92%,rgba(var(--decision-glow-rgb),.48) 100%);pointer-events:none}
+#decisionModal .decision-wheel-label{position:absolute;width:76px;text-align:center;font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.075em;line-height:1.4;text-transform:uppercase;color:var(--paper);text-shadow:0 1px 4px var(--ink);pointer-events:none;transform:translate(-50%,-50%)}
+#decisionModal .decision-center{position:absolute;inset:43%;border:1px solid rgba(var(--decision-glow-rgb),.65);border-radius:50%;background:radial-gradient(circle,#152321,#070a09 72%);box-shadow:0 0 12px rgba(var(--decision-glow-rgb),.25),inset 0 0 0 5px #080e0d;pointer-events:none}
+#decisionModal .decision-center:after{content:"";position:absolute;inset:35%;border:1px solid var(--decision-glow);border-radius:50%;box-shadow:0 0 7px rgba(var(--decision-glow-rgb),.6)}
 #decisionModal .decision-pointer{position:absolute;z-index:2;left:50%;top:-5px;transform:translateX(-50%);border-left:9px solid transparent;border-right:9px solid transparent;border-top:24px solid var(--amber2);filter:drop-shadow(0 0 5px rgba(242,189,115,.55))}
 #decisionModal .decision-wheel-box:after{content:"";position:absolute;inset:-3px;border:2px solid var(--decision-glow);border-radius:50%;opacity:0;pointer-events:none}
-#decisionModal .resolving .decision-bezel{box-shadow:0 0 12px rgba(117,211,215,.5),0 0 32px rgba(117,211,215,.22),inset 0 0 14px rgba(117,211,215,.25)}
+#decisionModal .resolving .decision-bezel{box-shadow:0 0 7px rgba(var(--decision-glow-rgb),1),0 0 25px rgba(var(--decision-glow-rgb),.8),0 0 52px rgba(var(--decision-glow-rgb),.35),inset 0 0 20px rgba(var(--decision-glow-rgb),.5)}
 #decisionModal .decided .decision-wheel-box:after{animation:decisionCommitPulse .8s ease-out 1}
-#decisionModal [data-result="fail"]{--decision-glow:var(--amber2)}
-#decisionModal [data-result="alarm"]{--decision-glow:var(--red)}
-#decisionModal .decision-options{display:grid;gap:15px;min-width:0}
-#decisionModal .decision-option{padding:9px 11px;border:1px solid transparent;border-left:2px solid var(--cyan);transition:background .3s,border-color .3s}
-#decisionModal .decision-option.fail{border-left-color:var(--amber2)}
-#decisionModal .decision-option.alarm{border-left-color:var(--red)}
-#decisionModal .decision-option>div{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:var(--cyan);font-size:13px;line-height:1.4}
-#decisionModal .decision-option.fail>div{color:var(--amber2)}
-#decisionModal .decision-option.alarm>div{color:#ef7777}
-#decisionModal .decision-option b{font-variant-numeric:tabular-nums}
-#decisionModal .decision-option p{margin:5px 0 0;color:#aaa99f;font-size:12px;line-height:1.5}
-#decisionModal .decision-option.selected{border-color:var(--decision-glow);background:rgba(255,255,255,.045);box-shadow:inset 0 0 16px rgba(117,211,215,.04)}
+#decisionModal [data-result="fail"]{--decision-glow:var(--amber2);--decision-glow-rgb:242,189,115}
+#decisionModal [data-result="alarm"]{--decision-glow:var(--red);--decision-glow-rgb:223,74,74}
+#decisionModal .decision-options{display:grid;gap:9px;min-width:0}
+#decisionModal .decision-option{padding:12px 14px;border:1px solid var(--line);color:var(--paper);background:rgba(255,255,255,.015);transition:background .3s,border-color .3s}
+#decisionModal .decision-option>div{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;font-family:inherit;line-height:1.35}
+#decisionModal .decision-option strong{display:block;color:var(--paper);font-size:12px;font-weight:700;letter-spacing:.075em;text-transform:uppercase;overflow-wrap:break-word}
+#decisionModal .decision-option b{display:grid;place-items:center;min-width:46px;min-height:34px;padding:5px;color:var(--cyan);border:1px solid rgba(117,211,215,.35);font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.04em}
+#decisionModal .decision-option.fail b{color:var(--amber2);border-color:var(--line)}
+#decisionModal .decision-option.alarm b{color:#ef7777;border-color:rgba(223,74,74,.4)}
+#decisionModal .decision-option p{margin:8px 0 0;color:var(--muted);font-family:inherit;font-size:12px;line-height:1.4}
+#decisionModal .decision-option.selected{border-color:rgba(242,189,115,.72);background:rgba(217,161,92,.045);box-shadow:inset 0 -2px rgba(242,189,115,.35)}
 #decisionModal .decision-status{margin:10px 0 14px;color:var(--decision-glow);font-size:11px;line-height:1.5;font-weight:900;letter-spacing:.1em;text-align:center;text-transform:uppercase}
 #decisionModal .decision-resolution{padding-top:18px;border-top:1px solid var(--line)}
 #decisionModal .decision-resolution h3{margin:0;color:var(--decision-glow);font-size:clamp(23px,3vw,31px);line-height:1.12;letter-spacing:.07em;text-transform:uppercase}
@@ -68,6 +69,7 @@
   #decisionModal .decision-modal{width:min(920px,100%);padding:18px 24px}
   #decisionModal .decision-console{grid-template-columns:minmax(180px,.75fr) minmax(0,1fr);gap:22px}
   #decisionModal .decision-wheel-box{max-width:210px}
+  #decisionModal .decision-wheel-label{width:68px;font-size:11px}
   #decisionModal .decision-actions{flex-direction:row}
   #decisionModal .decision-actions button{width:auto}
 }
