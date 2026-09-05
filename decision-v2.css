@@ -1,0 +1,77 @@
+/* Scoped to the narrative check. Existing portrait/landscape layouts stay intact. */
+.choice-check .cost{max-width:150px;white-space:normal;line-height:1.4}
+#decisionModal{z-index:74;padding:12px;background:rgba(2,4,4,.93)}
+#decisionModal .decision-modal{--decision-glow:var(--cyan);width:min(860px,100%);max-height:calc(100dvh - 24px - var(--safe-t) - var(--safe-b));padding:clamp(22px,3vw,34px);overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+#decisionModal .decision-modal h2{font-size:clamp(25px,4vw,39px);line-height:1.08;overflow-wrap:break-word}
+#decisionModal .kicker{font-size:10px;line-height:1.5}
+#decisionModal .decision-story{margin:17px 0;color:#ece7dc;font-family:Georgia,"Times New Roman",serif;font-size:16px;line-height:1.55}
+#decisionModal .decision-quote{margin:13px 0 20px;padding:12px 15px;border:1px solid rgba(217,161,92,.24);border-left:3px solid var(--amber2);background:rgba(217,161,92,.035);font-size:14px}
+#decisionModal .decision-group{padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid rgba(117,211,215,.25)}
+#decisionModal .decision-group-head{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:12px;line-height:1.5}
+#decisionModal .decision-group-head strong{font-weight:900;letter-spacing:.07em;text-transform:uppercase}
+#decisionModal #decisionMood{color:var(--cyan)}
+#decisionModal #decisionModifier{color:var(--paper)}
+#decisionModal .decision-party{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:13px}
+#decisionModal .decision-member{min-width:0;padding-left:9px;border-left:1px solid rgba(217,161,92,.36);font-size:13px;line-height:1.6;overflow-wrap:break-word}
+#decisionModal .decision-member strong{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+#decisionModal .decision-member small{display:block;font-size:11px;color:var(--muted)}
+#decisionModal .decision-member .favorable{color:var(--cyan)}
+#decisionModal .decision-member .adverse{color:#ef7777}
+#decisionModal summary{display:list-item;min-height:44px;padding:13px 0 7px;cursor:pointer;font-size:12px;color:var(--muted)}
+#decisionModal #decisionMath{margin:0 0 8px;font-size:12px;line-height:1.6;color:var(--paper)}
+#decisionModal .decision-console{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:center;margin:24px 0}
+#decisionModal .decision-wheel-box{position:relative;width:100%;max-width:286px;aspect-ratio:1;margin:10px auto;isolation:isolate}
+#decisionModal .decision-bezel{position:absolute;inset:0;border:1px solid var(--decision-glow);border-radius:50%;background:repeating-conic-gradient(rgba(117,211,215,.42) 0deg 1deg,transparent 1deg 10deg),#0c1412;box-shadow:0 0 9px rgba(117,211,215,.28),0 0 24px rgba(117,211,215,.16),inset 0 0 12px rgba(117,211,215,.16);transition:box-shadow .35s,border-color .35s}
+#decisionModal .decision-wheel{position:absolute;inset:9px;border-radius:50%}
+#decisionModal .decision-wheel-label{position:absolute;width:68px;text-align:center;font-size:11px;font-weight:900;letter-spacing:.015em;line-height:1.4;text-transform:uppercase;color:var(--paper);pointer-events:none;transform:translate(-50%,-50%)}
+#decisionModal .decision-center{position:absolute;inset:38%;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;background:#0a0f0e;color:var(--amber2);font-size:11px;font-weight:900;letter-spacing:.1em;text-align:center;line-height:1.5}
+#decisionModal .decision-pointer{position:absolute;z-index:2;left:50%;top:-5px;transform:translateX(-50%);border-left:9px solid transparent;border-right:9px solid transparent;border-top:24px solid var(--amber2);filter:drop-shadow(0 0 5px rgba(242,189,115,.55))}
+#decisionModal .decision-wheel-box:after{content:"";position:absolute;inset:-3px;border:2px solid var(--decision-glow);border-radius:50%;opacity:0;pointer-events:none}
+#decisionModal .resolving .decision-bezel{box-shadow:0 0 12px rgba(117,211,215,.5),0 0 32px rgba(117,211,215,.22),inset 0 0 14px rgba(117,211,215,.25)}
+#decisionModal .decided .decision-wheel-box:after{animation:decisionCommitPulse .8s ease-out 1}
+#decisionModal [data-result="fail"]{--decision-glow:var(--amber2)}
+#decisionModal [data-result="alarm"]{--decision-glow:var(--red)}
+#decisionModal .decision-options{display:grid;gap:15px;min-width:0}
+#decisionModal .decision-option{padding:9px 11px;border:1px solid transparent;border-left:2px solid var(--cyan);transition:background .3s,border-color .3s}
+#decisionModal .decision-option.fail{border-left-color:var(--amber2)}
+#decisionModal .decision-option.alarm{border-left-color:var(--red)}
+#decisionModal .decision-option>div{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:var(--cyan);font-size:13px;line-height:1.4}
+#decisionModal .decision-option.fail>div{color:var(--amber2)}
+#decisionModal .decision-option.alarm>div{color:#ef7777}
+#decisionModal .decision-option b{font-variant-numeric:tabular-nums}
+#decisionModal .decision-option p{margin:5px 0 0;color:#aaa99f;font-size:12px;line-height:1.5}
+#decisionModal .decision-option.selected{border-color:var(--decision-glow);background:rgba(255,255,255,.045);box-shadow:inset 0 0 16px rgba(117,211,215,.04)}
+#decisionModal .decision-status{margin:10px 0 14px;color:var(--decision-glow);font-size:11px;line-height:1.5;font-weight:900;letter-spacing:.1em;text-align:center;text-transform:uppercase}
+#decisionModal .decision-resolution{padding-top:18px;border-top:1px solid var(--line)}
+#decisionModal .decision-resolution h3{margin:0;color:var(--decision-glow);font-size:clamp(23px,3vw,31px);line-height:1.12;letter-spacing:.07em;text-transform:uppercase}
+#decisionModal .result-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+#decisionModal .result-chip{min-width:0;overflow-wrap:anywhere;font-size:10px}
+#decisionModal .result-chip strong{font-size:13px}
+#decisionModal .decision-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;padding-top:14px;border-top:1px solid rgba(217,161,92,.2)}
+#decisionModal .decision-actions .primary{flex:1;min-width:0}
+#decisionModal .decision-actions button{min-height:49px;white-space:normal;line-height:1.35;font-size:13px;touch-action:manipulation}
+#decisionModal .decision-foot{margin:10px 0 0;text-align:center;color:var(--muted);font-size:11px;line-height:1.5}
+@keyframes decisionCommitPulse{0%{opacity:.85;transform:scale(1)}100%{opacity:0;transform:scale(1.13)}}
+@media(max-width:600px){
+  .choice-check .cost{max-width:none}
+  #decisionModal{padding:8px}
+  #decisionModal .decision-modal{padding:23px 17px;max-height:calc(100dvh - 16px - var(--safe-t) - var(--safe-b))}
+  #decisionModal .decision-console{grid-template-columns:minmax(0,1fr);gap:17px;margin:20px 0}
+  #decisionModal .decision-wheel-box{max-width:260px}
+  #decisionModal .decision-party{gap:7px}
+  #decisionModal .decision-member{padding-left:7px}
+  #decisionModal .decision-actions{flex-direction:column}
+  #decisionModal .decision-actions button{width:100%}
+  #decisionModal .result-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-height:620px) and (orientation:landscape){
+  #decisionModal .decision-modal{width:min(920px,100%);padding:18px 24px}
+  #decisionModal .decision-console{grid-template-columns:minmax(180px,.75fr) minmax(0,1fr);gap:22px}
+  #decisionModal .decision-wheel-box{max-width:210px}
+  #decisionModal .decision-actions{flex-direction:row}
+  #decisionModal .decision-actions button{width:auto}
+}
+@media(prefers-reduced-motion:reduce){
+  #decisionModal .decided .decision-wheel-box:after{animation:none}
+  #decisionModal .decision-bezel,#decisionModal .decision-option{transition:none}
+}

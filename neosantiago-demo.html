@@ -817,6 +817,7 @@
     @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
     @media(max-width:600px){.trader-panel{grid-template-columns:1fr;grid-template-rows:auto 190px auto}.trader-art{height:190px;min-height:0}.npc-tabs{grid-column:1}.trader-copy{grid-column:1}}
   </style>
+  <link rel="stylesheet" href="decision-v2.css?v=1">
 </head>
 <body>
   <div class="app">
@@ -1095,6 +1096,34 @@
         </section>
       </div>
     </article>
+  </section>
+
+  <section class="overlay hidden" id="decisionModal" role="dialog" aria-modal="true" aria-labelledby="decisionTitle" aria-describedby="decisionLead">
+    <div class="modal decision-modal" id="decisionSurface">
+      <p class="kicker" id="decisionKicker">Destino de la acción</p>
+      <h2 id="decisionTitle">Una decisión incierta</h2>
+      <p class="decision-story" id="decisionLead"></p>
+      <p class="decision-story decision-quote" id="decisionQuote"></p>
+      <section class="decision-group" aria-label="Influencia del ánimo">
+        <div class="decision-group-head"><strong>Estado del grupo: <span id="decisionMood">Estable</span></strong><span id="decisionModifier"></span></div>
+        <div class="decision-party" id="decisionParty"></div>
+        <details id="decisionExplanation"><summary>¿Cómo influye el ánimo?</summary><p id="decisionMath"></p></details>
+      </section>
+      <div class="decision-console">
+        <div class="decision-wheel-box" id="decisionWheelBox" role="img" aria-label="Desenlaces posibles">
+          <div class="decision-bezel"></div><div class="decision-wheel" id="decisionWheel"></div>
+          <div class="decision-center" aria-hidden="true">NEO<br>SANTIAGO</div><div class="decision-pointer" aria-hidden="true"></div>
+        </div>
+        <div class="decision-options" id="decisionOptions"></div>
+      </div>
+      <p class="decision-status" id="decisionStatus" role="status" aria-live="polite"></p>
+      <section class="decision-resolution hidden" id="decisionResolution" aria-live="polite" aria-atomic="true">
+        <h3 id="decisionResolutionTitle"></h3><p class="decision-story" id="decisionResolutionText"></p>
+        <div class="result-grid" id="decisionChanges"></div>
+      </section>
+      <div class="decision-actions"><button type="button" class="secondary" id="decisionBack">Volver</button><button type="button" class="primary" id="decisionConfirm">Resolver acción</button></div>
+      <p class="decision-foot"><span id="decisionCost"></span> · La rueda se detiene sola.</p>
+    </div>
   </section>
 
   <section class="overlay hidden" id="result" role="dialog" aria-modal="true">
@@ -1436,7 +1465,7 @@
   </aside>
   <div class="toast hidden" id="toast" role="status"></div>
 
-  <script src="campaign-v2.js?v=65"></script>
+  <script src="campaign-v2.js?v=72"></script>
   <script>
   "use strict";
   var KEY="neosantiago2130_demo_v3";
@@ -1751,6 +1780,7 @@
     "ambience-archive": "audio/ambience/archive-static.mp3"
   }
   </script>
-  <script src="game-v2.js?v=71"></script>
+  <script src="decision-v2.js?v=1"></script>
+  <script src="game-v2.js?v=72"></script>
 </body>
 </html>
