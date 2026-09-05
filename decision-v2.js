@@ -44,7 +44,7 @@ function decisionCostText(choice){
   if(!choice.roll)return choice.cost||"";var cost=String(choice.cost||"").replace(/Dificultad\s+\d+/i,"").trim();return(cost?cost+" · ":"")+"Favorable "+decisionProbability(choice).chances[0]+"%"
 }
 function clearDecision(){
-  clearInterval(decisionAnimationTimer);clearTimeout(decisionFinishTimer);decisionAnimationTimer=null;decisionFinishTimer=null;decisionState=null;$("decisionModal").classList.add("hidden");signalLastTick=Date.now()
+  clearInterval(decisionAnimationTimer);clearTimeout(decisionFinishTimer);decisionAnimationTimer=null;decisionFinishTimer=null;decisionState=null;$("decisionOutcomeModal").classList.add("hidden");$("decisionModal").classList.add("hidden");$("decisionModal").removeAttribute("inert");$("decisionModal").removeAttribute("aria-hidden");$("decisionModal").setAttribute("aria-modal","true");signalLastTick=Date.now()
 }
 function closeDecision(){if(!decisionState||decisionState.phase!=="ready")return;var opener=decisionState.opener;clearDecision();if(opener&&opener.focus)opener.focus()}
 function decisionSigned(n){return(n>0?"+":"")+n}
@@ -92,8 +92,12 @@ function revealDecision(game){
   $("decisionChanges").innerHTML=isCombat?game.changes.map(function(c){return'<div class="result-chip">'+esc(c[0])+'<strong>'+esc(c[1])+'</strong></div>'}).join(""):$("resultChanges").innerHTML;
   $("decisionResolution").classList.remove("hidden");$("decisionSurface").classList.remove("resolving");$("decisionSurface").classList.add("decided");$("decisionSurface").dataset.result=opt.key;
   Array.prototype.forEach.call($("decisionOptions").querySelectorAll("[data-decision-outcome]"),function(node){node.classList.toggle("selected",Number(node.dataset.decisionOutcome)===game.selected)});
-  $("decisionStatus").textContent="Acción decidida · "+opt.title;$("decisionConfirm").textContent=isCombat?"Prepararse para el combate":pending&&pending.dialogue?"Continuar la conversación":"Continuar expedición";$("decisionConfirm").disabled=false;
-  playSfx(opt.key==="success"?"ui-click":"ui-error");$("decisionConfirm").focus({preventScroll:true})
+  $("decisionStatus").textContent="Acción decidida · "+opt.title;$("decisionConfirm").textContent="Acción decidida";$("decisionConfirm").disabled=true;
+  $("decisionOutcomeKicker").textContent=isCombat?"Acción decidida · contacto hostil":"Acción decidida · consecuencia";
+  $("decisionOutcomeContinue").textContent=isCombat?"Prepararse para el combate":pending&&pending.dialogue?"Continuar la conversación":"Continuar expedición";
+  $("decisionOutcomeModal").dataset.result=opt.key;$("decisionOutcomeModal").classList.remove("hidden");$("decisionResolution").scrollTop=0;
+  $("decisionOutcomeContinue").focus({preventScroll:true});$("decisionModal").setAttribute("inert","");$("decisionModal").setAttribute("aria-hidden","true");$("decisionModal").removeAttribute("aria-modal");
+  playSfx(opt.key==="success"?"ui-click":"ui-error")
 }
 function continueDecision(){
   var game=decisionState;if(!game||game.phase!=="resolved")return;var opt=game.options[game.selected];game.phase="committed";clearDecision();
@@ -108,9 +112,10 @@ function decisionKeydown(e){
   if(!decisionState)return false;
   if(e.key==="Escape"){e.preventDefault();closeDecision();return true}
   if(e.key==="Tab"){
-    var focusable=Array.prototype.slice.call($("decisionModal").querySelectorAll('button:not(:disabled),summary')).filter(function(n){return n.getClientRects().length>0});
+    var activeModal=decisionState.phase==="resolved"?$("decisionOutcomeModal"):$("decisionModal"),focusable=Array.prototype.slice.call(activeModal.querySelectorAll('button:not(:disabled),summary')).filter(function(n){return n.getClientRects().length>0});
     if(focusable.length){var first=focusable[0],last=focusable[focusable.length-1];if(focusable.indexOf(document.activeElement)<0){e.preventDefault();(e.shiftKey?last:first).focus()}else if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}else e.preventDefault();
   }
   // Native button/summary Enter and Space behavior is retained. No global choice shortcuts.
   return true
 }
+document.getElementById("decisionOutcomeContinue").addEventListener("click",continueDecision);

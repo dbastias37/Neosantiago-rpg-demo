@@ -817,7 +817,7 @@
     @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
     @media(max-width:600px){.trader-panel{grid-template-columns:1fr;grid-template-rows:auto 190px auto}.trader-art{height:190px;min-height:0}.npc-tabs{grid-column:1}.trader-copy{grid-column:1}}
   </style>
-  <link rel="stylesheet" href="decision-v2.css?v=2">
+  <link rel="stylesheet" href="decision-v2.css?v=3">
 </head>
 <body>
   <div class="app">
@@ -1117,12 +1117,19 @@
         <div class="decision-options" id="decisionOptions"></div>
       </div>
       <p class="decision-status" id="decisionStatus" role="status" aria-live="polite"></p>
-      <section class="decision-resolution hidden" id="decisionResolution" aria-live="polite" aria-atomic="true">
-        <h3 id="decisionResolutionTitle"></h3><p class="decision-story" id="decisionResolutionText"></p>
-        <div class="result-grid" id="decisionChanges"></div>
-      </section>
       <div class="decision-actions"><button type="button" class="secondary" id="decisionBack">Volver</button><button type="button" class="primary" id="decisionConfirm">Resolver acción</button></div>
       <p class="decision-foot"><span id="decisionCost"></span> · La rueda se detiene sola.</p>
+    </div>
+  </section>
+
+  <section class="overlay hidden" id="decisionOutcomeModal" role="dialog" aria-modal="true" aria-labelledby="decisionResolutionTitle" aria-describedby="decisionResolutionText">
+    <div class="modal decision-outcome-modal">
+      <header class="decision-outcome-head"><p class="kicker" id="decisionOutcomeKicker">Acción decidida</p><h2 id="decisionResolutionTitle"></h2></header>
+      <div class="decision-outcome-body" id="decisionResolution">
+        <p class="decision-story" id="decisionResolutionText"></p>
+        <div class="result-grid" id="decisionChanges"></div>
+      </div>
+      <footer class="decision-outcome-actions"><button type="button" class="primary" id="decisionOutcomeContinue">Continuar expedición</button></footer>
     </div>
   </section>
 
@@ -1780,7 +1787,7 @@
     "ambience-archive": "audio/ambience/archive-static.mp3"
   }
   </script>
-  <script src="decision-v2.js?v=2"></script>
+  <script src="decision-v2.js?v=3"></script>
   <script src="game-v2.js?v=72"></script>
 </body>
 </html>

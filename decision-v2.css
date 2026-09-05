@@ -43,16 +43,26 @@
 #decisionModal .decision-option p{margin:8px 0 0;color:var(--muted);font-family:inherit;font-size:12px;line-height:1.4}
 #decisionModal .decision-option.selected{border-color:rgba(242,189,115,.72);background:rgba(217,161,92,.045);box-shadow:inset 0 -2px rgba(242,189,115,.35)}
 #decisionModal .decision-status{margin:10px 0 14px;color:var(--decision-glow);font-size:11px;line-height:1.5;font-weight:900;letter-spacing:.1em;text-align:center;text-transform:uppercase}
-#decisionModal .decision-resolution{padding-top:18px;border-top:1px solid var(--line)}
-#decisionModal .decision-resolution h3{margin:0;color:var(--decision-glow);font-size:clamp(23px,3vw,31px);line-height:1.12;letter-spacing:.07em;text-transform:uppercase}
-#decisionModal .result-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-#decisionModal .result-chip{min-width:0;overflow-wrap:anywhere;font-size:10px}
-#decisionModal .result-chip strong{font-size:13px}
 #decisionModal .decision-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;padding-top:14px;border-top:1px solid rgba(217,161,92,.2)}
 #decisionModal .decision-actions .primary{flex:1;min-width:0}
 #decisionModal .decision-actions button{min-height:49px;white-space:normal;line-height:1.35;font-size:13px;touch-action:manipulation}
 #decisionModal .decision-foot{margin:10px 0 0;text-align:center;color:var(--muted);font-size:11px;line-height:1.5}
 @keyframes decisionCommitPulse{0%{opacity:.85;transform:scale(1)}100%{opacity:0;transform:scale(1.13)}}
+/* A sibling overlay avoids the wheel modal's scroll position and clip-path. */
+#decisionOutcomeModal{--outcome-accent:var(--cyan);z-index:75;padding:16px;background:rgba(2,4,4,.76);backdrop-filter:blur(4px)}
+#decisionOutcomeModal[data-result="fail"]{--outcome-accent:var(--amber2)}
+#decisionOutcomeModal[data-result="alarm"]{--outcome-accent:#ef7777}
+#decisionOutcomeModal .decision-outcome-modal{display:grid;grid-template-rows:auto minmax(0,1fr) auto;min-height:0;width:min(720px,100%);max-height:calc(100dvh - 32px - var(--safe-t) - var(--safe-b));padding:0;overflow:hidden;border-color:var(--line);background:linear-gradient(145deg,#0a0f0e,#080b0a)}
+#decisionOutcomeModal .decision-outcome-head{padding:24px 28px 15px;border-bottom:1px solid rgba(217,161,92,.24)}
+#decisionOutcomeModal .kicker{margin:0 0 8px;color:var(--outcome-accent);font-size:10px;line-height:1.5}
+#decisionOutcomeModal h2{color:var(--amber2);font-size:clamp(24px,3.6vw,34px);line-height:1.12;overflow-wrap:break-word}
+#decisionOutcomeModal .decision-outcome-body{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:18px 28px}
+#decisionOutcomeModal .decision-story{margin:0 0 17px;color:#ece7dc;font-family:Georgia,"Times New Roman",serif;font-size:16px;line-height:1.55}
+#decisionOutcomeModal .result-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0}
+#decisionOutcomeModal .result-chip{min-width:0;padding:11px;overflow-wrap:anywhere;font-size:10px}
+#decisionOutcomeModal .result-chip strong{font-size:13px;line-height:1.35}
+#decisionOutcomeModal .decision-outcome-actions{padding:15px 28px 24px;border-top:1px solid rgba(217,161,92,.24);background:#080b0a}
+#decisionOutcomeModal .primary{width:100%;min-height:49px;white-space:normal;line-height:1.35;font-size:13px;touch-action:manipulation}
 @media(max-width:600px){
   .choice-check .cost{max-width:none}
   #decisionModal{padding:8px}
@@ -63,7 +73,13 @@
   #decisionModal .decision-member{padding-left:7px}
   #decisionModal .decision-actions{flex-direction:column}
   #decisionModal .decision-actions button{width:100%}
-  #decisionModal .result-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #decisionOutcomeModal{padding:10px}
+  #decisionOutcomeModal .decision-outcome-modal{max-height:calc(100dvh - 20px - var(--safe-t) - var(--safe-b))}
+  #decisionOutcomeModal .decision-outcome-head{padding:23px 18px 14px}
+  #decisionOutcomeModal .decision-outcome-body{padding:16px 18px}
+  #decisionOutcomeModal .decision-story{font-size:15px;line-height:1.5}
+  #decisionOutcomeModal .result-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #decisionOutcomeModal .decision-outcome-actions{padding:14px 18px 21px}
 }
 @media(max-height:620px) and (orientation:landscape){
   #decisionModal .decision-modal{width:min(920px,100%);padding:18px 24px}
@@ -72,6 +88,15 @@
   #decisionModal .decision-wheel-label{width:68px;font-size:11px}
   #decisionModal .decision-actions{flex-direction:row}
   #decisionModal .decision-actions button{width:auto}
+  #decisionOutcomeModal{padding:8px}
+  #decisionOutcomeModal .decision-outcome-modal{width:min(860px,100%);max-height:calc(100dvh - 16px - var(--safe-t) - var(--safe-b))}
+  #decisionOutcomeModal .decision-outcome-head{padding:16px 22px 10px}
+  #decisionOutcomeModal h2{font-size:25px}
+  #decisionOutcomeModal .decision-outcome-body{padding:12px 22px}
+  #decisionOutcomeModal .decision-story{font-size:14px;line-height:1.45;margin-bottom:12px}
+  #decisionOutcomeModal .result-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  #decisionOutcomeModal .result-chip{padding:8px}
+  #decisionOutcomeModal .decision-outcome-actions{padding:10px 22px 16px}
 }
 @media(prefers-reduced-motion:reduce){
   #decisionModal .decided .decision-wheel-box:after{animation:none}

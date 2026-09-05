@@ -44,6 +44,6 @@ Los textos introductorios, la espera, las palabras de la rueda y las salidas son
 
 ## Verificación
 
-`node --test tests/*.test.cjs`: 31 pruebas aprobadas, incluidas las 20 de estabilidad previas. La cobertura nueva comprueba las 34 salidas, las 729 combinaciones de ánimo para el engaño, costos, banderas, continuaciones, retirada, restauración, selección y posición final, movimiento reducido y callbacks antiguos.
+`node --test tests/*.test.cjs`: 33 pruebas aprobadas, incluidas las 20 de estabilidad previas. La cobertura nueva comprueba las 34 salidas, las 729 combinaciones de ánimo para el engaño, costos, banderas, continuaciones, retirada, restauración, selección y posición final, movimiento reducido y callbacks antiguos. El resultado aparece en una ventana independiente sobre la ruleta en ambas orientaciones, con encabezado y botón fuera del scroll. Se comprueban su apertura, foco exclusivo, pausa del inhibidor, cierre y continuación única hacia conversación, expedición o combate.
 
 La revisión estática conserva apilado en portrait, dos columnas en horizontal, límites de altura, scroll único del modal y controles de al menos 49 px. **No se completó una verificación visual en navegador:** la política del navegador remoto bloqueó la página local de prueba. Sigue pendiente confirmar visualmente 360×800, 390×844, 412×915, tablet y desktop en el despliegue real. Las pruebas de DOM simulado no verifican geometría ni renderizado.

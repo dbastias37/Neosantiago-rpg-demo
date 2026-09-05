@@ -124,3 +124,34 @@ test('the physical mishap is nonlethal and the old Vega replacements keep their 
     const replaced=ev.choices.filter(o=>!o.roll);for(const choice of replaced)assert.equal(b.decisionScene(choice),null);
   }
 });
+test('results open in a dedicated window and the new button continues every outcome once',()=>{
+  for(const index of [0,1,2]){
+    const a=prepare('credential'),c=a.ctx;settle(a,index);
+    assert.equal(a.nodes.get('decisionOutcomeModal').classList.contains('hidden'),false);
+    assert.equal(a.nodes.get('decisionResolution').scrollTop,0);
+    assert.equal(c.document.activeElement,a.nodes.get('decisionOutcomeContinue'));
+    assert.equal(a.nodes.get('decisionModal').getAttribute('inert'),'');
+    assert.equal(a.nodes.get('decisionModal').getAttribute('aria-hidden'),'true');
+    assert.equal(c.signalPauseActive(),true);
+    c.closeDecision();assert.ok(c.decisionState);
+    const confirm=a.nodes.get('decisionOutcomeContinue').listeners.click;
+    assert.equal(confirm.length,1);confirm[0]();
+    assert.equal(a.nodes.get('decisionOutcomeModal').classList.contains('hidden'),true);
+    assert.equal(a.nodes.get('decisionModal').getAttribute('inert'),undefined);
+    assert.equal(a.nodes.get('decisionModal').getAttribute('aria-modal'),'true');
+    const after=JSON.stringify(c.state);confirm[0]();assert.equal(JSON.stringify(c.state),after);
+  }
+});
+test('resolved keyboard focus stays in the result window; restart removes both layers',()=>{
+  const a=prepare('council'),c=a.ctx;settle(a,0);
+  const button=a.nodes.get('decisionOutcomeContinue');button.getClientRects=()=>[{}];
+  a.nodes.get('decisionOutcomeModal').querySelectorAll=()=>[button];
+  a.nodes.get('decisionModal').querySelectorAll=()=>{throw Error('Focus must not return to the underlying wheel')};
+  let prevented=false;c.document.activeElement=a.nodes.get('decisionConfirm');
+  c.decisionKeydown({key:'Tab',preventDefault(){prevented=true}});
+  assert.equal(prevented,true);assert.equal(c.document.activeElement,button);
+  c.newGame();assert.equal(c.decisionState,null);
+  assert.equal(a.nodes.get('decisionOutcomeModal').classList.contains('hidden'),true);
+  assert.equal(a.nodes.get('decisionModal').classList.contains('hidden'),true);
+  assert.equal(a.nodes.get('decisionModal').getAttribute('aria-hidden'),undefined);
+});
