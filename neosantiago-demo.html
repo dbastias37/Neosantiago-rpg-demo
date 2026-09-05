@@ -16,25 +16,6 @@
   <link rel="preload" href="backgrounds/day-hunter-house.webp?v=44" as="image" type="image/webp">
   <link rel="preload" href="backgrounds/day-market.webp?v=44" as="image" type="image/webp">
   <link rel="preload" href="backgrounds/day-valley-perimeter.webp?v=44" as="image" type="image/webp">
-  <link rel="preload" href="narrative/matias/matias-01-farmacia.webp?v=65" as="image" type="image/webp">
-  <link rel="preload" href="narrative/matias/matias-02-tunel.webp?v=65" as="image" type="image/webp">
-  <link rel="preload" href="narrative/matias/matias-03-enfermeria.webp?v=65" as="image" type="image/webp">
-  <link rel="preload" href="narrative/rosa/rosa-01-agua-iara.webp?v=65" as="image" type="image/webp">
-  <link rel="preload" href="narrative/rosa/rosa-02-marca-torcida.webp?v=65" as="image" type="image/webp">
-  <link rel="preload" href="narrative/rosa/rosa-03-mesa-para-cuatro.webp?v=65" as="image" type="image/webp">
-  <link rel="preload" href="narrative/lira/lira-01-tunel-nucleos.webp?v=65" as="image" type="image/webp">
-  <link rel="preload" href="narrative/lira/lira-02-clinica-abandonada.webp?v=65" as="image" type="image/webp">
-  <link rel="preload" href="narrative/lira/lira-03-camara-recuperacion.webp?v=65" as="image" type="image/webp">
-  <link rel="preload" href="narrative/unit7/unit7-01-dron-no-se-va.webp?v=65" as="image" type="image/webp">
-  <link rel="preload" href="narrative/unit7/unit7-02-nombres-protegidos.webp?v=65" as="image" type="image/webp">
-  <link rel="preload" href="narrative/unit7/unit7-03-ultima-orden.webp?v=65" as="image" type="image/webp">
-  <link rel="preload" href="narrative/ortega/ortega-01-puerta-morada.webp?v=68" as="image" type="image/webp">
-  <link rel="preload" href="narrative/ortega/ortega-02-barrio-sin-noche.webp?v=68" as="image" type="image/webp">
-  <link rel="preload" href="narrative/ortega/ortega-03-ultima-orden.webp?v=68" as="image" type="image/webp">
-  <link rel="preload" href="characters/sara-loadout.webp" as="image" type="image/webp">
-  <link rel="preload" href="characters/elias-loadout.webp" as="image" type="image/webp">
-  <link rel="preload" href="characters/noa-loadout.webp" as="image" type="image/webp">
-  <link rel="preload" href="characters/mara-trader.webp" as="image" type="image/webp">
   <style>
     :root{
       --ink:#070a09;--panel:rgba(8,12,11,.93);--soft:rgba(9,15,14,.8);
@@ -486,7 +467,7 @@
     @media(max-width:600px){.bag-actions,.loot-buttons{grid-template-columns:repeat(2,minmax(0,1fr))}.disassembly-modal{width:calc(100% - 14px)}.disassembly-head{padding:20px 18px 14px}.disassembly-item{grid-template-columns:74px minmax(0,1fr);margin:16px 18px 12px}.disassembly-item .item-art{width:74px}.disassembly-console{margin:0 18px 14px;padding:13px}.disassembly-rewards{grid-template-columns:1fr;margin:0 18px 12px}.disassembly-feedback{margin:0 18px 12px}.disassembly-actions{display:grid;padding:12px 18px 18px}.disassembly-actions button{width:100%}}
 
     .signal-layer{z-index:74;background:radial-gradient(circle at 50% 30%,rgba(117,211,215,.12),transparent 34%),rgba(2,4,4,.94)}
-    .signal-modal{width:min(760px,100%);padding:0;overflow:hidden;border-color:rgba(117,211,215,.45);background:linear-gradient(145deg,#07100f,#080b0a)}
+    .signal-modal{width:min(760px,100%);padding:0;overflow-x:hidden;overflow-y:auto;border-color:rgba(117,211,215,.45);background:linear-gradient(145deg,#07100f,#080b0a)}
     .signal-modal:before{content:"";display:block;height:3px;background:linear-gradient(90deg,transparent,var(--cyan),var(--amber2),transparent);box-shadow:0 0 22px rgba(117,211,215,.4)}
     .signal-head{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:16px;padding:25px 28px 17px;border-bottom:1px solid rgba(117,211,215,.18)}.signal-head h2{font-size:clamp(27px,4vw,45px)}.signal-round{padding:7px 9px;border:1px solid rgba(117,211,215,.34);color:var(--cyan);font-size:8px;font-weight:900;letter-spacing:.13em;text-transform:uppercase}
     .signal-tutorial,.signal-game,.signal-outcome{margin:20px 28px}.signal-tutorial>p{margin:0;color:#d9d5cc;font-family:Georgia,"Times New Roman",serif;font-size:14px;line-height:1.55}.signal-tutorial-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:17px 0}.signal-tutorial-grid article{padding:11px;border:1px solid rgba(217,161,92,.22);background:rgba(217,161,92,.035)}.signal-tutorial-grid b,.signal-tutorial-grid span{display:block}.signal-tutorial-grid b{color:var(--amber2);font-size:8px;letter-spacing:.1em;text-transform:uppercase}.signal-tutorial-grid span{margin-top:6px;color:var(--muted);font-size:9px;line-height:1.42}.signal-key-hint{padding:9px 11px;border-left:2px solid var(--cyan);background:rgba(117,211,215,.05);color:#c8e9e8!important;font-family:inherit!important;font-size:8px!important;font-weight:900;letter-spacing:.09em;text-transform:uppercase}
@@ -500,7 +481,7 @@
     @media(max-height:620px) and (orientation:landscape){.signal-layer,.signal-warning-layer{padding:6px}.signal-layer .signal-modal{width:min(820px,calc(100% - 12px));max-height:calc(100dvh - 12px);overflow-y:auto}.signal-head{padding:10px 18px 8px}.signal-head h2{font-size:24px}.signal-tutorial,.signal-game,.signal-outcome{margin:8px 18px}.signal-tutorial>p,.signal-outcome p{font-size:11px;line-height:1.35}.signal-tutorial-grid{gap:6px;margin:8px 0}.signal-tutorial-grid article{padding:7px}.signal-key-hint{padding:6px 9px}.signal-readouts div{padding:6px 9px}.signal-readouts strong{font-size:15px}.signal-timer{margin:6px 0 8px}.signal-instruction{margin-bottom:6px}.signal-sequence,.signal-input{gap:4px;min-height:31px}.signal-sequence span{width:30px;height:30px;font-size:18px}.signal-input{min-height:21px;margin:4px 0}.signal-input span{width:21px;height:21px;font-size:13px}.signal-pad{grid-template-columns:repeat(3,54px);grid-template-rows:repeat(2,34px);gap:5px;margin-top:4px}.signal-pad button{font-size:18px}.signal-outcome-mark{width:46px;height:46px;margin-bottom:8px;font-size:25px}.signal-outcome h3{font-size:23px}.signal-actions{padding:8px 18px 10px}.signal-actions button{min-height:36px;padding:7px 13px}.signal-warning-modal{padding:16px 20px}.signal-warning-modal .buttons{margin-top:8px}}
 
     .npc-dialogue-layer{z-index:68;place-items:end center;padding:clamp(10px,2vw,24px);background:linear-gradient(0deg,rgba(1,4,3,.96),rgba(1,4,3,.7) 48%,rgba(1,4,3,.2))}
-    .npc-dialogue-modal{display:grid;grid-template-columns:minmax(165px,245px) minmax(0,1fr);gap:0;width:min(1050px,100%);max-height:calc(100dvh - 28px);padding:0;overflow:hidden;background:linear-gradient(145deg,#070b0b,#0a100f);border-color:rgba(117,211,215,.34)}
+    .npc-dialogue-modal{display:grid;grid-template-columns:minmax(165px,245px) minmax(0,1fr);gap:0;width:min(1050px,100%);max-height:calc(100dvh - 28px);padding:0;overflow-x:hidden;overflow-y:auto;background:linear-gradient(145deg,#070b0b,#0a100f);border-color:rgba(117,211,215,.34)}
     .npc-dialogue-portrait{position:relative;min-height:320px;overflow:hidden;background:#090d0c;border-right:1px solid rgba(117,211,215,.22)}
     .npc-dialogue-portrait img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 20%;filter:contrast(1.08) saturate(.9)}
     .npc-dialogue-portrait:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(4,8,7,.95),transparent 46%);pointer-events:none}
@@ -1770,6 +1751,6 @@
     "ambience-archive": "audio/ambience/archive-static.mp3"
   }
   </script>
-  <script src="game-v2.js?v=70"></script>
+  <script src="game-v2.js?v=71"></script>
 </body>
 </html>
