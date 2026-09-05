@@ -497,7 +497,10 @@
     .npc-dialogue-choice strong{color:var(--paper);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
     .npc-dialogue-choice small{grid-column:1/-1;color:var(--muted);font-size:10px;line-height:1.4}
     .npc-dialogue-choice em{align-self:start;color:var(--amber2);font-size:8px;font-style:normal;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
-    .npc-dialogue-choice:disabled{opacity:.38;cursor:not-allowed}
+    .npc-dialogue-choice:disabled{--dialogue-opacity:.38;opacity:.38;cursor:not-allowed}
+    .npc-dialogue-choices.choices-entering .npc-dialogue-choice{animation:npcChoiceArrival .36s cubic-bezier(.22,.61,.36,1) both;animation-delay:calc(60ms + var(--dialogue-order,0)*150ms)}
+    @keyframes npcChoiceArrival{from{opacity:0;visibility:hidden;transform:translateY(8px)}to{opacity:var(--dialogue-opacity,1);visibility:visible;transform:translateY(0)}}
+    @media(prefers-reduced-motion:reduce){.npc-dialogue-choices.choices-entering .npc-dialogue-choice{animation:none;transform:none;visibility:visible}}
     .dialogue-change-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
     .dialogue-continue-row{display:flex;justify-content:flex-end;margin-top:0}
     @media(min-width:901px) and (max-height:700px){.npc-dialogue-modal{grid-template-columns:190px minmax(0,1fr)}.npc-dialogue-portrait{min-height:260px}.npc-dialogue-frame{gap:9px;padding:18px 22px}.npc-dialogue-text{min-height:88px;padding:13px 15px;font-size:15px}.npc-dialogue-choice{min-height:44px;padding:9px 11px}.npc-dialogue-choice small{font-size:8px}.dialogue-skip{min-height:34px}}
@@ -1788,6 +1791,6 @@
   }
   </script>
   <script src="decision-v2.js?v=3"></script>
-  <script src="game-v2.js?v=72"></script>
+  <script src="game-v2.js?v=73"></script>
 </body>
 </html>

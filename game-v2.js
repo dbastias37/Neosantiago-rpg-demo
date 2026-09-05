@@ -1379,21 +1379,21 @@ function updateNpcDialogueKicker(){
   if(!npcDialogueState)return;var total=npcDialogueState.lines.length,base=npcDialogueState.kicker||"Conversación",step=npcDialogueState.nodeCount||1;$("npcDialogueKicker").textContent=base+" · intercambio "+step+" · "+(npcDialogueState.lineIndex+1)+"/"+total
 }
 function showNpcDialogueChoices(){
-  if(!npcDialogueState||npcDialogueState.selected)return;
-  $("npcDialogueChoices").classList.remove("hidden");var first=$("npcDialogueChoices").querySelector("button:not(:disabled)");if(first)first.focus();else $("dialogueContinueRow").classList.remove("hidden")
+  if(!npcDialogueState||npcDialogueState.selected||npcDialogueState.choicesShown)return;
+  npcDialogueState.choicesShown=true;$("npcDialogueChoices").classList.add("choices-entering");$("npcDialogueChoices").classList.remove("hidden");var first=$("npcDialogueChoices").querySelector("button:not(:disabled)");if(first){if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)first.focus({preventScroll:true})}else $("dialogueContinueRow").classList.remove("hidden")
 }
 function revealNpcDialogueText(){
   if(!npcDialogueState)return;clearInterval(npcDialogueTimer);npcDialogueTimer=null;$("npcDialogueText").textContent=npcDialogueState.text;if(npcDialogueState.lineIndex>=npcDialogueState.lines.length-1)showNpcDialogueChoices();else $("dialogueSkip").focus()
 }
 function typeNpcDialogue(){
-  var text=npcDialogueState?npcDialogueState.text:"",i=0;clearInterval(npcDialogueTimer);updateNpcDialogueKicker();$("npcDialogueText").textContent="";$("npcDialogueChoices").classList.add("hidden");$("dialogueChanges").classList.add("hidden");$("dialogueContinueRow").classList.add("hidden");npcDialogueTimer=setInterval(function(){if(!npcDialogueState){clearInterval(npcDialogueTimer);npcDialogueTimer=null;return}i+=2;$("npcDialogueText").textContent=text.slice(0,i);if(i>=text.length)revealNpcDialogueText()},22)
+  var text=npcDialogueState?npcDialogueState.text:"",i=0;clearInterval(npcDialogueTimer);updateNpcDialogueKicker();$("npcDialogueText").textContent="";$("npcDialogueChoices").classList.add("hidden");$("npcDialogueChoices").classList.remove("choices-entering");$("dialogueChanges").classList.add("hidden");$("dialogueContinueRow").classList.add("hidden");npcDialogueTimer=setInterval(function(){if(!npcDialogueState){clearInterval(npcDialogueTimer);npcDialogueTimer=null;return}i+=2;$("npcDialogueText").textContent=text.slice(0,i);if(i>=text.length)revealNpcDialogueText()},22)
 }
 function advanceNpcDialogueText(){
   if(!npcDialogueState||npcDialogueState.selected)return;if(npcDialogueTimer){revealNpcDialogueText();return}if(npcDialogueState.lineIndex<npcDialogueState.lines.length-1){npcDialogueState.lineIndex++;npcDialogueState.text=npcDialogueState.lines[npcDialogueState.lineIndex];typeNpcDialogue();return}showNpcDialogueChoices()
 }
 function renderNpcDialogueChoices(){
-  var choices=$("npcDialogueChoices"),options=npcDialogueState.options||[];choices.innerHTML=options.map(function(opt,i){var block=reason(opt),hint=choiceHintText(opt,block),action=block||opt.cost||(opt.combat?"Responder":"Elegir");return'<button class="npc-dialogue-choice" data-dialogue-choice="'+i+'" '+(block?"disabled":"")+'><strong>'+esc(opt.label)+'</strong><em>'+esc(action)+'</em><small>'+esc(hint)+'</small></button>'}).join("");
-  Array.prototype.forEach.call(choices.querySelectorAll("[data-dialogue-choice]"),function(b){b.addEventListener("click",function(){selectNpcDialogueChoice(Number(b.dataset.dialogueChoice))})})
+  var choices=$("npcDialogueChoices"),options=npcDialogueState.options||[];npcDialogueState.choicesShown=false;choices.innerHTML=options.map(function(opt,i){var block=reason(opt),hint=choiceHintText(opt,block),action=block||opt.cost||(opt.combat?"Responder":"Elegir");return'<button class="npc-dialogue-choice" style="--dialogue-order:'+i+'" data-dialogue-choice="'+i+'" '+(block?"disabled":"")+'><strong>'+esc(opt.label)+'</strong><em>'+esc(action)+'</em><small>'+esc(hint)+'</small></button>'}).join("");
+  Array.prototype.forEach.call(choices.querySelectorAll("[data-dialogue-choice]"),function(b){b.addEventListener("click",function(){selectNpcDialogueChoice(Number(b.dataset.dialogueChoice))});b.addEventListener("animationend",function(e){if(e.animationName!=="npcChoiceArrival"||!npcDialogueState||npcDialogueState.selected||choices.classList.contains("hidden")||$("npcDialogueModal").classList.contains("hidden"))return;if(document.activeElement===$("dialogueSkip")&&b===choices.querySelector("button:not(:disabled)"))b.focus({preventScroll:true})})})
 }
 function setNpcDialogueNode(nodeId){
   if(!npcDialogueState)return;var dialogue=npcDialogueState.dialogue,node=dialogueNode(dialogue,nodeId);npcDialogueState.selected=false;npcDialogueState.nodeId=nodeId;npcDialogueState.nodeCount=(npcDialogueState.nodeCount||0)+1;npcDialogueState.lines=dialogueLines(dialogue,node);npcDialogueState.lineIndex=0;npcDialogueState.text=npcDialogueState.lines[0];npcDialogueState.options=node.options||[];renderNpcDialogueChoices();typeNpcDialogue()
