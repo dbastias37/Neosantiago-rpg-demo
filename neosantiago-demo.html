@@ -1235,12 +1235,12 @@
       <div class="refuge-grid">
         <aside class="trader-panel">
           <nav class="npc-tabs" role="tablist" aria-label="Puestos del refugio">
-            <button class="active" id="npcTabMara" role="tab" aria-selected="true"><span>Economato</span><b>Mara</b></button>
+            <button class="active" id="npcTabMara" role="tab" aria-selected="true"><span>Almacén</span><b>Mara</b></button>
             <button id="npcTabArmorer" role="tab" aria-selected="false"><span>Banco de armas</span><b>El Armero</b></button>
           </nav>
           <div class="trader-art"><img id="traderPortrait" src="characters/mara-trader.webp?v=22" data-asset-path="characters/mara-trader.webp" data-asset-retry="0" onerror="retryAsset(this)" alt="Mara, encargada de intercambios del refugio" width="768" height="1152" loading="eager" decoding="async"></div>
           <div class="trader-copy">
-            <h3 id="traderName">Mara «La Rielera»</h3><span class="trader-role" id="traderRole">Recuperadora · Economato</span>
+            <h3 id="traderName">Mara, la Comerciante</h3><span class="trader-role" id="traderRole">Suministros · Almacén</span>
             <p class="trader-dialogue" id="traderDialogue"></p>
             <div class="trade-credit"><span>Saldo del grupo</span><b id="tradeCredits">0 fichas</b></div>
             <div class="refuge-actions">
@@ -1257,9 +1257,9 @@
           </section>
           <p class="refuge-message hidden" id="refugeMessage" aria-live="polite"></p>
           <section class="refuge-section">
-            <div class="refuge-section-head"><h3 id="tradeSectionTitle">Economía de intercambio</h3><small id="tradeSectionHint">Una operación mueve una unidad</small></div>
+            <div class="refuge-section-head"><h3 id="tradeSectionTitle">Compra y venta</h3><small id="tradeSectionHint">Una operación mueve una unidad</small></div>
             <div class="trade-ledger">
-              <div class="trade-column"><div class="trade-column-title"><span id="tradeSellTitle">Tus rescates</span><span>Entregar</span></div><div class="trade-list" id="tradeSellList"></div></div>
+              <div class="trade-column"><div class="trade-column-title"><span id="tradeSellTitle">Tu loot</span><span>Entregar</span></div><div class="trade-list" id="tradeSellList"></div></div>
               <div class="trade-column"><div class="trade-column-title"><span id="tradeBuyTitle">Reservas de Mara</span><span id="tradeBuyAction">Recibir</span></div><div class="trade-list" id="tradeBuyList"></div></div>
             </div>
           </section>
@@ -1279,7 +1279,7 @@
       <div class="summary-inventory" id="summaryInventory"></div>
       <section class="summary-block decision-summary"><h3>Decisiones y recorrido de la historia</h3><div class="summary-decisions" id="summaryDecisions"></div></section>
       <footer class="summary-actions">
-        <p>La imagen descargable incluye el final, el puntaje, el botín y el recorrido completo de tus decisiones.</p>
+        <p>La imagen descargable incluye el final, el puntaje, el loot y el recorrido completo de tus decisiones.</p>
         <div class="buttons"><button class="secondary download-result" id="downloadPng">Descargar resultado PNG</button><button class="primary" id="restart">Iniciar una nueva expedición</button></div>
       </footer>
     </div>
@@ -1339,7 +1339,7 @@
   <section class="overlay hidden" id="lootModal" role="dialog" aria-modal="true" aria-labelledby="lootTitle">
     <div class="modal loot-modal">
       <p class="kicker">Registro de cadáver</p>
-      <h2 id="lootTitle">Botín recuperado</h2>
+      <h2 id="lootTitle">Loot recuperado</h2>
       <p class="loot-owner" id="lootOwner"></p>
       <div class="loot-capacity" id="lootCapacity">
         <div class="loot-capacity-head"><span id="lootCapacityText">0 / 0 espacios ocupados</span><b id="lootCapacityPercent">0%</b></div>
@@ -1386,7 +1386,7 @@
         <div class="signal-round" id="signalRound">Tutorial</div>
       </header>
       <div class="signal-tutorial" id="signalTutorial">
-        <p>La Red UNO rastrea temperatura, respiración y pulso. El inhibidor falsifica esas firmas, pero Elías debe mantener su código sincronizado.</p>
+        <p>La Red UNO identifica al grupo por su temperatura, respiración y pulso. El inhibidor oculta sus identidades con datos falsos, pero Elías debe mantener su código sincronizado.</p>
         <div class="signal-tutorial-grid">
           <article><b>01 · Copia</b><span>Repite la secuencia de flechas en el mismo orden.</span></article>
           <article><b>02 · Resiste</b><span>Completa tres rondas antes de que cada reloj llegue a cero.</span></article>
@@ -1412,7 +1412,7 @@
       </div>
       <div class="signal-outcome hidden" id="signalOutcome">
         <div class="signal-outcome-mark" id="signalOutcomeMark">✓</div>
-        <h3 id="signalOutcomeTitle">Firma fantasma establecida</h3>
+        <h3 id="signalOutcomeTitle">Identidad falsa activada</h3>
         <p id="signalOutcomeText"></p>
         <div class="result-grid" id="signalOutcomeStats"></div>
       </div>
@@ -1529,7 +1529,7 @@
   </aside>
   <div class="toast hidden" id="toast" role="status"></div>
 
-  <script src="campaign-v2.js?v=72"></script>
+  <script src="campaign-v2.js?v=73"></script>
   <script>
   "use strict";
   var KEY="neosantiago2130_demo_v3";
@@ -1552,7 +1552,7 @@
     exiles:["Registro de los exiliados","Una expedición regresó de El Valle con implantes y fue expulsada de los túneles."],
     hunterMarks:["Marcas de cazadores","Símbolos analógicos identifican agua, refugio y peligro sin emitir señales rastreables."],
     redEyes:["Ópticas rojas","Los merodeadores se comunican con golpes sobre el hormigón y defienden fronteras propias."],
-    cores:["Núcleos implantados","Una fuente interna sostiene ciertas prótesis y conserva una firma que la Red UNO puede rastrear."],
+    cores:["Núcleos implantados","Una fuente interna sostiene ciertas prótesis y conserva una identidad que la Red UNO puede rastrear."],
     coreRite:["Rito de recuperación","Los exiliados vuelven por los núcleos de sus muertos y no abandonan a los caídos."],
     sonar:["Mapa SONAR","La Red UNO rastrea temperatura, respiración y patrones cardíacos, no solamente movimiento."],
     purpleHelmets:["Cascos morados","Unidades de élite protegen el perímetro ligado a El Valle y responden a protocolos superiores."],
@@ -1601,17 +1601,17 @@
     ]},
     cores:{classification:"Informe técnico y médico",source:"Análisis conjunto de Sara y Elías",date:"Día 1 · 14:38",body:[
       "El núcleo implantado se conecta al sistema nervioso y reemplaza parte del metabolismo dañado por la exposición. No controla al portador. Regula prótesis, filtra toxinas y almacena fragmentos de memoria sensorial necesarios para calibrar el cuerpo.",
-      "Su firma puede ser rastreada por la Red UNO, pero los merodeadores han aprendido a reducirla mediante dolor, respiración y períodos de inmovilidad. De allí proviene el extraño silencio de sus campamentos y la costumbre de comunicarse sin radio.",
+      "La Red UNO puede rastrear su identidad a través del pulso, pero los merodeadores han aprendido a ocultar ese rastro mediante dolor, respiración y períodos de inmovilidad. De allí proviene el extraño silencio de sus campamentos y la costumbre de comunicarse sin radio.",
       "Extraer un núcleo no equivale a quitar un arma. Para ellos contiene la última percepción del muerto: una ruta, un rostro, el sonido de quienes estaban cerca. Abandonarlo significa entregar una parte de la persona a la red que los expulsó."
     ]},
     coreRite:{classification:"Registro de práctica funeraria",source:"Informe de Sara",date:"Día 2 · Cámara de mantenimiento",body:[
       "El cuerpo estaba rodeado por herramientas y trozos de tela. Cada asistente había dejado un objeto reparado por el muerto: una hebilla, un filtro, la pieza de una óptica. No era un depósito de botín, sino una despedida interrumpida.",
-      "La extracción del núcleo se realiza después de detener el pulso. El procedimiento conserva la memoria de calibración y evita que la Red UNO utilice la firma para encontrar al resto del grupo. Los exiliados regresan por sus caídos incluso cuando hacerlo resulta tácticamente absurdo.",
+      "La extracción del núcleo se realiza después de detener el pulso. El procedimiento conserva la memoria de calibración y evita que la Red UNO utilice la identidad para encontrar al resto del grupo. Los exiliados regresan por sus caídos incluso cuando hacerlo resulta tácticamente absurdo.",
       "Sara anota que los refugios también conservan objetos de sus muertos. La diferencia es tecnológica, no humana. Quien interrumpe el rito puede obtener un componente valioso, pero convierte una batalla por recursos en una deuda que sobrevivirá a todos los presentes."
     ]},
     sonar:{classification:"Doctrina de rastreo de la Red UNO",source:"Manual táctico SONAR-9",date:"Revisión 6.2",body:[
       "SONAR no busca únicamente movimiento. Combina temperatura, respiración, presión sobre estructuras y ritmo cardíaco. Una persona inmóvil sigue siendo visible si teme; un grupo entrenado puede desaparecer durante segundos si sincroniza la respiración con la vibración de la ciudad.",
-      "El sistema asigna una firma emocional a cada contacto. Pánico autoriza persecución. Calma sostenida se interpreta como entrenamiento hostil. La ausencia completa de pulso activa una inspección mecánica porque la Red UNO aprendió que los exiliados pueden engañar a los sensores.",
+      "El sistema clasifica el estado emocional de cada persona detectada. Pánico autoriza persecución. Calma sostenida se interpreta como entrenamiento hostil. La ausencia completa de pulso activa una inspección mecánica porque la Red UNO aprendió que los exiliados pueden engañar a los sensores.",
       "El manual confirma una debilidad: disparos, alarmas y maquinaria producen demasiadas lecturas simultáneas. El ruido atrae patrullas, pero también puede ocultar una retirada dentro de una ciudad que todavía cruje, bombea agua y respira bajo sus ruinas."
     ]},
     purpleHelmets:{classification:"Canal de mando superior",source:"Visor de comandante de la Red UNO",date:"Día 3 · 08:03",body:[
@@ -1642,7 +1642,7 @@
       {label:"Tomar la frecuencia y marcharse",hint:"Conserva recursos, rompe confianza.",cost:"Moral −8",title:"La voz queda atrás",result:"Matías entiende la decisión antes de que nadie la explique. Sus indicaciones son correctas, pero el silencio acompaña al grupo.",fx:{morale:-8},archive:["matias"],flags:{abandonedMatias:true}}
     ]},
     {day:2,time:"08:20",loc:"Túnel de servicio",type:"Encuentro",title:"El pulso del dron",text:"Una unidad de la Red UNO desciende frente al grupo. No busca movimiento: mide calor, respiración y ritmo cardíaco. La transmisión comenzará en segundos.",choices:[
-      {label:"Interceptar antes de la transmisión",hint:"Derriba el dron en un combate breve.",cost:"Combate",combat:{title:"Intercepción de la Red UNO",brief:"La unidad abre sus placas de defensa. Quedan segundos antes de que transmita.",enemies:["drone"],xp:34,canFlee:true},victory:{title:"Núcleo recuperado",result:"La unidad cae antes de completar el envío. Elías extrae su memoria todavía intacta.",fx:{threat:7},add:["droneCore"]},defeat:{title:"Sector marcado",result:"El grupo rompe contacto, pero el dron alcanza a transmitir una firma parcial.",fx:{threat:14,morale:-4},flags:{droneAlert:true}}},
+      {label:"Interceptar antes de la transmisión",hint:"Derriba el dron en un combate breve.",cost:"Combate",combat:{title:"Intercepción de la Red UNO",brief:"La unidad abre sus placas de defensa. Quedan segundos antes de que transmita.",enemies:["drone"],xp:34,canFlee:true},victory:{title:"Núcleo recuperado",result:"La unidad cae antes de completar el envío. Elías extrae su memoria todavía intacta.",fx:{threat:7},add:["droneCore"]},defeat:{title:"Sector marcado",result:"El grupo rompe contacto, pero el dron alcanza a transmitir una identidad parcial.",fx:{threat:14,morale:-4},flags:{droneAlert:true}}},
       {label:"Cortar la energía del túnel",hint:"Prueba técnica. Dificultad 10.",cost:"Batería −1",req:{battery:1},roll:{dc:10,bonus:3,success:{title:"Oscuridad calculada",result:"La subestación se apaga antes de que el dron termine su lectura. El núcleo queda intacto.",fx:{battery:-1,threat:-4},add:["droneCore"]},fail:{title:"Arco eléctrico",result:"El corte llega tarde. El dron transmite una fracción de la señal antes de caer.",fx:{battery:-1,threat:8,morale:-2},add:["droneCore"]}}},
       {label:"Controlar el pulso",hint:"Prueba de grupo. Dificultad 13.",cost:"Sin recursos",roll:{dc:13,bonus:1,success:{title:"Latidos invisibles",result:"Durante nueve segundos nadie respira. La unidad clasifica el túnel como vacío.",fx:{threat:-5,morale:3},flags:{sparedDrone:true}},fail:{title:"Un latido fuera de lugar",result:"La respiración de Sara se acelera. El dron marca el sector antes de alejarse.",fx:{threat:10,morale:-4},flags:{droneAlert:true}}}}
     ]},
@@ -1657,7 +1657,7 @@
       {label:"Entregar una coordenada real",hint:"Obtiene el módulo, expone una comunidad.",cost:"Moral −10",title:"El trato permanece",result:"El módulo funciona. En algún punto, una comunidad acaba de convertirse en mercancía.",fx:{morale:-10},add:["radio"],flags:{soldRefuge:true}}
     ]},
     {day:3,time:"07:35",loc:"Alameda superior",type:"Supervivencia",title:"Cruzando a cielo abierto",text:"La torre está al otro lado de una avenida expuesta. Una patrulla de la Red UNO avanza mientras tres desconocidos piden ayuda desde un edificio hundido.",choices:[
-      {label:"Desviar la patrulla",hint:"Usa el núcleo como señuelo.",cost:"Pierde núcleo",reqItems:["droneCore"],title:"Una firma conocida",result:"El núcleo transmite un código de retorno. La patrulla abandona la avenida para recuperar su propia memoria.",fx:{threat:-8},remove:["droneCore"],flags:{clearAvenue:true}},
+      {label:"Desviar la patrulla",hint:"Usa el núcleo como señuelo.",cost:"Pierde núcleo",reqItems:["droneCore"],title:"Una identidad conocida",result:"El núcleo transmite un código de retorno. La patrulla abandona la avenida para recuperar su propia memoria.",fx:{threat:-8},remove:["droneCore"],flags:{clearAvenue:true}},
       {label:"Enfrentar a la patrulla",hint:"Abrir paso para los desconocidos.",cost:"Combate difícil",combat:{title:"Patrulla de superficie",brief:"Un agente de la Red UNO cubre la avenida mientras un dron fija las rutas de escape.",enemies:["agent","drone"],xp:48,canFlee:true},victory:{title:"La avenida queda abierta",result:"La patrulla retrocede y tres desconocidos alcanzan la torre. Una de ellos entrega el código del ascensor.",fx:{morale:6,threat:8},flags:{rescuedStrangers:true,towerCode:true,clearAvenue:true}},defeat:{title:"Bajo el fuego de la Red UNO",result:"El grupo se repliega por una galería hundida. Los desconocidos quedan atrás y la torre sigue vigilada.",fx:{morale:-7,threat:10},flags:{lostStrangers:true}}},
       {label:"Usar el mapa y evitar contacto",hint:"Ruta silenciosa, si conservan el mapa.",cost:"Requiere mapa",reqItems:["routeMap"],title:"Bajo las veredas rotas",result:"El mapa conduce por una galería técnica. Las voces quedan atrás, pero la patrulla nunca ve al grupo.",fx:{threat:-5,morale:-2},flags:{silentSurface:true}}
     ]},
@@ -1844,7 +1844,7 @@
     "ambience-archive": "audio/ambience/archive-static.mp3"
   }
   </script>
-  <script src="decision-v2.js?v=3"></script>
-  <script src="game-v2.js?v=75"></script>
+  <script src="decision-v2.js?v=4"></script>
+  <script src="game-v2.js?v=76"></script>
 </body>
 </html>

@@ -21,7 +21,7 @@ Solo seis escenas tienen una tercera salida de combate. En ellas, un tercio de l
 | blackout | Cortar la energía del túnel | Corte / arco | Núcleo del dron y alerta de la red |
 | pulse | Controlar el pulso | Silencio / marca / bloqueo | Contacto con S-7 o dron hostil |
 | memory | Injertar el núcleo del dron | Memoria / copia | Protocolo, nombres y señal |
-| credential | Presentar la credencial | Acceso / retirada / alarma | Conversación de Vega o firmas registradas |
+| credential | Presentar la credencial | Acceso / retirada / alarma | Conversación de Vega o identidades registradas |
 | controller | Sobrecargar el controlador | Ventana / rastro | Escape del cruce; consumo de batería |
 | coordinates | Entregar coordenadas falsas | Desvío / deuda | Vera y módulo de radio o Cosechadores hostiles |
 | relay | Infectar el relé | Mapa / rechazo / nido | Desvío de drones o alerta de torre |
