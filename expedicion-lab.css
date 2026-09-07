@@ -1,0 +1,100 @@
+/* Only loaded by expedicion-lab.html. All photography is inherited from the game. */
+:root{--ink:#070a09;--paper:#e8e5dc;--muted:#a6b2aa;--amber:#d9a15c;--amber2:#f2bd73;--cyan:#75d3d7;--line:rgba(151,187,174,.27)}
+body.expedition-lab{font-family:'Bahnschrift Condensed','Arial Narrow','Roboto Condensed',Arial,sans-serif}
+.expedition-lab .app{min-height:0;background:var(--ink);grid-template-rows:auto minmax(0,1fr) auto}
+.expedition-lab .hud{min-height:66px;grid-template-columns:auto auto auto minmax(150px,1fr);gap:0;padding:8px 2.2%;padding-top:calc(8px + var(--safe-t));background:linear-gradient(110deg,#090e0ddd, #07100dec);border-bottom:1px solid var(--line)}
+.expedition-lab .brand{font-size:clamp(19px,1.9vw,30px);letter-spacing:.1em;padding-right:26px;color:var(--paper)}
+.expedition-lab .clock{font-size:16px;letter-spacing:.035em;padding:8px 26px;border-left:1px solid var(--line)}
+.expedition-lab .signal-clock{display:flex;min-width:0;gap:10px;border:0;border-left:1px solid var(--line);padding:8px 26px;box-shadow:none;background:transparent;animation:none}
+.expedition-lab .signal-clock span{font-size:16px;letter-spacing:.045em;text-transform:none}
+.expedition-lab .signal-clock strong{font:600 20px 'Bahnschrift Condensed','Arial Narrow',sans-serif;letter-spacing:.04em}
+.expedition-lab .signal-clock em{display:none}
+.expedition-lab .signal-clock:hover:not(:disabled){background:#75d3d710;box-shadow:inset 0 -1px var(--cyan)}
+.expedition-lab .signal-clock.warning,.expedition-lab .signal-clock.critical,.expedition-lab .signal-clock.exposed{box-shadow:inset 0 -2px currentColor}
+.expedition-lab .threat{justify-content:start;grid-template-columns:auto minmax(65px,110px);gap:16px;padding:8px 22px;border-left:1px solid var(--line);font-size:14px;letter-spacing:.045em;text-transform:none;color:var(--paper)}
+.expedition-lab .threat strong{color:var(--amber2);font-size:19px}
+.expedition-lab .meter{height:9px;border:1px solid #a3c0b133;background:#9ab3a51a}
+.expedition-lab .meter span{background:var(--amber2);box-shadow:0 0 10px #f2bd7344}
+.expedition-lab .stage{display:flex;flex-direction:column;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#75d3d755 #080c0b;background-position:center 42%}
+.expedition-lab .stage:before{position:absolute;background:linear-gradient(0deg,#040a09fa 0%,#040a0966 34%,transparent 65%,#0207064d),linear-gradient(90deg,#02080766,transparent 60%);pointer-events:none}
+.expedition-lab .stage:after{pointer-events:none;background:linear-gradient(90deg,#72d4cc04,transparent 55%,#edb76705)}
+.expedition-lab .where{position:relative;left:auto;top:auto;flex:none;margin:24px 2.2% 0;z-index:2;max-width:95%}
+.expedition-lab .where p:first-child{font-size:12px;letter-spacing:.19em;color:#b5c4bb;margin-bottom:10px}
+.expedition-lab .where h1{font-size:clamp(27px,3.15vw,49px);font-weight:800;letter-spacing:.105em;line-height:1.14;color:var(--amber2)}
+.expedition-lab .where small{display:none}
+.expedition-lab .where .expedition-objective{font-size:17px;color:var(--paper);line-height:1.4;letter-spacing:.055em;margin:7px 0 0;max-width:850px}
+.expedition-lab .play{display:flex;flex-direction:column;justify-content:flex-end;gap:10px;width:95.6%;height:auto;min-height:0;flex:1;margin:0 auto;padding:clamp(65px,16vh,190px) 0 13px;position:relative;z-index:3}
+.expedition-lab .side{display:none!important}
+.expedition-lab .card{width:100%;padding:18px 20px 12px;background:linear-gradient(115deg,#08100ff5,#080e0de8 60%,#091512d9);border:1px solid #9bbcad54;box-shadow:inset 0 0 0 5px #080e0d,0 15px 40px #0005;clip-path:polygon(16px 0,49% 0,calc(49% + 16px) 12px,calc(100% - 16px) 12px,100% 28px,100% calc(100% - 18px),calc(100% - 18px) 100%,18px 100%,0 calc(100% - 18px),0 16px)}
+.expedition-lab .type{font-size:13px;font-weight:700;letter-spacing:.14em;margin:0 0 5px;color:var(--amber2)}
+.expedition-lab .type:before{display:none}
+.expedition-lab .card h2{font-size:clamp(23px,1.85vw,30px);color:var(--paper);letter-spacing:.035em;line-height:1.2;text-transform:none}
+.expedition-lab .story{font-size:16px;line-height:1.48;letter-spacing:.025em;color:#d3dbd5;margin:7px 0 12px;white-space:pre-line}
+.expedition-lab .choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.expedition-lab .choice{position:relative;display:flex;flex-direction:column;justify-content:center;align-items:stretch;gap:5px;min-height:76px;padding:11px 25px 11px 15px;color:var(--paper);border:1px solid #75d3d779;border-radius:0;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);background:linear-gradient(125deg,#12232299,#091211cc);text-align:center;box-shadow:inset 0 0 14px #75d3d70a;transition:background .18s,border-color .18s,box-shadow .18s,color .18s}
+.expedition-lab .choice:after,.expedition-lab .supplies-action:after{content:'›';position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:27px;font-weight:300;color:inherit}
+.expedition-lab .choice .num{position:absolute;left:9px;top:8px;font-size:12px;opacity:.45;background:none;border:0;width:auto;height:auto}
+.expedition-lab .choice strong{font-size:16px;line-height:1.25;letter-spacing:.06em;font-weight:700;text-transform:none}
+.expedition-lab .choice small{font-size:12px;line-height:1.35;color:#b9c9c4;letter-spacing:.015em;margin-top:5px}
+.expedition-lab .choice .cost{font-size:12px;letter-spacing:.025em;white-space:normal;color:var(--cyan);align-self:center}
+.expedition-lab .choice:hover:not(:disabled),.expedition-lab .choice:focus-visible,.expedition-lab .supplies-action:hover,.expedition-lab .supplies-action:focus-visible{border-color:var(--amber2);background:linear-gradient(120deg,#57442359,#17231dcc);box-shadow:inset 0 0 18px #f2bd7322,0 0 15px #f2bd7322;color:var(--amber2);transform:none}
+.expedition-lab .choice:disabled{opacity:.44;cursor:not-allowed}
+.expedition-lab .context-archives{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:0;margin:0 0 12px;border:0;background:none}
+.expedition-lab .context-archives:empty{display:none}
+.expedition-lab .context-archives header{font-size:12px;letter-spacing:.04em}
+.expedition-lab .context-archives header span:last-child{display:none}
+.expedition-lab .context-archive-list{display:flex;flex-wrap:wrap;gap:8px}
+.expedition-lab .context-archive{padding:6px 9px;grid-template-columns:20px minmax(0,1fr);align-items:center}
+.expedition-lab .context-archive:before{width:20px;height:24px;font-size:6px}
+.expedition-lab .context-archive b{font-size:12px;letter-spacing:.025em}
+.expedition-lab .context-archive small{display:none}
+.expedition-lab .expedition-dock{display:grid;grid-template-columns:minmax(0,1fr) 200px;gap:5px 20px;width:100%;align-items:center}
+.expedition-lab #groupMini{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;min-width:0}
+.expedition-lab #groupMini .member{display:grid;position:relative;grid-template-columns:39% minmax(0,1fr);grid-template-rows:1fr;gap:0;align-items:stretch;min-height:150px;height:clamp(150px,17.5vh,186px);padding:0;width:100%;border:1px solid #95b9a948;clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);background:linear-gradient(115deg,#0b1614e8,#070d0cfa);overflow:hidden;transition:border-color .2s,background .2s,box-shadow .2s;text-align:left;color:var(--paper)}
+.expedition-lab #groupMini .member .avatar{display:block;width:100%;height:100%;border:0;overflow:hidden;position:relative}
+.expedition-lab #groupMini .member .avatar:after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 70%,#0b1514b3)}
+.expedition-lab #groupMini .member .avatar img{width:100%;height:100%;object-fit:cover;object-position:center 18%;filter:none;transition:filter .2s}
+.expedition-lab #groupMini .member-copy{display:flex;flex-direction:column;justify-content:center;gap:7px;padding:13px 10px 13px 13px;min-width:0}
+.expedition-lab #groupMini .member strong{font-size:clamp(17px,1.4vw,22px);letter-spacing:.07em;white-space:normal;line-height:1.15;overflow:visible}
+.expedition-lab #groupMini .member-role{font-size:13px;letter-spacing:.07em;text-transform:uppercase;color:#b6c4bd}
+.expedition-lab #groupMini .member-health{display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:0;color:#c5d1ca;white-space:nowrap;margin-top:5px}
+.expedition-lab #groupMini .member-track{display:block;flex:1;min-width:24px;height:10px;border:1px solid #9abaae59;background:#07100f;padding:1px}
+.expedition-lab #groupMini .member-track>span{display:block;height:100%;background:#63d4d4;box-shadow:0 0 9px #75d3d766;transition:width .3s}
+.expedition-lab #groupMini .member-mood{color:var(--cyan);font-size:15px;letter-spacing:.055em;line-height:1.2}
+.expedition-lab #groupMini .member.needs-care .member-mood{color:var(--amber2)}
+.expedition-lab #groupMini .member.needs-care .member-track>span{background:var(--amber2)}
+.expedition-lab #groupMini .member:hover,.expedition-lab #groupMini .member:focus-visible{background:#12221fee;border-color:var(--cyan);box-shadow:inset 0 0 22px #75d3d718}
+.expedition-lab #groupMini .member:hover .avatar img{filter:brightness(1.13)}
+.expedition-lab #groupMini .member .skill-ready-copy{font-size:12px;margin:0;letter-spacing:0;color:var(--amber2)}
+.expedition-lab .supplies-action{position:relative;min-height:78px;width:100%;padding:16px 27px 16px 18px;background:linear-gradient(115deg,#13211dc9,#09110fea);border:1px solid #91b5a570;color:var(--paper);font-size:17px;letter-spacing:.035em;cursor:pointer;clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px)}
+.expedition-lab .team-hint{grid-column:1/-1;margin:2px 0 0;color:#a0b1a7;font-size:13px;letter-spacing:.045em}
+.expedition-lab .nav{min-height:calc(54px + var(--safe-b));display:flex;justify-content:flex-start;gap:0;padding:0 2.2% var(--safe-b);background:#07100fec;border-top:1px solid var(--line)}
+.expedition-lab .nav button{flex:0 1 260px;position:relative;color:#cbd6cf;font-size:15px;font-weight:400;letter-spacing:.08em;text-transform:none;border:0;border-right:1px solid #9ab3a523;background:transparent;padding:14px 20px}
+.expedition-lab .nav button:hover{background:#75d3d710;color:var(--cyan)}
+.expedition-lab .badge{font-size:12px;color:var(--cyan);background:#75d3d710;border-color:#75d3d738}
+/* Existing modal controls receive the same palette and typography, without new actions. */
+.expedition-lab .overlay{background:#010705bf;backdrop-filter:blur(5px)}
+.expedition-lab .modal{border-color:#8cb3a763;background:linear-gradient(135deg,#0b1513fa,#070d0cfc);box-shadow:0 24px 100px #000a, inset 0 1px #75d3d71a}
+.expedition-lab .modal h2{letter-spacing:.065em;color:var(--amber2)}
+.expedition-lab .modal :is(.primary,.secondary,.close),.expedition-lab .profile-tabs button,.expedition-lab .profile-switcher button{border-radius:0;letter-spacing:.05em;transition:background .18s,box-shadow .18s;border-color:#75d3d766}
+.expedition-lab .modal :is(.primary,.secondary,.close):hover:not(:disabled),.expedition-lab .profile-tabs button:hover{border-color:var(--amber2);box-shadow:inset 0 0 17px #f2bd7319;color:var(--amber2);background:#3b321a55}
+.expedition-lab .profile-tabs button{font-size:14px;min-height:44px}
+.expedition-lab #closeProfile,.expedition-lab #closeDrawer{position:static;display:block;width:auto;height:auto;min-height:44px;min-width:175px;padding:10px 16px;border:1px solid #f2bd7388;background:#f2bd7309;color:var(--amber2);font-size:14px;line-height:1.2;letter-spacing:.035em;cursor:pointer}
+.expedition-lab .drawer{position:fixed;inset:50% auto auto 50%;transform:translate(-50%,-50%);width:min(900px,calc(100% - 32px));max-height:85dvh;height:auto;border:1px solid #8cb3a763;background:#08110ffc;box-shadow:0 24px 100px #000b;overflow:auto;padding:24px;z-index:55}
+.expedition-lab .drawer-head{display:flex;gap:20px;align-items:center;justify-content:space-between}
+.expedition-lab .drawer h2{font-size:28px;color:var(--amber2);letter-spacing:.065em}
+.expedition-lab .drawer-item strong{font-size:16px;letter-spacing:.025em}
+.expedition-lab .drawer-item p,.expedition-lab .drawer-item small{font-size:14px;line-height:1.5}
+.expedition-lab .lab-resources{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0 24px}
+.expedition-lab .lab-resources .resource{font-size:14px;padding:12px;border:1px solid #75d3d733;background:#75d3d705}
+.expedition-lab .lab-resources b{font-size:19px;color:var(--cyan)}
+.expedition-lab .overlay:not(.hidden)>.modal{animation:lab-modal-in .23s ease-out both}
+@keyframes lab-modal-in{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+@media(min-width:1100px) and (min-height:900px){.expedition-lab .play{padding-top:clamp(100px,23vh,270px)}}
+@media(max-width:1100px){.expedition-lab .hud{grid-template-columns:auto auto auto 1fr}.expedition-lab .clock,.expedition-lab .signal-clock{padding:8px 13px}.expedition-lab .brand{padding-right:13px}.expedition-lab .threat{padding:8px 13px;grid-template-columns:auto}.expedition-lab .threat .meter{display:none}.expedition-lab .expedition-dock{grid-template-columns:minmax(0,1fr) 140px;gap:8px 12px}.expedition-lab #groupMini .member{grid-template-columns:36% 1fr}.expedition-lab #groupMini .member-copy{padding:10px 8px;gap:5px}.expedition-lab #groupMini .member-health{flex-wrap:wrap;gap:4px}.expedition-lab #groupMini .member-track{flex-basis:100%}.expedition-lab #groupMini .member-role{font-size:12px;letter-spacing:.025em}}
+@media(max-width:760px){.expedition-lab .hud{grid-template-columns:1fr auto;gap:6px;padding:10px 14px;padding-top:calc(10px + var(--safe-t))}.expedition-lab .brand{grid-column:auto;font-size:20px;padding:0;letter-spacing:.06em}.expedition-lab .clock{font-size:13px;border:0;padding:0;text-align:right}.expedition-lab .signal-clock{padding:4px 0;border:0;gap:8px}.expedition-lab .signal-clock span{font-size:14px}.expedition-lab .signal-clock strong{font-size:17px}.expedition-lab .threat{justify-content:end;border:0;padding:4px 0;font-size:13px}.expedition-lab .threat strong{font-size:16px}.expedition-lab .where{margin:19px 14px 0}.expedition-lab .where p:first-child{font-size:12px;letter-spacing:.065em}.expedition-lab .where h1{font-size:27px;letter-spacing:.07em}.expedition-lab .where .expedition-objective{font-size:14px}.expedition-lab .play{width:calc(100% - 24px);padding:110px 0 12px;gap:10px}.expedition-lab .card{padding:16px 13px 13px}.expedition-lab .story{font-size:16px;letter-spacing:0}.expedition-lab .choices{grid-template-columns:1fr;gap:8px}.expedition-lab .choice{min-height:66px;padding:10px 26px}.expedition-lab .choice strong{font-size:16px}.expedition-lab .choice small{font-size:12px}.expedition-lab .expedition-dock{grid-template-columns:1fr;gap:8px}.expedition-lab #groupMini{gap:7px}.expedition-lab #groupMini .member{grid-template-columns:1fr;grid-template-rows:95px auto;height:auto;min-height:225px}.expedition-lab #groupMini .member .avatar{height:95px}.expedition-lab #groupMini .member .avatar img{object-position:center 20%}.expedition-lab #groupMini .member .avatar:after{background:linear-gradient(0deg,#0b1514a8,transparent 30%)}.expedition-lab #groupMini .member-copy{padding:9px 8px;gap:5px;justify-content:flex-start}.expedition-lab #groupMini .member strong{font-size:17px}.expedition-lab #groupMini .member-role{font-size:12px}.expedition-lab #groupMini .member-mood{font-size:13px;letter-spacing:0}.expedition-lab #groupMini .member-health{font-size:12px;margin-top:3px}.expedition-lab .supplies-action{min-height:48px;font-size:16px;padding:10px 20px}.expedition-lab .team-hint{grid-row:2;font-size:12px;letter-spacing:0}.expedition-lab .nav{min-height:calc(51px + var(--safe-b));padding-inline:0}.expedition-lab .nav button{flex:1;padding:12px 6px;font-size:14px;letter-spacing:.025em}.expedition-lab .loadout-head{flex-wrap:wrap;gap:12px}.expedition-lab #closeProfile{width:100%}.expedition-lab .drawer{width:calc(100% - 20px);max-height:92dvh;padding:16px}.expedition-lab .drawer-head{flex-wrap:wrap;gap:12px}.expedition-lab .lab-resources{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.expedition-lab #closeDrawer{min-width:0}.expedition-lab .context-archives{align-items:flex-start}.expedition-lab .context-archive-list{width:100%}}
+@media(max-height:600px) and (min-width:761px){.expedition-lab .hud{min-height:48px;padding-block:5px}.expedition-lab .where{margin-top:12px}.expedition-lab .where h1{font-size:28px}.expedition-lab .play{padding-top:45px}.expedition-lab #groupMini .member{height:130px;min-height:130px}.expedition-lab .nav{min-height:44px}.expedition-lab .nav button{padding:10px}}
+@media(prefers-reduced-motion:reduce){.expedition-lab *, .expedition-lab *:before,.expedition-lab *:after{animation:none!important;transition:none!important}}
+
+.expedition-lab .card{order:0}.expedition-lab .expedition-dock{order:1}
+@media(max-width:760px){.expedition-lab #groupMini .avatar{grid-row:1}.expedition-lab .loadout-head{grid-template-columns:1fr}}
