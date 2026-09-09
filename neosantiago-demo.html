@@ -879,13 +879,9 @@
     #gameHelpModal button:focus-visible,.game-help-reading:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
     @media(max-width:600px){.game-help-head,.game-help-reading{padding:18px}.game-help-actions{padding:14px 18px}.game-help-reading{font-size:16px}}
     @media(orientation:landscape) and (max-height:540px){.game-help-head{padding:12px 20px}.game-help-head h2{font-size:26px}.game-help-reading{padding:14px 20px;font-size:15px}.game-help-actions{padding:10px 20px}}
-  /* Keep inventory actions in stable rows, including when disassembly unlocks. */
+    /* Pack available inventory actions into two columns without empty cells. */
     .loadout-modal .bag-actions{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-    .loadout-modal .bag-actions .equip-btn,
-    .loadout-modal .bag-actions .profile-use-btn{grid-area:1 / 1}
-    .loadout-modal .bag-actions .discard-open-btn{grid-area:1 / 2}
-    .loadout-modal .bag-actions .transfer-open-btn{grid-area:2 / 1!important}
-    .loadout-modal .bag-actions .disassemble-btn{grid-area:2 / 2}
+    .loadout-modal .bag-actions > button{grid-area:auto!important}
     </style>
   <link rel="stylesheet" href="decision-v2.css?v=3">
   <link rel="stylesheet" href="combat-stage.css?v=1">
