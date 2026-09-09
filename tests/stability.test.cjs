@@ -203,8 +203,8 @@ test('a normal fight preserves ammunition accounting and HP bounds', () => {
   const before=ammunition();let turns=0;
   while(c.battleState?.phase==='combat'&&turns++<100) {
     c.combatAction('attack');
-    for(let flush=0;flush<10;flush++) {
-      const next=[...a.timers.entries()].find(([,t])=>!t.interval&&(t.ms===680||t.ms===160));
+    for(let flush=0;flush<30;flush++) {
+      const next=[...a.timers.entries()].find(([,t])=>!t.interval&&([680,160,450,2200].includes(t.ms)));
       if(!next)break;a.timers.delete(next[0]);next[1].fn();
     }
   }

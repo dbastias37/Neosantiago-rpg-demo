@@ -1,0 +1,163 @@
+/* Combat presentation is isolated from expedition, refuge and campaign dialogs. */
+html:has(#battle:not(.hidden)),body:has(#battle:not(.hidden)){overflow:hidden!important}
+/* A viewport-bounded board. Only secondary inventory/loot panels can scroll. */
+#battle{height:100dvh;overflow:hidden!important;padding:0!important}
+#battle .battle-shell{box-sizing:border-box;display:grid!important;grid-template-columns:minmax(0,1fr);grid-template-rows:28px clamp(76px,14dvh,112px) minmax(0,1fr) 32px auto;width:min(1320px,calc(100% - 28px));height:100dvh!important;min-height:0!important;gap:8px;padding:10px 0!important;margin:auto}
+#battle .battle-head{height:28px;min-height:0;align-items:center}
+#battle .battle-head h2{font-size:22px;line-height:1.1}
+#battle .battle-head p,#battle .battle-brief,#battle .combat-log{display:none!important}
+#battle .round{font-size:12px;white-space:nowrap}
+#battle #stageLog{position:relative;isolation:isolate;display:grid;place-items:center;min-height:0;width:min(850px,100%);height:100%;margin:auto;padding:8px 18px;border:1px solid #75d3d738;background:#050c0aad;backdrop-filter:blur(9px);overflow:hidden;border-radius:3px}
+#battle #stageLog p{grid-area:1/1;font-size:clamp(13px,1.65dvh,16px);line-height:1.4;text-align:center;color:var(--paper);margin:0;max-width:100%;overflow-wrap:anywhere}
+#battle .log-enter{animation:logEnter .75s both}
+#battle .log-exit{position:absolute;left:18px;right:18px;animation:logExit .75s both}@keyframes logEnter{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}@keyframes logExit{to{opacity:0;transform:translateY(-30px)}}
+#battle .arena{display:grid!important;grid-template-columns:minmax(0,1fr) 32px minmax(0,1fr);gap:12px;align-items:stretch;min-height:0!important;height:100%;overflow:hidden;padding:0 14px!important}
+#battle .squad{display:grid!important;grid-template-rows:20px minmax(0,1fr);gap:22px;height:100%!important;min-height:0;min-width:0;margin:0!important;overflow:hidden}
+#battle .squad-title{font-size:12px;line-height:20px;text-align:center;letter-spacing:.08em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#battle .versus{display:block!important;align-self:center;font-size:16px;opacity:.65}
+#battle .units,#battle .units.enemies{position:relative;display:block!important;height:100%!important;min-height:0!important;max-height:none!important;margin:0!important;perspective:1000px;perspective-origin:50% 45%;overflow:visible!important;isolation:isolate}
+#battle .units .unit,#battle .units .unit.loot-mode{position:absolute;left:50%;top:50%;margin-top:calc(var(--card-height,240px) / -2);width:var(--card-width,160px)!important;grid-template-rows:minmax(0,1fr) min(110px,55%)!important;height:var(--card-height,240px)!important;min-height:0!important;max-height:none!important;min-width:0;overflow:visible;transform-origin:center;transition:transform .65s cubic-bezier(.2,.8,.2,1),filter .4s,opacity .4s;backface-visibility:hidden;box-shadow:4px 5px 0 #111a16,5px 6px 0 #496052,0 12px 24px #0008;border-radius:3px;animation:none!important;background:#0b130f}
+#battle .units .portrait,#battle .units .unit.loot-mode .portrait{height:100%!important;min-height:0!important;max-height:none!important;overflow:hidden}
+#battle .units .unit-info,#battle .units .unit.loot-mode .unit-info{height:auto!important;min-height:0!important;max-height:none!important;padding:6px!important;overflow:hidden;background:#0b130f}
+#battle .units .unit-info h3{font-size:14px;line-height:1.15;margin:0 0 3px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+#battle .units .unit-info small{font-size:12px;line-height:1.15;letter-spacing:0;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0 0 4px}
+#battle .units .barline{display:grid;grid-template-columns:18px minmax(0,1fr) 40px;gap:3px;font-size:12px;margin-top:4px;line-height:1.1}
+#battle .units .barline b{font-size:11px;white-space:nowrap;text-align:right}
+#battle .units .barline .bar{height:5px;min-width:0}
+#battle .units .status-tags,#battle .units .bagline{display:none!important}
+#battle .units .stage-rear{filter:brightness(.74);opacity:.92}
+#battle .units .stage-front{box-shadow:0 0 0 1px var(--cyan),4px 5px 0 #172e2a,0 10px 25px #000a}
+#battle .units .stage-front.stage-enemy{box-shadow:0 0 0 1px var(--red),4px 5px 0 #311917,0 10px 25px #000a}
+#battle .units .stage-rear.active{border-color:#ffffff28}
+#battle .units .stage-front .barline{display:none}
+#battle .units .stage-front .unit-info{display:flex;flex-direction:column;justify-content:center}
+#battle .stage-marker{display:none;position:absolute;bottom:calc(100% + 3px);left:50%;transform:translateX(-50%);font-size:11px;line-height:14px;font-weight:900;letter-spacing:.06em;color:var(--cyan);white-space:nowrap;padding:1px 5px;background:#09100eee;pointer-events:none}
+#battle .stage-marker:after{content:"";position:absolute;top:100%;left:calc(50% - 3px);border:3px solid transparent;border-top-color:var(--cyan)}
+#battle .stage-front .stage-marker{display:block}
+#battle .stage-enemy .stage-marker{color:#ff8881}
+#battle .stage-enemy .stage-marker:after{border-top-color:#ff8881}
+#battle .units .unit.down:not(.corpse){opacity:.35;filter:grayscale(1)}
+#battle .units .corpse .loot-call{font-size:12px;pointer-events:none}
+#battle .units .corpse .loot-done{font-size:11px;pointer-events:none}
+#battle .units .stage-hit{animation:stageShake .45s ease-out!important}
+#battle .units .stage-critical{animation:stageCritical .65s ease-out!important}@keyframes stageShake{0%,100%{translate:0 0}20%,60%{translate:-4px 1px}40%,80%{translate:4px -1px}}@keyframes stageCritical{0%,100%{translate:0 0}15%,45%,75%{translate:-9px 3px}30%,60%,90%{translate:9px -3px}}
+#battle .stage-notice{position:absolute;z-index:30;left:0;right:0;top:30%;padding:8px 2px;pointer-events:none;text-align:center;font-weight:900;font-size:clamp(13px,2vw,21px);letter-spacing:.04em;color:#fff6e5;background:#40381ce8;border-block:1px solid #e0c78a;animation:noticeAppear 2.8s both}
+#battle .stage-notice.level{color:#d2fff4;background:#123e37ed;border-color:var(--cyan)}@keyframes noticeAppear{0%{opacity:0;translate:0 10px}12%,82%{opacity:1;translate:0 0}100%{opacity:0;translate:0 -10px}}
+#battle #stageTargets{display:flex;align-items:center;justify-content:center;flex-wrap:nowrap;gap:5px;min-width:0;width:100%;margin:0;overflow:hidden}
+#battle #stageTargets button{flex:0 1 auto;min-width:0;font:12px var(--sans,Arial,sans-serif);padding:6px 9px;height:30px;min-height:0;background:#101713;color:var(--muted);border:1px solid var(--line);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#battle #stageTargets button[aria-pressed=true]{color:#ffb2a9;border-color:var(--red)}
+#battle #stageTargets button:disabled{opacity:.45;cursor:default}
+#battle .combat-console{position:relative;z-index:40;display:flex!important;flex-direction:column;gap:8px;width:min(850px,100%);height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;margin:0 auto!important;padding:10px!important;background:#050a08f5;border:1px solid #75d3d740}
+#battle #stageStatus{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;min-height:62px}
+#battle .stage-status-card{min-width:0;margin:0;padding:0}
+#battle .stage-status-card.hostile{grid-column:2}
+#battle .stage-status-card>div:first-child{display:flex;justify-content:space-between;align-items:baseline;gap:7px;margin-bottom:4px}
+#battle .stage-status-card strong{font-size:14px;color:var(--cyan);line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#battle .stage-status-card.hostile strong{color:#ff8881}
+#battle .stage-status-card span{font-size:12px;line-height:1.2}
+#battle .stage-meter{display:grid;grid-template-columns:22px minmax(0,1fr) 48px;gap:6px;align-items:center;margin-top:4px;line-height:1.1}
+#battle .stage-meter b{font-size:12px;white-space:nowrap;text-align:right}
+#battle .stage-meter .bar{height:6px;min-width:0}
+#battle .stage-meter.cargo{grid-template-columns:42px minmax(0,1fr) 48px}
+#battle .cargo-free{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+#battle .combat-console .actions{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+#battle .combat-console .action{min-height:40px;font-size:14px;letter-spacing:0;padding:6px 4px}
+#battle .combat-console .item-tray{position:absolute;z-index:60;left:0;right:0;bottom:calc(100% + 8px);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;max-height:min(280px,65dvh);overflow-y:auto;margin:0;padding:12px;background:#101b16fa;border:1px solid #75d3d777;box-shadow:0 -12px 40px #000b;animation:inventoryUp .3s ease-out}
+#battle .combat-console .item-tray.hidden{display:none!important}
+#battle .combat-console .item-action{font-size:14px;min-height:48px}
+#battle .combat-console .item-action span{min-width:0;overflow-wrap:anywhere}
+#battle #closeStageInventory{grid-column:1/-1;justify-self:end;min-height:32px;padding:5px 12px;font-size:13px}
+#battle .loot-controls{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px 12px;align-items:center}
+#battle .loot-controls>strong{display:none}
+#battle .loot-controls p{font-size:13px;line-height:1.3;margin:0}
+#battle .loot-controls button{font-size:13px;min-height:40px;padding:6px 12px;margin:0}@keyframes inventoryUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){
+#battle .battle-shell{width:calc(100% - 12px);gap:6px;grid-template-rows:24px clamp(96px,16dvh,118px) minmax(0,1fr) 30px auto;padding:6px 0!important}
+#battle .battle-head h2{font-size:18px}
+#battle .arena{grid-template-columns:minmax(0,1fr) 18px minmax(0,1fr);gap:3px;padding:0 2px!important}
+#battle .squad{grid-template-rows:18px minmax(0,1fr);gap:18px}
+#battle .squad-title{font-size:11px;letter-spacing:0;line-height:18px}
+#battle .versus{font-size:11px}
+#battle .units .unit-info{padding:4px!important}
+#battle .units .unit-info h3{font-size:12px}
+#battle .units .unit-info small{font-size:11px}
+#battle .units .barline{grid-template-columns:15px minmax(0,1fr) 31px;gap:2px;font-size:10px}
+#battle .units .barline b{font-size:10px}
+#battle .stage-marker{font-size:10px}
+#battle #stageStatus{gap:10px;min-height:76px}
+#battle .stage-status-card>div:first-child{display:block}
+#battle .stage-status-card strong{display:block;font-size:13px}
+#battle .stage-status-card>div:first-child>span{font-size:11px;display:block}
+#battle .stage-meter{grid-template-columns:18px minmax(0,1fr) 39px;gap:4px}
+#battle .stage-meter b{font-size:11px}
+#battle .stage-meter.cargo{grid-template-columns:36px minmax(0,1fr) 36px}
+#battle .combat-console{padding:8px!important;gap:6px}
+#battle .combat-console .actions{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+#battle .combat-console .action{font-size:13px;min-height:36px}
+#battle .combat-console .item-tray{grid-template-columns:repeat(2,minmax(0,1fr));padding:9px}
+#battle #stageTargets button{flex:1 1 0;font-size:11px;padding:5px 4px}
+#battle .loot-controls{grid-template-columns:1fr}
+#battle .loot-controls p{font-size:12px}
+#battle .loot-controls button{min-height:34px}}
+@media(max-height:500px) and (min-aspect-ratio:1/1){
+#battle .battle-shell{grid-template-rows:60px minmax(0,1fr) 24px auto;gap:4px;padding:4px 0!important}
+#battle .battle-head{display:none}
+#battle .squad{grid-template-rows:14px minmax(0,1fr);gap:15px}
+#battle .squad-title{font-size:10px;line-height:14px}
+#battle .arena{padding:0 8px!important}
+#battle .units .unit-info{padding:3px!important}
+#battle .units .unit-info h3{font-size:11px;margin-bottom:1px}
+#battle .units .unit-info small{font-size:10px;margin-bottom:2px}
+#battle .units .barline{font-size:10px;margin-top:2px}
+#battle .units .barline b{font-size:10px}
+#battle .stage-marker{font-size:9px;line-height:11px}
+#battle .combat-console{padding:5px 8px!important;gap:4px}
+#battle #stageStatus{min-height:48px}
+#battle .stage-status-card strong{font-size:12px}
+#battle .stage-status-card>div:first-child{margin-bottom:1px}
+#battle .stage-status-card span{font-size:10px}
+#battle .stage-meter{margin-top:2px}
+#battle .stage-meter b{font-size:10px}
+#battle .combat-console .actions{grid-template-columns:repeat(5,minmax(0,1fr))}
+#battle .combat-console .action{min-height:30px;font-size:12px}
+#battle .loot-controls button{min-height:30px}
+#battle .loot-controls p{font-size:11px}
+#battle .cargo-free{font-size:10px;margin-top:1px}
+#battle #stageTargets button{height:22px;padding:3px 7px;font-size:10px}
+#battle #stageLog p{font-size:12px;line-height:1.3}
+#battle .combat-console .item-tray{max-height:68dvh}}
+@media(prefers-reduced-motion:reduce){
+#battle .units .unit,#battle #stageLog p,#battle .stage-notice,#battle .combat-console .item-tray{animation:none!important;transition:none!important}}
+
+@media(max-width:600px) and (max-height:560px) and (max-aspect-ratio:1/1){
+#battle .battle-shell{grid-template-rows:20px 96px minmax(0,1fr) 26px auto;gap:4px;padding:4px 0!important}
+#battle .combat-console{padding:5px!important;gap:4px}
+#battle #stageStatus{min-height:55px}
+#battle .stage-status-card>div:first-child{margin-bottom:1px}
+#battle .stage-status-card span{font-size:10px}
+#battle .stage-meter{margin-top:2px}
+#battle .combat-console .actions{grid-template-columns:repeat(5,minmax(0,1fr));gap:3px}
+#battle .combat-console .action{font-size:10px;min-height:30px}
+#battle .stage-looting #stageStatus{min-height:42px}
+#battle .stage-looting .stage-status-card.hostile{display:none}
+#battle .stage-looting #stageStatus{grid-template-columns:1fr}
+#battle .loot-controls{grid-template-columns:minmax(0,1fr) auto;gap:4px}
+#battle .loot-controls p{font-size:10px}
+#battle .loot-controls button{font-size:10px;min-height:30px;padding:3px}
+#battle .units .unit-info h3{font-size:11px;margin-bottom:1px}
+#battle .units .unit-info small{font-size:10px;margin-bottom:2px}
+#battle .units .barline{margin-top:2px}}
+#battle .combat-console #closeStageInventory.action{font-family:inherit;min-height:40px;padding:8px 18px;min-width:175px;border:1px solid var(--line);background:linear-gradient(180deg,#233a2e,#122119);color:var(--paper);letter-spacing:.04em;font-size:13px;font-weight:700;justify-self:stretch}
+#battle .combat-console #closeStageInventory.action:hover{border-color:var(--cyan);background:#274638}
+#battle .combat-console .item-tray.inventory-closing{animation:inventoryClose .32s ease-in both;pointer-events:none}@keyframes inventoryClose{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(14px)}}
+#battle .battle-shell{grid-template-rows:28px var(--log-height,clamp(76px,14dvh,112px)) minmax(0,1fr) 32px auto}
+#battle #stageLog p{white-space:normal;text-wrap:pretty;overflow-wrap:normal;word-break:normal;hyphens:none}
+#battle #stageLog{transition:height .15s}
+@media(max-width:600px){
+#battle .battle-shell{grid-template-rows:24px var(--log-height,clamp(96px,16dvh,118px)) minmax(0,1fr) 30px auto}}
+@media(max-height:500px) and (min-aspect-ratio:1/1){
+#battle .battle-shell{grid-template-rows:var(--log-height,60px) minmax(0,1fr) 24px auto}
+#battle .combat-console #closeStageInventory.action{min-height:30px;padding:5px 12px}}
+@media(prefers-reduced-motion:reduce){
+#battle .combat-console .item-tray.inventory-closing{animation:none!important}}
+
