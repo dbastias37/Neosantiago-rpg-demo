@@ -1,6 +1,6 @@
 "use strict";
 
-// A complete, serializable encounter. Only explicit combination checks spend tries.
+// A complete, serializable encounter. Each switch movement spends fuse capacity.
 var crateTypes={
   electronic:{title:"Suministros electrónicos",mark:"TECNOLOGÍA · RED UNO",art:"electronic-pair",hint:"Celdas, circuitos y tecnología recuperable."},
   ammo:{title:"Caja de munición",mark:"RESERVA DE CAMPO",art:"ammo-pair",hint:"Munición, armamento escaso y cargas explosivas."},
@@ -12,6 +12,14 @@ function crateStore(){
   return state.lootCrates;
 }
 function activeCrate(){return state.lootCrates&&state.lootCrates.active}
+function upgradeCrate(c){
+  if(c.version===2)return;
+  // Old saves counted manual checks, so their switch count cannot be recovered.
+  // Give an intact fuse its new budget once, preserving spent fuses and all loot.
+  c.version=2;c.moves=["blown","failed","sealed"].indexOf(c.phase)>=0?10:0;c.history=[];c.message="";
+  delete c.failures;delete c.lastProbe;
+  if((c.phase==="playing"||c.phase==="help")&&c.board.current===c.board.target){c.phase="loot";c.outcome="opened";c.message="Cierre liberado. Elige quién recoge los suministros."}
+}
 function crateVisible(){return !$("crateModal").classList.contains("hidden")}
 function cratePopcount(n){var count=0;while(n){count+=n&1;n>>>=1}return count}
 function crateBoard(day){
@@ -82,21 +90,28 @@ function prepareCrate(choice,out){
   // Later locations keep a 50% chance and two intervening expedition decisions.
   if(store.lastIndex>=0&&random()>=.50)return;
   store.lastIndex=state.index;
-  pending.crate={version:1,index:state.index,type:type,location:ev.loc,phase:"help",helpReturn:"playing",board:crateBoard(ev.day),failures:0,spareUsed:false,lastProbe:null,history:[],drops:crateRewards(type),owner:Math.max(0,state.party.findIndex(function(p){return p.hp>0})),message:"",outcome:null};
+  pending.crate={version:2,index:state.index,type:type,location:ev.loc,phase:"help",helpReturn:null,board:crateBoard(ev.day),moves:0,spareUsed:false,history:[],drops:crateRewards(type),owner:Math.max(0,state.party.findIndex(function(p){return p.hp>0})),message:"",outcome:null};
 }
 function openPendingCrate(){
   if(!pending||!pending.crate)return false;
   crateStore().active=pending.crate;delete pending.crate;
+  upgradeCrate(activeCrate());
   // Commit both the resolved decision and its continuation, never either alone.
   encounterSaveLocked=false;save();showCrate();return true;
 }
 function showCrate(){
   if(!activeCrate())return;
   $("crateModal").classList.remove("hidden");renderCrate();signalLastTick=Date.now();
-  $(activeCrate().phase==="loot"||activeCrate().phase==="sealed"?"crateLeave":"cratePrimary").focus({preventScroll:true});
+  focusCrateControl();
+}
+function focusCrateControl(){
+  var c=activeCrate();if(!c)return;
+  var btn=c.phase==="playing"?$("crateSwitches").querySelector('button:not([disabled])'):$(c.phase==="blown"?"crateModal":c.phase==="help"||c.phase==="failed"?"cratePrimary":"crateLeave");
+  if(btn)btn.focus({preventScroll:true});
 }
 function resumeCrate(){
   var c=activeCrate();if(!c)return false;
+  upgradeCrate(c);
   pending={ending:null,returnToRefuge:null,dialogue:null,dialogueSeen:true};
   if(c.phase==="blown")c.phase=c.spareUsed?"sealed":"failed";
   showCrate();save();return true;
@@ -124,47 +139,42 @@ function renderCrate(){
   $("crateLeave").textContent=phase==="loot"?"Volver a expedición":"Dejar caja";
   $("cratePrimary").disabled=phase==="blown";
   $("crateLeave").disabled=phase==="blown";
-  $("cratePrimary").classList.toggle("hidden",phase==="sealed"||phase==="loot");
-  $("cratePrimary").textContent=phase==="help"?(c.helpReturn==="playing"&&c.failures?"Volver al panel":"Iniciar puzzle"):phase==="failed"?"Intentar otra vez":"Probar combinación";
+  $("cratePrimary").classList.toggle("hidden",phase!=="help"&&phase!=="failed");
+  $("cratePrimary").textContent=phase==="failed"?"Intentar otra vez":c.helpReturn==="playing"?"Volver al panel":"Iniciar puzzle";
   if(phase==="playing"||phase==="blown"){
     $("crateLights").innerHTML=crateLampRow(b.target,b.count,"OBJETIVO")+crateLampRow(b.current,b.count,"ESTADO ACTUAL");
     $("crateSwitches").innerHTML=b.masks.map(function(mask,i){var numbers=[];for(var n=0;n<b.count;n++)if(mask&(1<<n))numbers.push(n+1);var on=!!(b.switches&(1<<i));return '<button type="button" class="crate-switch '+(on?'active':'')+'" data-crate-switch="'+i+'" aria-pressed="'+on+'" '+(phase==="blown"?'disabled':'')+'><b>'+String.fromCharCode(65+i)+'</b><span><i aria-hidden="true"></i><small>Cambia '+numbers.join(' y ')+'</small></span></button>'}).join("");
-    $("crateAttempts").innerHTML='<span>'+(c.spareUsed?'FUSIBLE DE REPUESTO':'FUSIBLE PRINCIPAL')+'</span><strong>'+(c.spareUsed?'ÚLTIMA OPORTUNIDAD':(5-c.failures)+' pruebas restantes')+'</strong>';
-    $("crateHistory").textContent=c.history.length?'Última prueba: '+c.history[c.history.length-1].matches+' de '+b.count+' luces correctas.':'';
+    var left=Math.max(0,10-c.moves);
+    $("crateAttempts").innerHTML='<span>'+(c.spareUsed?'FUSIBLE DE REPUESTO':'FUSIBLE PRINCIPAL')+'</span><strong>'+left+(left===1?' movimiento restante':' movimientos restantes')+'</strong>';
+    $("crateHistory").textContent=(b.count-cratePopcount(b.current^b.target))+' de '+b.count+' luces correctas.';
   }
   if(phase==="failed"||phase==="sealed"){
-    $("crateFailureTitle").textContent=phase==="sealed"?"CAJA BLOQUEADA":"APERTURA FALLIDA";
-    $("crateFailureText").textContent=phase==="sealed"?'El fusible de repuesto también se quemó. El cierre quedó inutilizado y la caja permanece sellada.': 'El fusible se reventó tras cinco combinaciones incorrectas. Elías tiene un fusible de repuesto. Piensa bien la combinación: tienes una oportunidad más.';
+    $("crateFailureTitle").textContent=phase==="sealed"?"LOOT FALLIDO":"FUSIBLE QUEMADO";
+    $("crateFailureText").textContent=phase==="sealed"?'Agotaste los 10 movimientos del fusible de repuesto sin resolver la combinación. La caja quedó bloqueada y no puedes recoger sus suministros.': 'Agotaste los 10 movimientos sin resolver la combinación. Elías tiene un fusible de repuesto. Piensa bien la combinación: tienes una última oportunidad de 10 movimientos.';
   }
   if(phase==="loot")renderCrateLoot();
 }
 function toggleCrateSwitch(i){
   var c=activeCrate();if(!c||c.phase!=="playing"||!Number.isInteger(i)||!c.board.masks[i])return;
-  c.board.current^=c.board.masks[i];c.board.switches^=1<<i;c.message="";playSfx("ui-click");save();renderCrate();
-  var btn=$("crateSwitches").querySelector('[data-crate-switch="'+i+'"]');if(btn)btn.focus({preventScroll:true});
-}
-function probeCrate(){
-  var c=activeCrate();if(!c||c.phase!=="playing")return;
-  if(c.lastProbe===c.board.current){c.message="Cambia la combinación antes de volver a probar.";renderCrate();return}
-  c.lastProbe=c.board.current;
+  c.board.current^=c.board.masks[i];c.board.switches^=1<<i;c.moves++;c.message="";
+  c.history.push({pattern:c.board.current,matches:c.board.count-cratePopcount(c.board.current^c.board.target)});
+  // The tenth movement can still solve the puzzle before the fuse burns out.
   if(c.board.current===c.board.target){c.phase="loot";c.outcome="opened";c.message="Cierre liberado. Elige quién recoge los suministros.";playSfx("loot-found");save();renderCrate();$("crateLeave").focus();return}
-  c.failures++;c.history.push({pattern:c.board.current,matches:c.board.count-cratePopcount(c.board.current^c.board.target)});
-  c.message="Combinación incorrecta. Revisa el patrón y los interruptores.";
-  if(c.spareUsed||c.failures>=5){
+  if(c.moves>=10){
     c.phase="blown";c.message="Sobrecarga. El fusible se ha quemado.";if(c.spareUsed)c.outcome="sealed";
-    save();renderCrate();$("crateModal").classList.add("fuse-flash");playSfx("ui-error");
+    save();renderCrate();$("crateModal").classList.add("fuse-flash");playSfx("ui-error");focusCrateControl();
     clearTimeout(crateFlashTimer);crateFlashTimer=setTimeout(function(){
       if(activeCrate()!==c||c.phase!=="blown")return;
-      c.phase=c.spareUsed?"sealed":"failed";c.message="";$("crateModal").classList.remove("fuse-flash");save();renderCrate();$(c.spareUsed?"crateLeave":"cratePrimary").focus();
+      c.phase=c.spareUsed?"sealed":"failed";c.message="";$("crateModal").classList.remove("fuse-flash");save();renderCrate();focusCrateControl();
     },1500);return;
   }
-  playSfx("ui-error");save();renderCrate();
+  playSfx("ui-click");save();renderCrate();
+  var btn=$("crateSwitches").querySelector('[data-crate-switch="'+i+'"]');if(btn)btn.focus({preventScroll:true});
 }
 function cratePrimary(){
   var c=activeCrate();if(!c)return;
-  if(c.phase==="help"){c.phase=c.helpReturn||"playing";c.message="";save();renderCrate();return}
-  if(c.phase==="failed"&&!c.spareUsed){c.spareUsed=true;c.phase="playing";c.lastProbe=null;c.message="Fusible de repuesto instalado. Solo queda una comprobación.";playSfx("ui-click");save();renderCrate();return}
-  probeCrate();
+  if(c.phase==="help"){c.phase=c.helpReturn||"playing";c.message="";save();renderCrate();focusCrateControl();return}
+  if(c.phase==="failed"&&!c.spareUsed){c.spareUsed=true;c.moves=0;c.phase="playing";c.message="Fusible de repuesto instalado. Tienes 10 movimientos más. La combinación se mantiene.";playSfx("ui-click");save();renderCrate();focusCrateControl()}
 }
 function crateHelp(){var c=activeCrate();if(!c||c.phase!=="playing")return;c.helpReturn=c.phase;c.phase="help";save();renderCrate();$("cratePrimary").focus()}
 function renderCrateLoot(){

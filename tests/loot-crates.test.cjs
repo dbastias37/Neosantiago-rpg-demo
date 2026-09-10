@@ -14,12 +14,12 @@ function session(storage=new Map()){
 function encounter(type='electronic'){
   const a=session(),c=a.ctx;c.state.index=2;
   c.pending={ending:null,returnToRefuge:null,dialogue:null,dialogueSeen:true};
-  c.pending.crate={version:1,index:2,type,location:'Estación Los Héroes',phase:'help',helpReturn:'playing',board:c.crateBoard(2),failures:0,spareUsed:false,lastProbe:null,history:[],drops:c.crateRewards(type),owner:0,message:'',outcome:null};
+  c.pending.crate={version:2,index:2,type,location:'Estación Los Héroes',phase:'help',helpReturn:null,board:c.crateBoard(2),moves:0,spareUsed:false,history:[],drops:c.crateRewards(type),owner:0,message:'',outcome:null};
   c.openPendingCrate();return a;
 }
 function flash(a){const id=a.ctx.crateFlashTimer,t=a.timers.get(id);assert.ok(t);a.timers.delete(id);t.fn()}
 function solve(c){const b=c.activeCrate().board;for(let bits=0;bits<1<<b.masks.length;bits++){let value=b.initial;b.masks.forEach((m,i)=>{if(bits&(1<<i))value^=m});if(value===b.target){for(let i=0;i<b.masks.length;i++)if(!!(bits&(1<<i))!==!!(b.switches&(1<<i)))c.toggleCrateSwitch(i);return}}throw Error('No solution')}
-function wrong(c){const b=c.activeCrate().board;for(let i=0;i<b.masks.length;i++){const v=b.current^b.masks[i];if(v!==b.target&&v!==c.activeCrate().lastProbe){c.toggleCrateSwitch(i);c.probeCrate();return}}throw Error('Cannot produce wrong guess')}
+function wrong(c){const b=c.activeCrate().board;for(let i=0;i<b.masks.length;i++){if((b.current^b.masks[i])!==b.target){c.toggleCrateSwitch(i);return}}throw Error('Cannot produce wrong move')}
 
 test('generated boards have one reachable solution, at least two switches, even for constant RNG',()=>{
   const c=session().ctx;
@@ -88,48 +88,99 @@ test('real decision opens help before next scene; reload retains paid cost and c
   d.leaveCrate();assert.equal(d.state.index,3);assert.equal(d.activeCrate(),null);d.leaveCrate();assert.equal(d.state.index,3);
   const e=session(a.storage).ctx;e.continueGame();assert.equal(e.state.index,3);assert.equal(e.activeCrate(),null);
 });
-test('all three crates show help before play and buttons toggle lights without using attempts',()=>{
+test('all three crates explain ten moves, charge every switch activation and preserve moves through help',()=>{
   for(const type of ['electronic','ammo','medical']){
     const a=encounter(type),c=a.ctx,d=a.document;assert.equal(c.activeCrate().phase,'help');
+    assert.match(d.getElementById('crateScreen-help').textContent,/10 movimientos/);
     a.click(d.getElementById('cratePrimary'));assert.equal(c.activeCrate().phase,'playing');
+    assert.equal(d.getElementById('cratePrimary').classList.contains('hidden'),true);
+    assert.equal(d.activeElement.dataset.crateSwitch,'0');
     const before=c.activeCrate().board.current;a.click(d.querySelector('[data-crate-switch="0"]'));
-    assert.notEqual(c.activeCrate().board.current,before);assert.equal(c.activeCrate().failures,0);
+    assert.notEqual(c.activeCrate().board.current,before);assert.equal(c.activeCrate().moves,1);
+    assert.match(d.getElementById('crateAttempts').textContent,/9 movimientos restantes/);
     assert.equal(d.querySelector('[data-crate-switch="0"]').getAttribute('aria-pressed'),'true');
-    c.crateHelp();assert.equal(c.activeCrate().phase,'help');c.cratePrimary();assert.equal(c.activeCrate().failures,0);
+    a.click(d.querySelector('[data-crate-switch="0"]'));assert.equal(c.activeCrate().board.current,before);assert.equal(c.activeCrate().moves,2);
+    c.crateHelp();assert.equal(c.activeCrate().phase,'help');c.toggleCrateSwitch(0);c.cratePrimary();assert.equal(c.activeCrate().moves,2);
     assert.match(d.getElementById('crateArt').style.backgroundImage,/crates\//);
   }
 });
-test('fifth wrong combination flashes, offers one spare; one more wrong check seals permanently',()=>{
+test('ten unsuccessful moves burn each fuse, then permanently fail loot without granting items',()=>{
   const a=encounter(),c=a.ctx;c.cratePrimary();
-  for(let i=0;i<4;i++){wrong(c);assert.equal(c.activeCrate().phase,'playing');assert.equal(c.activeCrate().failures,i+1)}
-  wrong(c);assert.equal(c.activeCrate().phase,'blown');assert.equal(c.activeCrate().failures,5);
+  const bags=json(c.state.party.map(p=>p.bag)),loot=c.state.stats.loot;
+  for(let i=0;i<9;i++){wrong(c);assert.equal(c.activeCrate().phase,'playing');assert.equal(c.activeCrate().moves,i+1)}
+  assert.match(a.document.getElementById('crateAttempts').textContent,/1 movimiento restante/);
+  wrong(c);assert.equal(c.activeCrate().phase,'blown');assert.equal(c.activeCrate().moves,10);
   assert.equal(a.nodes.get('crateModal').classList.contains('fuse-flash'),true);
-  const before=json(c.activeCrate());c.probeCrate();c.toggleCrateSwitch(0);c.leaveCrate();assert.deepEqual(json(c.activeCrate()),before);
+  const before=json(c.activeCrate());c.cratePrimary();c.toggleCrateSwitch(0);c.leaveCrate();assert.deepEqual(json(c.activeCrate()),before);
   flash(a);assert.equal(c.activeCrate().phase,'failed');assert.match(a.nodes.get('crateFailureText').textContent,/Elías tiene un fusible/);
   c.cratePrimary();assert.equal(c.activeCrate().spareUsed,true);assert.equal(c.activeCrate().phase,'playing');
-  wrong(c);flash(a);assert.equal(c.activeCrate().phase,'sealed');assert.equal(c.activeCrate().failures,6);
+  assert.equal(c.activeCrate().moves,0);assert.deepEqual(json(c.activeCrate().board),before.board);
+  for(let i=0;i<9;i++){wrong(c);assert.equal(c.activeCrate().phase,'playing');assert.equal(c.activeCrate().moves,i+1)}
+  wrong(c);flash(a);assert.equal(c.activeCrate().phase,'sealed');assert.equal(c.activeCrate().moves,10);
+  assert.equal(a.document.getElementById('crateFailureTitle').textContent,'LOOT FALLIDO');
   c.cratePrimary();assert.equal(c.activeCrate().phase,'sealed');assert.equal(a.nodes.get('cratePrimary').classList.contains('hidden'),true);
+  c.takeAllCrateLoot();assert.deepEqual(json(c.state.party.map(p=>p.bag)),bags);assert.equal(c.state.stats.loot,loot);
   c.leaveCrate();assert.equal(c.crateStore().checked['2'],'sealed');assert.equal(c.state.index,3);
 });
-test('reload during fuse flash resumes failure and cannot restore spent attempts or spare',()=>{
-  const a=encounter(),c=a.ctx;c.cratePrimary();for(let i=0;i<5;i++)wrong(c);
-  const b=session(a.storage),d=b.ctx;d.continueGame();assert.equal(d.activeCrate().phase,'failed');assert.equal(d.activeCrate().failures,5);
+test('reload during either fuse flash resumes failure and cannot restore spent moves or spare',()=>{
+  const a=encounter(),c=a.ctx;c.cratePrimary();for(let i=0;i<10;i++)wrong(c);
+  const b=session(a.storage),d=b.ctx;d.continueGame();assert.equal(d.activeCrate().phase,'failed');assert.equal(d.activeCrate().moves,10);
   d.cratePrimary();const e=session(a.storage);e.ctx.continueGame();assert.equal(e.ctx.activeCrate().spareUsed,true);
-  wrong(e.ctx);const f=session(a.storage);f.ctx.continueGame();assert.equal(f.ctx.activeCrate().phase,'sealed');
+  assert.equal(e.ctx.activeCrate().moves,0);
+  for(let i=0;i<10;i++)wrong(e.ctx);const f=session(a.storage);f.ctx.continueGame();assert.equal(f.ctx.activeCrate().phase,'sealed');assert.equal(f.ctx.activeCrate().moves,10);
 });
 test('spare can open the original puzzle; rewards were fixed before play and survive reload',()=>{
-  const a=encounter('medical'),c=a.ctx,initial=json(c.activeCrate());c.cratePrimary();for(let i=0;i<5;i++)wrong(c);flash(a);c.cratePrimary();
-  assert.equal(c.activeCrate().board.target,initial.board.target);solve(c);c.probeCrate();
+  const a=encounter('medical'),c=a.ctx,initial=json(c.activeCrate());c.cratePrimary();for(let i=0;i<10;i++)wrong(c);flash(a);c.cratePrimary();
+  assert.equal(c.activeCrate().board.target,initial.board.target);solve(c);
   assert.equal(c.activeCrate().phase,'loot');assert.deepEqual(json(c.activeCrate().drops),initial.drops);
   assert.equal(a.nodes.get('crateArt').classList.contains('opened'),true);
   const b=session(a.storage);b.ctx.continueGame();assert.equal(b.ctx.activeCrate().phase,'loot');assert.deepEqual(json(b.ctx.activeCrate().drops),initial.drops);
 });
-test('unchanged guess and repeated input cannot consume multiple attempts',()=>{
-  const a=encounter(),c=a.ctx;c.cratePrimary();c.probeCrate();assert.equal(c.activeCrate().failures,1);c.probeCrate();c.probeCrate();assert.equal(c.activeCrate().failures,1);
-  solve(c);c.probeCrate();const snapshot=JSON.stringify(c.state);c.probeCrate();c.cratePrimary();assert.equal(JSON.stringify(c.state),snapshot);
+test('invalid switch input and non-switch actions spend no moves; solved crates ignore further input',()=>{
+  const a=encounter(),c=a.ctx;c.cratePrimary();
+  for(const i of [-1,.5,99,NaN])c.toggleCrateSwitch(i);
+  c.cratePrimary();c.renderCrate();assert.equal(c.activeCrate().moves,0);
+  solve(c);assert.equal(c.activeCrate().phase,'loot');assert.ok(c.activeCrate().moves<=5);
+  const snapshot=JSON.stringify(c.state);c.toggleCrateSwitch(0);c.cratePrimary();assert.equal(JSON.stringify(c.state),snapshot);
+});
+test('the correct tenth move opens automatically on either fuse instead of burning it',()=>{
+  for(const spare of [false,true]){
+    const a=encounter(),c=a.ctx,chest=c.activeCrate();
+    chest.board={count:5,masks:[3,6,12,24],initial:1,current:1,target:4,switches:0};c.cratePrimary();
+    if(spare){for(let i=0;i<10;i++)wrong(c);flash(a);c.cratePrimary()}
+    for(let i=0;i<8;i++)c.toggleCrateSwitch(2);
+    c.toggleCrateSwitch(0);assert.equal(chest.phase,'playing');assert.equal(chest.moves,9);
+    c.toggleCrateSwitch(1);assert.equal(chest.phase,'loot');assert.equal(chest.moves,10);assert.equal(chest.spareUsed,spare);
+    assert.equal(a.document.getElementById('crateModal').classList.contains('fuse-flash'),false);
+    assert.equal(a.document.activeElement.id,'crateLeave');
+  }
+});
+test('reload and reopened help preserve every movement and the board on both fuses',()=>{
+  const a=encounter();a.ctx.cratePrimary();for(let i=0;i<4;i++)wrong(a.ctx);
+  const board=json(a.ctx.activeCrate().board),b=session(a.storage),c=b.ctx;c.continueGame();
+  assert.equal(c.activeCrate().moves,4);assert.deepEqual(json(c.activeCrate().board),board);
+  assert.equal(b.document.activeElement.dataset.crateSwitch,'0');
+  c.crateHelp();const d=session(a.storage).ctx;d.continueGame();d.cratePrimary();assert.equal(d.activeCrate().moves,4);
+  for(let i=0;i<6;i++)wrong(d);
+  const e=session(a.storage).ctx;e.continueGame();e.cratePrimary();for(let i=0;i<7;i++)wrong(e);e.crateHelp();
+  const f=session(a.storage).ctx;f.continueGame();f.cratePrimary();assert.equal(f.activeCrate().moves,7);assert.equal(f.activeCrate().spareUsed,true);
+  for(let i=0;i<3;i++)wrong(f);assert.equal(f.activeCrate().phase,'blown');
+});
+test('legacy check-based saves migrate once without changing loot, board or consumed fuses',()=>{
+  for(const [phase,spareUsed] of [['help',false],['playing',false],['playing',true],['failed',false],['blown',false],['blown',true],['sealed',true],['loot',true]]){
+    const a=encounter(),c=a.ctx,chest=c.activeCrate();
+    Object.assign(chest,{version:1,phase,spareUsed,failures:spareUsed?6:3,lastProbe:chest.board.current,message:'Solo queda una comprobación.'});delete chest.moves;
+    const drops=json(chest.drops),board=json(chest.board);c.save();
+    const b=session(a.storage),d=b.ctx;d.continueGame();const restored=d.activeCrate();
+    assert.equal(restored.version,2);assert.equal(restored.spareUsed,spareUsed);assert.equal(restored.message,'');
+    assert.equal(restored.phase,phase==='blown'?(spareUsed?'sealed':'failed'):phase);
+    assert.deepEqual(json(restored.drops),drops);assert.deepEqual(json(restored.board),board);
+    assert.equal(restored.moves,['failed','blown','sealed'].includes(phase)?10:0);
+    if(phase==='playing'){wrong(d);const e=session(a.storage).ctx;e.continueGame();assert.equal(e.activeCrate().moves,1)}
+  }
 });
 test('loot fits available capacity, can be split among allies, inspected and never collected twice',()=>{
-  const a=encounter('ammo'),c=a.ctx,d=a.document;c.cratePrimary();solve(c);c.probeCrate();
+  const a=encounter('ammo'),c=a.ctx,d=a.document;c.cratePrimary();solve(c);
   const chest=c.activeCrate();chest.drops=[{id:'ammo9',qty:4,status:'pending'}];
   c.state.party[0].bag=[{id:'food',qty:c.bagCapacity(c.state.party[0])-1}];chest.owner=0;c.renderCrate();
   a.click(d.querySelector('[data-crate-info="ammo9"]'));assert.equal(c.itemDetailState.id,'ammo9');assert.equal(d.getElementById('crateModal').hasAttribute('inert'),true);
@@ -139,7 +190,7 @@ test('loot fits available capacity, can be split among allies, inspected and nev
   b.ctx.leaveCrate();assert.equal(b.ctx.state.index,3);assert.equal(b.ctx.activeCrate(),null);
 });
 test('full bags do not lose loot; leaving uncollected items requires an explicit second press',()=>{
-  const a=encounter(),c=a.ctx;c.cratePrimary();solve(c);c.probeCrate();
+  const a=encounter(),c=a.ctx;c.cratePrimary();solve(c);
   c.state.party.forEach(p=>p.bag=[{id:'scrap',qty:c.bagCapacity(p)}]);const before=json(c.activeCrate().drops);c.takeAllCrateLoot();assert.deepEqual(json(c.activeCrate().drops),before);
   c.leaveCrate();assert.ok(c.activeCrate());assert.equal(c.state.index,2);c.leaveCrate();assert.equal(c.state.index,3);
 });
@@ -148,7 +199,7 @@ test('timer, browser Back and narrative shortcuts cannot bypass the chest; new g
   c.signalGlobalTick();assert.equal(c.state.inhibitor.remainingMs,10000);assert.equal(c.openSignalHack('manual'),false);
   c.advance();assert.equal(c.state.index,2);c.NeoBackNavigation.handleBack();assert.equal(c.state.index,2);
   const snapshot=JSON.stringify(c.state);for(const key of ['1','2','3'])a.document.dispatchEvent(Object.assign(new a.document.defaultView.Event('keydown'),{key}));assert.equal(JSON.stringify(c.state),snapshot);
-  for(let i=0;i<5;i++)wrong(c);const callback=a.timers.get(c.crateFlashTimer).fn;c.newGame();const fresh=JSON.stringify(c.state);callback();assert.equal(JSON.stringify(c.state),fresh);assert.equal(c.crateVisible(),false);
+  for(let i=0;i<10;i++)wrong(c);const callback=a.timers.get(c.crateFlashTimer).fn;c.newGame();const fresh=JSON.stringify(c.state);callback();assert.equal(JSON.stringify(c.state),fresh);assert.equal(c.crateVisible(),false);
 });
 test('loot tables use existing objects with contextual restrictions and uncommon weapons',()=>{
   const c=session().ctx,allowed={electronic:['battery','electronics','emp','pulseCore'],ammo:['ammo9','ammo556','shell12','grenade','pistol9','revolver','shotgun12','rifle556'],medical:['bandage','medkit','meds','stimulant']};let weapons=0;
