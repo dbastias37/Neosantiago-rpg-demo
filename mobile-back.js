@@ -25,6 +25,7 @@
 
   var closers = {
     itemDetailModal: 'closeItemDetails',
+    crateModal: 'crateBack',
     refugeHelpModal: 'closeRefugeHelp',
     gameHelpModal: 'closeGameHelp',
     profileModal: 'closeProfile',

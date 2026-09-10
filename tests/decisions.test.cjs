@@ -64,7 +64,10 @@ test('each noncombat outcome applies only its own effects once and resumes exist
     for(const [flag,value]of Object.entries(out.flags||{}))assert.equal(c.state.flags[flag],value,id);
     const game=c.decisionState,snapshot=JSON.stringify(c.state);c.revealDecision(game);c.resolveDecision();c.choose(0);
     assert.equal(JSON.stringify(c.state),snapshot,id);const original=c.state.index;c.continueDecision();assert.equal(c.decisionState,null);
-    if(c.npcDialogueState)assert.equal(c.state.index,original,id);else assert.equal(c.state.index,original+1,id);
+    if(c.activeCrate()){
+      assert.equal(c.state.index,original,id);assert.equal(c.activeCrate().phase,'help',id);
+      c.leaveCrate();assert.equal(c.state.index,original+1,id);
+    }else if(c.npcDialogueState)assert.equal(c.state.index,original,id);else assert.equal(c.state.index,original+1,id);
     const post=JSON.stringify(c.state);c.continueDecision();assert.equal(JSON.stringify(c.state),post,id);
   }
 });

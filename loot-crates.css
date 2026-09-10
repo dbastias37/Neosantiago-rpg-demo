@@ -1,0 +1,84 @@
+#crateModal{z-index:180;padding:max(10px,env(safe-area-inset-top)) 10px max(10px,env(safe-area-inset-bottom));background:rgba(2,5,4,.97);color:var(--paper);font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;overscroll-behavior:contain}
+#crateModal *{box-sizing:border-box}
+#crateModal .crate-shell{display:flex;flex-direction:column;width:min(1040px,100%);max-height:100%;min-height:0;overflow:hidden;border:1px solid #b18651;border-radius:7px;background:linear-gradient(140deg,#111b17,#070b09 60%);box-shadow:0 24px 90px #000,0 0 25px #d9a15c0b}
+#crateModal .crate-head{flex:none;padding:20px 26px 14px;border-bottom:1px solid #b1865140}
+#crateModal .crate-eyebrow{font-size:12px;letter-spacing:.18em;color:var(--cyan);font-weight:800;margin-bottom:8px}
+#crateModal h2{font-size:clamp(23px,3vw,34px);line-height:1.06;letter-spacing:.025em;text-transform:uppercase;color:var(--amber2);margin:0;overflow-wrap:break-word}
+#crateModal #crateLocation{font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#afafa6;margin:8px 0 0}
+#crateModal .crate-scroll{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:24px;min-height:0;overflow:auto;overscroll-behavior:contain;padding:20px 26px;scrollbar-width:thin;scrollbar-color:#546960 #0a100d}
+#crateModal .crate-scene{min-width:0;align-self:center}
+#crateModal .crate-art{width:100%;aspect-ratio:1;background-size:200% 100%;background-position:left center;background-repeat:no-repeat;border-radius:5px;mix-blend-mode:lighten}
+#crateModal .crate-art.opened{background-position:right center;animation:crateOpen .4s ease-out}
+#crateModal .crate-art-caption{display:flex;flex-direction:column;gap:9px;align-items:center;text-align:center;font-size:12px;letter-spacing:.12em;line-height:1.4;margin:8px 0 0}
+#crateModal #crateMark{color:#a6a89e}#crateModal #crateSeal{color:var(--cyan);font-weight:600}
+#crateModal .crate-console{min-width:0;border:1px solid #61746b70;border-radius:5px;background:linear-gradient(140deg,#17231d90,#080d0a);padding:18px;align-self:center}
+#crateModal .crate-panel-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px;color:var(--amber2);font-weight:700;letter-spacing:.07em;line-height:1.4;border-bottom:1px solid #59706755;padding-bottom:12px}
+#crateModal .crate-panel-heading>b{font-size:13px;letter-spacing:0;color:var(--cyan);font-weight:400}
+#crateModal button{font:inherit;touch-action:manipulation;cursor:pointer;transition:background .15s,border-color .15s,color .15s;white-space:normal;line-height:1.25}
+#crateModal button:disabled{cursor:default;opacity:.4}#crateModal button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+#crateModal #crateHelp{font-size:14px;color:var(--cyan);background:transparent;border:1px solid #75d3d75c;border-radius:3px;min-height:44px;padding:8px 12px}
+#crateModal .crate-instruction,#crateModal .crate-intro{font-size:16px;line-height:1.45;color:#d4d8d0;margin:12px 0}
+#crateModal .crate-lamp-caption{text-align:center;font-size:12px;letter-spacing:.15em;color:#b7bfb6;padding:9px 0}
+#crateModal .crate-lamps{display:grid;grid-template-columns:repeat(var(--lamp-count),minmax(0,1fr));gap:10px;border-bottom:1px solid #61746b44;padding:2px 0 12px}
+#crateModal .crate-lamp-cell{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:12px;color:#bfc7bc}
+#crateModal .crate-lamp{display:block;width:clamp(23px,4vw,34px);aspect-ratio:1;border:4px solid #050907;border-radius:50%;background:radial-gradient(circle at 35% 30%,#373e38,#151c18);box-shadow:0 0 0 1px #6d8477,inset 0 2px 5px #000;transition:background .16s,box-shadow .16s}
+#crateModal .crate-lamp.on{background:radial-gradient(circle at 35% 30%,#bafaff,#4bd6d7 45%,#0e7b81);box-shadow:0 0 0 1px #4a9f9b,0 0 12px #75d3d755}
+#crateModal .crate-switches{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:15px}
+#crateModal .crate-switch{display:flex;align-items:center;gap:12px;padding:11px 13px;border:1px solid #5c7566;border-radius:5px;background:linear-gradient(135deg,#24372d,#17271f);color:#e7e2d8;box-shadow:inset 0 1px #ffffff12;min-height:63px;text-align:left}
+#crateModal .crate-switch>b{font-size:23px;border-right:1px solid #70807566;padding-right:10px;font-weight:500}
+#crateModal .crate-switch>span{display:flex;flex-direction:column;gap:6px;min-width:0}
+#crateModal .crate-switch small{font-size:13px;line-height:1.3}
+#crateModal .crate-switch i{display:block;position:relative;width:32px;height:17px;border:1px solid #8eaba0;border-radius:12px;background:#111c16}
+#crateModal .crate-switch i:after{content:"";display:block;position:absolute;top:2px;left:2px;width:11px;height:11px;border-radius:50%;background:#96a49a;transition:transform .18s}
+#crateModal .crate-switch.active{border-color:#75d3d7;background:linear-gradient(135deg,#243b35,#142a25);box-shadow:0 0 10px #75d3d717,inset 0 1px #75d3d733}
+#crateModal .crate-switch.active i:after{transform:translateX(15px);background:var(--cyan)}
+#crateModal .crate-attempts{display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid #b1865140;margin-top:15px;padding-top:12px;font-size:12px;line-height:1.4}
+#crateModal .crate-attempts>span{color:#b2b5a9;letter-spacing:.05em}#crateModal .crate-attempts>strong{color:var(--amber2);font-size:14px}
+#crateModal .crate-history{font-size:13px;color:#aebcaf;margin:8px 0 0;line-height:1.4}
+#crateModal .crate-lesson{display:flex;gap:14px;padding:10px 0;border-bottom:1px solid #65796a40;font-size:15px;line-height:1.4}
+#crateModal .crate-lesson>b{color:var(--amber2);font-size:16px;font-weight:400}#crateModal .crate-lesson p{margin:0;color:#bdc7bc}#crateModal .crate-lesson strong{display:block;color:var(--paper);margin-bottom:4px}
+#crateModal .crate-help-warning{padding:12px;border-left:2px solid var(--amber2);background:#d9a15c0b;font-size:14px;line-height:1.45;color:#d8c2a6;margin:16px 0 12px}
+#crateModal .crate-help-note{font-size:13px;line-height:1.45;color:#99b9ae;margin:0}
+#crateModal #crateScreen-failed{text-align:center;padding:28px 5px}
+#crateModal .crate-fuse-icon{display:flex;gap:8px;align-items:center;justify-content:center;color:#fc746c;font-size:46px;margin-bottom:22px}
+#crateModal .crate-fuse-icon span{height:22px;width:39px;border:2px solid #fc746c;border-radius:4px;background:#d43f3333}
+#crateModal .crate-failure-label{font-size:12px;letter-spacing:.12em;color:#cf7d70;margin:0 0 12px}
+#crateModal #crateFailureTitle{font-size:27px;color:#ff8e7c;margin:0 0 18px;letter-spacing:.04em;line-height:1.12}
+#crateModal #crateFailureText{font-size:16px;line-height:1.6;color:#d5c3b7;margin:0}
+#crateModal .crate-footer{flex:none;border-top:1px solid #b1865140;padding:10px 26px 14px;background:#080d0bf0}
+#crateModal #crateMessage{font-size:14px;line-height:1.4;color:var(--cyan);margin:0 0 10px;text-align:center}
+#crateModal #crateMessage:empty{display:none}
+#crateModal .crate-actions{display:flex;gap:12px}
+#crateModal .crate-actions button{flex:1;min-width:0;min-height:48px;border:1px solid var(--amber2);border-radius:4px;font-size:15px;letter-spacing:.025em;padding:10px 8px;font-weight:700}
+#crateModal #crateLeave{background:#121d17;color:#ead2b0}#crateModal #cratePrimary{background:linear-gradient(135deg,#f4c780,#dda052);color:#10170f}
+#crateModal .crate-time-note{font-size:12px;text-align:center;letter-spacing:.04em;color:#92a195;margin:10px 0 0}
+#crateModal .crate-owners{display:flex;gap:7px;margin-bottom:14px}
+#crateModal .crate-owners button{flex:1;min-width:0;border:1px solid #587361;background:#142319;color:var(--paper);border-radius:4px;padding:9px 3px;min-height:48px}
+#crateModal .crate-owners button[aria-pressed=true]{border-color:var(--cyan);background:#1e3930}
+#crateModal .crate-owners strong{display:block;font-size:15px}#crateModal .crate-owners small{display:block;font-size:12px;margin-top:4px;color:#b4c2b3}
+#crateModal .crate-drop{display:flex;align-items:center;gap:6px;padding:10px 0;border-top:1px solid #627a6655}
+#crateModal .crate-item-info{display:flex;gap:10px;align-items:center;flex:1;min-width:0;border:0;background:none;text-align:left;color:var(--paper);padding:0;font-size:15px}
+#crateModal .crate-item-info .item-art{flex:none;width:52px;height:52px;margin:0}
+#crateModal .crate-item-info small{display:block;color:var(--cyan);font-size:14px;margin-top:4px}
+#crateModal .crate-take,#crateModal .crate-collect{min-height:44px;border:1px solid #75d3d77a;background:#13312b;color:var(--cyan);border-radius:4px;padding:8px;font-size:14px}
+#crateModal .crate-collect{width:100%;margin-top:12px}#crateModal .crate-taken{font-size:12px;color:#9ab9a1}#crateModal .crate-drop.taken{opacity:.6}
+#crateModal .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+#crateModal.fuse-flash .crate-lamp{background:#f24439!important;box-shadow:0 0 0 1px #ff8b74,0 0 17px #ff442988!important;animation:crateFuse .75s ease-in-out 2}
+@keyframes crateFuse{0%,100%{opacity:1}50%{opacity:.22}}
+@keyframes crateOpen{from{opacity:.35;filter:brightness(1.4)}to{opacity:1;filter:brightness(1)}}
+@media(max-width:680px){
+  #crateModal{padding:8px 8px max(8px,env(safe-area-inset-bottom))}
+  #crateModal .crate-head{padding:14px 15px 10px}#crateModal .crate-eyebrow{margin-bottom:7px}
+  #crateModal .crate-scroll{grid-template-columns:minmax(0,1fr);gap:12px;padding:8px 12px 12px}
+  #crateModal .crate-scene{display:grid;grid-template-columns:120px 1fr;gap:10px;align-items:center}
+  #crateModal .crate-art{width:120px}#crateModal .crate-art-caption{text-align:left;align-items:flex-start;gap:6px;margin:0}
+  #crateModal .crate-console{padding:12px}#crateModal .crate-panel-heading{font-size:13px;padding-bottom:8px}
+  #crateModal .crate-lamps{padding-bottom:8px;gap:5px}#crateModal .crate-lamp-caption{padding:7px 0}
+  #crateModal .crate-switches{gap:7px;margin-top:11px}#crateModal .crate-switch{padding:8px 10px;min-height:59px;gap:8px}
+  #crateModal .crate-attempts{margin-top:10px;padding-top:10px}
+  #crateModal .crate-footer{padding:10px 12px}#crateModal .crate-actions{gap:8px}
+  #crateModal .crate-time-note{font-size:12px;letter-spacing:0;margin-top:8px}
+  #crateModal[data-phase=loot] .crate-scene{grid-template-columns:140px 1fr}#crateModal[data-phase=loot] .crate-art{width:140px}
+}
+@media(max-height:700px) and (max-width:680px){#crateModal .crate-scene{grid-template-columns:90px 1fr}#crateModal .crate-art{width:90px}#crateModal h2{font-size:22px}#crateModal .crate-head{padding-top:10px}#crateModal .crate-scroll{gap:8px}}
+@media(prefers-reduced-motion:reduce){#crateModal *{animation:none!important;transition:none!important}}
