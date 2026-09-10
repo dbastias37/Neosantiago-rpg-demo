@@ -1,5 +1,6 @@
 #crateModal{z-index:180;padding:max(10px,env(safe-area-inset-top)) 10px max(10px,env(safe-area-inset-bottom));background:rgba(2,5,4,.97);color:var(--paper);font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;overscroll-behavior:contain}
 #crateModal *{box-sizing:border-box}
+#crateModal[data-phase=waiting]{background:transparent}
 #crateModal .crate-shell{display:flex;flex-direction:column;width:min(1040px,100%);max-height:100%;min-height:0;overflow:hidden;border:1px solid #b18651;border-radius:7px;background:linear-gradient(140deg,#111b17,#070b09 60%);box-shadow:0 24px 90px #000,0 0 25px #d9a15c0b}
 #crateModal .crate-head{flex:none;padding:20px 26px 14px;border-bottom:1px solid #b1865140}
 #crateModal .crate-eyebrow{font-size:12px;letter-spacing:.18em;color:var(--cyan);font-weight:800;margin-bottom:8px}
@@ -18,6 +19,9 @@
 #crateModal button:disabled{cursor:default;opacity:.4}#crateModal button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
 #crateModal #crateHelp{font-size:14px;color:var(--cyan);background:transparent;border:1px solid #75d3d75c;border-radius:3px;min-height:44px;padding:8px 12px}
 #crateModal .crate-instruction,#crateModal .crate-intro{font-size:16px;line-height:1.45;color:#d4d8d0;margin:12px 0}
+#crateModal .crate-found-title{font-size:clamp(23px,3vw,30px);line-height:1.15;letter-spacing:.03em;text-transform:uppercase;color:var(--amber2);margin:20px 0 12px}
+#crateModal .crate-found-hint{color:var(--cyan);font-size:15px;line-height:1.45;border-left:2px solid var(--cyan);padding:10px 12px;background:#75d3d70a;margin:18px 0 0}
+#crateModal[data-phase=found] .crate-shell{animation:crateFound .25s ease-out}
 #crateModal .crate-lamp-caption{text-align:center;font-size:12px;letter-spacing:.15em;color:#b7bfb6;padding:9px 0}
 #crateModal .crate-lamps{display:grid;grid-template-columns:repeat(var(--lamp-count),minmax(0,1fr));gap:10px;border-bottom:1px solid #61746b44;padding:2px 0 12px}
 #crateModal .crate-lamp-cell{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:12px;color:#bfc7bc}
@@ -64,7 +68,10 @@
 #crateModal .crate-collect{width:100%;margin-top:12px}#crateModal .crate-taken{font-size:12px;color:#9ab9a1}#crateModal .crate-drop.taken{opacity:.6}
 #crateModal .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 #crateModal.fuse-flash .crate-lamp{background:#f24439!important;box-shadow:0 0 0 1px #ff8b74,0 0 17px #ff442988!important;animation:crateFuse .75s ease-in-out 2}
+#crateModal.success-flash .crate-lamp{background:#65f294!important;box-shadow:0 0 0 1px #a0ffbc,0 0 20px #36ed7988!important;animation:crateFuse .75s ease-in-out 2}
+#crateModal.success-flash #crateSeal,#crateModal.success-flash #crateMessage{color:#84ffac}
 @keyframes crateFuse{0%,100%{opacity:1}50%{opacity:.22}}
+@keyframes crateFound{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes crateOpen{from{opacity:.35;filter:brightness(1.4)}to{opacity:1;filter:brightness(1)}}
 @media(max-width:680px){
   #crateModal{padding:8px 8px max(8px,env(safe-area-inset-bottom))}

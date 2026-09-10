@@ -899,7 +899,7 @@
   <link rel="stylesheet" href="decision-v2.css?v=3">
   <link rel="stylesheet" href="combat-stage.css?v=1">
   <link rel="stylesheet" href="item-details.css?v=1">
-  <link rel="stylesheet" href="loot-crates.css?v=1">
+  <link rel="stylesheet" href="loot-crates.css?v=2">
 </head>
 <body>
   <div class="app">
@@ -1388,6 +1388,12 @@
       <div class="crate-scroll">
         <div class="crate-scene"><div id="crateArt" class="crate-art" role="img" aria-label="Caja de suministros"></div><div class="crate-art-caption"><span id="crateMark"></span><strong id="crateSeal"></strong></div></div>
         <div class="crate-console">
+          <div id="crateScreen-found" class="hidden" role="status">
+            <div class="crate-panel-heading"><span>HALLAZGO EN LA EXPEDICIÓN</span></div>
+            <h3 class="crate-found-title">Suministro encontrado</h3>
+            <p class="crate-intro">Encontraste una caja sellada en esta zona. Revisa su cierre para intentar recuperar los suministros.</p>
+            <p id="crateFoundHint" class="crate-found-hint"></p>
+          </div>
           <div id="crateScreen-help">
             <div class="crate-panel-heading"><span>ANTES DE ABRIR</span><b>Ayuda de Elías</b></div>
             <p class="crate-intro">El cierre se abre cuando las luces coinciden con el patrón objetivo.</p>
@@ -1929,7 +1935,7 @@
   <script src="decision-v2.js?v=4"></script>
   <script src="item-details.js?v=2"></script>
   <script src="game-v2.js?v=84-crates"></script>
-  <script src="loot-crates.js?v=3"></script>
+  <script src="loot-crates.js?v=4"></script>
   <script src="combat-stage.js?v=1"></script>
   <script src="mobile-back.js?v=2"></script>
 </body>
