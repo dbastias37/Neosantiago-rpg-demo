@@ -65,7 +65,8 @@ test('each noncombat outcome applies only its own effects once and resumes exist
     const game=c.decisionState,snapshot=JSON.stringify(c.state);c.revealDecision(game);c.resolveDecision();c.choose(0);
     assert.equal(JSON.stringify(c.state),snapshot,id);const original=c.state.index;c.continueDecision();assert.equal(c.decisionState,null);
     if(c.activeCrate()){
-      assert.equal(c.state.index,original,id);assert.equal(c.activeCrate().phase,'help',id);
+      assert.equal(c.state.index,original,id);assert.equal(c.activeCrate().phase,'waiting',id);
+      a.timers.get(c.crateNoticeTimer).fn();assert.equal(c.activeCrate().phase,'found',id);
       c.leaveCrate();assert.equal(c.state.index,original+1,id);
     }else if(c.npcDialogueState)assert.equal(c.state.index,original,id);else assert.equal(c.state.index,original+1,id);
     const post=JSON.stringify(c.state);c.continueDecision();assert.equal(JSON.stringify(c.state),post,id);
@@ -83,7 +84,8 @@ test('every alarm has real opponents, consumes resources once and retains its ou
     if(id==='credential')assert.equal(c.state.flags.trackerCredential,undefined);
     const original=c.state.index;c.advance();
     if(c.activeCrate()){
-      assert.equal(c.state.index,original,id);assert.equal(c.activeCrate().phase,'help',id);
+      assert.equal(c.state.index,original,id);assert.equal(c.activeCrate().phase,'waiting',id);
+      a.timers.get(c.crateNoticeTimer).fn();assert.equal(c.activeCrate().phase,'found',id);
       c.leaveCrate();assert.equal(c.stockCount('battery'),paidBattery,id);
     }
     assert.equal(c.state.index,original+1,id);assert.equal(c.encounterSaveLocked,false,id);

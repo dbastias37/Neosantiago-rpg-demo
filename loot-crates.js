@@ -6,12 +6,13 @@ var crateTypes={
   ammo:{title:"Caja de munición",mark:"RESERVA DE CAMPO",art:"ammo-pair",hint:"Munición, armamento escaso y cargas explosivas."},
   medical:{title:"Suministros médicos",mark:"EQUIPO SANITARIO",art:"medical-pair",hint:"Vendajes, botiquines y medicina conservada."}
 };
-var crateFlashTimer=null;
+var crateFlashTimer=null,crateNoticeTimer=null,crateSuccessTimer=null;
 function crateStore(){
   if(!state.lootCrates)state.lootCrates={checked:{},lastIndex:-10,active:null};
   return state.lootCrates;
 }
 function activeCrate(){return state.lootCrates&&state.lootCrates.active}
+function crateBusy(c){return c&&(c.phase==="waiting"||c.phase==="blown"||c.phase==="unlocking")}
 function upgradeCrate(c){
   if(c.version===2)return;
   // Old saves counted manual checks, so their switch count cannot be recovered.
@@ -90,7 +91,7 @@ function prepareCrate(choice,out){
   // Later locations keep a 50% chance and two intervening expedition decisions.
   if(store.lastIndex>=0&&random()>=.50)return;
   store.lastIndex=state.index;
-  pending.crate={version:2,index:state.index,type:type,location:ev.loc,phase:"help",helpReturn:null,board:crateBoard(ev.day),moves:0,spareUsed:false,history:[],drops:crateRewards(type),owner:Math.max(0,state.party.findIndex(function(p){return p.hp>0})),message:"",outcome:null};
+  pending.crate={version:2,index:state.index,type:type,location:ev.loc,phase:"waiting",helpReturn:null,board:crateBoard(ev.day),moves:0,spareUsed:false,history:[],drops:crateRewards(type),owner:Math.max(0,state.party.findIndex(function(p){return p.hp>0})),message:"",outcome:null};
 }
 function openPendingCrate(){
   if(!pending||!pending.crate)return false;
@@ -100,13 +101,31 @@ function openPendingCrate(){
   encounterSaveLocked=false;save();showCrate();return true;
 }
 function showCrate(){
-  if(!activeCrate())return;
+  var c=activeCrate();if(!c)return;
   $("crateModal").classList.remove("hidden");renderCrate();signalLastTick=Date.now();
   focusCrateControl();
+  if(c.phase==="waiting")scheduleCrateNotice(c);
+  if(c.phase==="unlocking")scheduleCrateSuccess(c);
+}
+function scheduleCrateNotice(c){
+  clearTimeout(crateNoticeTimer);
+  var timer=setTimeout(function(){
+    if(crateNoticeTimer!==timer||activeCrate()!==c||c.phase!=="waiting")return;
+    crateNoticeTimer=null;c.phase="found";save();showCrate();playSfx("loot-found");
+  },1000);
+  crateNoticeTimer=timer;
+}
+function scheduleCrateSuccess(c){
+  clearTimeout(crateSuccessTimer);
+  var timer=setTimeout(function(){
+    if(crateSuccessTimer!==timer||activeCrate()!==c||c.phase!=="unlocking")return;
+    crateSuccessTimer=null;c.phase="loot";c.message="Cierre liberado. Elige quién recoge los suministros.";save();renderCrate();focusCrateControl();
+  },1500);
+  crateSuccessTimer=timer;
 }
 function focusCrateControl(){
   var c=activeCrate();if(!c)return;
-  var btn=c.phase==="playing"?$("crateSwitches").querySelector('button:not([disabled])'):$(c.phase==="blown"?"crateModal":c.phase==="help"||c.phase==="failed"?"cratePrimary":"crateLeave");
+  var btn=c.phase==="playing"?$("crateSwitches").querySelector('button:not([disabled])'):$(crateBusy(c)?"crateModal":c.phase==="found"||c.phase==="help"||c.phase==="failed"?"cratePrimary":"crateLeave");
   if(btn)btn.focus({preventScroll:true});
 }
 function resumeCrate(){
@@ -118,32 +137,37 @@ function resumeCrate(){
 }
 function resetCrateUI(){
   clearTimeout(crateFlashTimer);crateFlashTimer=null;$("crateModal").classList.add("hidden");
-  $("crateModal").classList.remove("fuse-flash");
+  clearTimeout(crateNoticeTimer);crateNoticeTimer=null;clearTimeout(crateSuccessTimer);crateSuccessTimer=null;
+  $("crateModal").classList.remove("fuse-flash","success-flash");
 }
 function crateLampRow(bits,count,label){
   var lamps="";for(var i=0;i<count;i++)lamps+='<span class="crate-lamp-cell"><i class="crate-lamp '+(bits&(1<<i)?'on':'off')+'" aria-hidden="true"></i><span>'+(i+1)+'</span><span class="sr-only">'+(bits&(1<<i)?'encendida':'apagada')+'</span></span>';
   return '<div class="crate-lamp-caption">'+label+'</div><div class="crate-lamps" style="--lamp-count:'+count+'">'+lamps+'</div>';
 }
 function renderCrate(){
-  var c=activeCrate();if(!c)return;var def=crateTypes[c.type],b=c.board,phase=c.phase;
+  var c=activeCrate();if(!c)return;var def=crateTypes[c.type],b=c.board,phase=c.phase,busy=crateBusy(c),panel=phase==="playing"||phase==="blown"||phase==="unlocking";
   $("crateModal").dataset.phase=phase;$("crateModal").dataset.type=c.type;
+  $("crateModal").setAttribute("aria-busy",busy?"true":"false");
+  $("crateModal").querySelector(".crate-shell").classList.toggle("hidden",phase==="waiting");
+  $("crateModal").classList.toggle("success-flash",phase==="unlocking");
   $("crateTitle").textContent=def.title;$("crateLocation").textContent=c.location;
   $("crateMark").textContent=def.mark;
   $("crateArt").style.backgroundImage='url("'+assetUrl('crates/'+def.art+'.webp')+'")';
   $("crateArt").classList.toggle("opened",phase==="loot");
   $("crateArt").setAttribute("aria-label",def.title+(phase==="loot"?", abierta":", cerrada"));
-  $("crateSeal").textContent=phase==="loot"?"CIERRE LIBERADO":phase==="failed"||phase==="sealed"?"FUSIBLE QUEMADO":"CIERRE ELECTRÓNICO";
-  ["help","playing","failed","loot"].forEach(function(p){$("crateScreen-"+p).classList.toggle("hidden",p==="playing"?phase!=="playing"&&phase!=="blown":p==="failed"?phase!=="failed"&&phase!=="sealed":phase!==p)});
+  $("crateSeal").textContent=phase==="loot"||phase==="unlocking"?"CIERRE LIBERADO":phase==="failed"||phase==="sealed"?"FUSIBLE QUEMADO":"CIERRE ELECTRÓNICO";
+  ["found","help","playing","failed","loot"].forEach(function(p){$("crateScreen-"+p).classList.toggle("hidden",p==="playing"?!panel:p==="failed"?phase!=="failed"&&phase!=="sealed":phase!==p)});
+  $("crateFoundHint").textContent=def.hint;
   $("crateHelp").classList.toggle("hidden",phase!=="playing");
   $("crateMessage").textContent=c.message||"";
   $("crateLeave").textContent=phase==="loot"?"Volver a expedición":"Dejar caja";
-  $("cratePrimary").disabled=phase==="blown";
-  $("crateLeave").disabled=phase==="blown";
-  $("cratePrimary").classList.toggle("hidden",phase!=="help"&&phase!=="failed");
-  $("cratePrimary").textContent=phase==="failed"?"Intentar otra vez":c.helpReturn==="playing"?"Volver al panel":"Iniciar puzzle";
-  if(phase==="playing"||phase==="blown"){
+  $("cratePrimary").disabled=busy;
+  $("crateLeave").disabled=busy;
+  $("cratePrimary").classList.toggle("hidden",phase!=="found"&&phase!=="help"&&phase!=="failed");
+  $("cratePrimary").textContent=phase==="found"?"Revisar suministro":phase==="failed"?"Intentar otra vez":c.helpReturn==="playing"?"Volver al panel":"Iniciar puzzle";
+  if(panel){
     $("crateLights").innerHTML=crateLampRow(b.target,b.count,"OBJETIVO")+crateLampRow(b.current,b.count,"ESTADO ACTUAL");
-    $("crateSwitches").innerHTML=b.masks.map(function(mask,i){var numbers=[];for(var n=0;n<b.count;n++)if(mask&(1<<n))numbers.push(n+1);var on=!!(b.switches&(1<<i));return '<button type="button" class="crate-switch '+(on?'active':'')+'" data-crate-switch="'+i+'" aria-pressed="'+on+'" '+(phase==="blown"?'disabled':'')+'><b>'+String.fromCharCode(65+i)+'</b><span><i aria-hidden="true"></i><small>Cambia '+numbers.join(' y ')+'</small></span></button>'}).join("");
+    $("crateSwitches").innerHTML=b.masks.map(function(mask,i){var numbers=[];for(var n=0;n<b.count;n++)if(mask&(1<<n))numbers.push(n+1);var on=!!(b.switches&(1<<i));return '<button type="button" class="crate-switch '+(on?'active':'')+'" data-crate-switch="'+i+'" aria-pressed="'+on+'" '+(busy?'disabled':'')+'><b>'+String.fromCharCode(65+i)+'</b><span><i aria-hidden="true"></i><small>Cambia '+numbers.join(' y ')+'</small></span></button>'}).join("");
     var left=Math.max(0,10-c.moves);
     $("crateAttempts").innerHTML='<span>'+(c.spareUsed?'FUSIBLE DE REPUESTO':'FUSIBLE PRINCIPAL')+'</span><strong>'+left+(left===1?' movimiento restante':' movimientos restantes')+'</strong>';
     $("crateHistory").textContent=(b.count-cratePopcount(b.current^b.target))+' de '+b.count+' luces correctas.';
@@ -159,7 +183,7 @@ function toggleCrateSwitch(i){
   c.board.current^=c.board.masks[i];c.board.switches^=1<<i;c.moves++;c.message="";
   c.history.push({pattern:c.board.current,matches:c.board.count-cratePopcount(c.board.current^c.board.target)});
   // The tenth movement can still solve the puzzle before the fuse burns out.
-  if(c.board.current===c.board.target){c.phase="loot";c.outcome="opened";c.message="Cierre liberado. Elige quién recoge los suministros.";playSfx("loot-found");save();renderCrate();$("crateLeave").focus();return}
+  if(c.board.current===c.board.target){c.phase="unlocking";c.outcome="opened";c.message="Combinación correcta. Abriendo suministro…";playSfx("loot-found");save();showCrate();return}
   if(c.moves>=10){
     c.phase="blown";c.message="Sobrecarga. El fusible se ha quemado.";if(c.spareUsed)c.outcome="sealed";
     save();renderCrate();$("crateModal").classList.add("fuse-flash");playSfx("ui-error");focusCrateControl();
@@ -173,6 +197,7 @@ function toggleCrateSwitch(i){
 }
 function cratePrimary(){
   var c=activeCrate();if(!c)return;
+  if(c.phase==="found"){c.phase="help";c.helpReturn=null;c.message="";save();renderCrate();focusCrateControl();return}
   if(c.phase==="help"){c.phase=c.helpReturn||"playing";c.message="";save();renderCrate();focusCrateControl();return}
   if(c.phase==="failed"&&!c.spareUsed){c.spareUsed=true;c.moves=0;c.phase="playing";c.message="Fusible de repuesto instalado. Tienes 10 movimientos más. La combinación se mantiene.";playSfx("ui-click");save();renderCrate();focusCrateControl()}
 }
@@ -195,7 +220,7 @@ function takeCrateDrop(i,quiet){
 }
 function takeAllCrateLoot(){var c=activeCrate();if(!c||c.phase!=="loot")return;c.drops.forEach(function(_,i){takeCrateDrop(i,true)});playSfx("loadout-transfer");renderMini();renderCrate()}
 function leaveCrate(){
-  var c=activeCrate();if(!c||c.phase==="blown")return;
+  var c=activeCrate();if(!c||crateBusy(c))return;
   if(c.phase==="loot"&&c.drops.some(function(d){return (d.taken||0)<d.qty})&&!c.confirmLeave){c.confirmLeave=true;c.message="Quedan objetos en la caja. Pulsa otra vez para dejarlos y continuar.";renderCrate();return}
   var store=crateStore();store.checked[String(c.index)]=c.outcome||"left";store.active=null;
   resetCrateUI();signalLastTick=Date.now();
@@ -213,7 +238,8 @@ function crateKeydown(e){
   if(e.key==="Tab"){
     var controls=Array.prototype.filter.call($("crateModal").querySelectorAll('button:not([disabled]),[tabindex="0"]'),function(el){return !el.closest('.hidden')});
     var first=controls[0],last=controls[controls.length-1];
-    if(first&&(e.shiftKey&&document.activeElement===first||!e.shiftKey&&document.activeElement===last)){e.preventDefault();(e.shiftKey?last:first).focus()}
+    if(!first){e.preventDefault();$("crateModal").focus()}
+    else if(controls.indexOf(document.activeElement)<0||e.shiftKey&&document.activeElement===first||!e.shiftKey&&document.activeElement===last){e.preventDefault();(e.shiftKey?last:first).focus()}
   }
   return true;
 }

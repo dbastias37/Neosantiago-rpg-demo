@@ -11,13 +11,15 @@ function session(storage=new Map()){
   for(const n of document.querySelectorAll('.overlay,.title-screen,.drawer'))n.classList.add('hidden');
   return Object.assign(a,{document,click(node){assert.ok(node);node.dispatchEvent(new window.Event('click',{bubbles:true,cancelable:true}))}});
 }
-function encounter(type='electronic'){
+function encounter(type='electronic',phase='help'){
   const a=session(),c=a.ctx;c.state.index=2;
   c.pending={ending:null,returnToRefuge:null,dialogue:null,dialogueSeen:true};
-  c.pending.crate={version:2,index:2,type,location:'Estación Los Héroes',phase:'help',helpReturn:null,board:c.crateBoard(2),moves:0,spareUsed:false,history:[],drops:c.crateRewards(type),owner:0,message:'',outcome:null};
-  c.openPendingCrate();return a;
+  c.pending.crate={version:2,index:2,type,location:'Estación Los Héroes',phase:'waiting',helpReturn:null,board:c.crateBoard(2),moves:0,spareUsed:false,history:[],drops:c.crateRewards(type),owner:0,message:'',outcome:null};
+  c.openPendingCrate();if(phase==='waiting')return a;notice(a);if(phase==='found')return a;c.cratePrimary();return a;
 }
 function flash(a){const id=a.ctx.crateFlashTimer,t=a.timers.get(id);assert.ok(t);a.timers.delete(id);t.fn()}
+function notice(a){const id=a.ctx.crateNoticeTimer,t=a.timers.get(id);assert.ok(t);assert.equal(t.ms,1000);a.timers.delete(id);t.fn()}
+function unlock(a){const id=a.ctx.crateSuccessTimer,t=a.timers.get(id);assert.ok(t);assert.equal(t.ms,1500);a.timers.delete(id);t.fn()}
 function solve(c){const b=c.activeCrate().board;for(let bits=0;bits<1<<b.masks.length;bits++){let value=b.initial;b.masks.forEach((m,i)=>{if(bits&(1<<i))value^=m});if(value===b.target){for(let i=0;i<b.masks.length;i++)if(!!(bits&(1<<i))!==!!(b.switches&(1<<i)))c.toggleCrateSwitch(i);return}}throw Error('No solution')}
 function wrong(c){const b=c.activeCrate().board;for(let i=0;i<b.masks.length;i++){if((b.current^b.masks[i])!==b.target){c.toggleCrateSwitch(i);return}}throw Error('Cannot produce wrong move')}
 
@@ -80,13 +82,38 @@ test('saved expeditions past Matias with no previous box get the first box at th
   const ev=d.events[10],choice=ev.choices[0];d.pending={};d.prepareCrate(choice,choice);
   assert.ok(d.pending.crate);assert.equal(d.pending.crate.location,'Escalera República');
 });
-test('real decision opens help before next scene; reload retains paid cost and closes only once',()=>{
+test('real decision keeps its consequence readable, then waits one second for discovery; reload preserves cost',()=>{
   const a=session(),c=a.ctx;c.state.index=2;c.random=()=>0;
   const before=c.stockCount('battery');c.choose(1);assert.equal(c.stockCount('battery'),before-1);
-  c.advance();assert.equal(c.state.index,2);assert.equal(c.activeCrate().phase,'help');assert.equal(c.encounterSaveLocked,false);
-  const b=session(a.storage),d=b.ctx;d.continueGame();assert.equal(d.stockCount('battery'),before-1);assert.equal(d.activeCrate().phase,'help');
+  assert.equal(a.document.getElementById('result').classList.contains('hidden'),false);assert.equal(c.activeCrate(),null);assert.equal(c.crateNoticeTimer,null);
+  c.advance();assert.equal(c.state.index,2);assert.equal(c.activeCrate().phase,'waiting');assert.equal(c.encounterSaveLocked,false);
+  const b=session(a.storage),d=b.ctx;d.continueGame();assert.equal(d.stockCount('battery'),before-1);assert.equal(d.activeCrate().phase,'waiting');
+  notice(b);assert.equal(d.activeCrate().phase,'found');assert.equal(d.npcDialogueState,null);assert.equal(d.routeNarrativeState,null);
+  const found=session(a.storage).ctx;found.continueGame();assert.equal(found.activeCrate().phase,'found');assert.equal(found.crateNoticeTimer,null);
+  d.cratePrimary();assert.equal(d.activeCrate().phase,'help');
   d.leaveCrate();assert.equal(d.state.index,3);assert.equal(d.activeCrate(),null);d.leaveCrate();assert.equal(d.state.index,3);
   const e=session(a.storage).ctx;e.continueGame();assert.equal(e.state.index,3);assert.equal(e.activeCrate(),null);
+});
+test('all supply types announce their location before help and the delayed notice cannot be bypassed',()=>{
+  for(const type of ['electronic','ammo','medical']){
+    const a=encounter(type,'waiting'),c=a.ctx,d=a.document;
+    assert.equal(d.querySelector('.crate-shell').classList.contains('hidden'),true);
+    assert.equal(d.getElementById('crateScreen-help').classList.contains('hidden'),true);
+    c.state.inhibitor.active=true;c.state.inhibitor.remainingMs=10000;c.signalGlobalTick();assert.equal(c.state.inhibitor.remainingMs,10000);
+    let blocked=false;c.crateKeydown({key:'Tab',preventDefault(){blocked=true}});assert.equal(blocked,true);assert.equal(d.activeElement.id,'crateModal');
+    const before=JSON.stringify(c.state);c.cratePrimary();c.toggleCrateSwitch(0);c.advance();c.leaveCrate();c.NeoBackNavigation.handleBack();assert.equal(JSON.stringify(c.state),before);
+    notice(a);assert.equal(c.activeCrate().phase,'found');assert.equal(d.querySelector('.crate-shell').classList.contains('hidden'),false);
+    assert.equal(d.getElementById('crateScreen-found').classList.contains('hidden'),false);
+    assert.match(d.getElementById('crateScreen-found').textContent,/Suministro encontrado/);
+    assert.equal(d.getElementById('crateLocation').textContent,'Estación Los Héroes');assert.equal(d.getElementById('crateTitle').textContent,c.crateTypes[type].title);
+    assert.equal(d.getElementById('crateFoundHint').textContent,c.crateTypes[type].hint);assert.equal(d.activeElement.id,'cratePrimary');
+    a.click(d.getElementById('cratePrimary'));assert.equal(c.activeCrate().phase,'help');assert.equal(c.activeCrate().moves,0);
+  }
+});
+test('leaving a discovered supply continues once without opening its puzzle or granting loot',()=>{
+  const a=encounter('ammo','found'),c=a.ctx,bags=json(c.state.party.map(p=>p.bag));
+  c.leaveCrate();assert.equal(c.state.index,3);assert.equal(c.activeCrate(),null);assert.equal(c.crateStore().checked['2'],'left');
+  c.leaveCrate();assert.equal(c.state.index,3);assert.deepEqual(json(c.state.party.map(p=>p.bag)),bags);
 });
 test('all three crates explain ten moves, charge every switch activation and preserve moves through help',()=>{
   for(const type of ['electronic','ammo','medical']){
@@ -131,7 +158,7 @@ test('reload during either fuse flash resumes failure and cannot restore spent m
 });
 test('spare can open the original puzzle; rewards were fixed before play and survive reload',()=>{
   const a=encounter('medical'),c=a.ctx,initial=json(c.activeCrate());c.cratePrimary();for(let i=0;i<10;i++)wrong(c);flash(a);c.cratePrimary();
-  assert.equal(c.activeCrate().board.target,initial.board.target);solve(c);
+  assert.equal(c.activeCrate().board.target,initial.board.target);solve(c);unlock(a);
   assert.equal(c.activeCrate().phase,'loot');assert.deepEqual(json(c.activeCrate().drops),initial.drops);
   assert.equal(a.nodes.get('crateArt').classList.contains('opened'),true);
   const b=session(a.storage);b.ctx.continueGame();assert.equal(b.ctx.activeCrate().phase,'loot');assert.deepEqual(json(b.ctx.activeCrate().drops),initial.drops);
@@ -140,8 +167,9 @@ test('invalid switch input and non-switch actions spend no moves; solved crates 
   const a=encounter(),c=a.ctx;c.cratePrimary();
   for(const i of [-1,.5,99,NaN])c.toggleCrateSwitch(i);
   c.cratePrimary();c.renderCrate();assert.equal(c.activeCrate().moves,0);
-  solve(c);assert.equal(c.activeCrate().phase,'loot');assert.ok(c.activeCrate().moves<=5);
+  solve(c);assert.equal(c.activeCrate().phase,'unlocking');assert.ok(c.activeCrate().moves<=5);
   const snapshot=JSON.stringify(c.state);c.toggleCrateSwitch(0);c.cratePrimary();assert.equal(JSON.stringify(c.state),snapshot);
+  unlock(a);assert.equal(c.activeCrate().phase,'loot');
 });
 test('the correct tenth move opens automatically on either fuse instead of burning it',()=>{
   for(const spare of [false,true]){
@@ -150,9 +178,39 @@ test('the correct tenth move opens automatically on either fuse instead of burni
     if(spare){for(let i=0;i<10;i++)wrong(c);flash(a);c.cratePrimary()}
     for(let i=0;i<8;i++)c.toggleCrateSwitch(2);
     c.toggleCrateSwitch(0);assert.equal(chest.phase,'playing');assert.equal(chest.moves,9);
-    c.toggleCrateSwitch(1);assert.equal(chest.phase,'loot');assert.equal(chest.moves,10);assert.equal(chest.spareUsed,spare);
+    c.toggleCrateSwitch(1);assert.equal(chest.phase,'unlocking');assert.equal(chest.moves,10);assert.equal(chest.spareUsed,spare);
     assert.equal(a.document.getElementById('crateModal').classList.contains('fuse-flash'),false);
+    unlock(a);assert.equal(chest.phase,'loot');
     assert.equal(a.document.activeElement.id,'crateLeave');
+  }
+});
+test('success keeps both light rows visible in green for 1.5 seconds before exposing any loot',()=>{
+  for(const type of ['electronic','ammo','medical']){
+    const a=encounter(type),c=a.ctx,d=a.document;c.cratePrimary();const drops=json(c.activeCrate().drops);solve(c);
+    assert.equal(c.activeCrate().phase,'unlocking');assert.equal(d.getElementById('crateModal').classList.contains('success-flash'),true);
+    assert.equal(d.getElementById('crateScreen-playing').classList.contains('hidden'),false);assert.equal(d.getElementById('crateScreen-loot').classList.contains('hidden'),true);
+    assert.equal(d.querySelectorAll('.crate-lamp').length,c.activeCrate().board.count*2);assert.equal(d.getElementById('crateArt').classList.contains('opened'),false);
+    assert.ok([...d.querySelectorAll('[data-crate-switch]')].every(button=>button.disabled));assert.equal(d.getElementById('crateLeave').disabled,true);
+    const before=JSON.stringify(c.state);c.toggleCrateSwitch(0);c.takeAllCrateLoot();c.leaveCrate();c.advance();c.crateHelp();assert.equal(JSON.stringify(c.state),before);
+    unlock(a);assert.equal(c.activeCrate().phase,'loot');assert.equal(d.getElementById('crateModal').classList.contains('success-flash'),false);
+    assert.equal(d.getElementById('crateScreen-loot').classList.contains('hidden'),false);assert.equal(d.getElementById('crateArt').classList.contains('opened'),true);
+    assert.deepEqual(json(c.activeCrate().drops),drops);assert.equal(d.activeElement.id,'crateLeave');
+  }
+});
+test('reloading the green flash preserves success, movement cost and rewards, then opens once',()=>{
+  const a=encounter(),c=a.ctx;c.cratePrimary();solve(c);const solved=json(c.activeCrate());
+  const b=session(a.storage),d=b.ctx;d.continueGame();assert.equal(d.activeCrate().phase,'unlocking');
+  assert.equal(d.activeCrate().moves,solved.moves);assert.deepEqual(json(d.activeCrate().drops),solved.drops);
+  const callback=b.timers.get(d.crateSuccessTimer).fn;unlock(b);const before=JSON.stringify(d.state);callback();assert.equal(JSON.stringify(d.state),before);
+  assert.equal(d.activeCrate().phase,'loot');
+});
+test('new game invalidates both discovery and successful unlock callbacks',()=>{
+  for(const phase of ['waiting','unlocking']){
+    const a=encounter('medical',phase==='waiting'?'waiting':'help'),c=a.ctx;
+    if(phase==='unlocking'){c.cratePrimary();solve(c)}
+    const callback=a.timers.get(phase==='waiting'?c.crateNoticeTimer:c.crateSuccessTimer).fn;
+    c.newGame();const before=JSON.stringify(c.state);callback();assert.equal(JSON.stringify(c.state),before);assert.equal(c.crateVisible(),false);
+    assert.equal(c.crateNoticeTimer,null);assert.equal(c.crateSuccessTimer,null);assert.equal(a.document.getElementById('crateModal').classList.contains('success-flash'),false);
   }
 });
 test('reload and reopened help preserve every movement and the board on both fuses',()=>{
@@ -180,7 +238,7 @@ test('legacy check-based saves migrate once without changing loot, board or cons
   }
 });
 test('loot fits available capacity, can be split among allies, inspected and never collected twice',()=>{
-  const a=encounter('ammo'),c=a.ctx,d=a.document;c.cratePrimary();solve(c);
+  const a=encounter('ammo'),c=a.ctx,d=a.document;c.cratePrimary();solve(c);unlock(a);
   const chest=c.activeCrate();chest.drops=[{id:'ammo9',qty:4,status:'pending'}];
   c.state.party[0].bag=[{id:'food',qty:c.bagCapacity(c.state.party[0])-1}];chest.owner=0;c.renderCrate();
   a.click(d.querySelector('[data-crate-info="ammo9"]'));assert.equal(c.itemDetailState.id,'ammo9');assert.equal(d.getElementById('crateModal').hasAttribute('inert'),true);
@@ -190,7 +248,7 @@ test('loot fits available capacity, can be split among allies, inspected and nev
   b.ctx.leaveCrate();assert.equal(b.ctx.state.index,3);assert.equal(b.ctx.activeCrate(),null);
 });
 test('full bags do not lose loot; leaving uncollected items requires an explicit second press',()=>{
-  const a=encounter(),c=a.ctx;c.cratePrimary();solve(c);
+  const a=encounter(),c=a.ctx;c.cratePrimary();solve(c);unlock(a);
   c.state.party.forEach(p=>p.bag=[{id:'scrap',qty:c.bagCapacity(p)}]);const before=json(c.activeCrate().drops);c.takeAllCrateLoot();assert.deepEqual(json(c.activeCrate().drops),before);
   c.leaveCrate();assert.ok(c.activeCrate());assert.equal(c.state.index,2);c.leaveCrate();assert.equal(c.state.index,3);
 });
