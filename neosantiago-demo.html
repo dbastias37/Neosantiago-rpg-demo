@@ -892,6 +892,7 @@
     </style>
   <link rel="stylesheet" href="decision-v2.css?v=3">
   <link rel="stylesheet" href="combat-stage.css?v=1">
+  <link rel="stylesheet" href="item-details.css?v=1">
 </head>
 <body>
   <div class="app">
@@ -1289,6 +1290,22 @@
       </div>
       <footer class="game-help-actions"><button class="primary" id="refugeHelpContinue">Continuar</button></footer>
     </div>
+  </section>
+
+  <section class="overlay hidden" id="itemDetailModal" role="dialog" aria-modal="true" aria-labelledby="itemDetailTitle">
+    <article class="modal item-detail-modal">
+      <header class="item-detail-head"><p class="kicker">Ficha de objeto</p><h2 id="itemDetailTitle"></h2></header>
+      <div class="item-detail-reading" id="itemDetailReading" tabindex="0" role="region" aria-label="Información del objeto">
+        <div class="item-detail-summary">
+          <div class="item-detail-image" id="itemDetailImage"></div>
+          <div><h3>Para qué sirve</h3><p id="itemDetailPurpose"></p></div>
+        </div>
+        <dl class="item-detail-facts" id="itemDetailFacts"></dl>
+        <section class="item-detail-section"><h3>Compra y venta</h3><div id="itemDetailPrices"></div></section>
+        <section class="item-detail-section"><h3>Desarme</h3><div id="itemDetailDisassembly"></div></section>
+      </div>
+      <footer class="item-detail-actions"><button class="primary" id="itemDetailBack">Volver</button></footer>
+    </article>
   </section>
 
   <section class="overlay hidden" id="summary" role="dialog" aria-modal="true" aria-labelledby="summaryTitle">
@@ -1867,7 +1884,8 @@
   }
   </script>
   <script src="decision-v2.js?v=4"></script>
-  <script src="game-v2.js?v=81-refuge-help"></script>
+  <script src="item-details.js?v=1"></script>
+  <script src="game-v2.js?v=82-item-details"></script>
   <script src="combat-stage.js?v=1"></script>
 </body>
 </html>
