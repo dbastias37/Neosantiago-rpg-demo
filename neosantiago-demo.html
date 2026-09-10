@@ -766,22 +766,28 @@
     }
 
     @media(max-width:600px){.context-archives{margin-bottom:13px;padding:9px}.context-archives header{display:grid;gap:3px}.context-archives header span:last-child{text-align:left}.context-archive-list{grid-template-columns:1fr}.context-archive{grid-template-columns:28px minmax(0,1fr)}}
-    @media(max-width:700px) and (orientation:portrait){
-      .title-screen-bg img{object-position:55% center}
-      .title-screen:before{background:linear-gradient(0deg,rgba(1,4,3,.98) 0%,rgba(1,4,3,.78) 42%,rgba(1,4,3,.18) 100%),linear-gradient(90deg,rgba(1,4,3,.7),transparent 82%)}
-      .title-screen-copy{align-self:end;width:calc(100% - 40px);max-width:100%;margin:0 20px calc(92px + var(--safe-b));overflow:hidden}
-      .title-eyebrow{gap:9px;margin-bottom:10px;font-size:6px;letter-spacing:.16em;white-space:normal}
-      .title-eyebrow:before{width:30px;flex:0 0 30px}
-      .title-lockup{max-width:100%;font-size:clamp(38px,12vw,48px);line-height:.86;letter-spacing:.01em;overflow:hidden}
+    /* Portrait cover follows the intro: artwork above, readable content below. */
+    @media(orientation:portrait){
+      .title-screen{height:100dvh;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,.34fr) minmax(0,.66fr)}
+      .title-screen-bg{position:relative;inset:auto;z-index:0;min-width:0;min-height:0;border-bottom:1px solid var(--line)}
+      .title-screen-bg img{object-position:center 45%;animation:none;transform:none;filter:saturate(.82) contrast(1.08) brightness(.9)}
+      .title-screen:before,.title-screen:after{content:none}
+      .title-screen-copy{display:grid;grid-template-rows:auto auto auto minmax(0,1fr) auto;align-self:stretch;min-width:0;min-height:0;width:100%;max-width:none;margin:0;padding:18px max(20px,env(safe-area-inset-right,0px)) max(18px,var(--safe-b)) max(20px,env(safe-area-inset-left,0px));background:#050908;overflow:visible;text-shadow:none}
+      .title-eyebrow{gap:9px;margin-bottom:12px;font-size:8px;line-height:1.5;letter-spacing:.12em;white-space:normal}
+      .title-eyebrow:before{width:24px;flex:0 0 24px}
+      .title-lockup{max-width:100%;font-size:clamp(28px,10.5vw,62px);line-height:1;letter-spacing:.01em;overflow:visible}
       .title-lockup span{white-space:nowrap}
-      .title-lockup b{margin-top:.16em;font-size:.72em;letter-spacing:.18em}
-      .title-rule{width:100%;margin:17px 0 13px}
-      .title-tagline{max-width:100%;font-size:12px;line-height:1.45;overflow-wrap:break-word}
-      .title-actions{display:grid;justify-items:start;gap:8px;margin-top:16px}
-      .title-enter{grid-template-columns:minmax(0,1fr) 24px;gap:10px;width:min(260px,calc(100% - 8px));min-width:0;min-height:46px;padding:8px 9px 8px 14px}
-      .title-enter span{font-size:10px;letter-spacing:.16em}
-      .title-enter i{width:24px;height:24px;font-size:13px}
-      .title-hint{font-size:6px;letter-spacing:.1em;text-align:left}
+      .title-lockup b{margin-top:.12em;font-size:.68em;letter-spacing:.18em}
+      .title-rule{width:100%;margin:14px 0 12px}
+      .title-tagline{min-height:0;max-width:100%;font-size:clamp(14px,3.6vw,18px);line-height:1.5;overflow-wrap:break-word;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+      .title-actions{display:grid;justify-items:stretch;gap:9px;margin-top:16px;padding:5px;min-width:0}
+      .title-enter{grid-template-columns:minmax(0,1fr) 28px;gap:12px;width:100%;min-width:0;min-height:54px;padding:11px 12px 11px 18px;overflow:visible}
+      .title-enter span{font-size:12px;line-height:1.5;letter-spacing:.16em}
+      .title-enter i{width:28px;height:28px;font-size:16px}
+      .title-hint{font-size:8px;line-height:1.5;letter-spacing:.1em;text-align:center}
+      .title-build{display:none}
+    }
+    @media(max-width:700px) and (orientation:portrait){
       .stage{overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain}
       .where{top:10px;left:12px;right:12px}
       .where p{margin-bottom:4px;font-size:7px;letter-spacing:.18em}
