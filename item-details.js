@@ -12,7 +12,7 @@ function itemPurpose(id){
   if(d.slot==="backpack")lines.push("Equípala para ampliar la capacidad del aliado. Cada unidad guardada ocupa un espacio.");
   if(["food","meds","medkit","bandage","stimulant","traumaKit"].indexOf(id)>=0)lines.push("Se consume al utilizarlo desde la ficha del aliado. La recuperación no supera su salud o energía máximas.");
   if(id==="scrap")lines.push("También se utiliza para reparar cascos y chalecos desde las fichas de los aliados.");
-  if(id==="battery")lines.push("Puedes gastar una celda desde el inhibidor para ampliar su cobertura.");
+  if(id==="battery")lines.push("Puedes gastar una celda desde el aviso del inhibidor para activar 90 segundos de cobertura de emergencia. Se consume una unidad.");
   workshopRecipes.forEach(function(recipe){if(recipe.cost[id]&&products.indexOf(gear(recipe.id).name)<0)products.push(gear(recipe.id).name)});
   if(products.length)lines.push("Material para fabricar: "+products.join(", ")+". Las recetas pueden requerir habilidades y otros materiales.");
   return lines.join("\n\n")
@@ -24,6 +24,7 @@ function itemFacts(id){
   if(d.ammo)facts.push(["Munición",gear(d.ammo).name]);
   if(d.defense)facts.push(["Defensa base","+"+d.defense]);
   if(d.maxDurability)facts.push(["Durabilidad máxima",d.maxDurability]);
+  if(id==="battery")facts.push(["Cobertura de emergencia","90 segundos"],["Espacio por unidad","1 espacio"]);
   if(d.capacity)facts.push(["Capacidad",d.capacity+" espacios"]);
   return facts.map(function(f){return'<div><dt>'+esc(f[0])+'</dt><dd>'+esc(f[1])+'</dd></div>'}).join("")
 }

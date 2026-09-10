@@ -899,6 +899,7 @@
   <link rel="stylesheet" href="decision-v2.css?v=3">
   <link rel="stylesheet" href="combat-stage.css?v=1">
   <link rel="stylesheet" href="item-details.css?v=1">
+  <link rel="stylesheet" href="loot-crates.css?v=1">
 </head>
 <body>
   <div class="app">
@@ -1381,6 +1382,42 @@
     </div>
   </section>
 
+  <section class="overlay hidden" id="crateModal" role="dialog" aria-modal="true" aria-labelledby="crateTitle">
+    <div class="crate-shell">
+      <header class="crate-head"><div class="crate-eyebrow">HALLAZGO · CAJA DE LOOT</div><h2 id="crateTitle">Suministros</h2><p id="crateLocation"></p></header>
+      <div class="crate-scroll">
+        <div class="crate-scene"><div id="crateArt" class="crate-art" role="img" aria-label="Caja de suministros"></div><div class="crate-art-caption"><span id="crateMark"></span><strong id="crateSeal"></strong></div></div>
+        <div class="crate-console">
+          <div id="crateScreen-help">
+            <div class="crate-panel-heading"><span>ANTES DE ABRIR</span><b>Ayuda de Elías</b></div>
+            <p class="crate-intro">El cierre se abre cuando las luces coinciden con el patrón objetivo.</p>
+            <div class="crate-lesson"><b>01</b><p><strong>Compara las dos filas</strong>Arriba está el objetivo. Abajo están las luces que puedes cambiar. Cian significa encendida; oscuro, apagada.</p></div>
+            <div class="crate-lesson"><b>02</b><p><strong>Prepara la combinación</strong>Cada interruptor invierte las luces indicadas: las enciende o las apaga. Puedes moverlos todas las veces que quieras.</p></div>
+            <div class="crate-lesson"><b>03</b><p><strong>Prueba cuando estés seguro</strong>Solo «Probar combinación» cuenta como intento. Si las dos filas coinciden, la caja se abre.</p></div>
+            <p class="crate-help-warning">Cinco errores queman el fusible. Elías lleva un repuesto que permite <strong>una última comprobación</strong>. Si vuelves a fallar, la caja quedará bloqueada.</p>
+            <p class="crate-help-note">No hay cuenta regresiva. El inhibidor queda pausado durante el puzzle y el saqueo.</p>
+          </div>
+          <div id="crateScreen-playing" class="hidden">
+            <div class="crate-panel-heading"><span>PANEL DE INTERRUPTORES</span><button type="button" id="crateHelp">Ayuda</button></div>
+            <p class="crate-instruction">Iguala las luces y prueba la combinación.</p>
+            <div id="crateLights"></div><div id="crateSwitches" class="crate-switches"></div>
+            <div id="crateAttempts" class="crate-attempts"></div><p id="crateHistory" class="crate-history"></p>
+          </div>
+          <div id="crateScreen-failed" class="hidden" role="alert">
+            <div class="crate-fuse-icon" aria-hidden="true"><span></span><b>×</b><span></span></div>
+            <p class="crate-failure-label">SOBRECARGA DEL CIERRE</p><h3 id="crateFailureTitle"></h3><p id="crateFailureText"></p>
+          </div>
+          <div id="crateScreen-loot" class="hidden">
+            <div class="crate-panel-heading"><span>CAJA ABIERTA</span><b>Loot disponible</b></div>
+            <p class="crate-instruction">Elige quién recoge. Toca un objeto para ver su ficha.</p>
+            <div id="crateOwners" class="crate-owners" aria-label="Aliado que recoge los objetos"></div>
+            <div id="crateDrops" class="crate-drops"></div><button type="button" id="crateAll" class="crate-collect"></button>
+          </div>
+        </div>
+      </div>
+      <footer class="crate-footer"><p id="crateMessage" role="status" aria-live="polite"></p><div class="crate-actions"><button type="button" id="crateLeave">Dejar caja</button><button type="button" id="cratePrimary">Iniciar puzzle</button></div><p class="crate-time-note">SIN LÍMITE DE TIEMPO · INHIBIDOR PAUSADO</p></footer>
+    </div>
+  </section>
   <section class="overlay hidden" id="lootModal" role="dialog" aria-modal="true" aria-labelledby="lootTitle">
     <div class="modal loot-modal">
       <p class="kicker">Registro de cadáver</p>
@@ -1890,9 +1927,10 @@
   }
   </script>
   <script src="decision-v2.js?v=4"></script>
-  <script src="item-details.js?v=1"></script>
-  <script src="game-v2.js?v=83-mobile-back"></script>
+  <script src="item-details.js?v=2"></script>
+  <script src="game-v2.js?v=84-crates"></script>
+  <script src="loot-crates.js?v=1"></script>
   <script src="combat-stage.js?v=1"></script>
-  <script src="mobile-back.js?v=1"></script>
+  <script src="mobile-back.js?v=2"></script>
 </body>
 </html>
