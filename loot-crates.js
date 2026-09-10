@@ -47,17 +47,28 @@ function crateCandidate(ev,choice,out){
   if(choice.combat&&out!==choice.victory)return null;
   var label=choice.label||"",title=ev.title;
   // Explicit story actions, not keywords guessed from a background image.
-  if(title==="La puerta sellada"&&/^(Alimentar el lector|Forzar el mecanismo)$/.test(label))return "electronic";
+  if(title==="La puerta sellada"&&/^(Alimentar el lector|Forzar el mecanismo|Buscar los ductos superiores)$/.test(label))return "electronic";
+  if(title==="El peso de una ración"&&label==="Cambiar una ración por componentes")return "electronic";
+  if(title==="Tres luces rojas"&&choice.combat)return "ammo";
   if(title==="Agua sobre los rieles"&&/^(Cruzar asegurados con una cuerda|Cortar la corriente antes de cruzar)$/.test(label))return "medical";
   if(title==="El campamento apagado"&&label==="Registrar el campamento")return "ammo";
-  if(title==="El guardián reconstruido"&&choice.combat)return "electronic";
-  if(title==="El pulso del dron"&&choice.combat)return "electronic";
+  if(title==="El guardián reconstruido"&&(choice.combat||label==="Reactivar el señuelo térmico"))return "electronic";
+  if(title==="El hombre bajo el mostrador"&&label==="Tomar la frecuencia y marcharse")return "medical";
+  if(title==="El pulso del dron"&&(choice.combat||label==="Controlar el pulso"))return "electronic";
+  if(title==="La primera luz"&&/^(Seguir las marcas de cazadores|Abrir la reja por la avenida|Esperar un ciclo completo de vigilancia)$/.test(label))return "electronic";
+  if(title==="Sombras sobre el asfalto"&&label==="Cruzar por los subterráneos")return "electronic";
   if(title==="La mesa para cuatro"&&label==="Tomar suministros y marcharse")return "medical";
-  if(title==="La máquina que recuerda"&&!/solo el origen/.test(label))return "electronic";
+  if(title==="La máquina que recuerda")return "electronic";
+  if(title==="Tres identidades autorizadas"&&(choice.combat||label==="Esperar dentro de un edificio"))return choice.combat?"ammo":"medical";
   if(title==="El núcleo expuesto"&&label==="Extraer el núcleo")return "medical";
+  if(title==="Cazadores de pulsos"&&(choice.combat||label==="Sobrecargar el controlador"))return "ammo";
+  if(title==="Cruzando a cielo abierto"&&(choice.combat||label==="Desviar la patrulla con un núcleo"||label==="Usar el mapa y evitar contacto"))return label==="Usar el mapa y evitar contacto"?"electronic":"ammo";
   if(title==="Los cascos morados"&&choice.combat)return "ammo";
-  if(title==="El nido de vigilancia"&&choice.combat)return "electronic";
+  if(title==="El nido de vigilancia"&&(choice.combat||out.flags&&out.flags.droneNestBypassed))return "electronic";
   if(title==="Los muertos sin núcleo"&&label==="Registrar equipo de la Red UNO")return "ammo";
+  if(title==="La puerta de continuidad"&&(choice.combat||out.flags&&out.flags.towerEntered))return choice.combat?"ammo":"electronic";
+  if(title==="La última patrulla"&&(choice.combat||label==="Cerrar pisos con la credencial"))return choice.combat?"ammo":"electronic";
+  if(title==="Los exiliados regresan"&&choice.combat)return "electronic";
   return null;
 }
 function prepareCrate(choice,out){
@@ -65,7 +76,11 @@ function prepareCrate(choice,out){
   var ev=eventDisplay(events[state.index],state.index),type=crateCandidate(ev,choice,out),store=crateStore(),key=String(state.index);
   if(!type||store.checked[key])return;
   store.checked[key]=true;
-  if(state.index-store.lastIndex<3||random()>=.25)return;
+  if(state.index-store.lastIndex<3)return;
+  // Introduce the mechanic at the first compatible decision, including old saves
+  // which have checked locations but have never encountered a crate.
+  // Later locations keep a 50% chance and two intervening expedition decisions.
+  if(store.lastIndex>=0&&random()>=.50)return;
   store.lastIndex=state.index;
   pending.crate={version:1,index:state.index,type:type,location:ev.loc,phase:"help",helpReturn:"playing",board:crateBoard(ev.day),failures:0,spareUsed:false,lastProbe:null,history:[],drops:crateRewards(type),owner:Math.max(0,state.party.findIndex(function(p){return p.hp>0})),message:"",outcome:null};
 }

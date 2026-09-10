@@ -34,13 +34,51 @@ test('generated boards have one reachable solution, at least two switches, even 
 test('context filters exclude flight, failed checks, conversations and incompatible types; cooldown persists',()=>{
   const c=session().ctx,station=c.events[2],gal=c.events[5];
   assert.equal(c.crateCandidate(station,station.choices[1],station.choices[1]),'electronic');
-  assert.equal(c.crateCandidate(station,station.choices[2],station.choices[2]),null);
+  assert.equal(c.crateCandidate(station,station.choices[2],station.choices[2]),'electronic');
+  const retreat=c.events[4].choices[2];assert.equal(c.crateCandidate(c.events[4],retreat,retreat),null);
   assert.equal(c.crateCandidate(gal,gal.choices[0],gal.choices[0].roll.fail),null);
   assert.equal(c.crateCandidate(gal,gal.choices[1],gal.choices[1]),'medical');
   c.state.index=2;c.random=()=>0;c.pending={dialogue:{npc:'mara'}};c.prepareCrate(station.choices[1],station.choices[1]);assert.equal(c.pending.crate,undefined);
   c.pending={};c.prepareCrate(station.choices[1],station.choices[1]);assert.ok(c.pending.crate);
   c.pending={};c.prepareCrate(station.choices[1],station.choices[1]);assert.equal(c.pending.crate,undefined);
   c.state.index=5;c.crateStore().lastIndex=4;c.prepareCrate(gal.choices[1],gal.choices[1]);assert.equal(c.pending.crate,undefined);
+});
+test('22 expedition situations can actually queue a contextual crate without opening narrative dialogs',()=>{
+  const c=session().ctx,covered=[];
+  c.events.forEach((ev,index)=>{
+    const available=ev.choices.some(choice=>{
+      const out=choice.roll?choice.roll.success:choice.combat?choice.victory:choice;
+      c.state=c.fresh();c.state.index=index;c.pending={dialogue:c.contextualDialogueFor(choice,out)};
+      c.prepareCrate(choice,out);
+      return !!c.pending.crate;
+    });
+    if(available)covered.push(index);
+  });
+  assert.deepEqual(covered,[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,18,19,20,21,22,23,25]);
+});
+test('first compatible decision guarantees a box before Matias for both quiet and combat approaches',()=>{
+  const c=session().ctx,station=c.events[2];
+  for(const choice of station.choices){
+    c.state=c.fresh();c.state.index=2;c.random=()=>.99;c.pending={};
+    c.prepareCrate(choice,choice.combat?choice.victory:choice);
+    assert.ok(c.pending.crate,choice.label);assert.equal(c.pending.crate.type,'electronic');
+  }
+});
+test('subsequent encounters use 50 percent odds, preserve cooldown and cannot reroll a decision',()=>{
+  const c=session().ctx,ev=c.events[10],choice=ev.choices[0];
+  for(const [roll,appears] of [[.49,true],[.50,false],[.99,false]]){
+    c.state=c.fresh();c.state.index=10;c.crateStore().lastIndex=2;c.pending={};c.random=()=>roll;
+    c.prepareCrate(choice,choice);assert.equal(!!c.pending.crate,appears);
+    c.pending={};c.random=()=>0;c.prepareCrate(choice,choice);assert.equal(c.pending.crate,undefined);
+  }
+  c.state=c.fresh();c.state.index=10;c.crateStore().lastIndex=8;c.pending={};c.random=()=>0;
+  c.prepareCrate(choice,choice);assert.equal(c.pending.crate,undefined);
+});
+test('saved expeditions past Matias with no previous box get the first box at the next compatible place',()=>{
+  const a=session(),c=a.ctx;c.state.index=10;c.crateStore().checked={'2':true,'5':true,'6':true};c.save();
+  const b=session(a.storage),d=b.ctx;d.continueGame();d.random=()=>.99;
+  const ev=d.events[10],choice=ev.choices[0];d.pending={};d.prepareCrate(choice,choice);
+  assert.ok(d.pending.crate);assert.equal(d.pending.crate.location,'Escalera República');
 });
 test('real decision opens help before next scene; reload retains paid cost and closes only once',()=>{
   const a=session(),c=a.ctx;c.state.index=2;c.random=()=>0;

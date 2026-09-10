@@ -81,7 +81,12 @@ test('every alarm has real opponents, consumes resources once and retains its ou
     c.winCombat();assert.equal(c.stockCount('battery'),paidBattery,id);assert.equal(c.state.history.length,1,id);assert.ok(c.pending,id);
     for(const [flag,value]of Object.entries(scene.alarm.winFlags||{}))assert.equal(c.state.flags[flag],value,id);
     if(id==='credential')assert.equal(c.state.flags.trackerCredential,undefined);
-    const original=c.state.index;c.advance();assert.equal(c.state.index,original+1,id);assert.equal(c.encounterSaveLocked,false,id);
+    const original=c.state.index;c.advance();
+    if(c.activeCrate()){
+      assert.equal(c.state.index,original,id);assert.equal(c.activeCrate().phase,'help',id);
+      c.leaveCrate();assert.equal(c.stockCount('battery'),paidBattery,id);
+    }
+    assert.equal(c.state.index,original+1,id);assert.equal(c.encounterSaveLocked,false,id);
   }
 });
 test('an alarm retreat remains at the encounter and saves the actual cost only once',()=>{
