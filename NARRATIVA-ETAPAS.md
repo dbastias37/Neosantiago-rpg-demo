@@ -1,7 +1,7 @@
 # Renovación narrativa por etapas
 
 Base revisada: main 2aa39997d09bf44c6ca0a998d0b50aaad6252472.
-Esta rama contiene solamente la etapa 1. No cambia todavía el selector de finales.
+Etapas 1 y 2 implementadas. No cambia todavía el selector de finales: corresponde a la etapa 3.
 
 ## Etapa 1 — Base y piloto de Lira
 
@@ -13,9 +13,17 @@ Las consecuencias anteriores siguen en las partidas guardadas; no se reconstruye
 
 Validación: regresiones del repositorio más pruebas de rutas, guardado, irreversibilidad, doble pulsación, información oculta, derrota y contrato de descarga PNG. No se realizó una partida completa ni una prueba visual en navegador.
 
-## Etapa 2 — Memoria y conexiones de las siete rutas
+## Etapa 2 — Memoria y conexiones de las siete rutas (implementada)
 
-Extender el modelo a Rosa, Matías, S-7, H-12, Vega y Ortega. Definir quién sabe cada hecho, relaciones reparables y pérdidas irreversibles. Diseñar conexiones que respeten el orden temporal (Matías y S-7 ocurren después del primer encuentro con Lira: su ayuda requeriría un reencuentro posterior, no puede modificar retrospectivamente su rescate). Reescribir encuentros y transiciones según lo ocurrido. Ampliar el mapa por capítulos y causas conocidas de caminos cerrados. Afinar la negociación de los exiliados: en el piloto la traición la bloquea; pruebas externas y reparaciones específicas se diseñarán aquí.
+Los siete desvíos tienen identificadores, recorrido persistente, decisiones sin temporizador y texto de consecuencia para cada cierre. S-7 tiene una escena distinta cuando solo se rescatan los nombres: no recupera por arte de magia su memoria ni los accesos a Nodo 14. El borrado selectivo de H-12, la restitución de todos los nombres por Vega y la entrega de viviendas a los residentes requieren preparación previa; el texto advierte de esas condiciones antes de elegir.
+
+Conexiones implementadas: código de Rosa → traslado cubierto de Matías; frecuencia de Matías → ocultar S-7; S-7 restaurado y aliado → mantenimiento de H-12; ubicaciones de H-12 + red civil de Rosa → advertencia a comunidades; registro de Línea 1 por Vega → revocación de su ocultamiento anterior; identidades restauradas por Vega → controles civiles en el distrito de Ortega. Los hechos conocidos por NPC se guardan tras los intercambios correspondientes. No se supone que Rosa conoce una venta secreta a Vera.
+
+Lira distingue el rescate accidentado de copiar recuerdos sin consentimiento. En el primer caso atender su herida y reconocer el error permite recuperar su apoyo; en el segundo, curarla no restaura la confianza. S-7 apagado no conserva ayudas activas. El retraso de Matías desplaza todo el día 2 para evitar que el reloj retroceda.
+
+El mapa permite seleccionar cualquiera de los siete capítulos y descargarlo como PNG horizontal. Conserva qué opciones estaban cerradas al visitar cada escena, explica sus causas en el panel y añade conexiones vividas a la imagen. No es todavía un mapa de la campaña principal ni una colección entre partidas. La retirada con avance narrativo está implementada en el piloto de Lira; los demás combates conservan la recuperación existente hasta diseñar sus consecuencias específicas.
+
+Validación de etapas 1–2: 107 pruebas automáticas aprobadas, incluidas ocho pruebas nuevas de conexiones, preparación, guardado de caminos cerrados, memoria de Lira y cronología. Sin prueba completa en navegador ni evaluación con jugadores todavía. Los nuevos diálogos no reciben una puntuación final antes de esa evaluación.
 
 ## Etapa 3 — Desenlace y cierre automático
 
