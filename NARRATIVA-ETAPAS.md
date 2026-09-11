@@ -1,7 +1,7 @@
 # Renovación narrativa por etapas
 
 Base revisada: main 2aa39997d09bf44c6ca0a998d0b50aaad6252472.
-Etapas 1, 2 y 3 implementadas. En las partidas nuevas y las antiguas aún en curso, el cierre ocurre automáticamente. Los finales de partidas antiguas ya terminadas conservan su versión original.
+Etapas 1, 2 y 3 implementadas; revisión de código y documento de la etapa 4 realizada, con validación humana y visual pendiente. En las partidas nuevas y las antiguas aún en curso, el cierre ocurre automáticamente. Los finales de partidas antiguas ya terminadas conservan su versión original.
 
 ## Etapa 1 — Base y piloto de Lira
 
@@ -39,6 +39,14 @@ El mapa incorpora «El desenlace de la torre» y permite descargar su PNG direct
 
 Validación: 118 pruebas automáticas aprobadas. Cubren los cinco cierres, consentimiento y recursos de Irene, objetivos por rondas con el ciclo real de enemigos, derrotas, pérdidas, migración, recarga, pago único y acceso al mapa final. Falta la prueba completa en navegador y con jugadores de la etapa 4.
 
-## Etapa 4 — Revisión literaria y recorrido completo
+## Etapa 4 — Revisión literaria y recorridos (revisión técnica realizada)
 
-Revisar voz de cada personaje, redundancias, claridad del mundo, cronología, epílogos contradictorios y ritmo. Probar recorridos representativos completos y lectura con amigos: qué persiguen, qué sacrificaron y por qué llegaron a ese cierre. Actualizar la reconstrucción literaria entregada al usuario. Puntuar con la misma rúbrica: 4,6/10 fue la evaluación editorial original, 9–9,5 es una aspiración, no una nota concedida por implementar el mapa.
+Ortega ya no presupone haber oído el nombre de Lira: responde al registro aceptado por el lector. Solo puede afirmarse que ella vive tras atenderla y sin hechos posteriores de muerte. No se ofrece borrar una ruta desconocida. Los bloqueos narrativos se ocultan también en conversaciones, conservando sus índices originales y la validación al seleccionar. Su diálogo concreta el conflicto en las familias del perímetro y el temor a su reemplazo.
+
+Prometer decidir en privado ya no abre automáticamente el intercambio de archivos de Varela. SONAR se describe como inferencia de señales físicas, no lectura de pensamientos. El resumen del censo coincide con el archivo de comunidades vigiladas. Los restos del ministerio se sitúan once años atrás; los suministros recuperables proceden del mantenimiento actual del relé.
+
+Actualizada la reconstrucción literaria TXT: expedición, siete desvíos, preparación del canal, Irene, retirada y cinco cierres causales. Se distinguen ramas incompatibles y se explica qué información procede de archivos opcionales.
+
+Validación: 122 pruebas aprobadas. Cuatro pruebas nuevas verifican bloqueos de Ortega, acceso al diálogo de Varela y dos recorridos continuos desde el evento inicial hasta archivo/testimonio, con persistencia al recargar. Los recorridos simulan victorias y reponen HP/energía/moral para aislar continuidad; no validan equilibrio de supervivencia. Las pruebas anteriores cubren los otros cierres, rutas, pérdidas y exportación del mapa.
+
+Pendiente: partida visual completa en el demo publicado (la conexión del navegador se cerró durante la comprobación), prueba de comprensión con amigos y evaluación de ritmo/dificultad. La retirada irreversible de otros desvíos sigue limitada como se documentó en etapa 2. No se afirma que todas las combinaciones hayan sido jugadas ni se concede una nota 9–9,5 sin lectores. La implementación técnica de esta revisión está lista; la aceptación narrativa depende de esa prueba humana.
