@@ -81,6 +81,7 @@ function crateCandidate(ev,choice,out){
   return null;
 }
 function prepareCrate(choice,out){
+  if(state.finaleRevision===1&&state.index>=23)return;
   if(!pending||pending.dialogue||pending.ending||pending.returnToRefuge||state.morale<=0||state.refuge.active)return;
   var ev=eventDisplay(events[state.index],state.index),type=crateCandidate(ev,choice,out),store=crateStore(),key=String(state.index);
   if(!type||store.checked[key])return;

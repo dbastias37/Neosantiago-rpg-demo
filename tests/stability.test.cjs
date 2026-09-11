@@ -229,26 +229,14 @@ test('three correct signal sequences grant coverage once; stale transitions cann
   for(const key of [...c.signalGameState.sequence])c.signalInput(key);
   const current=JSON.stringify(c.signalGameState);stale();assert.equal(JSON.stringify(c.signalGameState),current);
 });
-test('day transition and all final choices commit their effects once', () => {
+test('day transition commits once and the tower closure has no ending selector', () => {
   const a=session(),c=a.ctx;c.state.index=8;c.encounterSaveLocked=true;
   c.pending={ending:null,returnToRefuge:null};c.continuePendingAdvance();
   assert.equal(c.state.index,9);assert.equal(c.state.stats.rests,1);
   const b=boot(a.storage);b.ctx.continueGame();assert.equal(b.ctx.state.stats.rests,1);
-  for(let i=0;i<3;i++) {
-    const d=session(),s=d.ctx;s.state.index=26;
-    const choice=s.eventDisplay(s.events[26],26).choices[i];
-    if(choice.req)for(const [id,qty] of Object.entries(choice.req)) {
-      if(id==='water')s.state.res.water=qty;else s.placePartyItem(id,qty);
-    }
-    for(const id of choice.reqAll||[])s.placePartyItem(id,1);
-    if(choice.reqAny?.length)s.placePartyItem(choice.reqAny[0],1);
-    assert.equal(s.reason(choice),'');s.choose(i);s.advance();
-    for(let step=0;s.npcDialogueState&&step<10;step++) {
-      s.npcDialogueState.lineIndex=s.npcDialogueState.lines.length-1;s.revealNpcDialogueText();
-      if(s.npcDialogueState.selected||!s.npcDialogueState.options.length)s.closeNpcDialogueAndContinue();
-      else s.selectNpcDialogueChoice(s.npcDialogueState.options.findIndex(o=>!o.combat&&!s.reason(o)));
-    }
-    assert.equal(s.state.finished,true);assert.equal(s.encounterSaveLocked,false);
-    assert.equal(JSON.parse(d.storage.get(s.KEY)).ending,choice.ending);
-  }
+  const d=session(),s=d.ctx;s.state.index=26;s.render();
+  assert.equal(s.eventDisplay(s.events[26],26).choices.length,0);
+  assert.equal(s.state.finished,true);assert.equal(s.encounterSaveLocked,false);
+  const snapshot=JSON.stringify(s.state);s.choose(0);s.render();assert.equal(JSON.stringify(s.state),snapshot);
+  assert.equal(JSON.parse(d.storage.get(s.KEY)).ending,'testimony');
 });

@@ -45,7 +45,7 @@ test('context filters exclude flight, failed checks, conversations and incompati
   c.pending={};c.prepareCrate(station.choices[1],station.choices[1]);assert.equal(c.pending.crate,undefined);
   c.state.index=5;c.crateStore().lastIndex=4;c.prepareCrate(gal.choices[1],gal.choices[1]);assert.equal(c.pending.crate,undefined);
 });
-test('22 expedition situations can actually queue a contextual crate without opening narrative dialogs',()=>{
+test('20 expedition situations can queue crates before the uninterrupted tower climax',()=>{
   const c=session().ctx,covered=[];
   c.events.forEach((ev,index)=>{
     const available=ev.choices.some(choice=>{
@@ -56,7 +56,7 @@ test('22 expedition situations can actually queue a contextual crate without ope
     });
     if(available)covered.push(index);
   });
-  assert.deepEqual(covered,[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,18,19,20,21,22,23,25]);
+  assert.deepEqual(covered,[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,18,19,20,21,22]);
 });
 test('first compatible decision guarantees a box before Matias for both quiet and combat approaches',()=>{
   const c=session().ctx,station=c.events[2];

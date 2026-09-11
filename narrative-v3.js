@@ -71,6 +71,7 @@ function narrativeEvent(ev){
 }
 // No inferred playthrough for legacy saves: only actions recorded by this version are highlighted.
 function narrativeGraph(id){
+  if(id==="towerFinale"&&typeof finaleGraph==="function")return finaleGraph();
   var def=routeNarrativeDef(id),log=(state.narrative&&state.narrative.routes[id])||{visited:[],choices:[]},nodes=[],edges=[];
   def.scenes.forEach(function(s){
     var seen=log.visited.indexOf(s.id)>=0;
@@ -102,11 +103,12 @@ function drawNarrativeMap(canvas,id){
 function downloadDecisionMap(){
   try{var canvas=document.createElement("canvas");var selectedRoute=narrativeMapRoute;drawNarrativeMap(canvas,selectedRoute);canvas.toBlob(function(blob){
     if(!blob){toast("No se pudo preparar la imagen. Inténtalo de nuevo.");return}
-    var url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="NeoSantiago-mapa-de-decisiones-"+(selectedRoute==="liraExiledCore"?"Lira":selectedRoute)+".png";document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url)},30000);
+    var url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="NeoSantiago-mapa-de-decisiones-"+(selectedRoute==="liraExiledCore"?"Lira":selectedRoute==="towerFinale"?"Desenlace":selectedRoute)+".png";document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url)},30000);
   },"image/png")}catch(e){toast("No se pudo descargar el mapa en este navegador.")}
 }
 function narrativeMapPanel(){
   var graph=narrativeGraph(narrativeMapRoute),selectors=Object.keys(routeNarrativeDefs).map(function(id){return '<option value="'+esc(id)+'" '+(id===narrativeMapRoute?'selected':'')+'>'+esc(routeNarrativeDefs[id].title)+'</option>'}).join("");
+  if(typeof finaleGraph==="function")selectors+='<option value="towerFinale" '+(narrativeMapRoute==="towerFinale"?'selected':'')+'>El desenlace de la torre</option>';
   var connections=(typeof narrativeLinks==="undefined"?[]:narrativeLinks).filter(function(link){return state.flags[link.flag]&&(link.to===narrativeMapRoute||link.from===narrativeMapRoute)});
   var closed=Object.keys(graph.closed).map(function(id){return graph.closed[id].map(function(b){return '<p>'+esc(b.reason)+'</p>'}).join("")}).join("");
   return '<article class="drawer-item"><strong>Mapa de decisiones</strong><p>Elige un capítulo para ver y descargar tu recorrido. Los nombres de escenas desconocidas permanecen ocultos.</p><label for="decisionMapChapter">Capítulo</label><select id="decisionMapChapter">'+selectors+'</select><button id="downloadDecisionMap">Descargar mapa de decisiones PNG</button></article><div style="overflow-x:auto"><canvas id="decisionMapPreview" role="img" aria-label="Mapa horizontal del capítulo. Recorrido y conexiones descritos debajo." style="width:960px;max-width:none;height:600px"></canvas></div>'+connections.map(function(link){return '<article class="drawer-item"><strong>Una decisión anterior tuvo efecto aquí</strong><p>'+esc(link.text)+'</p></article>'}).join("")+(closed?'<article class="drawer-item"><strong>Caminos que quedaron cerrados</strong>'+closed+'</article>':'')+graph.nodes.filter(function(n){return n.seen}).map(function(n){return '<article class="drawer-item"><strong>'+esc(n.label)+'</strong><p>'+esc(graph.edges.filter(function(e){return e.from===n.id&&e.chosen}).map(function(e){return e.label+(e.combat?" (intento con combate)":"")}).join("; ")||n.status)+'</p></article>'}).join("");
