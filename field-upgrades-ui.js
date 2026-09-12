@@ -1,19 +1,5 @@
-/* Inline SVG symbols and CSS details: no raster card assets or external fonts. */
-var fieldPaths={
- triple:'M12 48V20l5-9 5 9v28zm15 0V20l5-9 5 9v28zm15 0V20l5-9 5 9v28M12 39h10m5 0h10m5 0h10',
- sweep:'M13 47l10-18m9 18V19m19 28L41 29M18 29h5v5m4-15h10m4 10h5v5M9 52h46',
- sight:'M32 8v12m0 24v12M8 32h12m24 0h12M48 32a16 16 0 1 1-32 0 16 16 0 0 1 32 0M29 32h6m-3-3v6',
- breach:'M14 12h36v40H14zm21 0-9 17 12 5-10 18M7 32h7m36 0h7',
- opener:'M32 12l7 12v28H25V24zm-7 30h14M11 18l6 5m36-5-6 5M10 35h7m30 0h7',
- knife:'M39 8l8 8-20 23-7-7zm-23 23 14 14M12 48l9-9m-12 12 5 5 10-10',
- cover:'M12 15h40v22L32 55 12 37zm9 18h22M25 24h14M25 42h14',
- arc:'M35 7 24 27h12l-7 14M26 38 16 48m22-10 10 10M20 52a5 5 0 1 1-10 0 5 5 0 0 1 10 0m34 0a5 5 0 1 1-10 0 5 5 0 0 1 10 0',
- capacitor:'M19 15h26v39H19zm8-6h10v6M34 23l-7 12h10l-7 12',
- plate:'M32 8 51 16v20L32 55 13 36V16zm0 9-11 5v11l11 11 11-11V22z',
- pulse:'M8 33h12l6-16 11 31 7-15h12M9 15h6m-3-3v6',
- shared:'M26 10h12v16h16v12H38v16H26V38H10V26h16zM44 46h12m-6-6v12'
-};
-function fieldIcon(d){return '<svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="square" stroke-linejoin="miter"><path d="'+fieldPaths[d.icon]+'"/></svg>'}
+/* Shared generated WebP illustrations; card text and controls remain accessible HTML. */
+function fieldIcon(d){return '<img class="field-art" src="assets/upgrades/'+d.icon+'.webp?v=1" width="512" height="512" alt="" aria-hidden="true" decoding="async">'}
 var fieldMode='offer',fieldOpener=null,fieldOfferTimer=null,fieldDetailId=null,fieldPinned=false,fieldHovered=null,fieldHoverBlocked=null,fieldDeferredSignal=null,fieldDeferredWarning=null;
 var fieldSkillTray=document.createElement('div');fieldSkillTray.id='fieldSkillTray';fieldSkillTray.className='hidden';fieldSkillTray.setAttribute('aria-label','Habilidades disponibles');document.querySelector('.combat-console').appendChild(fieldSkillTray);
 document.querySelector('.nav').appendChild($('fieldCollection'));

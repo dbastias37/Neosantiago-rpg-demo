@@ -33,7 +33,7 @@ Los porcentajes ofensivos se aplican antes de la armadura. Los impactos de ráfa
 
 ## Interfaz
 
-SVG con una geometría común, fondos verdes oscuros y acentos por clase. Las ilustraciones son independientes del texto. El detalle se abre al pasar el cursor sobre el símbolo o al tocarlo; la × y Escape vuelven al frente. Cerrar el detalle no selecciona la carta. `Elegir` es una acción independiente del detalle y del selector de portador.
+Doce ilustraciones generadas en WebP de 512×512, en `assets/upgrades/`: símbolos geométricos con relieve metálico desgastado, fondos verdes oscuros, ámbar para Armamento, cian para Tecnología y Medicina, y acero para Protección. Comparten encuadre, iluminación y acabado. Las ilustraciones son independientes del texto. La imagen se desvanece mediante una transición CSS de opacidad de 250 ms mientras aparecen los detalles al pasar el cursor sobre el símbolo o al tocarlo; la × y Escape vuelven al frente. Cerrar el detalle no selecciona la carta. `Elegir` es una acción independiente del detalle y del selector de portador.
 
 El menú de navegación incluye `Mejoras`. En combate, los iconos bajo el aliado permiten consultar su equipo cuando no se están resolviendo acciones. Las mejoras activas aparecen en `Habilidad`, junto a la habilidad original, con sus usos y requisitos. Enter funciona sobre los botones de ese menú sin ser interceptado por el avance de narración. El botón Atrás cierra los detalles o el menú sin gastar acciones.
 

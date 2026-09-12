@@ -13,21 +13,21 @@
 .field-card.cyan{--accent:#75d3d7}.field-card.steel{--accent:#afc5bc}
 .field-class{color:var(--accent);text-align:center;text-transform:uppercase;letter-spacing:.17em;font-size:12px;margin:3px 0 12px}
 .field-card-body{position:relative;min-height:355px;display:grid;flex:1}
-.field-front{display:flex;align-items:center;flex-direction:column;text-align:center;transition:opacity .2s ease,transform .2s ease}
+.field-front{display:flex;align-items:center;flex-direction:column;text-align:center;opacity:1;visibility:visible;transition:opacity .25s ease,transform .25s ease,visibility 0s}
 .field-symbol{display:grid;place-items:center;width:100%;height:136px;flex:none;margin:0 0 8px;border:0;background:transparent;color:var(--accent);cursor:pointer}
-.field-symbol svg{width:108px;height:108px}
+.field-art{display:block;object-fit:contain;max-width:100%}.field-symbol .field-art{width:136px;height:136px}
 .field-card h3{font-size:clamp(20px,2.2vw,27px);line-height:1.15;text-transform:uppercase;letter-spacing:.055em;margin:8px 0 14px;overflow-wrap:normal;hyphens:none;color:#f1eddf}
 .field-front>p{border-top:1px solid #486458;padding-top:14px;font-size:14px;line-height:1.5;margin:0 0 14px;width:100%}
 .field-buff{font-size:18px;line-height:1.3;color:var(--accent);display:block;margin-bottom:14px}
 .field-details-link{font-size:12px;color:#bac8c0;background:none;border:0;text-decoration:underline;text-underline-offset:4px;cursor:pointer;margin-top:auto;padding:10px}
-.field-detail{position:absolute;inset:0;display:flex;flex-direction:column;background:#081510;padding:0;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s ease,transform .2s ease,visibility .2s;pointer-events:none;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin}
+.field-detail{position:absolute;inset:0;display:flex;flex-direction:column;background:#081510;padding:0;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .25s ease,transform .25s ease,visibility 0s .25s;pointer-events:none;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin}
 .field-detail h3{padding-right:35px;margin-top:10px}
 .field-detail h4{text-transform:uppercase;letter-spacing:.1em;color:var(--accent);font-size:11px;margin:12px 0 8px}
 .field-detail p{font-size:14px;line-height:1.5;margin:0 0 6px}
 .field-detail small{font-size:11px;color:#a9bcb0;border-top:1px solid #365548;padding-top:10px;margin-top:auto}
 .field-x{position:absolute;right:0;top:0;font-size:23px;min-width:32px;min-height:32px;color:var(--accent);border-color:transparent}
-.field-card.is-detailed .field-front{opacity:0;visibility:hidden;pointer-events:none;transform:translateY(-5px)}
-.field-card.is-detailed .field-detail{opacity:1;visibility:visible;transform:none;pointer-events:auto}
+.field-card.is-detailed .field-front{opacity:0;visibility:hidden;pointer-events:none;transform:translateY(-5px);transition-delay:0s,0s,.25s}
+.field-card.is-detailed .field-detail{opacity:1;visibility:visible;transform:none;pointer-events:auto;transition-delay:0s}
 .field-card-footer{margin-top:12px;border-top:1px solid #365548;padding-top:12px;display:grid;gap:10px}
 .field-owner{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;color:#b9c8c0;margin:0}
 .field-owner select{min-width:0;width:65%;background:#0e221a;border:1px solid #456a5b;color:#f1eddf;padding:8px;font:inherit;border-radius:0}
@@ -39,18 +39,18 @@
 #fieldCollection{position:static;color:#e1b974}#fieldCollection.hidden{display:none!important}#fieldCount{display:inline-block;font-size:10px;color:#b9c8c0}
 #battle .field-badges{display:flex;flex-wrap:wrap;justify-content:center;gap:3px;margin-top:5px}
 #battle .field-badges button{display:grid;place-items:center;color:#d6ac65;width:23px;height:23px;min-height:0;padding:2px;background:#11251b;border:1px solid #617967;cursor:pointer}
-#battle .field-badges svg{width:17px;height:17px}.field-badges button:disabled{opacity:.45;cursor:default}
+#battle .field-badges .field-art{width:17px;height:17px}.field-badges button:disabled{opacity:.45;cursor:default}
 #fieldSkillTray{position:absolute;bottom:calc(100% + 8px);left:0;right:0;z-index:70;background:#091a12;border:1px solid #75d3d7;padding:12px;display:grid;gap:8px;max-height:55dvh;overflow:auto;box-shadow:0 -10px 30px #0009}
 #fieldSkillTray.hidden{display:none!important}#fieldSkillTray>strong{color:#75d3d7;font-size:14px}
 #fieldSkillTray button{display:flex;align-items:center;gap:10px;text-align:left;padding:10px 12px;font:600 14px var(--sans,Arial,sans-serif);color:#eee8db;background:#102a1d;border:1px solid #456a5b;cursor:pointer;flex-wrap:wrap}
-#fieldSkillTray button:disabled{opacity:.5;cursor:default}#fieldSkillTray small{display:block;font-size:12px;color:#b5c5ba;font-weight:400;margin-top:4px}#fieldSkillTray svg{width:30px;height:30px;color:#d6ac65;flex:none}
-@media(max-width:700px){#fieldModal{padding:14px 10px}.field-cards{grid-template-columns:1fr;gap:14px;width:min(430px,100%);margin:auto}.field-card{padding:14px 18px}.field-card-body{min-height:300px}.field-symbol{height:94px}.field-symbol svg{width:80px;height:80px}.field-card h3{font-size:24px;margin:5px 0 12px}.field-heading h2{font-size:27px}.field-kicker{font-size:9px;letter-spacing:.1em}.field-front>p{padding-top:10px}.field-detail p{font-size:14px}.field-front{min-height:300px}.field-cards-owned .field-card-body{min-height:310px}}
-@media(max-height:500px) and (min-width:701px){#fieldModal{padding:12px}.field-card-body{min-height:285px}.field-symbol{height:76px}.field-symbol svg{width:70px;height:70px}.field-card h3{font-size:21px}.field-heading h2{font-size:28px}.field-cards{gap:12px}.field-card{padding:12px}.field-detail p{font-size:13px}}
+#fieldSkillTray button:disabled{opacity:.5;cursor:default}#fieldSkillTray small{display:block;font-size:12px;color:#b5c5ba;font-weight:400;margin-top:4px}#fieldSkillTray .field-art{width:30px;height:30px;color:#d6ac65;flex:none}
+@media(max-width:700px){#fieldModal{padding:14px 10px}.field-cards{grid-template-columns:1fr;gap:14px;width:min(430px,100%);margin:auto}.field-card{padding:14px 18px}.field-card-body{min-height:300px}.field-symbol{height:94px}.field-symbol .field-art{width:94px;height:94px}.field-card h3{font-size:24px;margin:5px 0 12px}.field-heading h2{font-size:27px}.field-kicker{font-size:9px;letter-spacing:.1em}.field-front>p{padding-top:10px}.field-detail p{font-size:14px}.field-front{min-height:300px}.field-cards-owned .field-card-body{min-height:310px}}
+@media(max-height:500px) and (min-width:701px){#fieldModal{padding:12px}.field-card-body{min-height:285px}.field-symbol{height:76px}.field-symbol .field-art{width:76px;height:76px}.field-card h3{font-size:21px}.field-heading h2{font-size:28px}.field-cards{gap:12px}.field-card{padding:12px}.field-detail p{font-size:13px}}
 @media(prefers-reduced-motion:reduce){.field-front,.field-detail,.field-choose{transition:none!important}}
 
 .field-reward{--accent:#d6ac65;grid-column:1/-1;width:min(660px,100%);box-sizing:border-box;margin:auto;border:1px solid #d6ac65;padding:24px;background:#081510;line-height:1.5}
 .field-reward h3{font-size:24px;color:#eee8db;margin:0 0 12px}.field-reward p{font-size:15px;color:#c1cec5;margin:12px 0}
-.field-reward-symbol{color:#d6ac65;float:right;margin:0 0 14px 20px}.field-reward-symbol svg{width:64px;height:64px}
+.field-reward-symbol{color:#d6ac65;float:right;margin:0 0 14px 20px}.field-reward-symbol .field-art{width:64px;height:64px}
 .field-tutorial-steps{clear:both;border-block:1px solid #365548;margin:18px 0;padding:4px 0}.field-tutorial-steps b{display:block;color:#d6ac65;font-size:14px;margin-bottom:3px}
 .field-reward .field-reward-rule{font-size:13px;color:#aac0b2}.field-reward .field-choose{margin-top:12px}
-@media(max-width:700px){.field-reward{padding:18px}.field-reward h3{font-size:21px}.field-reward p{font-size:14px}.field-reward-symbol svg{width:48px;height:48px}}
+@media(max-width:700px){.field-reward{padding:18px}.field-reward h3{font-size:21px}.field-reward p{font-size:14px}.field-reward-symbol .field-art{width:48px;height:48px}}
