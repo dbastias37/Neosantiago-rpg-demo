@@ -161,3 +161,18 @@ html:has(#battle:not(.hidden)),body:has(#battle:not(.hidden)){overflow:hidden!im
 @media(prefers-reduced-motion:reduce){
 #battle .combat-console .item-tray.inventory-closing{animation:none!important}}
 
+
+/* Full combat names wrap instead of truncating, including target selectors. */
+#battle .units .unit-info h3,#battle .stage-status-card strong,#battle #stageTargets button{white-space:normal;text-overflow:clip;overflow:visible;overflow-wrap:anywhere;word-break:normal;hyphens:none}
+#battle .units .unit,#battle .units .unit.loot-mode{grid-template-rows:minmax(0,1fr) max-content!important}
+#battle .units .unit-info,#battle .units .unit.loot-mode .unit-info{overflow:visible}
+#battle #stageTargets{flex-wrap:wrap;overflow:visible}
+#battle #stageTargets button{height:auto;min-height:28px}
+#battle .battle-shell{grid-template-rows:28px var(--log-height,112px) minmax(0,1fr) auto auto}
+#battle #stageLog{box-sizing:border-box;grid-template-rows:minmax(0,1fr) 28px;gap:5px;padding:8px 12px}
+#battle #stageLogLines{grid-row:1;display:grid;place-items:center;position:relative;width:100%;min-height:0}
+#battle #stageAdvance{grid-row:2;justify-self:end;border:1px solid var(--cyan);background:#122b25;color:var(--paper);font:600 12px var(--sans,Arial,sans-serif);padding:4px 14px;min-height:28px;cursor:pointer}
+#battle #stageAdvance:disabled{opacity:.35;cursor:default}
+#battle #stageAdvance:focus-visible{outline:2px solid var(--paper);outline-offset:2px}
+@media(max-width:600px){#battle .battle-shell{grid-template-rows:24px var(--log-height,118px) minmax(0,1fr) auto auto}}
+@media(max-height:500px) and (min-aspect-ratio:1/1){#battle .battle-shell{grid-template-rows:var(--log-height,90px) minmax(0,1fr) auto auto}}

@@ -16,6 +16,8 @@ function stageActivateCard(side,index){
 'use strict';
 var shell=document.querySelector('.battle-shell'),arena=document.querySelector('.arena'),consolePanel=document.querySelector('.combat-console');
 var stageLog=document.createElement('div');stageLog.id='stageLog';stageLog.setAttribute('role','log');stageLog.setAttribute('aria-live','polite');stageLog.setAttribute('aria-atomic','true');shell.insertBefore(stageLog,arena);
+var advanceButton=document.createElement('button');advanceButton.id='stageAdvance';advanceButton.type='button';advanceButton.textContent='Avanzar';advanceButton.setAttribute('aria-keyshortcuts','Enter');stageLog.appendChild(advanceButton);
+var logLines=document.createElement('div');logLines.id='stageLogLines';stageLog.appendChild(logLines);
 var status=document.createElement('div');status.id='stageStatus';consolePanel.insertBefore(status,consolePanel.firstChild);
 $('combatLog').setAttribute('aria-live','off');
 $('itemsToggle').textContent='Inventario';$('itemsToggle').setAttribute('aria-controls','itemTray');$('itemsToggle').setAttribute('aria-expanded','false');
@@ -29,28 +31,56 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('itemTra
 var selector=document.createElement('div');selector.id='stageTargets';selector.setAttribute('aria-label','Seleccionar objetivo');arena.parentNode.insertBefore(selector,consolePanel);
 [['allyUnits','ally'],['enemyUnits','enemy']].forEach(function(pair){$(pair[0]).addEventListener('click',function(e){var card=e.target.closest('.unit');var group=$(pair[0]);if(!card||!group.contains(card))return;e.preventDefault();e.stopImmediatePropagation();stageActivateCard(pair[1],Array.from(group.children).indexOf(card))},true)});
 var rawRender=renderBattle,rawEnd=endPlayerTurn,rawRecord=recordHp;
-var endTurnTimer=null,logExitTimers=[];
+var endTurnTimer=null,pendingNarration=null,logExitTimers=[];
 var visualBattle=null,seenLogs=0,lastDamage={ally:{},enemy:{}},notices={ally:{},enemy:{}},queue=[],logTimer=null,logUntil=0;
 function logDuration(text){return Math.max(2600,Math.min(6500,1800+String(text).length*23))}
 function fitLog(line){
  var log=stageLog,w=log.clientWidth||400,font=w<500?14:16;line.style.fontSize=font+'px';
- var needed=line.scrollHeight+20,base=Math.max(70,Math.min(112,innerHeight*.14));
- if(needed>innerHeight*.30){line.style.fontSize='12px';needed=line.scrollHeight+20}
+ var needed=line.scrollHeight+54,base=Math.max(70,Math.min(112,innerHeight*.14));
+ if(needed>innerHeight*.30){line.style.fontSize='12px';needed=line.scrollHeight+54}
  shell.style.setProperty('--log-height',Math.max(base,needed)+'px');
 }
 function showNextLog(){
  if(visualBattle!==battleState){resetPresentation();return}
- if(!queue.length){logTimer=null;return}
- var previous=stageLog.lastElementChild;
+ if(!queue.length){logTimer=null;logUntil=0;syncAdvance();return}
+ var previous=logLines.lastElementChild;
  if(previous){previous.classList.remove('log-enter');previous.classList.add('log-exit');logExitTimers.push(setTimeout(function(){previous.remove()},750))}
- var text=queue.shift(),line=document.createElement('p');line.className='log-enter';line.textContent=text;stageLog.appendChild(line);fitLog(line);
- var duration=logDuration(text);logUntil=Date.now()+duration;logTimer=setTimeout(showNextLog,duration);
+ var text=queue.shift(),line=document.createElement('p');line.className='log-enter';line.textContent=text;logLines.appendChild(line);fitLog(line);
+ var duration=logDuration(text);logUntil=Date.now()+duration;logTimer=setTimeout(showNextLog,duration);syncAdvance();
 }
 function enqueueLog(lines){
  // Keep each original engine entry intact. Never cut it by character count.
  lines.forEach(function(line){if(String(line).trim())queue.push(String(line))});if(queue.length&&!logTimer)showNextLog();
 }
 window.stageNarrationDelay=function(){return Math.max(2200,logUntil-Date.now()+queue.reduce(function(sum,text){return sum+logDuration(text)},0))};
+
+function syncAdvance(){advanceButton.disabled=!(logTimer||queue.length||pendingNarration)}
+window.stageWaitForNarration=function(next){
+ clearTimeout(endTurnTimer);var current=battleState;
+ pendingNarration=function(){if(battleState===current)next()};
+ endTurnTimer=setTimeout(finishNarration,stageNarrationDelay());syncAdvance();
+};
+function finishNarration(){
+ clearTimeout(endTurnTimer);endTurnTimer=null;
+ var next=pendingNarration;pendingNarration=null;syncAdvance();if(next)next();
+}
+function advanceNarration(){
+ if(!battleState||visualBattle!==battleState)return;
+ clearTimeout(logTimer);logTimer=null;logUntil=0;
+ // Remove fading entries so fast clicks never stack unreadable messages.
+ logExitTimers.forEach(clearTimeout);logExitTimers=[];
+ logLines.querySelectorAll('.log-exit').forEach(function(p){p.remove()});
+ if(queue.length){if(logLines.lastElementChild)logLines.lastElementChild.remove();showNextLog();if(pendingNarration){clearTimeout(endTurnTimer);endTurnTimer=setTimeout(finishNarration,stageNarrationDelay())}}
+ else{finishNarration();syncAdvance()}
+}
+advanceButton.onclick=advanceNarration;
+document.addEventListener('keydown',function(e){
+ if(e.key!=='Enter'||!battleState||$('battle').classList.contains('hidden'))return;
+ if(e.target&&(e.target.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)))return;
+ if(document.querySelector('.overlay[aria-modal="true"]:not(.hidden)')||!$('itemTray').classList.contains('hidden'))return;
+ // Consume Enter even at the next decision: never activate a focused attack button.
+ e.preventDefault();e.stopImmediatePropagation();if(!e.repeat&&!advanceButton.disabled)advanceNarration();
+},true);
 
 recordHp=function(side,index,from,to,max,sfx){if(battleState&&to!==from)lastDamage[side][index]={time:Date.now(),delta:to-from,critical:false};return rawRecord.apply(this,arguments)};
 function reconcile(container,previous){Array.from(container.children).forEach(function(node,i){var old=previous[i];if(!old||old.tagName!==node.tagName)return;Array.from(old.attributes).forEach(function(a){if(a.name!=='style')old.removeAttribute(a.name)});Array.from(node.attributes).forEach(function(a){old.setAttribute(a.name,a.value)});if(old.innerHTML!==node.innerHTML)old.innerHTML=node.innerHTML;node.replaceWith(old)})}
@@ -78,7 +108,7 @@ function statusCard(p,label,enemy,looting){
 }
 renderBattle=function(){
  if(!battleState)return;var b=battleState;
- if(visualBattle!==b){visualBattle=b;seenLogs=0;stageLog.innerHTML='';queue=[];clearTimeout(logTimer);logTimer=null;logUntil=0;lastDamage={ally:{},enemy:{}};notices={ally:{},enemy:{}}}
+ if(visualBattle!==b){clearTimeout(endTurnTimer);pendingNarration=null;visualBattle=b;seenLogs=0;logLines.innerHTML='';queue=[];clearTimeout(logTimer);logTimer=null;logUntil=0;lastDamage={ally:{},enemy:{}};notices={ally:{},enemy:{}}}
  var oldAllies=Array.from($('allyUnits').children),oldEnemies=Array.from($('enemyUnits').children);
  b.criticalFeedback.forEach(function(f){if(lastDamage.enemy[f.index])lastDamage.enemy[f.index].critical=true});
  if(b.allyCritical!==undefined&&b.allyCritical!==null){if(lastDamage.ally[b.allyCritical])lastDamage.ally[b.allyCritical].critical=true;b.allyCritical=null}
@@ -98,16 +128,16 @@ renderBattle=function(){
  arrange('allyUnits','ally',allyIndex);arrange('enemyUnits','enemy',enemyIndex);
  enqueueLog(b.log.slice(seenLogs));seenLogs=b.log.length;
 };
-endPlayerTurn=function(){if(!battleState)return;var current=battleState;current.busy=true;renderBattle();endTurnTimer=setTimeout(function(){endTurnTimer=null;if(battleState!==current)return;current.busy=false;rawEnd()},stageNarrationDelay())};
+endPlayerTurn=function(){if(!battleState)return;var current=battleState;current.busy=true;renderBattle();stageWaitForNarration(function(){if(battleState!==current)return;current.busy=false;rawEnd()})};
 // A campaign has many encounters in one page; discard presentation callbacks on exit.
 function resetPresentation(){
  clearTimeout(logTimer);clearTimeout(endTurnTimer);clearTimeout(inventoryTimer);
  logExitTimers.forEach(clearTimeout);logExitTimers=[];logTimer=null;endTurnTimer=null;inventoryTimer=null;
- queue=[];logUntil=0;seenLogs=0;visualBattle=null;stageLog.innerHTML='';status.innerHTML='';selector.innerHTML='';
+ pendingNarration=null;queue=[];logUntil=0;seenLogs=0;visualBattle=null;logLines.innerHTML='';status.innerHTML='';selector.innerHTML='';
  shell.style.removeProperty('--log-height');shell.classList.remove('stage-looting');
  $('itemTray').classList.add('hidden');$('itemTray').classList.remove('inventory-closing');
- closeInventory.disabled=false;$('itemsToggle').setAttribute('aria-expanded','false');
+ closeInventory.disabled=false;$('itemsToggle').setAttribute('aria-expanded','false');syncAdvance();
 }
 window.resetCombatPresentation=resetPresentation;
-window.addEventListener('resize',function(){if(stageLog.lastElementChild)fitLog(stageLog.lastElementChild);if(battleState)renderBattle()});
+window.addEventListener('resize',function(){if(logLines.lastElementChild)fitLog(logLines.lastElementChild);if(battleState)renderBattle()});
 })();

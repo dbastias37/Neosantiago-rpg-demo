@@ -26,8 +26,8 @@ test('campaign encounter loads cards, complete log and animated inventory withou
  timer(a,t=>t.ms===320);assert.ok(d.getElementById('itemTray').classList.contains('hidden'));
  const full='Elías dispara contra el agente de la Red UNO y falla porque la cobertura del enemigo reduce su posibilidad de impacto. La munición utilizada se descuenta de su mochila, pero el enemigo conserva todos sus puntos de vida y permanece en combate.';
  c.battleState.log.push(full);c.renderBattle();let n=0;
- while(d.getElementById('stageLog').lastElementChild.textContent!==full){assert.ok(++n<20);timer(a,t=>t.fn.name==='showNextLog')}
- assert.equal(d.getElementById('stageLog').lastElementChild.textContent,full);
+ while(d.getElementById('stageLogLines').lastElementChild.textContent!==full){assert.ok(++n<20);timer(a,t=>t.fn.name==='showNextLog')}
+ assert.equal(d.getElementById('stageLogLines').lastElementChild.textContent,full);
  assert.equal(c.parent,undefined);assert.equal(c.labConfig,undefined);
 });
 test('misses, level ups and loot card selection use the campaign inventory',()=>{
@@ -51,7 +51,7 @@ test('victory returns to the campaign and retreat returns to refuge; callbacks c
   else if(exit==='retreat'){c.loseCombat(true);assert.ok(c.state.refuge.active)}
   else c.newGame();
   assert.equal(c.battleState,null);assert.ok(d.getElementById('battle').classList.contains('hidden'));
-  assert.equal(d.getElementById('stageLog').textContent,'');
+  assert.equal(d.getElementById('stageLogLines').textContent,'');
   assert.equal([...a.timers.values()].some(t=>t.fn.name==='showNextLog'||t.ms===320),false);
   c.startCombat({title:'Siguiente combate',enemies:['drone'],canFlee:true},{label:'test',_decisionChanges:[]});
   assert.notEqual(c.battleState,oldBattle);assert.equal(c.battleState.busy,false);
@@ -70,4 +70,34 @@ test('an entire campaign fight advances animated turns and preserves ammunition 
  }
  assert.ok(turns<100);assert.equal(c.battleState.phase,'loot');assert.equal(before-ammo(),c.state.stats.shots);
  c.finishLooting();assert.equal(c.battleState,null);assert.equal(c.state.stats.wins,1);
+});
+test('advance drains narration, releases one turn and never chooses the next action',()=>{
+ const a=session(),c=a.ctx,d=a.document,button=d.getElementById('stageAdvance');
+ c.combatAction('defend');const actor=c.battleState.actor;
+ let clicks=0;
+ while(c.battleState.busy){assert.ok(++clicks<30);a.click(button)}
+ assert.notEqual(c.battleState.actor,actor);
+ const next=c.battleState.actor,logs=c.battleState.log.length;
+ for(let i=0;i<10;i++)a.click(button);
+ assert.equal(c.battleState.actor,next);assert.equal(c.battleState.log.length,logs);
+ assert.equal(button.disabled,true);
+});
+test('Enter advances enemy narration without duplicating enemy attacks',()=>{
+ const a=session(),c=a.ctx,d=a.document;
+ c.state.party.forEach(p=>{p.hp=500;p.maxHp=500});
+ c.battleState.acted=c.state.party.map(()=>true);c.enemyPhase();
+ const round=c.battleState.round;let steps=0;
+ while(c.battleState.busy){
+  assert.ok(++steps<60);
+  if(d.getElementById('stageAdvance').disabled)timer(a,t=>!t.interval);
+  else{
+   const e=new d.defaultView.Event('keydown',{bubbles:true,cancelable:true});
+   Object.defineProperty(e,'key',{value:'Enter'});d.dispatchEvent(e);
+   assert.ok(e.defaultPrevented);
+  }
+ }
+ assert.equal(c.battleState.round,round+1);
+ const actor=c.battleState.actor;
+ const e=new d.defaultView.Event('keydown',{bubbles:true,cancelable:true});Object.defineProperty(e,'key',{value:'Enter'});d.dispatchEvent(e);
+ assert.equal(c.battleState.actor,actor);assert.equal(c.battleState.busy,false);
 });

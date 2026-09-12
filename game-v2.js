@@ -1664,7 +1664,7 @@ function enemyPhase(){
     if(cursor>=queue.length){current.enemyActing=null;finishEnemyRound();return}
     var e=queue[cursor++];current.enemyActing=current.enemies.indexOf(e);renderBattle();
     setTimeout(function(){if(battleState!==current)return;
-      try{resolveEnemy(e)}finally{if(battleState===current){renderBattle();setTimeout(nextEnemy,typeof stageNarrationDelay==="function"?stageNarrationDelay():2200)}}
+      try{resolveEnemy(e)}finally{if(battleState===current){renderBattle();if(typeof stageWaitForNarration==="function")stageWaitForNarration(nextEnemy);else setTimeout(nextEnemy,2200)}}
     },450);
   }
   function resolveEnemy(e){
