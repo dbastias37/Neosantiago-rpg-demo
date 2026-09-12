@@ -4,16 +4,13 @@ Primera versión: doce mejoras, hasta cuatro elecciones por partida. Cada elecci
 
 ## Obtención y guardado
 
-| Elección | Situaciones completadas | Victorias alternativas |
-|---|---:|---:|
-| 1 | 3 | 1 |
-| 2 | 9 | 3 |
-| 3 | 16 | 5 |
-| 4 | 22 | 7 |
+La partida comienza sin mejoras ni un acceso vacío a ellas. La primera victoria de combate concede la primera elección. Después se necesita ganar dos combates más por elección: victorias 1, 3, 5 y 7. Avanzar situaciones, retirarse o perder no concede mejoras. El contador también reconoce una victoria por sostener un objetivo en la torre.
 
-Se requiere uno de los dos umbrales. La oferta espera un punto seguro de la expedición: nunca interrumpe combates, decisiones pendientes, suministros, diálogos o el refugio. Una partida antigua puede recuperar elecciones pendientes, con un máximo total de cuatro. El contexto es material recuperado que permite preparar una mejora.
+La recompensa espera un punto seguro tras resolver combate, loot y ventanas narrativas. Antes de las cartas aparece «Has ganado una mejora», con el origen del material recuperado. La primera vez se explican consulta, asignación, elección y uso. Después de elegir aparece una confirmación específica del portador y de cómo usar la mejora. Las siguientes entregas mantienen el aviso de recompensa y omiten el tutorial largo.
 
-`state.fieldUpgrades` contiene portadores, oferta pendiente, estadísticas y un generador aleatorio propio. La oferta se guarda antes de mostrarla; recargar no cambia las cartas. Este generador no consume el azar de la historia. Las partidas anteriores se normalizan sin perder progreso. Los usos por combate están en `battleState.field` y se reinician con cada encuentro.
+La pantalla de resultado muestra el progreso hacia la próxima mejora. También puede consultarse en «Mejoras»: 0/2 o 1/2 victorias. El máximo sigue siendo cuatro mejoras. La migración conserva las cartas equipadas y cuenta únicamente victorias futuras para las siguientes: no convierte progreso narrativo ni victorias antiguas en premios retroactivos. Una oferta antigua no ganada se descarta.
+
+`state.fieldUpgrades` contiene portadores, oferta pendiente, estadísticas, victorias reconocidas, tutorial visto y un generador aleatorio propio. La oferta se guarda antes de mostrarla; recargar no cambia las cartas. Este generador no consume el azar de la historia. Las partidas anteriores se normalizan sin perder progreso. Los usos por combate están en `battleState.field` y se reinician con cada encuentro.
 
 ## Catálogo
 
@@ -46,6 +43,6 @@ El resumen final y su PNG incluyen las mejoras elegidas y sus portadores. Se reg
 
 ## Validación
 
-`npm test`: 141 pruebas, incluidas 17 específicas de esta función. Se verifican ofertas y recarga, migración, cuatro elecciones sin duplicados, munición, muertes durante ráfagas, críticos y defensa, combos sin recursión, batería vacía, protección, curación, interfaz, habilidad original y reinicio.
+`npm test`: 144 pruebas, incluidas 20 específicas de esta función. Se verifican ofertas y recarga, migración, cuatro elecciones sin duplicados, munición, muertes durante ráfagas, críticos y defensa, combos sin recursión, batería vacía, protección, curación, interfaz, habilidad original y reinicio.
 
 Prueba adicional en Chromium: escritorio 1440×1000, móvil vertical 390×844 y horizontal 844×390, sin desbordamiento horizontal. Recorrido real con ratón, teclado y tacto: abrir/cerrar detalle, persistir oferta al recargar, elegir portador y gastar la munición correcta al activar Gatillo triple. Sin errores de JavaScript en esos recorridos.

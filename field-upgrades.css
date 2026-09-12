@@ -47,3 +47,10 @@
 @media(max-width:700px){#fieldModal{padding:14px 10px}.field-cards{grid-template-columns:1fr;gap:14px;width:min(430px,100%);margin:auto}.field-card{padding:14px 18px}.field-card-body{min-height:300px}.field-symbol{height:94px}.field-symbol svg{width:80px;height:80px}.field-card h3{font-size:24px;margin:5px 0 12px}.field-heading h2{font-size:27px}.field-kicker{font-size:9px;letter-spacing:.1em}.field-front>p{padding-top:10px}.field-detail p{font-size:14px}.field-front{min-height:300px}.field-cards-owned .field-card-body{min-height:310px}}
 @media(max-height:500px) and (min-width:701px){#fieldModal{padding:12px}.field-card-body{min-height:285px}.field-symbol{height:76px}.field-symbol svg{width:70px;height:70px}.field-card h3{font-size:21px}.field-heading h2{font-size:28px}.field-cards{gap:12px}.field-card{padding:12px}.field-detail p{font-size:13px}}
 @media(prefers-reduced-motion:reduce){.field-front,.field-detail,.field-choose{transition:none!important}}
+
+.field-reward{--accent:#d6ac65;grid-column:1/-1;width:min(660px,100%);box-sizing:border-box;margin:auto;border:1px solid #d6ac65;padding:24px;background:#081510;line-height:1.5}
+.field-reward h3{font-size:24px;color:#eee8db;margin:0 0 12px}.field-reward p{font-size:15px;color:#c1cec5;margin:12px 0}
+.field-reward-symbol{color:#d6ac65;float:right;margin:0 0 14px 20px}.field-reward-symbol svg{width:64px;height:64px}
+.field-tutorial-steps{clear:both;border-block:1px solid #365548;margin:18px 0;padding:4px 0}.field-tutorial-steps b{display:block;color:#d6ac65;font-size:14px;margin-bottom:3px}
+.field-reward .field-reward-rule{font-size:13px;color:#aac0b2}.field-reward .field-choose{margin-top:12px}
+@media(max-width:700px){.field-reward{padding:18px}.field-reward h3{font-size:21px}.field-reward p{font-size:14px}.field-reward-symbol svg{width:48px;height:48px}}

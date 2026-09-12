@@ -14,25 +14,47 @@ var fieldPaths={
  shared:'M26 10h12v16h16v12H38v16H26V38H10V26h16zM44 46h12m-6-6v12'
 };
 function fieldIcon(d){return '<svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="square" stroke-linejoin="miter"><path d="'+fieldPaths[d.icon]+'"/></svg>'}
-var fieldMode='offer',fieldOpener=null,fieldOfferTimer=null,fieldDetailId=null,fieldPinned=false,fieldHovered=null,fieldHoverBlocked=null,fieldDeferredSignal=null;
+var fieldMode='offer',fieldOpener=null,fieldOfferTimer=null,fieldDetailId=null,fieldPinned=false,fieldHovered=null,fieldHoverBlocked=null,fieldDeferredSignal=null,fieldDeferredWarning=null;
 var fieldSkillTray=document.createElement('div');fieldSkillTray.id='fieldSkillTray';fieldSkillTray.className='hidden';fieldSkillTray.setAttribute('aria-label','Habilidades disponibles');document.querySelector('.combat-console').appendChild(fieldSkillTray);
 document.querySelector('.nav').appendChild($('fieldCollection'));
 function fieldVisible(){return !$('fieldModal').classList.contains('hidden')}
 function fieldSafe(){return gameSessionActive&&state.introCompleted&&!state.finished&&!pending&&!battleState&&!encounterSaveLocked&&!state.refuge.active&&!document.querySelector('.overlay:not(.hidden),.drawer:not(.hidden),.title-screen:not(.hidden)')}
 function fieldScheduleOffer(){
- $('fieldCount').textContent=fieldStore().selected.length+'/4';$('fieldCollection').classList.toggle('hidden',!gameSessionActive);
+ $('fieldCount').textContent=fieldStore().selected.length+'/4';$('fieldCollection').classList.toggle('hidden',!gameSessionActive||(!fieldStore().victories&&!fieldStore().selected.length));
  clearTimeout(fieldOfferTimer);fieldOfferTimer=setTimeout(function(){fieldOfferTimer=null;fieldMaybeOffer()},0);
 }
-function fieldMaybeOffer(){if(fieldVisible())return true;if(!fieldSafe()||!fieldDue())return false;if(!fieldPrepareOffer())return false;fieldOpen('offer');return true}
+function fieldMaybeOffer(){
+ if(fieldVisible())return true;if(!fieldSafe())return false;
+ if(!fieldDue()){if(fieldStore().progressNotice){toast(fieldStore().progressNotice);fieldStore().progressNotice='';save()}return false}
+ if(!fieldPrepareOffer())return false;fieldShowReward();return true;
+}
+function fieldShowReward(){
+ fieldMode='reward';fieldOpener=document.activeElement;fieldDetailId=null;fieldPinned=false;
+ $('fieldTitle').textContent='Has ganado una mejora';
+ $('fieldStory').textContent='Combate ganado. Al asegurar la zona, el grupo recuperó material útil para mejorar su equipo.';
+ $('fieldInstruction').textContent='Recompensa de victoria · Mejora '+(fieldStore().selected.length+1)+' de 4';
+ $('fieldClose').classList.add('hidden');$('fieldMessage').textContent='';$('fieldCards').classList.remove('field-cards-owned');
+ var tutorial=!fieldStore().tutorialSeen;
+ $('fieldCards').innerHTML='<div class="field-reward"><div class="field-reward-symbol">'+fieldIcon(fieldById.plate)+'</div><h3>Material recuperado</h3><p>Con estas piezas puedes preparar <strong>una de tres mejoras</strong> para un aliado.</p>'+(tutorial?'<div class="field-tutorial-steps"><p><b>1 · Revisa las cartas</b>Toca el símbolo para conocer el efecto y sus límites.</p><p><b>2 · Elige un portador</b>Asigna la mejora a Sara, Elías o Noa, según su compatibilidad.</p><p><b>3 · Equipa una mejora</b>Las pasivas funcionan solas. Las activas se usan desde Habilidad durante el combate.</p></div>':'')+'<p class="field-reward-rule">La conservarás hasta el final de esta partida. Después de elegir, ganar otros dos combates te dará una nueva mejora, hasta completar cuatro.</p><button class="field-choose" type="button" data-field-reward-next>Ver mis tres opciones</button></div>';
+ fieldStore().progressNotice='';save();$('fieldModal').classList.remove('hidden');$('fieldCards').querySelector('button').focus();
+}
+function fieldShowEquipped(id,owner){
+ var d=fieldById[id],p=state.party.find(function(p){return p.id===owner});fieldMode='equipped';fieldDetailId=null;
+ $('fieldTitle').textContent='Mejora equipada';$('fieldStory').textContent=p.name+' conserva '+d.name+' hasta el final de esta partida.';
+ $('fieldInstruction').textContent=fieldProgressText();$('fieldMessage').textContent='';$('fieldClose').classList.add('hidden');
+ $('fieldCards').innerHTML='<div class="field-reward"><div class="field-reward-symbol">'+fieldIcon(d)+'</div><h3>'+esc(d.name)+' · '+esc(p.name)+'</h3><strong class="field-buff">'+esc(d.buff)+'</strong><p>'+esc(d.active?'Cuando sea el turno de '+p.name+', abre Habilidad y selecciona '+d.name+'.':'Se activa automáticamente. '+d.detail)+'</p><p>'+esc(d.limit)+'</p><p>Podrás consultarla desde Mejoras o desde el icono bajo el personaje en combate.</p><button class="field-choose" type="button" data-field-equipped-done>Volver a la expedición</button></div>';
+ $('fieldCards').querySelector('button').focus();
+}
+
 function fieldOpen(mode,owner){
  if(battleState&&battleState.busy)return;
  fieldMode=mode;fieldOpener=document.activeElement;fieldDetailId=null;fieldPinned=false;fieldHovered=null;
  $('fieldTitle').textContent=mode==='offer'?'Mejoras de campo':'Mejoras equipadas';
- $('fieldStory').textContent=mode==='offer'?'El grupo reúne piezas, circuitos y material de curación recuperados durante la expedición. Hay suficiente para preparar una mejora. Tú decides cómo aprovecharlo.':'Estas mejoras acompañan al grupo hasta el final de la partida.';
- $('fieldInstruction').textContent=mode==='offer'?'Elección '+(fieldStore().selected.length+1)+' de 4 · Elige una carta y su portador.':'Toca un símbolo para consultar sus efectos y límites.';
+ $('fieldStory').textContent=mode==='offer'?'Recompensa del combate ganado: elige cómo aprovechar el material recuperado.':'Estas mejoras acompañan al grupo hasta el final de la partida.';
+ $('fieldInstruction').textContent=mode==='offer'?'Elección '+(fieldStore().selected.length+1)+' de 4 · Elige una carta y su portador.':fieldProgressText()+' · Toca un símbolo para consultar sus efectos.';
  $('fieldClose').classList.toggle('hidden',mode==='offer');$('fieldMessage').textContent='';
  var entries=mode==='offer'?fieldStore().offer.ids.map(function(id){return {id:id}}):fieldStore().selected.filter(function(x){return !owner||x.owner===owner});
- $('fieldCards').innerHTML=entries.length?entries.map(fieldCardHtml).join(''):'<p class="field-empty">Todavía no hay mejoras. La primera elección llega tras una victoria o al avanzar tres situaciones.</p>';
+ $('fieldCards').innerHTML=entries.length?entries.map(fieldCardHtml).join(''):'<p class="field-empty">Todavía no hay mejoras. Gana tu primer combate para recuperar material y obtener tu primera mejora.</p>';
  $('fieldCards').classList.toggle('field-cards-owned',mode!=='offer');$('fieldModal').classList.remove('hidden');$('fieldModal').focus();
 }
 function fieldCardHtml(entry){
@@ -49,9 +71,9 @@ function fieldSetDetail(id,open,pinned){
  fieldDetailId=open?id:null;fieldPinned=!!(open&&pinned);
  if(open&&pinned)detail.querySelector('button').focus();
 }
-function fieldClose(){if(fieldMode==='offer')return false;$('fieldModal').classList.add('hidden');fieldDetailId=null;signalLastTick=Date.now();fieldResumeSignal();if(fieldOpener&&fieldOpener.isConnected)fieldOpener.focus();return true}
+function fieldClose(){if(fieldMode==='offer'||fieldMode==='reward')return false;$('fieldModal').classList.add('hidden');fieldDetailId=null;signalLastTick=Date.now();fieldResumeSignal();fieldScheduleOffer();if(fieldOpener&&fieldOpener.isConnected)fieldOpener.focus();return true}
 function fieldBack(){if(fieldDetailId){var id=fieldDetailId;fieldSetDetail(id,false,false);var b=$('fieldCards').querySelector('[data-field-detail="'+id+'"]');if(b)b.focus();return true}return fieldClose()}
-function fieldResetUI(){clearTimeout(fieldOfferTimer);fieldOfferTimer=null;$('fieldModal').classList.add('hidden');fieldDetailId=null;fieldOpener=null;fieldDeferredSignal=null;fieldCloseSkills();$('fieldCollection').classList.add('hidden')}
+function fieldResetUI(){clearTimeout(fieldOfferTimer);fieldOfferTimer=null;$('fieldModal').classList.add('hidden');fieldDetailId=null;fieldOpener=null;fieldDeferredSignal=null;fieldDeferredWarning=null;fieldCloseSkills();$('fieldCollection').classList.add('hidden')}
 function fieldCloseSkills(){var open=!fieldSkillTray.classList.contains('hidden');fieldSkillTray.classList.add('hidden');var b=document.querySelector('[data-action="skill"]');b.setAttribute('aria-expanded','false');return open}
 function fieldOpenSkills(){
  var p=battleState&&state.party[battleState.actor];if(!p||battleState.busy||battleState.phase!=='combat')return;
@@ -68,9 +90,11 @@ $('fieldCollection').addEventListener('click',function(){if(!fieldMaybeOffer())f
 $('fieldClose').addEventListener('click',fieldClose);
 $('fieldCards').addEventListener('click',function(e){
  var b=e.target.closest('button');if(!b||b.disabled)return;
+ if(b.hasAttribute('data-field-reward-next')){fieldStore().tutorialSeen=true;save();fieldOpen('offer');return}
+ if(b.hasAttribute('data-field-equipped-done')){fieldClose();render();return}
  if(b.dataset.fieldDetail)fieldSetDetail(b.dataset.fieldDetail,true,true);
  if(b.dataset.fieldCloseDetail){var id=b.dataset.fieldCloseDetail;fieldSetDetail(id,false,false);$('fieldCards').querySelector('[data-field-detail="'+id+'"]').focus()}
- if(b.dataset.fieldChoose){var id=b.dataset.fieldChoose,select=$('fieldCards').querySelector('[data-field-owner="'+id+'"]');if(fieldMode==='offer'&&fieldSelect(id,select.value)){$('fieldModal').classList.add('hidden');signalLastTick=Date.now();playSfx('ui-click');toast(fieldById[id].name+' equipada');fieldResumeSignal();render();var next=$('choices').querySelector('button:not([disabled])');if(next)next.focus()}else $('fieldMessage').textContent='No se puede asignar esta mejora a ese portador.'}
+ if(b.dataset.fieldChoose){var id=b.dataset.fieldChoose,select=$('fieldCards').querySelector('[data-field-owner="'+id+'"]');if(fieldMode==='offer'&&fieldSelect(id,select.value)){signalLastTick=Date.now();playSfx('ui-click');fieldShowEquipped(id,select.value)}else $('fieldMessage').textContent='No se puede asignar esta mejora a ese portador.'}
 });
 $('fieldCards').addEventListener('pointerover',function(e){if(!window.matchMedia('(hover: hover)').matches||fieldPinned)return;var b=e.target.closest('[data-field-detail]');if(b&&b.dataset.fieldDetail!==fieldHoverBlocked){fieldHovered=b.dataset.fieldDetail;fieldSetDetail(fieldHovered,true,false)}});
 $('fieldCards').addEventListener('pointerout',function(e){var card=e.target.closest('[data-field-card]');if(card&&!card.contains(e.relatedTarget)){if(!fieldPinned&&fieldDetailId===card.dataset.fieldCard){fieldSetDetail(fieldDetailId,false,false);fieldHovered=null}fieldHoverBlocked=null}});
@@ -95,4 +119,6 @@ fieldScheduleOffer();
 
 var fieldSignalBase=openSignalHack;
 openSignalHack=function(source){if(fieldVisible()){fieldDeferredSignal=source;return}return fieldSignalBase.apply(this,arguments)};
-function fieldResumeSignal(){if(fieldDeferredSignal!==null){var source=fieldDeferredSignal;fieldDeferredSignal=null;openSignalHack(source)}}
+var fieldWarningBase=openSignalWarning;
+openSignalWarning=function(mode){if(fieldVisible()){fieldDeferredWarning=mode;return}return fieldWarningBase.apply(this,arguments)};
+function fieldResumeSignal(){if(fieldDeferredWarning!==null){var mode=fieldDeferredWarning;fieldDeferredWarning=null;openSignalWarning(mode);return}if(fieldDeferredSignal!==null){var source=fieldDeferredSignal;fieldDeferredSignal=null;openSignalHack(source)}}

@@ -14,12 +14,14 @@ var fieldDefs = [
  {id:'shared',name:'Dosis compartida',category:'Medicina',icon:'shared',owner:'sara',summary:'Aprovecha la intervención para atender a otro.',buff:'Hasta +6 HP a otro aliado',detail:'La habilidad de Sara recupera también hasta 6 HP del otro aliado vivo más herido. Nunca supera su vida máxima.',limit:'No reanima. La curación secundaria no activa otras mejoras.'}
 ];
 var fieldById={};fieldDefs.forEach(function(d){fieldById[d.id]=d});
-function fieldFresh(){return {version:1,seed:(Math.floor(Math.random()*4294967296)>>>0)||2130,selected:[],offer:null,stats:{activations:0,bonusDamage:0,prevented:0,healed:0,batteries:0}}}
+function fieldFresh(){return {version:2,victories:0,tutorialSeen:false,progressNotice:'',seed:(Math.floor(Math.random()*4294967296)>>>0)||2130,selected:[],offer:null,stats:{activations:0,bonusDamage:0,prevented:0,healed:0,batteries:0}}}
 function fieldStore(){if(!state.fieldUpgrades)state.fieldUpgrades=fieldFresh();return state.fieldUpgrades}
 function fieldNormalize(){
  var f=fieldStore(),base=fieldFresh(),seen={};
- f.seed=(Number(f.seed)>>>0)||base.seed;f.version=1;
+ var oldVersion=f.version;f.seed=(Number(f.seed)>>>0)||base.seed;
  f.selected=(Array.isArray(f.selected)?f.selected:[]).filter(function(x){var d=x&&fieldById[x.id];if(!d||seen[x.id]||!state.party.some(function(p){return p.id===x.owner&&(!d.owner||d.owner===p.id)}))return false;seen[x.id]=true;return true}).slice(0,4).map(function(x){return{id:x.id,owner:x.owner}});
+ if(oldVersion!==2){f.victories=Math.max(0,f.selected.length*2-1);f.offer=null;f.tutorialSeen=false;f.progressNotice=''}
+ f.version=2;f.victories=Math.max(0,Math.floor(Number(f.victories)||0));f.tutorialSeen=!!f.tutorialSeen;f.progressNotice=typeof f.progressNotice==='string'?f.progressNotice:'';
  f.stats=Object.assign(base.stats,f.stats||{});Object.keys(base.stats).forEach(function(k){f.stats[k]=Math.max(0,Number(f.stats[k])||0)});
  if(!f.offer||f.offer.tier!==f.selected.length||!Array.isArray(f.offer.ids)||f.offer.ids.length!==3||new Set(f.offer.ids).size!==3||f.offer.ids.some(function(id){return !fieldById[id]||seen[id]}))f.offer=null;
  return f;
@@ -28,7 +30,13 @@ function fieldHas(p,id){return !!p&&fieldStore().selected.some(function(x){retur
 function fieldOwned(p){return fieldStore().selected.filter(function(x){return x.owner===p.id}).map(function(x){return fieldById[x.id]})}
 function fieldEligible(d){return state.party.filter(function(p){return(!d.owner||p.id===d.owner)&&(!d.gun||!!weaponFor(p).ammo)})}
 function fieldRandom(){var f=fieldStore();f.seed=(Math.imul(f.seed,1664525)+1013904223)>>>0;return f.seed/4294967296}
-function fieldDue(){var n=fieldStore().selected.length;return n<4&&!state.finished&&(state.index>=[3,9,16,22][n]||state.stats.wins>=[1,3,5,7][n])}
+function fieldDue(){var f=fieldStore(),n=f.selected.length;return n<4&&!state.finished&&f.victories>=[1,3,5,7][n]}
+function fieldProgressText(){var f=fieldStore(),n=f.selected.length;if(n>=4)return 'Equipo completo · 4 mejoras';if(fieldDue())return 'Victoria: una mejora lista para elegir';if(!n)return 'Gana tu primer combate para obtener una mejora';var remaining=[1,3,5,7][n]-f.victories;return 'Próxima mejora: '+(2-remaining)+'/2 victorias · '+remaining+' combate'+(remaining===1?'':'s')+' por ganar'}
+function fieldRecordVictory(b){
+ if(!b||b.fieldVictoryRecorded)return;b.fieldVictoryRecorded=true;var f=fieldStore();if(f.selected.length>=4)return;f.victories++;f.progressNotice=fieldProgressText();
+}
+function fieldVictoryRows(){var f=fieldStore();return f.selected.length>=4?[]:[['Mejoras de campo',fieldProgressText()]]}
+
 function fieldPrepareOffer(){
  var f=fieldStore();if(f.offer)return f.offer;if(!fieldDue())return null;
  var pool=fieldDefs.filter(function(d){return !f.selected.some(function(x){return x.id===d.id})&&fieldEligible(d).length});

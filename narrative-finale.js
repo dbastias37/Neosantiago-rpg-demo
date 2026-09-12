@@ -90,11 +90,11 @@ function finaleDefeat(fled){
 }
 function finaleObjectiveRound(){
   var b=battleState;if(!b||!b.config.objectiveRounds||b.round<b.config.objectiveRounds||!state.party.some(function(p){return p.hp>0}))return false;
-  var choice=b.choice;state.stats.battles++;state.stats.wins++;state.stats.objectivesHeld=(state.stats.objectivesHeld||0)+1;
+  fieldRecordVictory(b);var choice=b.choice;state.stats.battles++;state.stats.wins++;state.stats.objectivesHeld=(state.stats.objectivesHeld||0)+1;
   state.party.forEach(function(p){p.guard=0;p.bleed=0});battleState=null;
   if(typeof resetCombatPresentation==="function")resetCombatPresentation();
   $("battle").classList.add("hidden");setSceneAmbience("ambience-title",AUDIO_CROSSFADE_MS);
-  completeChoice(choice,choice.victory,null,null,[["Objetivo", "Posición sostenida"]]);return true;
+  completeChoice(choice,choice.victory,null,null,fieldVictoryRows().concat([["Objetivo", "Posición sostenida"]]));return true;
 }
 
 function finaleBeforeEvidence(opt){
