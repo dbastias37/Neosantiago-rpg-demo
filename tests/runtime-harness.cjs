@@ -25,7 +25,7 @@ function boot(storage = new Map(), options = {}) {
     if(s[1].includes('application/json'))continue;
     const src=(s[1].match(/src="([^"?]+)/)||[])[1];
     // State-only tests use the small DOM double; integration tests supply a parsed document.
-    if(src==='combat-stage.js'&&!options.document)continue;
+    if((src==='combat-stage.js'||src==='field-upgrades-ui.js')&&!options.document)continue;
     vm.runInContext(src?fs.readFileSync(path.join(root,src),'utf8'):s[2],ctx,{filename:src||'inline.js'});
   }
   return {ctx,nodes,listeners,timers,storage,run:code=>vm.runInContext(code,ctx)};

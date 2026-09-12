@@ -77,7 +77,7 @@ advanceButton.onclick=advanceNarration;
 document.addEventListener('keydown',function(e){
  if(e.key!=='Enter'||!battleState||$('battle').classList.contains('hidden'))return;
  if(e.target&&(e.target.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)))return;
- if(document.querySelector('.overlay[aria-modal="true"]:not(.hidden)')||!$('itemTray').classList.contains('hidden'))return;
+ if(document.querySelector('.overlay[aria-modal="true"]:not(.hidden)')||!$('itemTray').classList.contains('hidden')||(typeof fieldSkillTray!=='undefined'&&!fieldSkillTray.classList.contains('hidden')))return;
  // Consume Enter even at the next decision: never activate a focused attack button.
  e.preventDefault();e.stopImmediatePropagation();if(!e.repeat&&!advanceButton.disabled)advanceNarration();
 },true);
@@ -86,7 +86,7 @@ recordHp=function(side,index,from,to,max,sfx){if(battleState&&to!==from)lastDama
 function reconcile(container,previous){Array.from(container.children).forEach(function(node,i){var old=previous[i];if(!old||old.tagName!==node.tagName)return;Array.from(old.attributes).forEach(function(a){if(a.name!=='style')old.removeAttribute(a.name)});Array.from(node.attributes).forEach(function(a){old.setAttribute(a.name,a.value)});if(old.innerHTML!==node.innerHTML)old.innerHTML=node.innerHTML;node.replaceWith(old)})}
 function arrange(id,side,front){
  var container=$(id),nodes=Array.from(container.children),n=nodes.length,width=container.clientWidth,height=container.clientHeight;
- var cardHeight=Math.max(64,Math.min(280,height-12)),cardWidth=Math.max(74,Math.min(174,width*.47,cardHeight*.72));
+ var cardHeight=Math.max(64,Math.min(280,height-12)),cardWidth=Math.max(74,Math.min(174,width*(width<240?.66:.47),cardHeight*.72));
  container.style.setProperty('--card-width',cardWidth+'px');container.style.setProperty('--card-height',cardHeight+'px');
  var radius=Math.max(12,(width-cardWidth)/2-8);
  nodes.forEach(function(node,i){node.onclick=null;var relative=front===null?i:(i-front+n)%n,angle=n===1?0:relative*2*Math.PI/n,focused=i===front;

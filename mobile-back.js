@@ -24,6 +24,7 @@
   }
 
   var closers = {
+    fieldModal: 'fieldBack',
     itemDetailModal: 'closeItemDetails',
     crateModal: 'crateBack',
     refugeHelpModal: 'closeRefugeHelp',
@@ -63,6 +64,7 @@
       // Never confirm a purchase/rest, skip a story, abandon loot or flee a fight.
       return false;
     }
+    if (typeof window.fieldCloseSkills === 'function' && window.fieldCloseSkills()) return true;
     var tray = document.getElementById('itemTray');
     if (visible(document.getElementById('battle')) && visible(tray)) {
       var button = document.getElementById('closeStageInventory');
