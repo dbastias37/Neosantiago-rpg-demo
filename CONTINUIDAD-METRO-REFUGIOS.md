@@ -4,7 +4,7 @@ Documento de traspaso para continuar este trabajo en otro chat. Fecha: 14 de sep
 
 ## Punto de partida para otro chat
 
-Estamos diseñando una expansión de NeoSantiago 2130 con viajes entre refugios del metro, encargos y facciones. Existe un laboratorio visual independiente; todavía no existe esta expansión como sistema jugable conectado a la campaña. El usuario pidió conservar el trabajo en main sin activar el mapa y después desarrollar refugios, funciones y posibles NPC. El siguiente paso es diseñar esos personajes y sus servicios antes de programar rutas o misiones.
+Estamos diseñando una expansión de NeoSantiago 2130 con viajes entre refugios del metro, encargos y facciones. Existe un laboratorio visual independiente; todavía no existe esta expansión como sistema jugable conectado a la campaña. El usuario pidió conservar el trabajo en main sin activar el mapa y después desarrollar refugios, funciones y posibles NPC. Las funciones de cada refugio ya están desarrolladas como propuesta en [Refugios y funciones](docs/metro-refugios/REFUGIOS-Y-FUNCIONES.md). El siguiente paso es revisar esa propuesta y definir sus NPC y servicios antes de programar rutas o misiones.
 
 Leer este documento, `docs/metro-refugios/modelo.json` y `docs/metro-refugios/laboratorio.source.json`. El último contiene las fuentes originales completas del prototipo, incluyendo HTML, CSS, JavaScript y un SVG de referencia. Son texto dentro de JSON: no hay un nuevo index ejecutable, enlace, importación ni activación desde el juego. Para recuperar una prueba, extraer las entradas de `sources` en un directorio local separado, conservando sus nombres y contenido. No extraerlas al directorio servido por el juego sin una futura decisión de integración.
 
@@ -115,6 +115,10 @@ El usuario propuso encargados reconocibles por oficio, tomando como referencia g
 Cada función podría reunir un servicio permanente, encargos habituales y una pequeña historia propia. República atiende pacientes; Plaza de Armas produciría insumos. Los Leones repara tecnología; Los Libertadores la opera para producir. Armería abastece; Operaciones coordina acciones. Esta separación evita repetir al mismo comerciante con otro retrato.
 
 Antes de inventar personajes, revisar los NPC que ya existen y considerar reutilizar funciones compatibles, por ejemplo Mara o el Armero si la continuidad actual lo permite. No desplazar a Elías, Sara, Noa u otros personajes de la campaña sin revisar su papel. Los nombres y roles deben verificarse en el código vigente, no deducirse de esta propuesta.
+
+## Ampliación de refugios documentada
+
+Consultar [Refugios y funciones](docs/metro-refugios/REFUGIOS-Y-FUNCIONES.md): desarrolla tipos de comunidad, espacios propuestos, servicios, necesidades, aportes a la red, ejemplos de encargos y límites de cada lugar. Conserva Plaza de Armas como provisional y diferencia decisiones del usuario de ampliaciones propuestas. Es la referencia más reciente para continuar con funciones y NPC; no modifica el modelo geométrico ni activa el laboratorio.
 
 ## Próximo trabajo autorizado como dirección, todavía sin implementación
 
