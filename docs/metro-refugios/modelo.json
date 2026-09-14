@@ -1,0 +1,268 @@
+{
+  "schema_version": 1,
+  "status": "design_only",
+  "runtime_enabled": false,
+  "coordinate_system": {
+    "width": 1090,
+    "height": 704,
+    "kind": "schematic_not_geographic"
+  },
+  "default_origin": "heroes",
+  "default_selection": "leones",
+  "nodes": [
+    {
+      "id": "heroes",
+      "name": "Los Héroes",
+      "lines": [
+        "L1",
+        "L2"
+      ],
+      "position": {
+        "x": 340,
+        "y": 325
+      },
+      "kind": "principal",
+      "purpose": "Cazadores y exploradores",
+      "npc_roles_proposed": [
+        "Abastecimiento",
+        "Expediciones",
+        "Encomiendas"
+      ]
+    },
+    {
+      "id": "republica",
+      "name": "República",
+      "lines": [
+        "L1"
+      ],
+      "position": {
+        "x": 175,
+        "y": 325
+      },
+      "kind": "puesto",
+      "purpose": "Puesto médico",
+      "npc_roles_proposed": [
+        "Atención médica"
+      ]
+    },
+    {
+      "id": "plaza",
+      "name": "Plaza de Armas",
+      "lines": [
+        "L3",
+        "L5"
+      ],
+      "position": {
+        "x": 440,
+        "y": 265
+      },
+      "kind": "comunidad_provisional",
+      "purpose": "Cultivos y medicina ancestral, propuesta",
+      "npc_roles_proposed": [
+        "Cultivos medicinales"
+      ]
+    },
+    {
+      "id": "libertadores",
+      "name": "Los Libertadores",
+      "lines": [
+        "L3"
+      ],
+      "position": {
+        "x": 220,
+        "y": 95
+      },
+      "kind": "principal",
+      "purpose": "Alimentos e hidroponía",
+      "npc_roles_proposed": [
+        "Producción de alimentos",
+        "Energía y riego"
+      ]
+    },
+    {
+      "id": "leones",
+      "name": "Los Leones",
+      "lines": [
+        "L1",
+        "L6"
+      ],
+      "position": {
+        "x": 750,
+        "y": 204
+      },
+      "kind": "principal",
+      "purpose": "Electricidad y talleres",
+      "npc_roles_proposed": [
+        "Electricidad y talleres",
+        "Comunicaciones"
+      ]
+    },
+    {
+      "id": "vicuna",
+      "name": "Vicuña Mackenna",
+      "lines": [
+        "L4",
+        "L4A"
+      ],
+      "position": {
+        "x": 945,
+        "y": 519
+      },
+      "kind": "principal",
+      "purpose": "Armas, municiones y defensa",
+      "npc_roles_proposed": [
+        "Armería y municiones",
+        "Operaciones"
+      ]
+    },
+    {
+      "id": "uchile",
+      "name": "Universidad de Chile",
+      "position": {
+        "x": 440,
+        "y": 325
+      },
+      "kind": "transit_reference"
+    },
+    {
+      "id": "baquedano",
+      "name": "Baquedano",
+      "position": {
+        "x": 620,
+        "y": 288
+      },
+      "kind": "transit_reference"
+    },
+    {
+      "id": "franklin",
+      "name": "Franklin",
+      "position": {
+        "x": 380,
+        "y": 443
+      },
+      "kind": "transit_reference"
+    },
+    {
+      "id": "cisterna",
+      "name": "La Cisterna",
+      "position": {
+        "x": 440,
+        "y": 625
+      },
+      "kind": "transit_reference"
+    },
+    {
+      "id": "tobalaba",
+      "name": "Tobalaba",
+      "position": {
+        "x": 794,
+        "y": 160
+      },
+      "kind": "transit_reference"
+    }
+  ],
+  "factions": [
+    {
+      "id": "cazadores_exploradores",
+      "name": "Cazadores y Exploradores",
+      "naming_status": "agrupación; nombre colectivo pendiente"
+    },
+    {
+      "id": "mensajeros",
+      "name": "Los Mensajeros",
+      "naming_status": "aprobado"
+    },
+    {
+      "id": "frente",
+      "name": "El Frente",
+      "naming_status": "aprobado"
+    }
+  ],
+  "itineraries": [
+    {
+      "id": "republica",
+      "nodes": [
+        "heroes",
+        "republica"
+      ],
+      "state": "design_route_not_playable"
+    },
+    {
+      "id": "plaza",
+      "nodes": [
+        "heroes",
+        "uchile",
+        "plaza"
+      ],
+      "state": "design_route_not_playable"
+    },
+    {
+      "id": "libertadores",
+      "nodes": [
+        "heroes",
+        "uchile",
+        "plaza",
+        "libertadores"
+      ],
+      "state": "design_route_not_playable"
+    },
+    {
+      "id": "leones",
+      "nodes": [
+        "heroes",
+        "franklin",
+        "leones"
+      ],
+      "state": "design_route_not_playable"
+    },
+    {
+      "id": "vicuna_sur",
+      "nodes": [
+        "heroes",
+        "cisterna",
+        "vicuna"
+      ],
+      "state": "design_route_not_playable"
+    },
+    {
+      "id": "vicuna_oriente",
+      "nodes": [
+        "heroes",
+        "franklin",
+        "leones",
+        "tobalaba",
+        "vicuna"
+      ],
+      "state": "design_route_not_playable"
+    }
+  ],
+  "geometry_constraints": {
+    "destroyed_l1": {
+      "from": "baquedano",
+      "to": "leones",
+      "path": "M620 288L750 204",
+      "traversable": false
+    },
+    "l3_north": {
+      "path": "M220 95L426 166Q440 171 440 186V325",
+      "note": "Vertical larga; quiebre superior hacia el norponiente."
+    },
+    "l4a": {
+      "path": "M440 625H824Q839 625 849 615L945 519",
+      "note": "Trinchera abierta; horizontal y diagonal nororiente."
+    }
+  },
+  "missing_decisions": [
+    "Combinaciones alternativas reales y su estado narrativo",
+    "Estaciones intermedias y accesos a superficie",
+    "Costos, encuentros y desbloqueos",
+    "Nombres y asignación definitiva de NPC",
+    "Economía, recompensas, carga y persistencia"
+  ],
+  "mission_system_implemented": false,
+  "notes": [
+    "Los itinerarios son esquemáticos y no un grafo completo del Metro.",
+    "Todos los roles NPC son propuestas, no personajes nuevos aprobados.",
+    "Geometría completa y textos de la interfaz en laboratorio.source.json."
+  ]
+}
