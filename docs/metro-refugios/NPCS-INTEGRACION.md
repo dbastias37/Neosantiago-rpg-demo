@@ -8,34 +8,19 @@ misiones y rutas después. No se importan desde el HTML, JavaScript ni CSS del j
 
 ## Archivos y perfiles
 
-| Original del usuario | ID | WebP en `characters/encargos/` | Perfil recuperado |
-|---|---|---|---|
-| Dr_romero.png | dr-romero | dr-romero.webp | Pendiente |
-| Beatriz.png | beatriz | beatriz.webp | Pendiente |
-| Guzman.png | guzman | guzman.webp | Pendiente |
-| Jimenez.png | jimenez | jimenez.webp | Pendiente |
-| Adasme.png | adasme | adasme.webp | Pendiente |
-| Hmorales.png | hmorales | hmorales.webp | Pendiente; no expandir la H sin fuente |
-| Ana.png | ana | ana.webp | Líder y encargada de encargos en Plaza de Armas |
+Las siete fichas completas aportadas por el usuario están conservadas en [NPCS-CONTEXTO.md](NPCS-CONTEXTO.md) y estructuradas en `npcs.json`. No faltan asignaciones de estos siete personajes. Los IDs y las rutas WebP permanecen estables.
 
-El usuario identificó estos adjuntos como los personajes aprobados en el chat de
-creación. La recuperación de contexto no devolvió las fichas completas de los
-primeros seis. No confundir esto con personajes que aún necesiten ser creados.
-El catálogo conserva sus nombres y retratos exactos; `refuge_id: null`, `roles: []`
-y `profile_status: awaiting_prior_profile` indican que falta recuperar la asignación.
-`roster_complete: true` se refiere a estos siete adjuntos, no a todos los NPC del juego.
-`profiles_complete: false` expresa la limitación pendiente.
+| Personaje | Refugio | Función confirmada |
+|---|---|---|
+| Dr. Romero | República | Encargado del puesto médico |
+| Beatriz | Los Libertadores | Encargada del sector hidropónico; Encargada de los encargos |
+| Guzmán | Los Leones | Líder del refugio de talleres |
+| Jimenez | Vicuña Mackenna | Jefe de operaciones; NPC central del refugio |
+| Adasme | Vicuña Mackenna | Encargada de las misiones de extracción |
+| H.Morales | Los Héroes | Cazador; Encargado de los encargos |
+| Ana | Plaza de Armas | Líder de la comunidad de paso; Encargada de los encargos |
 
-Ana dirige la comunidad de paso de Plaza de Armas (`plaza`) y coordina los encargos.
-Tiene aproximadamente 34 años, es seria, no sonríe, tiene trenza maría y usa silla
- de ruedas. Se pidió diferenciar su rostro de Sara y Rosa. Esta ficha no confirma
-por sí sola las propuestas anteriores de cultivos medicinales de Plaza de Armas.
-
-Las observaciones visuales del catálogo describen lo que se ve en los adjuntos.
-No son prueba de rangos, facciones, biografías ni asignaciones a estaciones. Para
-completar esas relaciones, recuperar el texto de las fichas del chat original.
-Mantener los IDs estables; no duplicar, trasladar ni reemplazar a Mara, el Armero,
-Elías, Sara, Noa u otros personajes existentes por inferencia.
+`profiles_complete: true` indica que se registraron todas las fichas proporcionadas; no implica que las misiones estén programadas. Adasme conserva personalidad y manera de hablar pendientes. No expandir la inicial de H.Morales. Ana no tiene especialidad medicinal: lidera la comunidad de paso y gestiona sus encargos. La procedencia de Sara de Vicuña Mackenna queda documentada en la ficha de Jimenez, sin modificar la campaña.
 
 ## Peso y fidelidad
 

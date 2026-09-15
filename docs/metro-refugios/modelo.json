@@ -27,6 +27,18 @@
         "Abastecimiento",
         "Expediciones",
         "Encomiendas"
+      ],
+      "npc_ids": [
+        "hmorales"
+      ],
+      "npc_roles_confirmed": [
+        {
+          "npc_id": "hmorales",
+          "roles": [
+            "Cazador",
+            "Encargado de los encargos"
+          ]
+        }
       ]
     },
     {
@@ -43,6 +55,17 @@
       "purpose": "Puesto médico",
       "npc_roles_proposed": [
         "Atención médica"
+      ],
+      "npc_ids": [
+        "dr-romero"
+      ],
+      "npc_roles_confirmed": [
+        {
+          "npc_id": "dr-romero",
+          "roles": [
+            "Encargado del puesto médico"
+          ]
+        }
       ]
     },
     {
@@ -56,10 +79,20 @@
         "x": 440,
         "y": 265
       },
-      "kind": "comunidad_provisional",
-      "purpose": "Cultivos y medicina ancestral, propuesta",
-      "npc_roles_proposed": [
-        "Cultivos medicinales"
+      "kind": "comunidad_de_paso",
+      "purpose": "Puesto intermedio entre refugios; comunidad dirigida por Ana",
+      "npc_roles_proposed": [],
+      "npc_ids": [
+        "ana"
+      ],
+      "npc_roles_confirmed": [
+        {
+          "npc_id": "ana",
+          "roles": [
+            "Líder de la comunidad de paso",
+            "Encargada de los encargos"
+          ]
+        }
       ]
     },
     {
@@ -77,6 +110,18 @@
       "npc_roles_proposed": [
         "Producción de alimentos",
         "Energía y riego"
+      ],
+      "npc_ids": [
+        "beatriz"
+      ],
+      "npc_roles_confirmed": [
+        {
+          "npc_id": "beatriz",
+          "roles": [
+            "Encargada del sector hidropónico",
+            "Encargada de los encargos"
+          ]
+        }
       ]
     },
     {
@@ -95,6 +140,17 @@
       "npc_roles_proposed": [
         "Electricidad y talleres",
         "Comunicaciones"
+      ],
+      "npc_ids": [
+        "guzman"
+      ],
+      "npc_roles_confirmed": [
+        {
+          "npc_id": "guzman",
+          "roles": [
+            "Líder del refugio de talleres"
+          ]
+        }
       ]
     },
     {
@@ -113,6 +169,25 @@
       "npc_roles_proposed": [
         "Armería y municiones",
         "Operaciones"
+      ],
+      "npc_ids": [
+        "jimenez",
+        "adasme"
+      ],
+      "npc_roles_confirmed": [
+        {
+          "npc_id": "jimenez",
+          "roles": [
+            "Jefe de operaciones",
+            "NPC central del refugio"
+          ]
+        },
+        {
+          "npc_id": "adasme",
+          "roles": [
+            "Encargada de las misiones de extracción"
+          ]
+        }
       ]
     },
     {
@@ -256,13 +331,13 @@
     "Combinaciones alternativas reales y su estado narrativo",
     "Estaciones intermedias y accesos a superficie",
     "Costos, encuentros y desbloqueos",
-    "Nombres y asignación definitiva de NPC",
-    "Economía, recompensas, carga y persistencia"
+    "Economía, recompensas, carga y persistencia",
+    "Encargos, diálogos y rutas de los siete NPC; personalidad y manera de hablar de Adasme"
   ],
   "mission_system_implemented": false,
   "notes": [
     "Los itinerarios son esquemáticos y no un grafo completo del Metro.",
-    "Todos los roles NPC son propuestas, no personajes nuevos aprobados.",
-    "Geometría completa y textos de la interfaz en laboratorio.source.json."
+    "Geometría completa y textos de la interfaz en laboratorio.source.json.",
+    "Los siete NPC confirmados constan en npcs.json y NPCS-CONTEXTO.md. npc_roles_proposed conserva propuestas históricas de servicios, no nuevos personajes aprobados."
   ]
 }

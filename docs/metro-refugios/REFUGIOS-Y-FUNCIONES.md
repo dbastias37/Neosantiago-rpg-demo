@@ -2,6 +2,8 @@
 
 Fecha: 14 de septiembre de 2026. Proyecto: NeoSantiago 2130. Estado: diseño documentado, sin integración jugable.
 
+Actualización del 15 de septiembre: [NPCS-CONTEXTO.md](NPCS-CONTEXTO.md) y `npcs.json` contienen las siete fichas confirmadas y prevalecen sobre las menciones de encargados por definir de este documento histórico. Plaza de Armas está definida como comunidad de paso dirigida por Ana, responsable de sus encargos, sin especialidad medicinal asignada. Los cultivos medicinales descritos más abajo son una propuesta histórica no confirmada por estas fichas. No implementarlos por inferencia.
+
 ## Cómo continuar en otro chat
 
 Leer primero `../../CONTINUIDAD-METRO-REFUGIOS.md` y después este documento. Consultar `modelo.json` para posiciones y recorridos esquemáticos; `laboratorio.source.json` conserva la interfaz aprobada. Este documento amplía las funciones de las comunidades: no reemplaza la geometría ni convierte el prototipo en un sistema de viajes.

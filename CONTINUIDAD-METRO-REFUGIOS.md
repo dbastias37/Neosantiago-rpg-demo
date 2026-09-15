@@ -4,13 +4,7 @@ Documento de traspaso para continuar este trabajo en otro chat. Fecha: 14 de sep
 
 ## Punto de partida para otro chat
 
-Actualización del 15 de septiembre: consultar primero
-[NPCS-INTEGRACION.md](docs/metro-refugios/NPCS-INTEGRACION.md) y
-[npcs.json](docs/metro-refugios/npcs.json). El usuario autorizó archivar los NPC
-aprobados sin activarlos. Los siete retratos adjuntos por el usuario ya están integrados en WebP y vinculados
-por nombre en el catálogo, sin conexión al juego. Ana conserva su función de líder
-y encargada de encargos de Plaza de Armas. Las fichas anteriores de los otros seis
-no se recuperaron: sus funciones y refugios quedan pendientes, no inventados.
+Actualización del 15 de septiembre: los siete retratos WebP y sus fichas completas ya están archivados, con nombres, funciones y refugios confirmados por el usuario. Leer primero [NPCS-CONTEXTO.md](docs/metro-refugios/NPCS-CONTEXTO.md), [npcs.json](docs/metro-refugios/npcs.json) y [NPCS-INTEGRACION.md](docs/metro-refugios/NPCS-INTEGRACION.md). Estas fichas prevalecen sobre las menciones históricas de NPC sin definir que siguen más abajo. Ana lidera la comunidad de paso de Plaza de Armas y gestiona encargos; no tiene especialidad medicinal. Los encargos, diálogos y rutas siguen pendientes; también la personalidad y manera de hablar de Adasme. El juego no carga estos NPC ni sus retratos.
 
 Estamos diseñando una expansión de NeoSantiago 2130 con viajes entre refugios del metro, encargos y facciones. Existe un laboratorio visual independiente; todavía no existe esta expansión como sistema jugable conectado a la campaña. El usuario pidió conservar el trabajo en main sin activar el mapa y después desarrollar refugios, funciones y posibles NPC. Las funciones de cada refugio ya están desarrolladas como propuesta en [Refugios y funciones](docs/metro-refugios/REFUGIOS-Y-FUNCIONES.md). El siguiente paso es revisar esa propuesta y definir sus NPC y servicios antes de programar rutas o misiones.
 
