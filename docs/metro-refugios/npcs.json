@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "status": "awaiting_original_assets_and_remaining_roster",
+  "status": "portraits_integrated_inactive_profiles_partially_recovered",
   "runtime_enabled": false,
-  "roster_complete": false,
+  "roster_complete": true,
   "image_policy": {
     "format": "webp",
     "max_width": 768,
@@ -13,17 +13,214 @@
   },
   "npcs": [
     {
+      "id": "dr-romero",
+      "name": "Dr. Romero",
+      "refuge_id": null,
+      "roles": [],
+      "enabled": false,
+      "mission_ids": [],
+      "profile_status": "awaiting_prior_profile",
+      "portrait_status": "verified",
+      "portrait": {
+        "src": "characters/encargos/dr-romero.webp",
+        "width": 614,
+        "height": 1024,
+        "bytes": 95420,
+        "quality": 84,
+        "sha256": "7b0848254e8d60f940add20c71dfbb89514d8f9f2fd47a2f9d41a390b8059456",
+        "alt": "Retrato de Dr. Romero"
+      },
+      "source": {
+        "filename": "Dr_romero.png",
+        "bytes": 3120933,
+        "width": 971,
+        "height": 1619,
+        "sha256": "198db80fb0542ecb543deef3a38096413c7c34381b2ed25736106c190545a5c4",
+        "approval": "user_supplied_approved_portrait"
+      },
+      "visual_observation": "Atuendo médico, estetoscopio y material sanitario; entorno de atención médica.",
+      "source_note": "Nombre vinculado al archivo adjunto del usuario. Las observaciones visuales no confirman oficio, facción ni refugio."
+    },
+    {
+      "id": "beatriz",
+      "name": "Beatriz",
+      "refuge_id": null,
+      "roles": [],
+      "enabled": false,
+      "mission_ids": [],
+      "profile_status": "awaiting_prior_profile",
+      "portrait_status": "verified",
+      "portrait": {
+        "src": "characters/encargos/beatriz.webp",
+        "width": 614,
+        "height": 1024,
+        "bytes": 125284,
+        "quality": 84,
+        "sha256": "f9651c4f2de33b90cb14fc8fdb6e82482809c807a9d0e43338324a86bdef85a1",
+        "alt": "Retrato de Beatriz"
+      },
+      "source": {
+        "filename": "Beatriz.png",
+        "bytes": 3494830,
+        "width": 971,
+        "height": 1619,
+        "sha256": "37ebec2a9f4e4f9bac0b3b67436e96332deacd6b72831e114a9eb73f045c45e6",
+        "approval": "user_supplied_approved_portrait"
+      },
+      "visual_observation": "Cultivo hidropónico, plantas y sistemas de riego.",
+      "source_note": "Nombre vinculado al archivo adjunto del usuario. Las observaciones visuales no confirman oficio, facción ni refugio."
+    },
+    {
+      "id": "guzman",
+      "name": "Guzman",
+      "refuge_id": null,
+      "roles": [],
+      "enabled": false,
+      "mission_ids": [],
+      "profile_status": "awaiting_prior_profile",
+      "portrait_status": "verified",
+      "portrait": {
+        "src": "characters/encargos/guzman.webp",
+        "width": 614,
+        "height": 1024,
+        "bytes": 113136,
+        "quality": 84,
+        "sha256": "63f3cc071a69263f5b8fc1be0c24cd8bf86838ee4ad1ab93b2acc8ecd81ee699",
+        "alt": "Retrato de Guzman"
+      },
+      "source": {
+        "filename": "Guzman.png",
+        "bytes": 3406357,
+        "width": 971,
+        "height": 1619,
+        "sha256": "9b031111f5c7920001a74026bf5f09f112e7a5d93668f7b5230ec23962519e96",
+        "approval": "user_supplied_approved_portrait"
+      },
+      "visual_observation": "Herramientas, lentes de trabajo y maquinaria en un taller eléctrico.",
+      "source_note": "Nombre vinculado al archivo adjunto del usuario. Las observaciones visuales no confirman oficio, facción ni refugio."
+    },
+    {
+      "id": "jimenez",
+      "name": "Jimenez",
+      "refuge_id": null,
+      "roles": [],
+      "enabled": false,
+      "mission_ids": [],
+      "profile_status": "awaiting_prior_profile",
+      "portrait_status": "verified",
+      "portrait": {
+        "src": "characters/encargos/jimenez.webp",
+        "width": 614,
+        "height": 1024,
+        "bytes": 104374,
+        "quality": 84,
+        "sha256": "15770d37d3c3a2e0956e11344bd7bc69f16082ba296e7346e4b7db33c53e2019",
+        "alt": "Retrato de Jimenez"
+      },
+      "source": {
+        "filename": "Jimenez.png",
+        "bytes": 3302521,
+        "width": 971,
+        "height": 1619,
+        "sha256": "d8833a22318eb23e5927d8f6b4190a8e87dbf4016f8adc01ec3c4364c9b8d4c5",
+        "approval": "user_supplied_approved_portrait"
+      },
+      "visual_observation": "Equipo táctico, casco, arma y cajas de suministros.",
+      "source_note": "Nombre vinculado al archivo adjunto del usuario. Las observaciones visuales no confirman oficio, facción ni refugio."
+    },
+    {
+      "id": "adasme",
+      "name": "Adasme",
+      "refuge_id": null,
+      "roles": [],
+      "enabled": false,
+      "mission_ids": [],
+      "profile_status": "awaiting_prior_profile",
+      "portrait_status": "verified",
+      "portrait": {
+        "src": "characters/encargos/adasme.webp",
+        "width": 614,
+        "height": 1024,
+        "bytes": 79424,
+        "quality": 84,
+        "sha256": "61516dddbec4b217ea77a1ed49c42db0027ba0d6083cfb3d9275393a01a9152c",
+        "alt": "Retrato de Adasme"
+      },
+      "source": {
+        "filename": "Adasme.png",
+        "bytes": 3131855,
+        "width": 971,
+        "height": 1619,
+        "sha256": "b0d9c6fd4684b86a46ad813e3df3da96597783e611eebbdb8013d0044837fe6b",
+        "approval": "user_supplied_approved_portrait"
+      },
+      "visual_observation": "Pasamontañas, equipo táctico y monitores de vigilancia.",
+      "source_note": "Nombre vinculado al archivo adjunto del usuario. Las observaciones visuales no confirman oficio, facción ni refugio."
+    },
+    {
+      "id": "hmorales",
+      "name": "Hmorales",
+      "refuge_id": null,
+      "roles": [],
+      "enabled": false,
+      "mission_ids": [],
+      "profile_status": "awaiting_prior_profile",
+      "portrait_status": "verified",
+      "portrait": {
+        "src": "characters/encargos/hmorales.webp",
+        "width": 614,
+        "height": 1024,
+        "bytes": 91206,
+        "quality": 84,
+        "sha256": "33d47d4fc395968c4a3ac5de0207359c8aa9053c2d801cb6e640bb9ca3f9b951",
+        "alt": "Retrato de Hmorales"
+      },
+      "source": {
+        "filename": "Hmorales.png",
+        "bytes": 3251506,
+        "width": 971,
+        "height": 1619,
+        "sha256": "9ad8082851e171588ebb02d2319a548a0224c1374af8804f5c31c2abcac67b55",
+        "approval": "user_supplied_approved_portrait"
+      },
+      "visual_observation": "Cuerda, herramientas y mochila en un refugio habitado.",
+      "source_note": "Nombre vinculado al archivo adjunto del usuario. Las observaciones visuales no confirman oficio, facción ni refugio."
+    },
+    {
       "id": "ana",
       "name": "Ana",
       "refuge_id": "plaza",
-      "roles": ["Líder del refugio", "Encargada de los encargos"],
+      "roles": [
+        "Líder del refugio",
+        "Encargada de los encargos"
+      ],
       "approximate_age": 34,
       "enabled": false,
-      "portrait": null,
-      "portrait_status": "awaiting_approved_original",
+      "portrait": {
+        "src": "characters/encargos/ana.webp",
+        "width": 614,
+        "height": 1024,
+        "bytes": 91666,
+        "quality": 84,
+        "sha256": "f6d34f9cda774265f70c4ba4a367b42759d18e2a437287ff3998a9dc784aa5c0",
+        "alt": "Retrato de Ana"
+      },
+      "portrait_status": "verified",
       "mission_ids": [],
       "appearance_brief": "Ciudadana de los túneles, en silla de ruedas, trenza maría, seria y sin sonrisa, con carisma especial. Rasgos distintos de Sara y Rosa. Refugio parcialmente iluminado, con cajas y habitantes haciendo vida cotidiana.",
-      "source_note": "Descripción recuperada del pedido del usuario; el retrato aprobado no estuvo disponible para esta integración."
+      "source_note": "Nombre y retrato adjuntos por el usuario; funciones y descripción recuperadas del contexto de creación de Ana.",
+      "profile_status": "confirmed_from_available_context",
+      "source": {
+        "filename": "Ana.png",
+        "bytes": 3126087,
+        "width": 971,
+        "height": 1620,
+        "sha256": "71edfc3559907aceff48a1b52542fc31a8649ed208434539f62a180b6cfdf834",
+        "approval": "user_supplied_approved_portrait"
+      },
+      "visual_observation": "Silla de ruedas, trenza y documentos; comunidad habitada al fondo."
     }
-  ]
+  ],
+  "roster_scope": "seven_user_supplied_portraits_2026_09_15",
+  "profiles_complete": false
 }

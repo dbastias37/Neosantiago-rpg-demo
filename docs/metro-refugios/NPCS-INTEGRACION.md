@@ -1,52 +1,72 @@
-# NPC de encargos: preparación pendiente de retratos
+# NPC de encargos: retratos integrados, sistema desactivado
 
 Actualización: 15 de septiembre de 2026.
 
-El usuario autorizó integrar los NPC aprobados y sus imágenes ligeras en main,
-sin mostrarlos ni activar rutas o misiones. Esta entrega es parcial: los originales
-del chat de creación y el elenco completo no se pudieron recuperar. No se han
-añadido retratos sustitutos ni se afirma que las imágenes estén integradas.
+Los siete PNG aprobados y adjuntos por el usuario se convirtieron a WebP y se
+vincularon por nombre en `npcs.json`. Están archivados en main para implementar
+misiones y rutas después. No se importan desde el HTML, JavaScript ni CSS del juego.
 
-`npcs.json` registra únicamente la ficha recuperada de Ana. No es el elenco
-completo. Ana dirige Plaza de Armas y coordina encargos en esa comunidad de paso.
-Su descripción aprobada actualiza la etapa anterior de diseño; no confirma por
-sí sola todas las propuestas de cultivos medicinales del documento de funciones.
-Los demás nombres, asignaciones y retratos deben recuperarse del material aprobado.
+## Archivos y perfiles
 
-## Cómo completar la integración
+| Original del usuario | ID | WebP en `characters/encargos/` | Perfil recuperado |
+|---|---|---|---|
+| Dr_romero.png | dr-romero | dr-romero.webp | Pendiente |
+| Beatriz.png | beatriz | beatriz.webp | Pendiente |
+| Guzman.png | guzman | guzman.webp | Pendiente |
+| Jimenez.png | jimenez | jimenez.webp | Pendiente |
+| Adasme.png | adasme | adasme.webp | Pendiente |
+| Hmorales.png | hmorales | hmorales.webp | Pendiente; no expandir la H sin fuente |
+| Ana.png | ana | ana.webp | Líder y encargada de encargos en Plaza de Armas |
 
-Recibir los retratos originales aprobados con su correspondencia de nombres y
-refugios. Revisar cada imagen y completar el elenco en `npcs.json`, usando los IDs
-de estaciones de `modelo.json`. Mantener los originales fuera de los recursos
-servidos por el juego.
+El usuario identificó estos adjuntos como los personajes aprobados en el chat de
+creación. La recuperación de contexto no devolvió las fichas completas de los
+primeros seis. No confundir esto con personajes que aún necesiten ser creados.
+El catálogo conserva sus nombres y retratos exactos; `refuge_id: null`, `roles: []`
+y `profile_status: awaiting_prior_profile` indican que falta recuperar la asignación.
+`roster_complete: true` se refiere a estos siete adjuntos, no a todos los NPC del juego.
+`profiles_complete: false` expresa la limitación pendiente.
 
-Convertir cada original con Python y Pillow:
+Ana dirige la comunidad de paso de Plaza de Armas (`plaza`) y coordina los encargos.
+Tiene aproximadamente 34 años, es seria, no sonríe, tiene trenza maría y usa silla
+ de ruedas. Se pidió diferenciar su rostro de Sara y Rosa. Esta ficha no confirma
+por sí sola las propuestas anteriores de cultivos medicinales de Plaza de Armas.
+
+Las observaciones visuales del catálogo describen lo que se ve en los adjuntos.
+No son prueba de rangos, facciones, biografías ni asignaciones a estaciones. Para
+completar esas relaciones, recuperar el texto de las fichas del chat original.
+Mantener los IDs estables; no duplicar, trasladar ni reemplazar a Mara, el Armero,
+Elías, Sara, Noa u otros personajes existentes por inferencia.
+
+## Peso y fidelidad
+
+Los PNG sumaban 22.834.089 bytes y los siete WebP suman 700.510 bytes: reducción
+del 96,93 %. Cada salida mide 614×1024 píxeles, calidad 84, y pesa entre 79.424 y
+125.284 bytes. Se conserva el encuadre completo y la proporción con el redondeo
+normal del escalado; no se recortan rostros, fondos ni la silla de Ana.
+
+El catálogo incluye dimensiones, tamaño y SHA-256 de cada WebP, además del nombre,
+dimensiones, tamaño y SHA-256 del PNG de origen. Los originales adjuntos no se
+modifican y no se añaden al repositorio. `scripts/optimize-npc-portrait.py` requiere
+Python y Pillow solo para desarrollo, sin dependencias nuevas para el navegador.
 
 ```sh
-python scripts/optimize-npc-portrait.py /ruta/ana.png characters/encargos/ana.webp
+python scripts/optimize-npc-portrait.py /ruta/original.png /ruta/retrato.webp
+node --test tests/refuge-npcs.test.cjs
 ```
 
-La herramienta conserva proporciones y encuadre, aplica orientación EXIF, no
-amplía imágenes y limita la salida a 768×1024 píxeles y 180 KiB. Prueba calidad
-84, 80, 76 y 72; si no cumple el presupuesto, pide revisión en lugar de seguir
-degradando automáticamente. No modifica el original ni sobrescribe destinos.
-Estos límites son una decisión técnica inicial, no mediciones de retratos aún
-ausentes. Revisar el rostro, cabello y detalles en la salida antes de aceptarla.
+El conversor limita la salida a 768×1024 y 180 KiB, conserva proporciones, aplica
+orientación EXIF y no amplía imágenes. Prueba calidad 84, 80, 76 y 72. Si no alcanza
+el presupuesto, solicita revisión antes de degradar más. No sobrescribe destinos.
 
-Para cada retrato verificado, completar `portrait` con `src`, `width`, `height`
-y `bytes`, y cambiar `portrait_status` a `verified`. Conservar `enabled: false`,
-`runtime_enabled: false` y `mission_ids: []` hasta la etapa jugable. Marcar el
-elenco completo únicamente después de contrastarlo con todos los NPC aprobados.
+## Activación futura y carga
 
-## Carga y futura conexión
+Conservar `runtime_enabled: false`, `enabled: false` y `mission_ids: []` hasta
+desarrollar las misiones. El catálogo es JSON de preparación: no crea pantallas,
+diálogos, viajes, recompensas ni cambios de partidas. Como no hay referencias de
+carga en la campaña, estos retratos no generan solicitudes al iniciar el juego.
 
-Este catálogo no está importado por el HTML, JavaScript o CSS de la campaña.
-No se añade precarga, descarga, menú, diálogo, viaje ni cambio de partidas.
-Archivar estos datos no añade solicitudes a la carga inicial del juego.
-
-Cuando se apruebe la implementación jugable, cargar el catálogo al abrir el
-sistema de refugios y solicitar cada retrato al abrir su contacto. Usar las
-dimensiones registradas y `decoding="async"`; para contactos fuera de pantalla,
-usar `loading="lazy"`. No incrustar imágenes en base64 ni precargar el elenco.
-Los ficheros seguirán siendo accesibles por URL si el alojamiento sirve esas
-carpetas: estar desactivados en la interfaz no es una restricción de acceso.
+Cuando se implemente el sistema de refugios, cargar el catálogo al abrirlo y cada
+retrato al consultar su contacto. Usar las dimensiones registradas y
+`decoding="async"`; para contactos fuera de pantalla, `loading="lazy"`. No incrustar
+imágenes en base64 ni precargar el elenco. Estar desactivados en la interfaz no
+impide el acceso directo por URL si el alojamiento sirve esas carpetas.
