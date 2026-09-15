@@ -4,6 +4,13 @@ Documento de traspaso para continuar este trabajo en otro chat. Fecha: 14 de sep
 
 ## Punto de partida para otro chat
 
+Actualización del 15 de septiembre: consultar primero
+[NPCS-INTEGRACION.md](docs/metro-refugios/NPCS-INTEGRACION.md) y
+[npcs.json](docs/metro-refugios/npcs.json). El usuario autorizó archivar los NPC
+aprobados sin activarlos. Se recuperó la descripción de Ana, líder y encargada
+de encargos en Plaza de Armas; faltan los originales de los retratos y recuperar
+el resto del elenco. La integración de imágenes aún no está completada.
+
 Estamos diseñando una expansión de NeoSantiago 2130 con viajes entre refugios del metro, encargos y facciones. Existe un laboratorio visual independiente; todavía no existe esta expansión como sistema jugable conectado a la campaña. El usuario pidió conservar el trabajo en main sin activar el mapa y después desarrollar refugios, funciones y posibles NPC. Las funciones de cada refugio ya están desarrolladas como propuesta en [Refugios y funciones](docs/metro-refugios/REFUGIOS-Y-FUNCIONES.md). El siguiente paso es revisar esa propuesta y definir sus NPC y servicios antes de programar rutas o misiones.
 
 Leer este documento, `docs/metro-refugios/modelo.json` y `docs/metro-refugios/laboratorio.source.json`. El último contiene las fuentes originales completas del prototipo, incluyendo HTML, CSS, JavaScript y un SVG de referencia. Son texto dentro de JSON: no hay un nuevo index ejecutable, enlace, importación ni activación desde el juego. Para recuperar una prueba, extraer las entradas de `sources` en un directorio local separado, conservando sus nombres y contenido. No extraerlas al directorio servido por el juego sin una futura decisión de integración.

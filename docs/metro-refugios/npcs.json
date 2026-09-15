@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "status": "awaiting_original_assets_and_remaining_roster",
+  "runtime_enabled": false,
+  "roster_complete": false,
+  "image_policy": {
+    "format": "webp",
+    "max_width": 768,
+    "max_height": 1024,
+    "max_bytes": 184320,
+    "preserve_aspect_ratio": true,
+    "preload": false
+  },
+  "npcs": [
+    {
+      "id": "ana",
+      "name": "Ana",
+      "refuge_id": "plaza",
+      "roles": ["Líder del refugio", "Encargada de los encargos"],
+      "approximate_age": 34,
+      "enabled": false,
+      "portrait": null,
+      "portrait_status": "awaiting_approved_original",
+      "mission_ids": [],
+      "appearance_brief": "Ciudadana de los túneles, en silla de ruedas, trenza maría, seria y sin sonrisa, con carisma especial. Rasgos distintos de Sara y Rosa. Refugio parcialmente iluminado, con cajas y habitantes haciendo vida cotidiana.",
+      "source_note": "Descripción recuperada del pedido del usuario; el retrato aprobado no estuvo disponible para esta integración."
+    }
+  ]
+}
