@@ -2,6 +2,10 @@
 
 Documento de traspaso para continuar este trabajo en otro chat. Fecha: 14 de septiembre de 2026. Repositorio: `dbastias37/Neosantiago-rpg-demo`. Base consultada: `434b1ca53eed534d3a16be17fededae6c45bec72`.
 
+## Actualización del 17 de septiembre: estructura inactiva de misiones
+
+El usuario autorizó preparar Guzmán y Adasme con rutas, puntos de control, instancias, objetos, imágenes y modales en main, sin conectarlos al juego vigente. Leer el [manual del laboratorio local](extensions/mensajeros/README.md), la [entrega de Guzmán](docs/metro-refugios/misiones/GUZMAN-01-ENTREGA.md) y la actualización del [rescate de Adasme](docs/metro-refugios/misiones/ADASME-01-EXTRACCION.md). Hay un motor y una interfaz de prueba, no una expansión activada: los flags originales, catálogos de NPC y archivos de campaña permanecen intactos. Balance, combate de prueba, autonomía narrativa y detalles nuevos son provisionales. No activar por inferencia.
+
 ## Primera misión de Adasme — borrador archivado el 16 de septiembre
 
 Se conserva [Adasme 01: extracción en Los Leones–Tobalaba](docs/metro-refugios/misiones/ADASME-01-EXTRACCION.md), basada en la premisa aportada por el usuario. Incluye rescate de un operativo incomunicado, provisiones, tres bombas de humo, un inhibidor con batería de veinte minutos y recompensa mayor por evitar enfrentamientos. Combatir reduce la recompensa y debe aumentar la vigilancia futura, con reglas aún pendientes. Los diálogos son propuestas; integración, cierre y balance siguen por definir. Este registro actualiza las menciones históricas de encargos totalmente pendientes: existe ahora un primer borrador, sin misión jugable. No activar NPC ni modificar la campaña por leerlo.

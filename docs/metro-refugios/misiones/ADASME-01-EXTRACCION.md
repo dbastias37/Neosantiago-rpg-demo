@@ -5,6 +5,12 @@ Estado: **borrador narrativo archivado; sin implementar ni activar**.
 Identificador documental propuesto: `adasme-extraccion-01`.
 Título de trabajo: **Fuera de contacto** (propuesta, pendiente de aprobación).
 
+## Actualización del 17 de septiembre: estructura de prueba autorizada
+
+El usuario pidió crear las dos misiones, objetos, imágenes, puntos de control e instancias y dejarlos en main sin activar el juego. Ya existe una estructura inactiva con laboratorio local en [extensions/mensajeros](../../../extensions/mensajeros/README.md), ID `adasme-01`. Esta autorización sustituye la restricción histórica de no programar de este borrador, pero mantiene pendiente la conexión a producción. La premisa original se conserva debajo.
+
+La prueba permite buscar al compañero, asistirlo, acompañarlo o cargarlo, volver a Vicuña Mackenna y entregarlo a Adasme. Adasme otorga 3 bombas de humo y un inhibidor de 20 minutos; reloj narrativo, estado sorteado del aliado, desgaste, combate agregado, recompensa 40 + 30 por cero combates y punto de cierre son propuestas de laboratorio, no canon final. El tramo L4 Vicuña–Tobalaba permanece agrupado y rotulado, sin fingir estaciones adyacentes. La amenaza persiste por corredor en un guardado independiente. Los diálogos tienen variantes según enfrentamientos y transporte del herido.
+
 ## Alcance y continuidad
 
 El usuario pidió guardar esta primera misión para desarrollar después su integración, finalización y demás reglas. Este documento conserva su premisa y distingue las propuestas de los hechos solicitados. No es una especificación lista para programar.

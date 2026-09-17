@@ -1,0 +1,872 @@
+{
+  "schema_version": 1,
+  "content_version": "2026-09-17.1",
+  "runtime_enabled": false,
+  "status": "inactive_structure_with_local_preview",
+  "balance_status": "provisional",
+  "save_key": "neosantiago.mensajeros.lab.v1",
+  "weights": {
+    "low": [
+      50,
+      25,
+      15,
+      10
+    ],
+    "medium": [
+      30,
+      30,
+      30,
+      10
+    ],
+    "high": [
+      15,
+      25,
+      50,
+      10
+    ]
+  },
+  "categories": [
+    "quiet",
+    "decision",
+    "hostile",
+    "opportunity"
+  ],
+  "rules": {
+    "max_hostile_streak": 2,
+    "event_cooldown": 3,
+    "travel_wear": 2,
+    "carry_wear": 2,
+    "rest_heal": 25,
+    "rest_minutes": 10,
+    "jammer_minutes": 20,
+    "combat_alert": 1,
+    "max_region_alert": 6
+  },
+  "nodes": {
+    "leones": {
+      "id": "leones",
+      "name": "Los Leones",
+      "x": 750,
+      "y": 204,
+      "kind": "refuge",
+      "checkpoint": true,
+      "rest": true,
+      "region": "l6"
+    },
+    "ines": {
+      "id": "ines",
+      "name": "Inés de Suárez",
+      "x": 780,
+      "y": 278,
+      "kind": "station",
+      "region": "l6"
+    },
+    "nunoa": {
+      "id": "nunoa",
+      "name": "Ñuñoa",
+      "x": 780,
+      "y": 359,
+      "kind": "station",
+      "region": "l6"
+    },
+    "estadio": {
+      "id": "estadio",
+      "name": "Estadio Nacional",
+      "x": 751,
+      "y": 443,
+      "kind": "station",
+      "region": "l6"
+    },
+    "nuble": {
+      "id": "nuble",
+      "name": "Ñuble",
+      "x": 628,
+      "y": 443,
+      "kind": "station",
+      "region": "l6"
+    },
+    "biobio": {
+      "id": "biobio",
+      "name": "Bío Bío",
+      "x": 507,
+      "y": 443,
+      "kind": "station",
+      "region": "l6"
+    },
+    "franklin": {
+      "id": "franklin",
+      "name": "Franklin",
+      "x": 380,
+      "y": 443,
+      "kind": "station",
+      "region": "l6"
+    },
+    "rondizzoni": {
+      "id": "rondizzoni",
+      "name": "Rondizzoni",
+      "x": 355,
+      "y": 418,
+      "kind": "station",
+      "region": "centro"
+    },
+    "parque": {
+      "id": "parque",
+      "name": "Parque O’Higgins",
+      "x": 340,
+      "y": 393,
+      "kind": "station",
+      "region": "centro"
+    },
+    "toesca": {
+      "id": "toesca",
+      "name": "Toesca",
+      "x": 340,
+      "y": 356,
+      "kind": "station",
+      "region": "centro"
+    },
+    "moneda": {
+      "id": "moneda",
+      "name": "La Moneda",
+      "x": 393,
+      "y": 325,
+      "kind": "station",
+      "region": "centro"
+    },
+    "heroes": {
+      "id": "heroes",
+      "name": "Los Héroes",
+      "x": 340,
+      "y": 325,
+      "kind": "refuge",
+      "checkpoint": true,
+      "rest": true,
+      "region": "centro"
+    },
+    "uchile": {
+      "id": "uchile",
+      "name": "Universidad de Chile",
+      "x": 440,
+      "y": 325,
+      "kind": "rest",
+      "checkpoint": true,
+      "rest": true,
+      "provisional": true,
+      "region": "centro"
+    },
+    "plaza": {
+      "id": "plaza",
+      "name": "Plaza de Armas",
+      "x": 440,
+      "y": 265,
+      "kind": "refuge",
+      "checkpoint": true,
+      "rest": true,
+      "region": "centro"
+    },
+    "vicuna": {
+      "id": "vicuna",
+      "name": "Vicuña Mackenna",
+      "x": 945,
+      "y": 519,
+      "kind": "refuge",
+      "checkpoint": true,
+      "rest": true,
+      "region": "oriente"
+    },
+    "tobalaba": {
+      "id": "tobalaba",
+      "name": "Tobalaba",
+      "x": 794,
+      "y": 160,
+      "kind": "station",
+      "region": "oriente"
+    },
+    "escotilla": {
+      "id": "escotilla",
+      "name": "Exterior de la escotilla",
+      "x": 783,
+      "y": 171,
+      "kind": "surface",
+      "region": "oriente"
+    },
+    "provisorio": {
+      "id": "provisorio",
+      "name": "Refugio provisorio",
+      "x": 766,
+      "y": 188,
+      "kind": "rescue",
+      "provisional": true,
+      "region": "oriente"
+    }
+  },
+  "routes": {
+    "guzman-plaza": {
+      "id": "guzman-plaza",
+      "nodes": [
+        "leones",
+        "ines",
+        "nunoa",
+        "estadio",
+        "nuble",
+        "biobio",
+        "franklin",
+        "rondizzoni",
+        "parque",
+        "toesca",
+        "heroes",
+        "moneda",
+        "uchile",
+        "plaza"
+      ],
+      "edges": [
+        {
+          "from": "leones",
+          "to": "ines",
+          "risk": "low",
+          "line": "L6",
+          "minutes": 8,
+          "kind": "adjacent_station",
+          "region": "l6",
+          "path": "M750 204L771 225Q780 234 780 247V278"
+        },
+        {
+          "from": "ines",
+          "to": "nunoa",
+          "risk": "medium",
+          "line": "L6",
+          "minutes": 8,
+          "kind": "adjacent_station",
+          "region": "l6"
+        },
+        {
+          "from": "nunoa",
+          "to": "estadio",
+          "risk": "high",
+          "line": "L6",
+          "minutes": 8,
+          "kind": "adjacent_station",
+          "region": "l6",
+          "path": "M780 359V430Q780 443 767 443H751"
+        },
+        {
+          "from": "estadio",
+          "to": "nuble",
+          "risk": "medium",
+          "line": "L6",
+          "minutes": 8,
+          "kind": "adjacent_station",
+          "region": "l6"
+        },
+        {
+          "from": "nuble",
+          "to": "biobio",
+          "risk": "low",
+          "line": "L6",
+          "minutes": 8,
+          "kind": "adjacent_station",
+          "region": "l6"
+        },
+        {
+          "from": "biobio",
+          "to": "franklin",
+          "risk": "medium",
+          "line": "L6",
+          "minutes": 8,
+          "kind": "adjacent_station",
+          "region": "l6"
+        },
+        {
+          "from": "franklin",
+          "to": "rondizzoni",
+          "risk": "medium",
+          "line": "L2",
+          "minutes": 8,
+          "kind": "adjacent_station",
+          "region": "centro"
+        },
+        {
+          "from": "rondizzoni",
+          "to": "parque",
+          "risk": "low",
+          "line": "L2",
+          "minutes": 8,
+          "kind": "adjacent_station",
+          "region": "centro",
+          "path": "M355 418L348 411Q340 403 340 393"
+        },
+        {
+          "from": "parque",
+          "to": "toesca",
+          "risk": "medium",
+          "line": "L2",
+          "minutes": 8,
+          "kind": "adjacent_station",
+          "region": "centro"
+        },
+        {
+          "from": "toesca",
+          "to": "heroes",
+          "risk": "low",
+          "line": "L2",
+          "minutes": 8,
+          "kind": "adjacent_station",
+          "region": "centro"
+        },
+        {
+          "from": "heroes",
+          "to": "moneda",
+          "risk": "low",
+          "line": "L1",
+          "minutes": 8,
+          "kind": "adjacent_station",
+          "region": "centro"
+        },
+        {
+          "from": "moneda",
+          "to": "uchile",
+          "risk": "low",
+          "line": "L1",
+          "minutes": 8,
+          "kind": "adjacent_station",
+          "region": "centro"
+        },
+        {
+          "from": "uchile",
+          "to": "plaza",
+          "risk": "medium",
+          "line": "L3",
+          "minutes": 8,
+          "kind": "adjacent_station",
+          "region": "centro"
+        }
+      ]
+    },
+    "adasme-oriente": {
+      "id": "adasme-oriente",
+      "nodes": [
+        "vicuna",
+        "tobalaba",
+        "escotilla",
+        "provisorio",
+        "escotilla",
+        "tobalaba",
+        "vicuna"
+      ],
+      "edges": [
+        {
+          "from": "vicuna",
+          "to": "tobalaba",
+          "risk": "medium",
+          "line": "L4 · tramo agrupado",
+          "minutes": 8,
+          "kind": "grouped_corridor",
+          "region": "oriente",
+          "path": "M945 519L977 487Q985 479 985 467V366Q985 351 975 341L794 160"
+        },
+        {
+          "from": "tobalaba",
+          "to": "escotilla",
+          "risk": "high",
+          "line": "Exterior",
+          "minutes": 3,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "escotilla",
+          "to": "provisorio",
+          "risk": "high",
+          "line": "Exterior",
+          "minutes": 3,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "provisorio",
+          "to": "escotilla",
+          "risk": "high",
+          "line": "Exterior",
+          "minutes": 3,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "escotilla",
+          "to": "tobalaba",
+          "risk": "high",
+          "line": "Exterior",
+          "minutes": 3,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "tobalaba",
+          "to": "vicuna",
+          "risk": "medium",
+          "line": "L4 · tramo agrupado",
+          "minutes": 8,
+          "kind": "grouped_corridor",
+          "region": "oriente",
+          "path": "M794 160L975 341Q985 351 985 366V467Q985 479 977 487L945 519"
+        }
+      ]
+    }
+  },
+  "missions": {
+    "guzman-01": {
+      "id": "guzman-01",
+      "enabled": false,
+      "npc": "guzman",
+      "name": "Piezas para seguir en pie",
+      "type": "delivery",
+      "route": "guzman-plaza",
+      "portrait": "../../characters/encargos/guzman.webp",
+      "issuer": "Guzmán",
+      "recipient": "Técnicos de Plaza de Armas",
+      "summary": "Transporta 2 rotores y 1 sensor de movimiento desde Los Leones. Los técnicos los necesitan para las torretas que protegen la salida del refugio.",
+      "briefing": "Estos dos rotores devuelven el movimiento a las torretas. El sensor les permite detectar lo que se acerca. Llévenlos a los técnicos de Plaza de Armas; ellos se encargan de instalarlos. El viaje es largo. Revisen sus provisiones antes de salir.",
+      "cargo": {
+        "rotor": 2,
+        "motion-sensor": 1
+      },
+      "issued": {},
+      "test_loadout": {
+        "food": 3,
+        "water": 3,
+        "ammo556": 12
+      },
+      "reward": {
+        "base": 40,
+        "stealth_bonus": 0
+      },
+      "dialogues": {
+        "success": "Llegaron los dos rotores y el sensor. Con esto podemos recuperar el movimiento y la detección de las torretas. Gracias por traerlos.",
+        "issuer_report": "Los técnicos confirmaron la entrega. Buen trabajo. Esas piezas hacían falta."
+      }
+    },
+    "adasme-01": {
+      "id": "adasme-01",
+      "enabled": false,
+      "npc": "adasme",
+      "name": "Fuera de contacto",
+      "type": "extraction",
+      "route": "adasme-oriente",
+      "portrait": "../../characters/encargos/adasme.webp",
+      "issuer": "Adasme",
+      "recipient": "Adasme · Vicuña Mackenna",
+      "summary": "Encuentra al operativo incomunicado entre Los Leones y Tobalaba. Lleva provisiones y vuelve con él evitando enfrentamientos.",
+      "briefing": "Venían de recuperar municiones y equipo de defensa electrónica. Al entrar por la escotilla notaron que faltaba uno. Su grupo está en otra misión y no puede volver. Busquen en el refugio provisorio que conocemos. Les doy tres bombas de humo y un inhibidor: tiene veinte minutos de batería. Si no puede caminar, habrá que cargarlo. Eviten las peleas; alertar la ruta pondrá en peligro a los siguientes.",
+      "cargo": {},
+      "issued": {
+        "smoke": 3,
+        "jammer": 1
+      },
+      "test_loadout": {
+        "food": 3,
+        "water": 3,
+        "ammo556": 12
+      },
+      "reward": {
+        "base": 40,
+        "stealth_bonus": 30
+      },
+      "dialogues": {
+        "stealth": "Volvieron con él y no hubo enfrentamientos. Eso era lo que necesitábamos. Les corresponde la recompensa completa.",
+        "combat": "Me alegra que lo hayan traído. Pero los enfrentamientos alertaron el corredor. Habrá más vigilancia en los túneles y afuera. La recompensa será menor, como les advertí.",
+        "carried": "Me dijeron que tuvieron que cargarlo. Gracias por no dejarlo ahí."
+      }
+    }
+  },
+  "items": {
+    "rotor": {
+      "id": "rotor",
+      "name": "Rotor de torreta",
+      "description": "Módulo electromecánico para recuperar el giro de las torretas de Plaza de Armas. Guzmán entrega dos. Entrega protegida; no se vende ni se desarma.",
+      "kind": "cargo",
+      "image": "assets/rotor.webp",
+      "trade": false,
+      "discard": false,
+      "disassemble": false,
+      "existing_id": null
+    },
+    "motion-sensor": {
+      "id": "motion-sensor",
+      "name": "Sensor de movimiento",
+      "description": "Módulo de detección para el funcionamiento de las torretas que defienden la salida de Plaza de Armas. Destinatarios: los técnicos del refugio.",
+      "kind": "cargo",
+      "image": "assets/motion-sensor.webp",
+      "trade": false,
+      "discard": false,
+      "disassemble": false,
+      "existing_id": null
+    },
+    "smoke": {
+      "id": "smoke",
+      "name": "Bomba de humo",
+      "description": "Permite evitar un encuentro o retirarse durante el combate de prueba. Consumible; Adasme entrega tres. No borra una alerta ya provocada.",
+      "kind": "supply",
+      "image": "assets/smoke.webp",
+      "trade": false,
+      "discard": false,
+      "disassemble": false,
+      "existing_id": null
+    },
+    "jammer": {
+      "id": "jammer",
+      "name": "Inhibidor de señal",
+      "description": "Batería de 20 minutos de uso. En esta prueba consume tiempo narrativo solo cuando está encendido. Puede evitar encuentros electrónicos; no oculta al grupo de observadores humanos.",
+      "kind": "supply",
+      "image": "assets/jammer.webp",
+      "trade": false,
+      "discard": false,
+      "disassemble": false,
+      "existing_id": null
+    },
+    "water": {
+      "id": "water",
+      "name": "Agua",
+      "description": "Provisión para descansar y asistir al compañero rescatado.",
+      "kind": "supply",
+      "image": "assets/water.webp",
+      "trade": false,
+      "discard": false,
+      "disassemble": false,
+      "existing_id": null
+    },
+    "food": {
+      "id": "food",
+      "name": "Ración de comida",
+      "description": "Provisión para recuperar al grupo o asistir al compañero. Reutiliza el objeto existente.",
+      "kind": "supply",
+      "image": "../../items/food.webp",
+      "trade": false,
+      "discard": false,
+      "disassemble": false,
+      "existing_id": "food"
+    },
+    "ammo556": {
+      "id": "ammo556",
+      "name": "Munición 5,56 mm",
+      "description": "Munición para el combate de prueba; Adasme permite entregar parte al compañero si la necesita.",
+      "kind": "supply",
+      "image": "../../items/ammo556.webp",
+      "trade": false,
+      "discard": false,
+      "disassemble": false,
+      "existing_id": "ammo556"
+    }
+  },
+  "events": [
+    {
+      "id": "silencio",
+      "category": "quiet",
+      "title": "Un tramo en silencio",
+      "text": "Solo se oyen las pisadas y el agua que cae sobre los rieles. La carga sigue asegurada.",
+      "regions": [
+        "l6",
+        "centro",
+        "oriente"
+      ],
+      "choices": [
+        {
+          "id": "continue",
+          "label": "Continuar"
+        }
+      ],
+      "electronic": false
+    },
+    {
+      "id": "huellas",
+      "category": "quiet",
+      "title": "Huellas antiguas",
+      "text": "Las marcas del andén están cubiertas de polvo. Nadie parece haber cruzado hace poco.",
+      "regions": [
+        "l6",
+        "centro",
+        "oriente"
+      ],
+      "choices": [
+        {
+          "id": "continue",
+          "label": "Continuar"
+        }
+      ],
+      "electronic": false
+    },
+    {
+      "id": "luces",
+      "category": "quiet",
+      "title": "Al otro lado del túnel",
+      "text": "La luz de la siguiente estación aparece al fondo. El grupo llega sin incidentes.",
+      "regions": [
+        "l6",
+        "centro",
+        "oriente"
+      ],
+      "choices": [
+        {
+          "id": "continue",
+          "label": "Continuar"
+        }
+      ],
+      "electronic": false
+    },
+    {
+      "id": "reja",
+      "category": "decision",
+      "title": "Una reja trabada",
+      "text": "El paso habitual está cerrado. Elías examina una bisagra mientras el grupo protege la carga.",
+      "regions": [
+        "l6",
+        "centro",
+        "oriente"
+      ],
+      "choices": [
+        {
+          "id": "repair",
+          "label": "Ayudar a Elías · 4 min",
+          "minutes": 4
+        },
+        {
+          "id": "detour",
+          "label": "Rodear el cierre · desgaste 3",
+          "wear": 3,
+          "minutes": 2
+        }
+      ],
+      "electronic": false
+    },
+    {
+      "id": "voces",
+      "category": "decision",
+      "title": "Voces en la oscuridad",
+      "text": "Se oyen voces más allá del andén. Todavía no han visto al grupo.",
+      "regions": [
+        "l6",
+        "centro",
+        "oriente"
+      ],
+      "choices": [
+        {
+          "id": "wait",
+          "label": "Esperar en silencio · 5 min",
+          "minutes": 5
+        },
+        {
+          "id": "detour",
+          "label": "Tomar el paso lateral · desgaste 3",
+          "wear": 3,
+          "minutes": 3
+        }
+      ],
+      "electronic": false
+    },
+    {
+      "id": "escombros",
+      "category": "decision",
+      "title": "Escombros sobre el paso",
+      "text": "Hay espacio para cruzar, pero la carga puede engancharse. El grupo debe moverla con cuidado.",
+      "regions": [
+        "l6",
+        "centro",
+        "oriente"
+      ],
+      "choices": [
+        {
+          "id": "slow",
+          "label": "Pasar la carga entre todos · 4 min",
+          "minutes": 4
+        },
+        {
+          "id": "detour",
+          "label": "Buscar otro acceso · desgaste 4",
+          "wear": 4,
+          "minutes": 2
+        }
+      ],
+      "electronic": false
+    },
+    {
+      "id": "cables",
+      "category": "decision",
+      "title": "Cables a ras del suelo",
+      "text": "Elías señala un tramo de cables sueltos. No sabe si aún tienen corriente.",
+      "regions": [
+        "l6",
+        "centro",
+        "oriente"
+      ],
+      "choices": [
+        {
+          "id": "inspect",
+          "label": "Revisar con Elías · 3 min",
+          "minutes": 3
+        },
+        {
+          "id": "detour",
+          "label": "Rodear el sector · desgaste 2",
+          "wear": 2,
+          "minutes": 2
+        }
+      ],
+      "electronic": false
+    },
+    {
+      "id": "merodeadores",
+      "category": "hostile",
+      "title": "Paso ocupado",
+      "text": "Un grupo de merodeadores registra el andén. Todavía hay espacio para evitar el contacto.",
+      "regions": [
+        "l6",
+        "centro",
+        "oriente"
+      ],
+      "choices": [
+        {
+          "id": "avoid",
+          "label": "Tomar un desvío · 6 min / desgaste 4",
+          "minutes": 6,
+          "wear": 4
+        },
+        {
+          "id": "smoke",
+          "label": "Usar humo · 1 bomba",
+          "cost": {
+            "smoke": 1
+          },
+          "minutes": 1
+        },
+        {
+          "id": "fight",
+          "label": "Enfrentar al grupo",
+          "combat": true
+        }
+      ],
+      "electronic": false
+    },
+    {
+      "id": "patrulla",
+      "category": "hostile",
+      "title": "Patrulla en el corredor",
+      "text": "Luces de vigilancia recorren la vía. El grupo se detiene antes de exponerse.",
+      "regions": [
+        "l6",
+        "centro",
+        "oriente"
+      ],
+      "choices": [
+        {
+          "id": "avoid",
+          "label": "Tomar un desvío · 6 min / desgaste 4",
+          "minutes": 6,
+          "wear": 4
+        },
+        {
+          "id": "smoke",
+          "label": "Usar humo · 1 bomba",
+          "cost": {
+            "smoke": 1
+          },
+          "minutes": 1
+        },
+        {
+          "id": "fight",
+          "label": "Enfrentar al grupo",
+          "combat": true
+        }
+      ],
+      "electronic": false
+    },
+    {
+      "id": "dron",
+      "category": "hostile",
+      "title": "Barrido electrónico",
+      "text": "Un dron de la Red UNO inspecciona el acceso. Su sensor recorre las paredes.",
+      "regions": [
+        "oriente",
+        "l6"
+      ],
+      "choices": [
+        {
+          "id": "avoid",
+          "label": "Esperar una abertura · 6 min / desgaste 3",
+          "minutes": 6,
+          "wear": 3
+        },
+        {
+          "id": "smoke",
+          "label": "Usar humo · 1 bomba",
+          "cost": {
+            "smoke": 1
+          },
+          "minutes": 1
+        },
+        {
+          "id": "jammer",
+          "label": "Cruzar con inhibidor · 2 min de batería",
+          "requires_jammer": true,
+          "minutes": 2
+        },
+        {
+          "id": "fight",
+          "label": "Enfrentar al grupo",
+          "combat": true
+        }
+      ],
+      "electronic": true
+    },
+    {
+      "id": "reserva",
+      "category": "opportunity",
+      "title": "Una reserva olvidada",
+      "text": "Una pequeña caja de provisiones quedó detrás de un banco. Revisarla exige detenerse.",
+      "regions": [
+        "l6",
+        "centro",
+        "oriente"
+      ],
+      "choices": [
+        {
+          "id": "take",
+          "label": "Revisar · 3 min / +1 agua",
+          "minutes": 3,
+          "gain": {
+            "water": 1
+          }
+        },
+        {
+          "id": "leave",
+          "label": "Seguir con el encargo"
+        }
+      ],
+      "electronic": false
+    },
+    {
+      "id": "racion",
+      "category": "opportunity",
+      "title": "Un paquete intacto",
+      "text": "Entre envoltorios vacíos queda una ración sellada.",
+      "regions": [
+        "l6",
+        "centro",
+        "oriente"
+      ],
+      "choices": [
+        {
+          "id": "take",
+          "label": "Recuperar · 2 min / +1 ración",
+          "minutes": 2,
+          "gain": {
+            "food": 1
+          }
+        },
+        {
+          "id": "leave",
+          "label": "Continuar sin detenerse"
+        }
+      ],
+      "electronic": false
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+<svg id="network" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1090 704" aria-label="Mapa de refugios y rutas"><style>text{font-family:var(--font-ui);fill:var(--paper)}.sub{font-family:var(--font-ui);font-size:11px;fill:#9ba89b;letter-spacing:1px}.tiny{font-family:var(--font-ui);font-size:10px;fill:#829084;letter-spacing:1px}.muted{fill:#748075}.station{fill:#0b1510;stroke:#c1c8b7;stroke-width:2.5}.route{fill:none;stroke-linejoin:round;stroke-linecap:round;stroke-width:4}.label{font-size:16px;font-weight:600;letter-spacing:.4px}.back{paint-order:stroke;stroke:#0c140f;stroke-width:7;stroke-linejoin:round}</style><defs><pattern id="hatch" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><path d="M0 0V9" stroke="#b36753" stroke-opacity=".25" stroke-width="2"/></pattern><filter id="glow"><feGaussianBlur stdDeviation="5"/></filter></defs>
+<text x="62" y="222" style="font-size:34px;fill:#a1b39d;opacity:.055;letter-spacing:8px">PONIENTE</text><text x="750" y="95" style="font-size:32px;fill:#a1b39d;opacity:.055;letter-spacing:8px">EL VALLE</text><text x="462" y="581" style="font-size:32px;fill:#a1b39d;opacity:.055;letter-spacing:8px">CORREDOR SUR</text>
+<!-- L3: Los Libertadores is northwest, then the line turns south -->
+<path class="route" d="M220 95L426 166Q440 171 440 186V325" stroke="#a9956a"/>
+<circle cx="267" cy="111" r="3" fill="#a9956a"/><circle cx="314" cy="127" r="3" fill="#a9956a"/><circle cx="360" cy="143" r="3" fill="#a9956a"/>
+<!-- L1: eastbound approach to Baquedano and destroyed northeastern section -->
+<path class="route" d="M175 325H573Q583 325 591 317L620 288" stroke="#ad7063"/>
+<path d="M117 325H155" stroke="#765249" stroke-width="3" stroke-dasharray="4 5"/>
+<path d="M620 288L750 204" stroke="#b66b5d" stroke-width="2" stroke-dasharray="4 8"/>
+<path d="M624 274L737 201L747 217L634 290Z" fill="url(#hatch)"/>
+<!-- L2: the two southeast bends around Franklin -->
+<path class="route" d="M340 325V392Q340 403 348 411L380 443L432 495Q440 503 440 514V625" stroke="#b79a5c"/>
+<!-- L6: east, north, then northwest approach to Los Leones -->
+<path class="route" d="M380 443H767Q780 443 780 430V247Q780 234 771 225L750 204" stroke="#ad91c1"/>
+
+
+<!-- Los Leones to Tobalaba: exposed surface link, not a reopened L1 -->
+<path d="M750 204L794 160" fill="none" stroke="#d9a15c" stroke-width="3" stroke-dasharray="6 7"/>
+<!-- L4: southeast, south, then southwest to Vicuña Mackenna -->
+<path class="route" d="M794 160L975 341Q985 351 985 366V467Q985 479 977 487L945 519" stroke="#7393b1"/>
+<path d="M985 391V467Q985 479 977 487L945 519" fill="none" stroke="#d9a15c" stroke-width="2" stroke-dasharray="6 8"/>
+<!-- L4A: horizontal La Cisterna-La Granja followed by NE diagonal -->
+<path d="M440 625H824Q839 625 849 615L945 519" fill="none" stroke="#d9a15c" stroke-width="4"/>
+<path d="M440 625H824Q839 625 849 615L945 519" fill="none" stroke="#0b120f" stroke-width="4" stroke-dasharray="2 9"/>
+<!-- main refuges and support communities -->
+<rect x="209" y="84" width="22" height="22" rx="3" class="station"/><text class="label" x="251" y="69">LOS LIBERTADORES</text><text class="sub" x="251" y="90">L3 · ALIMENTOS / HIDROPONÍA</text>
+<circle cx="440" cy="265" r="7" class="station"/><text class="label" x="462" y="245">Plaza de Armas</text><text class="sub" x="462" y="265">COMUNIDAD DE PASO</text>
+<circle cx="175" cy="325" r="7" class="station"/><text class="label" x="111" y="285">República</text><text class="sub" x="111" y="303">PUESTO MÉDICO</text><path d="M130 318l12 14m0-14l-12 14" stroke="#e08575" stroke-width="2"/>
+<circle cx="340" cy="325" r="10" fill="#b7c8ba"/><circle cx="340" cy="325" r="4" fill="#102822"/><text class="label" x="270" y="279">LOS HÉROES</text><text class="sub" x="270" y="299" style="fill:#75d3d7">ORIGEN · L1 / L2</text>
+<circle cx="393" cy="325" r="3" fill="#d9ac9d"/><circle cx="440" cy="325" r="9" class="station"/><circle cx="440" cy="325" r="3" fill="#a9956a"/><text x="390" y="360" style="font-size:14px">Universidad de Chile</text><text class="sub" x="416" y="380">L1 / L3</text>
+<circle cx="501" cy="325" r="3" fill="#d9ac9d"/><circle cx="552" cy="325" r="3" fill="#d9ac9d"/><path d="M613 281l14 14m0-14l-14 14" stroke="#e08575" stroke-width="3"/><text class="label" x="642" y="309" style="fill:#da9282">Baquedano</text><text class="sub" x="642" y="328" style="fill:#b98272">PASO DESTRUIDO</text>
+<rect x="737" y="191" width="26" height="26" rx="3" fill="#173b32" stroke="#b7c8ba" stroke-width="2"/>
+<text class="label back" x="583" y="175" style="fill:#b8f0e8">LOS LEONES</text><text class="sub back" x="583" y="195">L1 / L6 · TALLERES</text>
+<circle cx="794" cy="160" r="8" class="station"/><text x="821" y="160" style="font-size:14px">Tobalaba</text><text class="sub" x="821" y="179">L4</text>
+<path d="M765 170L727 132H641" stroke="#8e7750" fill="none"/><text class="sub" x="569" y="111" style="fill:#d9a15c">SUPERFICIE VIGILADA</text><text class="tiny" x="569" y="125">ACCESO POR ESCOTILLA</text>
+<circle cx="380" cy="443" r="9" fill="#122d26" stroke="#b7c8ba" stroke-width="2"/><text class="label" x="203" y="449">Franklin</text><text class="sub" x="203" y="470">COMBINACIÓN L2 / L6</text>
+<circle cx="470" cy="443" r="3" fill="#b7c8ba"/><circle cx="560" cy="443" r="3" fill="#b7c8ba"/><circle cx="650" cy="443" r="3" fill="#b7c8ba"/>
+<circle cx="440" cy="625" r="9" class="station"/><text class="label" x="294" y="623">La Cisterna</text><text class="sub" x="294" y="643">L2 / L4A</text><text class="sub" x="534" y="607">L4A · TRINCHERA ABIERTA</text>
+<rect x="934" y="508" width="22" height="22" rx="3" class="station"/><text class="label" x="717" y="508">VICUÑA MACKENNA</text><text class="sub" x="717" y="529">L4 / L4A · EL FRENTE</text>
+<text class="sub" x="1003" y="422">L4</text><text class="sub" x="465" y="551">L2</text><text class="sub" x="359" y="158">L3</text><g id="routeGlow"></g><g id="hotspots"></g></svg>

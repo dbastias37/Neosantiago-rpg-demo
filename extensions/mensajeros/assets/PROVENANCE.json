@@ -1,0 +1,60 @@
+{
+  "created": "2026-09-17",
+  "assets": [
+    {
+      "id": "rotor",
+      "output": "extensions/mensajeros/assets/rotor.webp",
+      "prompt": "Use case: stylized-concept. Asset type: square inventory item for Neo Santiago 2130 RPG. Input images are STYLE REFERENCES ONLY, not edit targets. Create a NEW single item: ONE compact electromechanical turret rotor, cylindrical black steel casing, copper winding visible, central axle, worn bolts. Not a helicopter rotor. Match references: realistic grungy 3D prop render, dark gunmetal and weathered materials, subtle copper wear, 3/4 view looking slightly downward, soft upper left studio light. Center whole item with 15% clear margin. Plain uniform charcoal background #1b1d1c, subtle thin gray edge border like existing reference inventory images. Square composition. No words, labels, numbers, hands, characters, scenery, other objects or glow effects. Readable silhouette at 128 pixels.",
+      "tool": "image_gen",
+      "style_references": [
+        "items/emp.webp",
+        "items/food.webp"
+      ],
+      "optimization": "512×512 WebP, quality 85; no content edits"
+    },
+    {
+      "id": "motion-sensor",
+      "output": "extensions/mensajeros/assets/motion-sensor.webp",
+      "prompt": "Use case: stylized-concept. Asset type: square inventory item for Neo Santiago 2130 RPG. Input images are STYLE REFERENCES ONLY, not edit targets. Create a NEW single item: ONE salvaged turret motion sensor, compact rectangular steel module with one circular dark glass sensor and tiny cyan status light, short protected connector. Match references: realistic grungy 3D prop render, dark gunmetal and weathered materials, subtle copper wear, 3/4 view looking slightly downward, soft upper left studio light. Center whole item with 15% clear margin. Plain uniform charcoal background #1b1d1c, subtle thin gray edge border like existing reference inventory images. Square composition. No words, labels, numbers, hands, characters, scenery, other objects or glow effects. Readable silhouette at 128 pixels.",
+      "tool": "image_gen",
+      "style_references": [
+        "items/emp.webp",
+        "items/food.webp"
+      ],
+      "optimization": "512×512 WebP, quality 85; no content edits"
+    },
+    {
+      "id": "smoke",
+      "output": "extensions/mensajeros/assets/smoke.webp",
+      "prompt": "Use case: stylized-concept. Asset type: square inventory item for Neo Santiago 2130 RPG. Input images are STYLE REFERENCES ONLY, not edit targets. Create a NEW single item: ONE fictional smoke canister, squat worn graphite cylinder with muted off-white band and pull ring, restrained utilitarian design. No smoke emitted. Match references: realistic grungy 3D prop render, dark gunmetal and weathered materials, subtle copper wear, 3/4 view looking slightly downward, soft upper left studio light. Center whole item with 15% clear margin. Plain uniform charcoal background #1b1d1c, subtle thin gray edge border like existing reference inventory images. Square composition. No words, labels, numbers, hands, characters, scenery, other objects or glow effects. Readable silhouette at 128 pixels.",
+      "tool": "image_gen",
+      "style_references": [
+        "items/emp.webp",
+        "items/food.webp"
+      ],
+      "optimization": "512×512 WebP, quality 85; no content edits"
+    },
+    {
+      "id": "jammer",
+      "output": "extensions/mensajeros/assets/jammer.webp",
+      "prompt": "Use case: stylized-concept. Asset type: square inventory item for Neo Santiago 2130 RPG. Input images are STYLE REFERENCES ONLY, not edit targets. Create a NEW single item: ONE fictional portable signal inhibitor, battered black metal enclosure, two short stub antennas, small cyan battery display WITHOUT digits or text. Distinct silhouette from the reference EMP. Match references: realistic grungy 3D prop render, dark gunmetal and weathered materials, subtle copper wear, 3/4 view looking slightly downward, soft upper left studio light. Center whole item with 15% clear margin. Plain uniform charcoal background #1b1d1c, subtle thin gray edge border like existing reference inventory images. Square composition. No words, labels, numbers, hands, characters, scenery, other objects or glow effects. Readable silhouette at 128 pixels.",
+      "tool": "image_gen",
+      "style_references": [
+        "items/emp.webp",
+        "items/food.webp"
+      ],
+      "optimization": "512×512 WebP, quality 85; no content edits"
+    },
+    {
+      "id": "water",
+      "output": "extensions/mensajeros/assets/water.webp",
+      "prompt": "Use case: stylized-concept. Asset type: square inventory item for Neo Santiago 2130 RPG. Input images are STYLE REFERENCES ONLY, not edit targets. Create a NEW single item: ONE worn utilitarian dark olive water canteen with screw cap and fabric strap, no logos. Match references: realistic grungy 3D prop render, dark gunmetal and weathered materials, subtle copper wear, 3/4 view looking slightly downward, soft upper left studio light. Center whole item with 15% clear margin. Plain uniform charcoal background #1b1d1c, subtle thin gray edge border like existing reference inventory images. Square composition. No words, labels, numbers, hands, characters, scenery, other objects or glow effects. Readable silhouette at 128 pixels.",
+      "tool": "image_gen",
+      "style_references": [
+        "items/emp.webp",
+        "items/food.webp"
+      ],
+      "optimization": "512×512 WebP, quality 85; no content edits"
+    }
+  ]
+}
