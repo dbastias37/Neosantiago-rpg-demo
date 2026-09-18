@@ -4,20 +4,20 @@ const fs = require('node:fs');
 const path = require('node:path');
 const {boot,root} = require('./runtime-harness.cjs');
 function next(c){c.revealIntroText();c.advanceGameIntro()}
-function reachMara(c){while(c.introStep<c.introPages.length-1)next(c)}
+function completeIntro(c){while(!c.state.introCompleted)next(c)}
 
-test('prologue and guide precede Mara, and her explanation precedes the shop',()=>{
+test('prologue and guide precede Varela, and her explanation precedes the shop',()=>{
   const a=boot(),c=a.ctx;c.newGame();
   for(let i=0;i<c.introPages.length;i++){
     assert.equal(c.introStep,i);assert.equal(c.state.refuge.active,false);
     assert.equal(a.nodes.get('refuge').classList.contains('hidden'),true);
     assert.equal(c.state.starterKitGiven,false);assert.equal(c.state.credits,0);
     assert.equal(a.nodes.get('introActions').classList.contains('ready'),false);
-    if(i===3)assert.equal(a.nodes.get('introNext').textContent,'Comenzar');
+    if(i===3)assert.equal(a.nodes.get('introNext').textContent,'Elegir actividad');
     c.revealIntroText();assert.equal(a.nodes.get('introActions').classList.contains('ready'),true);
     c.advanceGameIntro();
   }
-  assert.equal(c.state.refuge.active,false);assert.equal(a.nodes.get('activityMenu').classList.contains('hidden'),false);c.resumeStoryActivity();assert.equal(c.state.refuge.active,true);assert.equal(c.state.introCompleted,true);
+  assert.equal(c.state.refuge.active,false);assert.equal(a.nodes.get('activityMenu').classList.contains('hidden'),false);c.resumeStoryActivity();assert.equal(a.nodes.get('storyPrelude').classList.contains('hidden'),false);assert.equal(c.state.refuge.active,false);c.finishStoryPrelude();assert.equal(c.state.refuge.active,true);assert.equal(c.state.introCompleted,true);
   assert.equal(c.state.refuge.visits,1);assert.equal(c.introTypeTimer,null);
   assert.equal(a.nodes.get('gameIntro').classList.contains('hidden'),true);
   c.advanceGameIntro();c.completeIntro();assert.equal(c.state.refuge.visits,1);
@@ -25,10 +25,10 @@ test('prologue and guide precede Mara, and her explanation precedes the shop',()
   c.acceptStarterKit();assert.equal(JSON.stringify(c.state.party),supplies);assert.equal(c.state.credits,credit);
 });
 test('unfinished introduction resumes its page, completed saves resume the existing refuge',()=>{
-  const a=boot(),c=a.ctx;c.newGame();reachMara(c);
+  const a=boot(),c=a.ctx;c.newGame();c.showGameIntro(c.introPages.length-1);
   const b=boot(a.storage);b.ctx.continueGame();
   assert.equal(b.ctx.introStep,c.introPages.length-1);assert.equal(b.ctx.state.refuge.active,false);
-  next(b.ctx);b.ctx.resumeStoryActivity();b.ctx.acceptStarterKit();const credits=b.ctx.state.credits;
+  next(b.ctx);b.ctx.resumeStoryActivity();b.ctx.finishStoryPrelude();b.ctx.acceptStarterKit();const credits=b.ctx.state.credits;
   const d=boot(a.storage);d.ctx.continueGame();
   assert.equal(d.ctx.state.refuge.active,true);assert.equal(d.ctx.state.refuge.visits,1);
   assert.equal(d.ctx.state.credits,credits);assert.equal(d.ctx.state.starterKitGiven,true);
@@ -72,7 +72,7 @@ test('intro consumes expedition shortcuts and keeps tab navigation in the window
   assert.equal(prevented,true);assert.equal(c.document.activeElement,a.nodes.get('introReading'));
 });
 test('simplified departure preserves readiness checks and starts only one signal tutorial',()=>{
-  const a=boot(),c=a.ctx;c.newGame();reachMara(c);next(c);c.resumeStoryActivity();
+  const a=boot(),c=a.ctx;c.newGame();completeIntro(c);c.resumeStoryActivity();c.finishStoryPrelude();
   assert.equal(c.confirmLeaveRefuge(),false);c.acceptStarterKit();
   assert.equal(c.leaveRefuge(),true);assert.equal(a.nodes.get('logisticsModal').classList.contains('hidden'),false);
   c.state.morale=0;assert.equal(c.confirmLeaveRefuge(),false);assert.equal(c.state.refuge.active,true);
@@ -81,10 +81,11 @@ test('simplified departure preserves readiness checks and starts only one signal
   const starts=[...a.timers.values()].filter(t=>t.ms===260);assert.equal(starts.length,1);starts[0].fn();
   assert.equal(a.nodes.get('signalModal').classList.contains('hidden'),false);
 });
-test('prologue backgrounds and Mara portrait use existing assets',()=>{
+test('prologue backgrounds and Varela portrait use existing assets',()=>{
   const a=boot();for(const page of a.ctx.introPages){
-    if(page.speaker)assert.equal(page.image,'characters/mara-trader.webp');else assert.ok(page.image.startsWith('backgrounds/'));assert.ok(fs.existsSync(path.join(root,page.image)));
+    assert.ok(page.image.startsWith('backgrounds/'));assert.ok(fs.existsSync(path.join(root,page.image)));
   }
+  assert.ok(fs.existsSync(path.join(root,'portraits/npc-varela.webp')));
 });
 test('help pauses typing, changes no run state and resumes at the same introduction page',()=>{
   const a=boot(),c=a.ctx;c.newGame();c.showGameIntro(2);
@@ -116,11 +117,9 @@ test('help controls close the last page, block expedition shortcuts and reset on
   assert.equal(a.nodes.get('gameIntro').getAttribute('inert'),undefined);
   assert.equal(c.introStep,0);
 });
-test('Mara has her own portrait and returning to the prologue restores the landscape image mode',()=>{
-  const a=boot(),c=a.ctx;c.newGame();reachMara(c);
-  assert.equal(a.nodes.get('introScene').classList.contains('is-speaker'),true);
-  assert.ok(a.nodes.get('introImage').src.includes('characters/mara-trader.webp'));
-  assert.equal(c.state.refuge.active,false);c.showGameIntro(0);
+test('the prologue remains in landscape mode before the separate Varela scene',()=>{
+  const a=boot(),c=a.ctx;c.newGame();c.showGameIntro(c.introPages.length-1);
   assert.equal(a.nodes.get('introScene').classList.contains('is-speaker'),false);
-  assert.ok(a.nodes.get('introImage').src.includes('backgrounds/day-alameda.webp'));
+  assert.ok(a.nodes.get('introImage').src.includes('backgrounds/day-station-entrance.webp'));
+  assert.equal(c.state.refuge.active,false);
 });

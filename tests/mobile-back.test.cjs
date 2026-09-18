@@ -17,7 +17,7 @@ function session(intro=false){
     routeNarrativeModal:69,gameHelpModal:170,refugeHelpModal:170,itemDetailModal:220};
   c.getComputedStyle=node=>({zIndex:String(z[node.id]||50)});
   c.newGame();
-  if(!intro){while(!c.state.introCompleted){c.revealIntroText();c.advanceGameIntro()}c.resumeStoryActivity();c.continueRefugeHelp();c.acceptStarterKit()}
+  if(!intro){while(!c.state.introCompleted){c.revealIntroText();c.advanceGameIntro()}c.resumeStoryActivity();c.finishStoryPrelude();c.continueRefugeHelp();c.acceptStarterKit()}
   const windowEvents={};c.addEventListener=(type,fn)=>(windowEvents[type] ||= []).push(fn);
   const emit=(type,event={})=>(windowEvents[type]||[]).forEach(fn=>fn(event));
   let cursor=1;

@@ -8,6 +8,7 @@ function enterShop(a) {
   c.newGame();
   while (!c.state.introCompleted) { c.revealIntroText(); c.advanceGameIntro(); }
   c.resumeStoryActivity();
+  c.finishStoryPrelude();
 }
 function visible(a, id) { return !a.nodes.get(id).classList.contains('hidden'); }
 function pulse(a, id) { return a.nodes.get(id).classList.contains('refuge-action-hint'); }
