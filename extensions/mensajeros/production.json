@@ -1379,12 +1379,12 @@
     {
       "id": "tomas",
       "name": "Tomás Leiva",
-      "role": "Técnico de señales",
+      "role": "Orientador y técnico de señales",
       "maxHp": 44,
       "attack": 10,
       "skill": "Interferencia",
       "ability": "jam",
-      "description": "Mantiene los enlaces de las postas. Puede evitar un contacto electrónico una vez por encargo. En combate, su interferencia impide una respuesta enemiga.",
+      "description": "Ciego, delgado y atlético. Se orienta por sonidos y memoria de los túneles. Falla el 55% de disparos y el 40% de golpes cercanos; el ruido electrónico añade 15 puntos de fallo. Escuchar consume un turno y mejora su siguiente ataque cercano. Puede reconocer un desvío una vez por encargo y guiar una retirada con menor desgaste. Conserva su técnica de interferencia.",
       "image": "../../characters/mensajeros/tomas.webp"
     },
     {
@@ -1395,7 +1395,7 @@
       "attack": 13,
       "skill": "Carga segura",
       "ability": "carry",
-      "description": "Protege las encomiendas y ayuda a quienes no pueden caminar. Mientras siga en pie reduce el desgaste de cargar a un herido. En combate puede cubrir al grupo.",
+      "description": "Delgado y atlético, transporta carga con técnica y resistencia. Reduce el desgaste de cargar a un herido y cubre al grupo en combate.",
       "image": "../../characters/mensajeros/bruno.webp"
     }
   ],
@@ -1587,31 +1587,69 @@
       "id": "medkit",
       "price": 10,
       "qty": 1
-    },
-    {
-      "id": "electronics",
-      "price": 3,
-      "qty": 1
-    },
-    {
-      "id": "scrap",
-      "price": 3,
-      "qty": 1
     }
   ],
-  "recipes": [
-    {
-      "id": "decoy",
-      "cost": {
-        "electronics": 1,
-        "scrap": 1
+  "recipes": [],
+  "skillTrees": {
+    "rocio": [
+      {
+        "id": "trail",
+        "name": "Lectura de rutas",
+        "description": "Una segunda evasión con Paso silencioso por encargo.",
+        "requires": null
+      },
+      {
+        "id": "mark",
+        "name": "Marca precisa",
+        "description": "Marca añade 12 de daño en lugar de 8.",
+        "requires": "trail"
+      },
+      {
+        "id": "aim",
+        "name": "Pulso firme",
+        "description": "Reduce 5 puntos porcentuales la probabilidad de fallar.",
+        "requires": "trail"
       }
-    },
-    {
-      "id": "trap",
-      "cost": {
-        "scrap": 2
+    ],
+    "tomas": [
+      {
+        "id": "echo",
+        "name": "Memoria acústica",
+        "description": "Un segundo desvío por encargo.",
+        "requires": null
+      },
+      {
+        "id": "focus",
+        "name": "Separar sonidos",
+        "description": "Escuchar mejora 30 puntos el siguiente golpe cercano; antes, 20. El ruido sigue penalizando.",
+        "requires": "echo"
+      },
+      {
+        "id": "exit",
+        "name": "Ruta de salida",
+        "description": "La retirada guiada desgasta 2 puntos en lugar de 5.",
+        "requires": "echo"
       }
-    }
-  ]
+    ],
+    "bruno": [
+      {
+        "id": "carry",
+        "name": "Paso sostenido",
+        "description": "Reduce otro punto de desgaste al transportar un herido.",
+        "requires": null
+      },
+      {
+        "id": "guard",
+        "name": "Cobertura coordinada",
+        "description": "Su protección reduce el daño recibido al 25%, antes 40%.",
+        "requires": "carry"
+      },
+      {
+        "id": "aid",
+        "name": "Primeros auxilios",
+        "description": "Los botiquines usados por Bruno en combate le curan hasta 32 HP.",
+        "requires": "carry"
+      }
+    ]
+  }
 }

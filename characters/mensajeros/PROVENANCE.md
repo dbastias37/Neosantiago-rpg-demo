@@ -9,3 +9,6 @@ Rocío Rojas: mujer de 28 años, exploradora, complexión atlética delgada, pó
 Tomás Leiva: hombre de 32 años, técnico de señales, complexión delgada, rostro largo y anguloso, cabello oscuro corto rizado, bigote discreto, chaqueta de trabajo oliva, bolso y herramientas, receptor ficticio con luz cian, sala de relés.
 
 Bruno Araya: hombre de 41 años, porteador y rescatista, robusto, rostro ancho curtido y nariz amplia, barba corta entrecana, cabello muy corto, chaleco utilitario sobre tejido marrón, mochila de armazón y cuerdas, depósito comunitario.
+
+## Revisión techwear
+Tres ediciones individuales con ImageGen integrado, usando retrato anterior para identidad y referencia adjunta de vestimenta. Prompt: conservar rostro; cuerpo delgado, atlético; chaqueta técnica negra ajustada, pantalón cargo entallado, arnés compacto, tela gastada y brazalete cobre; túneles Neo Santiago 2130, iluminación ámbar/cian, realismo cinematográfico, vertical 2:3, sin texto ni marcas. Tomás: gafas oscuras, oídos libres y bastón de movilidad. Bruno: sustituir complexión robusta por delgada y atlética. PNG 1024×1536 convertidos a WebP 590×885 calidad 86 en los mismos tres archivos consumidos por el juego.

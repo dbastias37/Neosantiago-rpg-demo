@@ -48,7 +48,7 @@ El inhibidor de Adasme tiene 20 minutos narrativos de uso: leer no consume tiemp
 
 Las entregas son transacciones únicas, retiran la carga exacta y no se pagan por encontrar el objeto o llegar a una estación. La carga no puede venderse, desarmarse ni descartarse. Los objetos incluyen inspección con imagen y uso. Se reutiliza arte existente para los objetos nuevos de apoyo (mapas, radio, piezas, medicina); las cinco ilustraciones aprobadas de rotor, sensor, humo, inhibidor y agua siguen presentes.
 
-Las fichas se usan en la central o en puntos de control. Las compras previas se agregan al aceptar; remanentes de compras y materiales propios se conservan al entregar, mientras que la dotación prestada pertenece al encargo. La victoria recupera munición, agua y materiales. Se fabrican señuelos con 1 electrónica + 1 pieza metálica y trampas con 2 piezas metálicas. Las alertas regionales persisten entre encargos.
+Las fichas se usan en la central o en puntos de control. Las compras previas se agregan al aceptar; remanentes de compras y materiales propios se conservan al entregar, mientras que la dotación prestada pertenece al encargo. La victoria recupera munición, agua y materiales. Los Mensajeros no fabrican. Compran señuelos y trampas; venden objetos propios y materiales recuperados en las postas. Las alertas regionales persisten entre encargos.
 
 ## Verificación
 
@@ -57,3 +57,16 @@ Las fichas se usan en la central o en puntos de control. Las compras previas se 
 Prueba Chromium local: introducción → menú → Mara → encargos; entrega completa de Guzmán; extracción completa de Adasme con combates; recarga durante viaje y durante combate; regreso a la narrativa sin modificar sus recursos/decisiones; compra/fabricación; inspección; zoom y arrastre del mapa. Revisión a 1440, 390 y 360 píxeles. El balance es una primera versión jugable, con constantes en los datos y motor; no representa una prueba extensa con jugadores.
 
 No se cambian ni se publican los laboratorios de Sites. El juego se integra en el repositorio y su despliegue depende del alojamiento habitual.
+
+
+## Revisión de Los Mensajeros — 18-sep-2026
+
+Los tres llevan techwear negro ajustado, son delgados y atléticos. Retratos sustituidos conservando sus identidades. Tomás es ciego: precisión base de disparo 45%, cuerpo a cuerpo 60%; encuentros electrónicos restan 15 puntos. Escuchar consume un turno y mejora el próximo golpe cercano en 20 puntos (30 con Separar sonidos). No mejora disparos ni otorga percepción sobrenatural.
+
+Tomás evita un contacto por encargo mediante un desvío acústico (desgaste 2, o 6 con ruido electrónico), ampliable a dos. Puede guiar retirada al andén anterior con desgaste 5 (2 mejorado), más 4 entre ruido electrónico. Retirarse no completa el tramo ni borra vigilancia. Requiere estar consciente.
+
+Cada personaje comienza con un punto de habilidad y gana otro por nivel. Rama de tres nodos: raíz seguida de dos especializaciones, un punto por nodo. Rocío: Lectura de rutas → Marca precisa / Pulso firme. Tomás: Memoria acústica → Separar sonidos / Ruta de salida. Bruno: Paso sostenido → Cobertura coordinada / Primeros auxilios. Se aprende en postas; las partidas anteriores obtienen los puntos correspondientes a su nivel sin reiniciarse. Guardado y recuperación conservan habilidades y usos gastados.
+
+La tienda existente se mantiene; se elimina fabricación de interfaz y motor. Las reservas antiguas de materiales pueden venderse. Carga protegida y suministros prestados no pueden venderse. La campaña principal conserva sus sistemas.
+
+Validación de esta revisión: 184 pruebas automatizadas aprobadas, incluida migración, prerrequisitos, escucha, retirada, límites de uso y comercio. Balance inicial pendiente de experiencia con jugadores.
