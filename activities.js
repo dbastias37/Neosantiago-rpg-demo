@@ -10,6 +10,17 @@ function openActivityMenu(){
  $("activityTitle").focus({preventScroll:true});
 }
 function courierAudioVisible(active){var frame=$('courierFrame');try{if(frame.contentWindow&&frame.contentWindow.NeoCourierVisibility)frame.contentWindow.NeoCourierVisibility(active)}catch(e){}}
+function resetActivityProgress(){
+ try{
+  localStorage.removeItem('neosantiago.mensajeros.production.v1');
+  localStorage.removeItem('neosantiago.mensajeros.production.v1.backup');
+ }catch(e){toast('No se pudo reiniciar el guardado de encargos. Revisa el almacenamiento del navegador.');return false}
+ courierAudioVisible(false);
+ // Destroy the old browsing context, including its combat, timers and in-memory world.
+ var frame=$('courierFrame'),replacement=frame.cloneNode(false);
+ replacement.removeAttribute('src');frame.replaceWith(replacement);
+ return true;
+}
 function openCourierActivity(){
  setSceneAmbience(null);courierAudioVisible(true);
  state.activity='couriers';save();$("activityMenu").classList.add("hidden");$("courierScreen").classList.remove("hidden");

@@ -12,6 +12,7 @@ function boot(storage = new Map(), options = {}) {
       classList:{contains:x=>set.has(x),add:(...xs)=>xs.forEach(x=>set.add(x)),remove:(...xs)=>xs.forEach(x=>set.delete(x)),toggle(x,on){on=on===undefined?!set.has(x):on;on?set.add(x):set.delete(x);return on;}},
       addEventListener(type,fn){(this.listeners ||= {})[type] ||= [];this.listeners[type].push(fn)},
       setAttribute(k,v){this[k]=v},getAttribute(k){return this[k]},removeAttribute(k){delete this[k]},
+      cloneNode(){const copy=element(this.id,[...set].join(' '));for(const k of ['src','title','loading'])if(this[k]!==undefined)copy[k]=this[k];return copy},replaceWith(node){nodes.set(this.id,node)},
       querySelector(){return element()},querySelectorAll(){return []},focus(){doc.activeElement=this},pause(){},play(){return Promise.resolve()},load(){},appendChild(){},remove(){},contains(){return false},closest(){return null},getBoundingClientRect(){return {width:390,height:844,top:0,left:0}}};
     Object.defineProperty(e,'parentNode',{get(){return element()}});return e;
   }
@@ -32,4 +33,3 @@ function boot(storage = new Map(), options = {}) {
 }
 module.exports={boot,root};
 if(require.main===module){const app=boot();console.log('Runtime boot OK:',app.ctx.events.length,'events;',Object.keys(app.ctx.routeNarrativeDefs).length,'routes');}
-

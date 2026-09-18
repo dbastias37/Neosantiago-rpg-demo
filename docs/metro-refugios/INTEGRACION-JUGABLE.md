@@ -8,7 +8,7 @@ Al terminar las cinco páginas de introducción se muestra «La ciudad sigue viv
 
 `activities.js` administra el menú y carga `extensions/mensajeros/play.html` en un marco del mismo origen. El aislamiento de DOM evita colisiones de IDs, estilos, teclas e inventarios con el juego existente. Las ventanas de fondo quedan inertes y el reloj de la señal de campaña se pausa. El campo `state.activity` registra el modo; los guardados antiguos sin ese campo siguen su flujo anterior.
 
-El guardado de encargos es `neosantiago.mensajeros.production.v1`; no usa la clave de campaña ni `neosantiago.mensajeros.lab.v1`. Se guarda tras cada transición, también durante el combate. Reiniciar la narrativa conserva los encargos. Reiniciar los encargos requiere su botón de confirmación y guarda una copia anterior con sufijo `.backup`. Si el guardado no es compatible se conserva intacto; no se reemplaza al abrir la guía.
+El guardado de encargos es `neosantiago.mensajeros.production.v1`; no usa la clave de campaña ni `neosantiago.mensajeros.lab.v1`. Se guarda tras cada transición, también durante el combate. «Nueva partida» reinicia la campaña y todos los encargos: elimina el guardado de producción y su copia `.backup`, y destruye la sesión cargada del mapa, combate y equipo. Al volver a Encargos se crea un mundo inicial, sin progreso, pagos, heridas ni inventarios anteriores. «Continuar guardado» restaura ambas actividades; si la campaña no se puede leer, informa del error sin borrar ningún guardado. El botón de reinicio dentro de Encargos continúa reiniciando solo esa actividad. Si el guardado no es compatible se conserva intacto; no se reemplaza al abrir la guía.
 
 ## Equipo nuevo
 
