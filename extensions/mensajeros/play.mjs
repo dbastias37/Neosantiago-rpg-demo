@@ -1,3 +1,4 @@
+import {animateRoute} from './travel.mjs?v=1';
 import * as E from './production.mjs';
 const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const asset=p=>new URL(p,import.meta.url).href;
@@ -13,7 +14,7 @@ function sound(path){try{const a=new Audio(asset('../../audio/'+path));a.volume=
 function apply(fn,...args){try{if(loadError)throw Error(warning);world=fn(data,world,...args);save();render();return true;}catch(err){announce(err.message);return false;}}
 function announce(text){$('announcement').textContent=text;$('saveStatus').textContent=text;}
 function image(p,alt,cls=''){return `<img src="${asset(p)}" alt="${esc(alt)}" class="${cls}" loading="eager" decoding="async">`;}
-function open(kicker,html){$('dialogKicker').textContent=kicker;$('dialogBody').innerHTML=html;if(!dialog.open)dialog.showModal();dialog.scrollTop=0;$('dialogTitle')?.focus({preventScroll:true});}
+function open(kicker,html){if(busy)return;$('dialogKicker').textContent=kicker;$('dialogBody').innerHTML=html;if(!dialog.open)dialog.showModal();dialog.scrollTop=0;$('dialogTitle')?.focus({preventScroll:true});}
 function close(d){if(d.open)d.close();}
 for(const d of [dialog,itemDialog]){d.addEventListener('cancel',e=>{e.preventDefault();close(d);});}
 function party(){return world.run?.status==='active'?world.run.party:world.crew;}
@@ -37,7 +38,7 @@ function contact(id){const c=data.contacts.find(x=>x.id===id),m=Object.values(da
 function contacts(){open('RED DE REFUGIOS',`<div class="dialog-body"><h2 id="dialogTitle" tabindex="-1">Comunidades y contactos</h2><div class="contact-list">${data.contacts.map(c=>`<button data-contact="${c.id}">${image(c.image,c.name)}<span><strong>${esc(c.name)}</strong><small>${esc(data.nodes[c.refuge]?.name)}</small></span></button>`).join('')}</div></div>`);}
 function restModal(){const f=E.rewardForecast(data,world);open('PUNTO DE DESCANSO',`<div class="dialog-body"><h2 id="dialogTitle" tabindex="-1">Recuperar al grupo</h2><p>Consume 1 ración y 1 agua, recupera resistencia y 12 HP por persona. Avanza 10 minutos.</p><p class="time-warning">Pago estimado: ${f.amount} fichas · plazo ${f.limit} min.</p></div><div class="dialog-actions"><button data-close="dialog">Seguir</button><button data-rest-confirm class="primary">Descansar</button></div>`);}
 function receipt(id=world.run?.mission){const r=world.completed[id];if(!r)return;open('ENCARGO ENTREGADO',`<div class="dialog-body"><h2 id="dialogTitle" tabindex="-1">${esc(data.missions[id].name)}</h2><p>«${esc(r.dialogue)}»</p><div class="outcome"><span>Pago final</span><strong>${r.amount} fichas</strong><span>${r.minutes} min · plazo ${r.timeLimit} min</span></div>${r.penalty?`<p class="bad">Demora: −${r.penalty} fichas sobre ${r.gross}.</p>`:'<p class="good">Entrega dentro del plazo: sin descuento.</p>'}<p>${esc(r.effect||'')}</p></div><div class="dialog-actions"><button data-close="dialog">Mapa</button><button data-heroes class="primary">Viajar a Los Héroes</button></div>`);}
-function pendingModal(){
+function pendingModal(){if(busy)return;
  const r=world.run,p=r?.pending;if(!p||r.status!=='active')return;if(p.combat){close(dialog);renderBattle();return;}
  const e=E.eventFor(data,world);let title=e?.title||'',text=e?.text||'',art='../../backgrounds/station-ruins.webp';
  if(p.category==='checkpoint'){title='Un lugar para detenerse';text='Llegan a '+data.nodes[p.to].name+'. Al entrar se registra el punto de control.';}else if(p.category==='rescue'){title='El compañero está aquí';text=p.injured?'Está herido y no puede caminar.':'Está agotado, pero puede caminar con ayuda.';}else if(p.category==='delivery'){title='El destinatario espera';text=E.mission(data,world).delivery_text;}
@@ -76,21 +77,36 @@ function renderBattle(){
 function pathFor(edge){const a=data.nodes[edge.from],b=data.nodes[edge.to];return edge.path||`M${a.x} ${a.y}L${b.x} ${b.y}`;}
 function svgEl(tag,attrs){const el=document.createElementNS(ns,tag);for(const [k,v]of Object.entries(attrs))el.setAttribute(k,String(v));return el;}
 function mapRender(){
- const m=world.run?E.mission(data,world):data.missions[selected],rt=data.routes[m.route];layer.replaceChildren();rt.edges.forEach(e=>layer.append(svgEl('path',{d:pathFor(e),class:'route-selected'})));
+ const m=world.run?E.mission(data,world):data.missions[selected],rt=data.routes[m.route];layer.replaceChildren();rt.edges.forEach((e,i)=>layer.append(svgEl('path',{d:pathFor(e),class:'route-selected',fill:'none','data-edge':i})));
  [...new Set([...rt.nodes,...data.contacts.map(c=>c.refuge)])].filter(id=>data.nodes[id]).forEach(id=>{const n=data.nodes[id],el=svgEl(n.checkpoint?'rect':'circle',n.checkpoint?{x:n.x-7,y:n.y-7,width:14,height:14}:{cx:n.x,cy:n.y,r:5});el.setAttribute('class',n.checkpoint?'control-point':'instance-point');el.setAttribute('role','button');el.setAttribute('tabindex','0');el.addEventListener('click',()=>nodeInfo(id));layer.append(el);});
- if(world.run){const r=world.run,n=data.nodes[rt.nodes[r.index]],marker=svgEl('circle',{cx:n.x,cy:n.y,r:9,class:'messenger'});marker.id='messenger';layer.append(marker);}
+ if(world.run){const r=world.run,n=data.nodes[r.pending&&!busy?r.pending.to:rt.nodes[r.index]],marker=svgEl('circle',{cx:n.x,cy:n.y,r:9,class:'messenger'});marker.id='messenger';layer.append(marker);}
 }
 function render(){
  const r=world.run,m=r?E.mission(data,world):data.missions[selected],node=r?E.here(data,world):data.nodes[data.routes[m.route].nodes[0]],forecast=r?E.rewardForecast(data,world):null;
  $('brief').innerHTML=`<div class="mission-portrait">${image(m.portrait,m.issuer)}<span class="portrait-name">${esc(m.issuer)}</span></div><span class="chip">${r?({active:'EN CURSO',completed:'ENTREGADO',failed:'VIAJE INTERRUMPIDO',abandoned:'DEVUELTO'})[r.status]:'DISPONIBLE'}</span><h2>${esc(m.name)}</h2><p>${esc(m.summary)}</p><button class="primary" data-offer="${m.id}">Ver encargo</button>${r&&['active','failed'].includes(r.status)?'<button class="text-button" data-abandon>Devolver encargo</button>':''}`;
- $('location').textContent=r?.pending?'En tránsito a '+data.nodes[r.pending.to].name:node.name;mapRender();$('crewSummary').innerHTML=crewHTML();$('cargo').innerHTML=itemRows(r?r.cargo:m.cargo);$('supplies').innerHTML=itemRows(r?r.supplies:totals());
+ $('location').textContent=r?.pending?(busy?'En tránsito a ':'')+data.nodes[r.pending.to].name:node.name;mapRender();$('crewSummary').innerHTML=crewHTML();$('cargo').innerHTML=itemRows(r?r.cargo:m.cargo);$('supplies').innerHTML=itemRows(r?r.supplies:totals());
  $('status').innerHTML=r?`<div class="meter-label"><span>Resistencia</span><b>${r.condition}%</b></div><div class="progress"><span style="width:${r.condition}%"></span></div><div class="deadline ${forecast.penalty?'late':''}"><span>${forecast.minutes} / ${forecast.limit} min</span><b>Pago estimado ${forecast.amount} fichas</b><small>${forecast.penalty?'Descuento actual −'+forecast.penalty:'Dentro del plazo'}</small></div><div class="status-data"><div>Combates<b>${r.combats}</b></div><div>Evitados<b>${r.evaded}</b></div><div>Fichas<b>${world.credits}</b></div></div>`:`<p>${world.location==='heroes'?'El equipo está en Los Héroes.':'Viaja a Los Héroes para preparar al equipo.'}</p><b>${world.credits} fichas</b>`;
  const edge=r?E.nextEdge(data,world):null,risk=edge?E.effectiveRisk(data,world,edge):'low';
- $('travel').innerHTML=!r?'<p>Consulta los encargos o visita Los Héroes.</p><button data-catalog class="primary">Consultar encargos</button>':r.status==='completed'?'<p class="good">Encargo entregado.</p><button data-receipt="'+r.mission+'" class="primary">Ver resultado</button><button data-heroes>Viajar a Los Héroes</button>':r.status==='failed'?'<p>El grupo no puede continuar.</p><button id="retryButton" class="primary">Reintentar desde '+esc(data.nodes[r.checkpoint.node].name)+'</button>':r.status==='abandoned'?'<p>Encargo devuelto.</p><button data-heroes class="primary">Viajar a Los Héroes</button>':`<div class="travel-head"><span>${r.index}/${E.route(data,world).edges.length} · próximo tramo ${edge?.minutes||0} min</span><span class="risk-${risk}">Amenaza ${risks[risk]}</span></div><div class="progress"><span style="width:${100*r.index/E.route(data,world).edges.length}%"></span></div><div class="travel-actions"><button id="advanceButton" class="primary">${r.pending?'Resolver instancia':'Avanzar a '+esc(data.nodes[edge.to].name)}</button>${!r.pending&&node.rest?'<button id="restButton">Descansar · 10 min</button>':''}${!r.pending&&node.id==='heroes'?'<button data-heroes>Hablar con Mara / Armero</button>':''}</div>`;
+ $('travel').innerHTML=!r?'<p>Consulta los encargos o visita Los Héroes.</p><button data-catalog class="primary">Consultar encargos</button>':r.status==='completed'?'<p class="good">Encargo entregado.</p><button data-receipt="'+r.mission+'" class="primary">Ver resultado</button><button data-heroes>Viajar a Los Héroes</button>':r.status==='failed'?'<p>El grupo no puede continuar.</p><button id="retryButton" class="primary">Reintentar desde '+esc(data.nodes[r.checkpoint.node].name)+'</button>':r.status==='abandoned'?'<p>Encargo devuelto.</p><button data-heroes class="primary">Viajar a Los Héroes</button>':`<div class="travel-head"><span>${r.index}/${E.route(data,world).edges.length} · próximo tramo ${edge?.minutes||0} min</span><span class="risk-${risk}">Amenaza ${risks[risk]}</span></div><div class="progress"><span style="width:${100*r.index/E.route(data,world).edges.length}%"></span></div><div class="travel-actions"><button id="advanceButton" class="primary" ${busy?'disabled':''}>${r.pending?'Resolver instancia':'Avanzar a '+esc(data.nodes[edge.to].name)}</button>${!r.pending&&node.rest?'<button id="restButton">Descansar · 10 min</button>':''}${!r.pending&&node.id==='heroes'?'<button data-heroes>Hablar con Mara / Armero</button>':''}</div>`;
  $('journal').innerHTML=(r?.log||['La red de encargos espera.']).slice(-10).map(x=>'<p>'+esc(x)+'</p>').join('');renderBattle();
 }
-function animateAdvance(){if(busy)return;if(world.run?.pending){pendingModal();return;}if(!apply(E.advance))return;if(world.run.status!=='active')return;busy=true;setTimeout(()=>{busy=false;render();pendingModal();},matchMedia('(prefers-reduced-motion:reduce)').matches?0:500);}
-document.addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b)return;
+async function animateAdvance(){
+ if(busy)return;
+ if(world.run?.pending){pendingModal();return;}
+ busy=true;
+ if(!apply(E.advance)){busy=false;render();return;}
+ if(world.run.status!=='active'){busy=false;render();return;}
+ const run=world.run,pending=run.pending,destination=data.nodes[pending.to];
+ const current=()=>world.run===run&&run.pending===pending&&run.status==='active';
+ const marker=$('messenger'),path=layer.querySelector('[data-edge="'+run.index+'"]');
+ $('advanceButton').disabled=true;$('advanceButton').textContent='En camino a '+destination.name+'…';
+ try{
+  const arrived=await animateRoute({path,marker,destination,reducedMotion:matchMedia('(prefers-reduced-motion:reduce)').matches,isCurrent:current});
+  busy=false;
+  if(arrived&&current()){render();pendingModal();}
+ }catch(error){busy=false;render();announce('No se pudo mostrar el recorrido. Pulsa Resolver instancia para continuar.');}
+}
+document.addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b||busy)return;
  if(b.dataset.close){close($(b.dataset.close));return;}if(b.dataset.item){itemModal(b.dataset.item);return;}if(b.hasAttribute('data-catalog')||b.id==='catalogButton'){catalog();return;}if(b.dataset.offer){offer(b.dataset.offer);return;}if(b.dataset.accept){if(apply(E.start,b.dataset.accept)){close(dialog);announce('Encargo aceptado.');}return;}if(b.hasAttribute('data-resume')){close(dialog);return;}if(b.dataset.receipt){receipt(b.dataset.receipt);return;}
  if(b.dataset.choice){if(apply(E.choose,b.dataset.choice)){sound('ui/click-metal.mp3');if(world.run?.pending?.combat)renderBattle();else if(world.run?.status==='completed')receipt();else pendingModal();}return;}
  if(b.id==='advanceButton'){animateAdvance();return;}if(b.id==='routeButton'){displayRoute();return;}if(b.id==='restButton'){restModal();return;}if(b.hasAttribute('data-rest-confirm')){if(apply(E.rest))close(dialog);return;}if(b.id==='retryButton'){apply(E.retry);return;}

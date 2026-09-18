@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#070a09"><title>Neo Santiago 2130 · Los Mensajeros</title><link rel="icon" href="data:,"><link rel="stylesheet" href="ui.css"><link rel="stylesheet" href="play.css?v=3-combat-viewport"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#070a09"><title>Neo Santiago 2130 · Los Mensajeros</title><link rel="icon" href="data:,"><link rel="stylesheet" href="ui.css?v=2-travel"><link rel="stylesheet" href="play.css?v=3-combat-viewport"></head>
 <body>
 <header class="topbar"><div class="brand">NEO SANTIAGO <span>2130</span><small>LOS MENSAJEROS / RED DE ENCARGOS</small></div><nav aria-label="Central de encargos"><button id="catalogButton">Encargos</button><button id="contactsButton">Refugios</button><button id="crewButton">Equipo</button><button id="heroesButton">Los Héroes</button><button id="helpButton">Ayuda</button></nav></header>
 <div id="bootStatus" role="status">Cargando la red de refugios…</div>
@@ -14,5 +14,5 @@
 <iframe id="battleLayer" class="courier-combat-frame hidden" title="Combate de Los Mensajeros" allow="autoplay" src="about:blank"></iframe>
 <dialog id="dialog" aria-labelledby="dialogTitle"><div class="dialog-head"><span id="dialogKicker" class="eyebrow"></span><button class="close" data-close="dialog" aria-label="Cerrar ventana">×</button></div><div id="dialogBody"></div></dialog>
 <dialog id="itemDialog" aria-labelledby="itemTitle"><div class="dialog-head"><span class="eyebrow">INVENTARIO / INSPECCIÓN</span><button class="close" data-close="itemDialog" aria-label="Cerrar objeto">×</button></div><div id="itemBody"></div><div class="dialog-actions"><button data-close="itemDialog" class="primary">Volver</button></div></dialog>
-<script type="module">import("./play.mjs?v=2-shared-combat").catch(()=>{document.getElementById("bootStatus").innerHTML='No se pudo cargar la central. <button onclick="location.reload()">Reintentar</button>';});</script>
+<script type="module">import("./play.mjs?v=3-travel").catch(()=>{document.getElementById("bootStatus").innerHTML='No se pudo cargar la central. <button onclick="location.reload()">Reintentar</button>';});</script>
 </body></html>

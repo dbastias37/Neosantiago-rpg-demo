@@ -7,3 +7,13 @@
 #dialogTitle:focus{outline:none}
 
 .instance-point:focus-visible,.control-point:focus-visible{outline:none;stroke:var(--paper);stroke-width:4px}
+
+/* Station backdrop shared by the route screen and the courier laboratory. */
+body{background:linear-gradient(180deg,rgba(3,7,6,.35),rgba(3,7,6,.65)),url('../../backgrounds/station-ruins.webp') center/cover fixed no-repeat;min-height:100dvh}
+:root{--panel:rgba(8,12,11,.82)}
+.topbar{background:rgba(5,10,8,.86)}
+.map-panel{background:rgba(5,12,10,.64)}
+#map svg .route-selected{fill:none;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.messenger.arriving{animation:messenger-arrival .5s ease-in-out 2}
+@keyframes messenger-arrival{0%,100%{opacity:1}50%{opacity:.2}}
+@media(prefers-reduced-motion:reduce){.messenger.arriving{animation:none}}

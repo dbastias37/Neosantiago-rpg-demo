@@ -1,3 +1,4 @@
+import {animateRoute} from './travel.mjs?v=1';
 import * as E from './engine.mjs';
 const $=id=>document.getElementById(id), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const asset=p=>new URL(p,import.meta.url).href;
@@ -13,7 +14,7 @@ const dialog=$('dialog'),itemDialog=$('itemDialog');
 function save(){try{localStorage.setItem(data.save_key,E.serialize(world));$('saveStatus').textContent='Progreso guardado en este navegador';}catch(err){warning='No se pudo guardar: el almacenamiento del navegador no está disponible.';$('saveStatus').textContent=warning;}}
 function apply(fn,...args){try{world=fn(data,world,...args);save();render();return true;}catch(err){announce(err.message);return false;}}
 function announce(text){$('announcement').textContent=text;$('saveStatus').textContent=text;}
-function open(kicker,html){$('dialogKicker').textContent=kicker;$('dialogBody').innerHTML=html;dialog.classList.remove('closing');if(!dialog.open)dialog.showModal();dialog.scrollTop=0;const heading=$('dialogTitle');if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}}
+function open(kicker,html){if(busy)return;$('dialogKicker').textContent=kicker;$('dialogBody').innerHTML=html;dialog.classList.remove('closing');if(!dialog.open)dialog.showModal();dialog.scrollTop=0;const heading=$('dialogTitle');if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}}
 function close(d){if(!d.open)return;d.classList.add('closing');setTimeout(()=>{d.close();d.classList.remove('closing');if(d===dialog){const target=$('advanceButton')||$('catalogButton');target?.focus({preventScroll:true});}},matchMedia('(prefers-reduced-motion:reduce)').matches?0:160);}
 for(const d of [dialog,itemDialog]){d.addEventListener('cancel',e=>{e.preventDefault();close(d);});d.addEventListener('click',e=>{if(e.target===d){const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)close(d);}});}
 const risks={low:'Baja',medium:'Media',high:'Alta'};
@@ -26,7 +27,7 @@ function displayRoute(){const m=world.run?E.mission(data,world):data.missions[se
 function nodeInfo(id){const n=data.nodes[id];open('PUNTO DEL RECORRIDO',`<div class="dialog-body"><h2 id="dialogTitle">${esc(n.name)}</h2><p>${n.checkpoint?'Punto de control: al llegar queda registrada una posición de recuperación.':'Estación o punto de instancia: al avanzar puede aparecer calma, una decisión, una amenaza o un hallazgo.'}</p>${n.rest?'<p>Descanso opcional: consume 1 ración y 1 agua; recupera 25 puntos de condición. Una vez por visita.</p>':''}${n.provisional?'<p class="muted">Ubicación o función provisional dentro de esta prueba.</p>':''}<p>Consultar el mapa no mueve al grupo.</p></div><div class="dialog-actions"><button data-close="dialog" class="primary">Volver</button></div>`);}
 function restModal(){open('PUNTO DE DESCANSO',`<div class="dialog-body"><h2 id="dialogTitle">Recuperar al grupo</h2><p>Descansar en ${esc(E.here(data,world).name)} consume 1 ración y 1 agua, recupera hasta 25 puntos y avanza 10 minutos narrativos. Si el inhibidor sigue encendido, también gasta batería.</p><p>El punto de control se actualiza después del descanso.</p></div><div class="dialog-actions"><button data-close="dialog">Continuar sin descansar</button><button data-rest-confirm class="primary">Descansar</button></div>`);}
 function receipt(id=world.run?.mission){const r=world.completed[id];if(!r)return;open('ENCARGO ENTREGADO',`<div class="dialog-body"><div class="eyebrow">${esc(r.recipient)}</div><h2 id="dialogTitle">${esc(data.missions[id].name)}</h2><p>«${esc(r.dialogue)}»</p><div class="outcome"><span>Recompensa de prueba</span><strong>${r.amount} fichas</strong><span>${r.combats} enfrentamientos · ${r.evaded} encuentros evitados o abandonados</span></div><p>Entrega registrada. La recompensa se abona una sola vez. La vigilancia provocada permanece en los corredores afectados.</p></div><div class="dialog-actions"><button data-close="dialog">Ver mapa</button><button data-catalog class="primary">Otros encargos</button></div>`);}
-function pendingModal(){const r=world.run,p=r?.pending;if(!p||r.status!=='active')return;
+function pendingModal(){if(busy)return;const r=world.run,p=r?.pending;if(!p||r.status!=='active')return;
  const e=E.eventFor(data,world);let title=e?.title||'',text=e?.text||'',art='../../backgrounds/station-ruins.webp',extra='';
  if(p.combat){title='Paso bloqueado';text='Combate de prueba por turnos. Puedes abrir paso o retirarte; la vigilancia ya aumentó al iniciar el enfrentamiento.';art='../../portraits/'+(e?.electronic?'drone.webp':'merodeador.webp');extra=`<div class="meter-label"><span>Amenaza restante</span><b>${p.combat.hp} / ${p.combat.maxHp}</b></div><div class="progress"><span style="width:${100*p.combat.hp/p.combat.maxHp}%"></span></div><p>Condición del grupo: ${r.condition} / 100 · Munición: ${r.supplies.ammo556||0}</p>`;}
  else if(p.category==='checkpoint'){title='Un lugar para detenerse';text='Llegan a '+data.nodes[p.to].name+'. Al entrar se registra el punto de control. Pueden descansar si tienen provisiones.';}
@@ -38,13 +39,13 @@ function pendingModal(){const r=world.run,p=r?.pending;if(!p||r.status!=='active
 function pathFor(edge){const a=data.nodes[edge.from],b=data.nodes[edge.to];return edge.path||`M${a.x} ${a.y}L${b.x} ${b.y}`;}
 function svgEl(tag,attrs){const el=document.createElementNS(ns,tag);for(const [k,v]of Object.entries(attrs))el.setAttribute(k,String(v));return el;}
 function mapRender(){const m=world.run?E.mission(data,world):data.missions[selected],rt=data.routes[m.route];layer.replaceChildren();
- rt.edges.forEach(e=>layer.append(svgEl('path',{d:pathFor(e),class:'route-selected'})));
+ rt.edges.forEach((e,i)=>layer.append(svgEl('path',{d:pathFor(e),class:'route-selected',fill:'none','data-edge':i})));
  [...new Set(rt.nodes)].forEach(id=>{const n=data.nodes[id],visited=world.run&&rt.nodes.slice(0,world.run.index+1).includes(id);const el=svgEl(n.checkpoint?'rect':'circle',n.checkpoint?{x:n.x-7,y:n.y-7,width:14,height:14}:{cx:n.x,cy:n.y,r:5});el.setAttribute('class',(n.checkpoint?'control-point':'instance-point')+(visited?' point-visited':''));el.setAttribute('role','button');el.setAttribute('tabindex','0');el.setAttribute('aria-label',n.name+(n.checkpoint?', punto de control':''));const t=svgEl('title',{});t.textContent=n.name;el.append(t);el.addEventListener('click',()=>nodeInfo(id));el.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();nodeInfo(id);}});layer.append(el);if(['ines','nunoa','estadio','nuble','biobio'].includes(id)){const label=svgEl('text',{x:n.x+(n.x===780?15:0),y:n.y+(n.x===780?4:24),class:'instance-label','text-anchor':n.x===780?'start':'middle'});label.textContent=n.name;layer.append(label);}});
- if(world.run){const r=world.run,n=data.nodes[rt.nodes[r.index]],marker=svgEl('circle',{cx:n.x,cy:n.y,r:9,class:'messenger'});marker.id='messenger';if(r.pending){const path=svgEl('path',{d:pathFor(rt.edges[r.index])});layer.append(path);const mid=path.getPointAtLength(path.getTotalLength()*.55);marker.setAttribute('cx',mid.x);marker.setAttribute('cy',mid.y);path.remove();}layer.append(marker);}
+ if(world.run){const r=world.run,n=data.nodes[r.pending&&!busy?r.pending.to:rt.nodes[r.index]],marker=svgEl('circle',{cx:n.x,cy:n.y,r:9,class:'messenger'});marker.id='messenger';layer.append(marker);}
 }
 function render(){const r=world.run,m=r?E.mission(data,world):data.missions[selected],node=r?E.here(data,world):data.nodes[data.routes[m.route].nodes[0]];
  $('brief').innerHTML=`<div class="mission-portrait">${image(m.portrait,m.issuer)}<span class="portrait-name">${esc(m.issuer)}</span></div><span class="chip">${r?({active:'EN CURSO',completed:'ENTREGADO',failed:'VIAJE INTERRUMPIDO',abandoned:'ABANDONADO'})[r.status]:'DISPONIBLE'}</span><h2>${esc(m.name)}</h2><p>${esc(m.summary)}</p><div class="mission-meta">Destinatario<strong>${esc(m.recipient)}</strong></div><button class="primary" data-offer="${m.id}">Ver encargo</button>${r&&['active','failed'].includes(r.status)?'<button class="text-button" data-abandon>Abandonar prueba de este encargo</button>':''}`;
- $('location').textContent=r?.pending?'En tránsito a '+data.nodes[r.pending.to].name:node.name;mapRender();
+ $('location').textContent=r?.pending?(busy?'En tránsito a ':'')+data.nodes[r.pending.to].name:node.name;mapRender();
  $('cargo').innerHTML=itemRows(r?r.cargo:m.cargo);$('supplies').innerHTML=itemRows(r?r.supplies:{...m.test_loadout,...m.issued});
  $('status').innerHTML=r?`<div class="meter-label"><span>Condición del grupo</span><b>${r.condition}%</b></div><div class="progress"><span style="width:${r.condition}%"></span></div><div class="status-data"><div>Tiempo narrativo<b>${r.minutes} min</b></div><div>Enfrentamientos<b>${r.combats}</b></div><div>Encuentros evitados<b>${r.evaded}</b></div><div>Fichas de prueba<b>${world.credits}</b></div></div>${r.supplies.jammer?`<button id="jammerButton" ${r.status!=='active'||!r.battery?'disabled':''}>Inhibidor ${r.jammerOn?'activo':'apagado'} · ${r.battery} min</button>`:''}${r.rescued?'<p class="good" style="margin-top:14px">Compañero: '+(r.rescued.mode==='carry'?'transportado por el grupo':'caminando acompañado')+'</p>':''}`:'<p class="muted">Prepara un encargo para iniciar el recorrido.</p>';
  const edge=r?E.nextEdge(data,world):null,risk=edge?E.effectiveRisk(data,world,edge):'low';
@@ -52,10 +53,23 @@ function render(){const r=world.run,m=r?E.mission(data,world):data.missions[sele
  $('journal').innerHTML=(r?.log||['Las estaciones marcan el recorrido. El peligro se conoce; el encuentro se descubre al avanzar.']).slice(-10).map(x=>'<p>'+esc(x)+'</p>').join('');$('journal').scrollTop=$('journal').scrollHeight;
  if(warning)$('saveStatus').textContent=warning;
 }
-function animateAdvance(){if(busy)return;if(world.run?.pending){pendingModal();return;}if(!apply(E.advance))return;if(world.run.status!=='active')return;busy=true;$('advanceButton').disabled=true;const edge=E.nextEdge(data,world),p=svgEl('path',{d:pathFor(edge)});layer.append(p);const marker=$('messenger'),length=p.getTotalLength(),start=performance.now(),duration=matchMedia('(prefers-reduced-motion:reduce)').matches?0:650;
- function step(now){const f=duration?Math.min(1,(now-start)/duration):1,point=p.getPointAtLength(length*.55*f);marker?.setAttribute('cx',point.x);marker?.setAttribute('cy',point.y);if(f<1)requestAnimationFrame(step);else{p.remove();busy=false;render();pendingModal();}}requestAnimationFrame(step);
+async function animateAdvance(){
+ if(busy)return;
+ if(world.run?.pending){pendingModal();return;}
+ busy=true;
+ if(!apply(E.advance)){busy=false;render();return;}
+ if(world.run.status!=='active'){busy=false;render();return;}
+ const run=world.run,pending=run.pending,destination=data.nodes[pending.to];
+ const current=()=>world.run===run&&run.pending===pending&&run.status==='active';
+ const marker=$('messenger'),path=layer.querySelector('[data-edge="'+run.index+'"]');
+ $('advanceButton').disabled=true;$('advanceButton').textContent='En camino a '+destination.name+'…';
+ try{
+  const arrived=await animateRoute({path,marker,destination,reducedMotion:matchMedia('(prefers-reduced-motion:reduce)').matches,isCurrent:current});
+  busy=false;
+  if(arrived&&current()){render();pendingModal();}
+ }catch(error){busy=false;render();announce('No se pudo mostrar el recorrido. Pulsa Resolver instancia para continuar.');}
 }
-document.addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b)return;
+document.addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b||busy)return;
  if(b.dataset.close){close($(b.dataset.close));return;}if(b.dataset.item){itemModal(b.dataset.item);return;}if(b.hasAttribute('data-catalog')||b.id==='catalogButton'){catalog();return;}
  if(b.dataset.offer){offer(b.dataset.offer);return;}if(b.dataset.accept){if(apply(E.start,b.dataset.accept))close(dialog);return;}
  if(b.hasAttribute('data-resume')){render();close(dialog);return;}if(b.dataset.receipt){receipt(b.dataset.receipt);return;}
