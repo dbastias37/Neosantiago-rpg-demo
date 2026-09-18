@@ -60,10 +60,13 @@ function roll(data, world, edge, index) {
   let result;
   if (m.type!=='travel' && index === route(data, world).edges.length - 1) result = {category:'delivery',id:'delivery'};
   else if (m.type!=='travel' && node.kind === 'rescue' && !run.rescued) result = {category:'rescue',id:'rescue',injured:fraction(world.seed+':injury')<0.5};
-  else if (m.type!=='travel' && node.checkpoint) result = {category:'checkpoint',id:'checkpoint'};
+  else if (m.type!=='travel' && node.checkpoint && !edge.encounter_before_checkpoint) result = {category:'checkpoint',id:'checkpoint'};
   else {
     const weights = [...data.weights[effectiveRisk(data, world, edge)]];
     if (run.history.slice(-2).length === 2 && run.history.slice(-2).every(x=>x.category==='hostile')) {weights[0] += weights[2];weights[2] = 0;}
+    // These corridors must contain an actionable encounter, even on low-risk trips.
+    // Move quiet weight to decisions; preserve hostile/loot odds and anti-combat streaks.
+    if(edge.required_encounter){weights[1]+=weights[0];weights[0]=0;}
     const salt=m.type==='travel'?':trip-'+run.travelSerial:'';
     let value = fraction(world.seed+':'+run.mission+':'+index+':'+world.regions[edge.region]+salt)*100, category = 'quiet';
     for (let i=0;i<weights.length;i++) { value -= weights[i]; if(value<0) {category=data.categories[i];break;} }

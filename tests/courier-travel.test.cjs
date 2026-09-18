@@ -89,7 +89,7 @@ test('finishing a market journey renders arrival and opens both vendors without 
  const option=E.options(data,w).find(o=>o.id==='scout')||E.options(data,w).find(o=>o.id==='continue')||E.options(data,w).find(o=>E.optionAvailable(w,o)&&!o.combat);w=E.choose(data,w,option.id);
  assert.equal(w.run.status,'completed');const a=await session({saved:w}),d=a.document;
  assert.match(d.getElementById('travel').textContent,/Llegaste a Los Héroes/);assert.doesNotMatch(d.getElementById('status').textContent,/undefined|NaN|Pago estimado/);
- a.click('#travel [data-heroes]');assert.match(d.getElementById('dialogBody').textContent,/Reservas de Mara/);a.click('[data-vendor="armorer"]');assert.match(d.getElementById('dialogBody').textContent,/Banco del Armero/);
+ a.click('#travel [data-heroes]');assert.equal(d.getElementById('refugeLayer').classList.contains('hidden'),false);assert.match(d.getElementById('refugeLayer').src,/refuge.html/);assert.equal(d.getElementById('dialog').open,undefined);
 });
 
 test('the compact layout keeps the full travel journal accessible in a closable dialog',async()=>{

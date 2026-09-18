@@ -110,3 +110,5 @@ dialog{overscroll-behavior:contain;max-width:calc(100% - 16px);max-height:calc(1
  .hero-brief{grid-template-columns:70px minmax(0,1fr);gap:12px}.hero-brief>img{height:120px}
  .route-list li{grid-template-columns:20px minmax(0,1fr) 75px;gap:6px}
 }
+.courier-refuge-frame{position:fixed;inset:0;z-index:280;width:100%;height:100dvh;border:0;background:#070a09}.courier-refuge-frame.hidden{display:none}
+html:has(#refugeLayer:not(.hidden)),body:has(#refugeLayer:not(.hidden)){overflow:hidden}

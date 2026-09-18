@@ -92,3 +92,19 @@ test('a paid legacy extraction retains its original deadline and penalty after t
  w.run.index=6;w.run.status='completed';w.run.minutes=52;w.run.receipt={gross:70,amount:64,late:12,penalty:6,timeLimit:40,minutes:52};w.credits=64;w.completed['adasme-01']=structuredClone(w.run.receipt);w.paid=['adasme-01'];
  w=E.restore(d,E.serialize(w));assert.deepEqual(E.rewardForecast(d,w),{gross:70,amount:64,late:12,penalty:6,limit:40,minutes:52});assert.equal(w.credits,64);assert.equal(w.run.index,28);
 });
+
+test('north checkpoint approaches and the south corridor cannot silently skip their required encounters',async()=>{
+ const {E,d}=await setup();
+ for(let seed=1;seed<=100;seed++){
+  let north=E.advance(d,E.start(d,E.createWorld(d,{seed}),'beatriz-01'));
+  assert.equal(north.run.pending.to,'plaza');assert.ok(['decision','hostile','opportunity'].includes(north.run.pending.category));
+  assert.deepEqual(E.restore(d,E.serialize(north)).run.pending,north.run.pending);
+  // Return journeys reverse the south route while retaining encounter requirements.
+  let w=E.createWorld(d,{seed});w.location='franklin';w=E.travelHeroes(d,w);
+  const r=E.route(d,w),index=r.edges.findIndex(e=>e.from==='parque'&&e.to==='toesca');assert.ok(index>=0);
+  w.run.index=index;w.location='parque';w=E.advance(d,w);
+  assert.ok(['decision','hostile','opportunity'].includes(w.run.pending.category));
+  const journey=d.routes[d.journeys['market-libertadores'].route];assert.ok(journey.edges[0].required_encounter);
+ }
+ const forward=d.routes['guzman-plaza'].edges.find(e=>e.from==='parque'&&e.to==='toesca');assert.equal(forward.required_encounter,true);
+});

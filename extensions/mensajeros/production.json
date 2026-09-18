@@ -421,7 +421,9 @@
           "line": "L2",
           "minutes": 8,
           "kind": "adjacent_station",
-          "region": "centro"
+          "region": "centro",
+          "encounter_before_checkpoint": true,
+          "required_encounter": true
         },
         {
           "from": "toesca",
@@ -457,7 +459,9 @@
           "line": "L3",
           "minutes": 8,
           "kind": "adjacent_station",
-          "region": "centro"
+          "region": "centro",
+          "encounter_before_checkpoint": true,
+          "required_encounter": true
         }
       ]
     },
@@ -845,7 +849,9 @@
           "minutes": 6,
           "kind": "adjacent_station",
           "region": "centro",
-          "from": "plaza"
+          "from": "plaza",
+          "encounter_before_checkpoint": true,
+          "required_encounter": true
         },
         {
           "to": "moneda",
@@ -933,7 +939,9 @@
           "kind": "grouped_corridor",
           "region": "centro",
           "from": "libertadores",
-          "path": "M220 95L426 166Q440 171 440 186V265"
+          "path": "M220 95L426 166Q440 171 440 186V265",
+          "encounter_before_checkpoint": true,
+          "required_encounter": true
         },
         {
           "to": "uchile",
@@ -942,7 +950,9 @@
           "minutes": 6,
           "kind": "adjacent_station",
           "region": "centro",
-          "from": "plaza"
+          "from": "plaza",
+          "encounter_before_checkpoint": true,
+          "required_encounter": true
         },
         {
           "to": "plaza",
@@ -951,7 +961,9 @@
           "minutes": 6,
           "kind": "adjacent_station",
           "region": "centro",
-          "from": "uchile"
+          "from": "uchile",
+          "encounter_before_checkpoint": true,
+          "required_encounter": true
         },
         {
           "to": "libertadores",
@@ -961,7 +973,9 @@
           "kind": "grouped_corridor",
           "region": "centro",
           "from": "plaza",
-          "path": "M440 265V186Q440 171 426 166L220 95"
+          "path": "M440 265V186Q440 171 426 166L220 95",
+          "encounter_before_checkpoint": true,
+          "required_encounter": true
         }
       ]
     },
