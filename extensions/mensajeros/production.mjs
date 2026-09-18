@@ -191,3 +191,26 @@ export function restore(data,text){
  return w;
 }
 export function craft(){throw Error('Los Mensajeros no pueden fabricar. Compra suministros en Los Héroes.');}
+
+// Corpse search and discard persist alongside the encounter, without regenerating drops.
+export function revealLoot(data,source,enemyIndex){
+ const w=copy(source),c=w.run?.pending?.combat,e=c?.enemies[enemyIndex];
+ need(w.run?.status==='active'&&c?.phase==='loot'&&e,'No hay un cuerpo disponible.');
+ e.searched=true;return w;
+}
+export function discardLoot(data,source,enemyIndex,itemId){
+ const w=copy(source),c=w.run?.pending?.combat,e=c?.enemies[enemyIndex],drop=e?.loot.find(x=>x.id===itemId&&x.qty>0);
+ need(w.run?.status==='active'&&c?.phase==='loot'&&drop,'Ese objeto ya no está disponible.');
+ drop.originalQty=drop.qty;drop.qty=0;drop.status='discarded';return w;
+}
+export function collectLoot(data,source,enemyIndex,memberId,itemId=null){
+ const c=source.run?.pending?.combat,e=c?.enemies[enemyIndex],p=source.run?.party.find(x=>x.id===memberId);
+ need(source.run?.status==='active'&&c?.phase==='loot'&&e&&p?.hp>0,'Selecciona un saqueador con vida.');
+ const drops=e.loot.filter(x=>x.qty>0&&(itemId===null||x.id===itemId));
+ need(drops.length,'Ese objeto ya no está disponible.');
+ need(drops.reduce((n,x)=>n+x.qty,0)<=bagCapacity(data,p)-bagUsed(p),'No cabe todo el loot seleccionado en la mochila.');
+ let w=source;
+ for(const drop of drops){const qty=drop.qty;for(let i=0;i<qty;i++)w=takeLoot(data,w,enemyIndex,memberId,drop.id);
+  const taken=w.run.pending.combat.enemies[enemyIndex].loot.find(x=>x.id===drop.id);taken.originalQty=qty;taken.status='taken';}
+ return w;
+}

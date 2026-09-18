@@ -9,12 +9,14 @@ function openActivityMenu(){
  $("storyActivityStatus").textContent=state.finished?'Expedición terminada · consultar desenlace':state.starterKitGiven?'Partida guardada · día '+currentDay():'Prepara al grupo con Mara en Los Héroes';
  $("activityTitle").focus({preventScroll:true});
 }
+function courierAudioVisible(active){var frame=$('courierFrame');try{if(frame.contentWindow&&frame.contentWindow.NeoCourierVisibility)frame.contentWindow.NeoCourierVisibility(active)}catch(e){}}
 function openCourierActivity(){
+ setSceneAmbience(null);courierAudioVisible(true);
  state.activity='couriers';save();$("activityMenu").classList.add("hidden");$("courierScreen").classList.remove("hidden");
- var frame=$("courierFrame");if(!frame.getAttribute('src'))frame.setAttribute('src','extensions/mensajeros/play.html?v=1');
+ var frame=$("courierFrame");if(!frame.getAttribute('src'))frame.setAttribute('src','extensions/mensajeros/play.html?v=2-shared-combat');
  $("courierReturn").focus({preventScroll:true});
 }
-function returnToActivities(){state.activity='hub';openActivityMenu()}
+function returnToActivities(){courierAudioVisible(false);setSceneAmbience('ambience-title',AUDIO_CROSSFADE_MS);state.activity='hub';openActivityMenu()}
 function enterStoryActivity(){
  hideActivities();state.activity='story';signalLastTick=Date.now();save();render();
  if(state.finished&&state.ending){if(state.summarySeen)showRunSummary();else finish(state.ending)}
