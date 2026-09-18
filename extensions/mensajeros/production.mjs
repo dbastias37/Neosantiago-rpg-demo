@@ -169,8 +169,21 @@ export function sell(data,source,id,memberId){
 }
 export function recover(data,source){const w=copy(source);need(atHeroes(data,w),'Viaja a Los Héroes para recuperarte.');const party=activeParty(w);need(party.some(c=>c.hp<c.maxHp),'El equipo ya está recuperado.');need(w.credits>=8,'Necesitas 8 fichas.');w.credits-=8;party.forEach(c=>c.hp=c.maxHp);if(w.run?.status==='active')updateCheckpoint(data,w);return w;}
 export function heal(data,source,id){const w=copy(source),r=w.run;need(r?.status==='active'&&!r.pending,'Resuelve el encuentro antes de atender al equipo.');const c=r.party.find(c=>c.id===id);need(c&&c.hp<c.maxHp,'Ese Mensajero no necesita un botiquín.');spend(r,{medkit:1});c.hp=Math.min(c.maxHp,c.hp+24);updateCheckpoint(data,w);return w;}
-export function useItem(data,source,memberId,id){const w=copy(source),party=activeParty(w),m=party.find(x=>x.id===memberId),item=data.items[id];need(m&&['medical'].includes(item?.kind),'Ese objeto no puede usarse.');need(bagCount(m,id)>0&&m.hp<m.maxHp,'No puedes usarlo ahora.');removeBag(m,id,1);m.hp=Math.min(m.maxHp,m.hp+(item.heal||14));if(w.run?.status==='active'){w.run.ownedStock[id]=Math.max(0,(w.run.ownedStock[id]||0)-1);sync(w.run);updateCheckpoint(data,w);}return w;}
-export function transfer(data,source,fromId,toId,id){const w=copy(source),party=activeParty(w),from=party.find(x=>x.id===fromId),to=party.find(x=>x.id===toId);need(from&&to&&from!==to&&bagCount(from,id)>0,'Transferencia no disponible.');need(bagUsed(to)<bagCapacity(data,to),'La mochila de destino está llena.');removeBag(from,id,1);addBag(data,to,id,1);if(w.run?.status==='active'){sync(w.run);updateCheckpoint(data,w);}return w;}
+export function useItem(data,source,memberId,id){const w=copy(source),party=activeParty(w),m=party.find(x=>x.id===memberId),item=data.items[id];need(!w.run?.pending?.combat,'Usa el inventario de combate durante una batalla.');need(m&&(item?.kind==='medical'||id==='medkit'),'Ese objeto no puede usarse.');need(bagCount(m,id)>0&&m.hp<m.maxHp,'No puedes usarlo ahora.');removeBag(m,id,1);m.hp=Math.min(m.maxHp,m.hp+(item.heal||(id==='medkit'?24:14)));if(w.run?.status==='active'){w.run.ownedStock[id]=Math.max(0,(w.run.ownedStock[id]||0)-1);sync(w.run);updateCheckpoint(data,w);}return w;}
+export function transfer(data,source,fromId,toId,id,qty=1){
+ const w=copy(source),party=activeParty(w),from=party.find(x=>x.id===fromId),to=party.find(x=>x.id===toId);
+ need(!w.run?.pending?.combat,'Termina el combate antes de transferir equipo.');
+ need(Number.isInteger(qty)&&qty>0&&from&&to&&from!==to&&bagCount(from,id)>=qty,'Transferencia no disponible.');
+ need(bagUsed(to)+qty<=bagCapacity(data,to),'La mochila de destino no tiene espacio suficiente.');
+ removeBag(from,id,qty);addBag(data,to,id,qty);if(w.run?.status==='active'){sync(w.run);updateCheckpoint(data,w);}return w;
+}
+export function discardItem(data,source,memberId,id,qty=1){
+ const w=copy(source),m=activeParty(w).find(x=>x.id===memberId),item=data.items[id];
+ need(!w.run?.pending?.combat,'Termina el combate antes de descartar equipo.');
+ need(m&&item&&item.kind!=='cargo'&&item.discard!==false,'Este objeto está protegido y no se puede descartar.');
+ need(Number.isInteger(qty)&&qty>0&&bagCount(m,id)>=qty,'Ese objeto no está disponible.');
+ removeBag(m,id,qty);if(w.run?.status==='active'){w.run.ownedStock[id]=Math.max(0,(w.run.ownedStock[id]||0)-qty);sync(w.run);updateCheckpoint(data,w);}return w;
+}
 export function equip(data,source,memberId,id){
  const w=copy(source),party=activeParty(w),m=party.find(x=>x.id===memberId),item=data.items[id];need(m&&item?.slot&&bagCount(m,id)>0,'Ese equipo no está disponible.');const old=m.equipment[item.slot];removeBag(m,id,1);if(old)addBag(data,m,old,1);m.equipment[item.slot]=id;if(w.run?.status==='active'){sync(w.run);updateCheckpoint(data,w);}return w;
 }

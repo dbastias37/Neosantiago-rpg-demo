@@ -64,3 +64,12 @@ test('choosing combat dismisses the encounter dialog before showing the battle',
  assert.equal(a.document.getElementById('dialog').open,false);
  assert.equal(a.document.getElementById('battleLayer').classList.contains('hidden'),false);
 });
+
+test('cargo and supplies open separately without stretching the map or advancing the mission',async()=>{
+ const a=await session(),d=a.document,before=a.storage.get(a.data.save_key);
+ assert.equal(d.querySelectorAll('.cargo-panel .item-row').length,0);assert.ok(d.getElementById('cargoSummary').textContent.includes('suministros'));
+ a.click('#cargoButton');assert.equal(d.getElementById('dialog').open,true);assert.ok(d.querySelector('#dialog #cargo'));assert.ok(d.querySelector('#dialog #supplies .item-row'));
+ a.click('#supplies .item-row');assert.equal(d.getElementById('itemDialog').open,true);a.click('#itemDialog [data-close="itemDialog"]');assert.equal(d.getElementById('dialog').open,true);
+ a.click('#dialogBody [data-close="dialog"]');assert.equal(d.getElementById('dialog').open,false);assert.equal(a.storage.get(a.data.save_key),before);
+ a.click('#crewButton');assert.equal(d.getElementById('profileLayer').classList.contains('hidden'),false);assert.match(d.getElementById('profileLayer').src,/profile.html/);assert.equal(d.getElementById('dialog').open,false);
+});

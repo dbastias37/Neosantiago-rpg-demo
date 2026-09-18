@@ -1135,15 +1135,12 @@ function openContextArchive(id,opener){
 }
 function repairCost(p,slot){var d=gear(p.equipment[slot]),dur=gearDurability(p,slot);if(!d||!d.maxDurability||dur>=d.maxDurability)return 0;return dur===0||d.maxDurability-dur>=Math.ceil(d.maxDurability/2)?2:1}
 function repairReady(p,slot){var cost=repairCost(p,slot);return cost>0&&state.party[1].hp>0&&state.engineeringUses>0&&hasPartyItem("tool")&&stockCount("scrap")>=cost}
-function slotHtml(label,pIndex,slot){var p=state.party[pIndex],id=p.equipment[slot],d=gear(id),dur=d&&d.maxDurability?gearDurability(p,slot):null,cost=repairCost(p,slot),durability=d&&d.maxDurability?'<span class="durability-copy"><span>Durabilidad</span><b>'+dur+'/'+d.maxDurability+'</b></span><span class="durability-bar"><span style="width:'+Math.round(100*dur/d.maxDurability)+'%"></span></span>'+(cost?'<button class="repair-btn" data-repair="'+slot+'" '+(!repairReady(p,slot)?'disabled':'')+'>Reparar · '+cost+' comp.</button>':""):"";return'<div '+itemDetailAttributes(id)+' class="gear-slot"><span class="slot-name">'+esc(label)+'</span>'+itemArt(id,d&&d.name,"",true)+ '<span class="gear-copy"><strong>'+esc(d?d.name:"Vacío")+'</strong><small>'+esc(d?d.desc:"Sin equipar")+'</small>'+durability+'</span></div>'}
 function canEquip(p,d){return d&&d.slot&&(d.kind!=="weapon"||p.categories.indexOf(d.category)>=0)}
 function profileItemUsable(p,id){return id==="food"?p.hunger<100:id==="stimulant"?p.hp<p.maxHp||p.hunger<100:id==="meds"||id==="medkit"||id==="traumaKit"?p.hp<p.maxHp:id==="bandage"?p.hp<p.maxHp||p.bleed>0:false}
 function recipeCostText(recipe){return Object.keys(recipe.cost).map(function(id){var names={scrap:"componentes",cloth:"tela",water:"agua",electronics:"electrónica",pulseCore:"núcleos de pulso"},d=gear(id);return recipe.cost[id]+" "+(names[id]||(d?d.name.toLowerCase():id))}).join(" · ")}
 function professionUses(id){return id==="elias"?state.engineeringUses:id==="sara"?state.medicalUses:id==="noa"?state.ordnanceUses:0}
 function craftOutputFits(p,recipe){return bagFree(p)+Object.keys(recipe.cost).reduce(function(sum,id){return sum+(id==="water"?0:Math.min(bagQty(p,id),recipe.cost[id]))},0)>=Math.max(1,Number(recipe.qty)||1)}
 function canCraft(p,recipe){return !!(p&&recipe&&p.id===recipe.owner&&(!recipe.skill||hasSkill(p,recipe.skill))&&p.hp>0&&professionUses(p.id)>0&&(p.id!=="elias"||hasPartyItem("tool"))&&craftOutputFits(p,recipe)&&Object.keys(recipe.cost).every(function(id){return stockCount(id)>=recipe.cost[id]}))}
-function profileVitalFill(kind,value,max,feedback,extraClass){var to=Math.round(100*value/max),active=feedback&&feedback.kind===kind;if(!active)return'<span class="vital-fill '+kind+' '+(extraClass||"")+'" style="width:'+to+'%"></span>';var from=Math.round(100*feedback.from/max);return'<span class="vital-fill '+kind+' '+(extraClass||"")+' vital-shift" style="--vital-from:'+from+'%;--vital-to:'+to+'%;width:'+to+'%"></span>'}
-function profileVitalFloat(feedback){if(!feedback||feedback.delta<=0)return"";return'<span class="profile-vital-float '+feedback.kind+'" aria-live="polite">+'+feedback.delta+' '+(feedback.kind==="hp"?"HP":"ENERGÍA")+'</span>'}
 function psychTrack(label,value){
   var pct=clamp(50+value*7,8,92);return'<span class="psych-track-row"><b>'+esc(label)+'</b><i><span style="width:'+pct+'%"></span></i><em>'+((value>0?"+":"")+value)+'</em></span>'
 }
@@ -1156,72 +1153,6 @@ function professionWorkshopHtml(p){
   var cards=recipes.map(function(recipe){var d=gear(recipe.id),ready=canCraft(p,recipe),qty=Math.max(1,Number(recipe.qty)||1);return'<article '+itemDetailAttributes(recipe.id)+' class="recipe-card">'+itemArt(recipe.id,d.name,"",true)+'<span><b>'+esc(d.name)+(qty>1?' ×'+qty:'')+'</b><small>'+esc(recipe.note)+'</small><em>'+esc(recipeCostText(recipe))+'</em></span><button data-craft="'+recipe.id+'" '+(!ready?'disabled':'')+'>Fabricar · +'+(recipe.xp||8)+' XP</button></article>'}).join("");
   var sara=p.id==="sara",noa=p.id==="noa",title=sara?"Mesa médica de Sara":noa?"Banco de explosivos de Noa":"Taller de Elías",description=sara?"Preparar medicina consume una acción médica. La tela se recupera de merodeadores.":noa?"Fabrica granadas y cargas EMP con chatarra electrónica recuperada.":"Reparar o fabricar consume una acción técnica. El uso de armas de fuego tiene −2 de precisión.",meta=sara?state.medicalUses+" / 3 acciones · "+stockCount("cloth")+" tela · "+stockCount("water")+" agua":noa?state.ordnanceUses+" / 3 acciones · "+stockCount("electronics")+" electrónica · "+stockCount("pulseCore")+" núcleos":state.engineeringUses+" / 3 acciones · "+stockCount("scrap")+" componentes · "+(hasPartyItem("tool")?"herramientas listas":"sin herramientas");
   return'<section class="workshop '+(sara?'medical-workshop':noa?'ordnance-workshop':'engineering-workshop')+'"><div class="workshop-head"><span><b>'+title+'</b><small>'+description+'</small></span><em>'+meta+'</em></div><div class="recipe-grid">'+cards+'</div></section>'
-}
-function skillTreeHtml(p){
-  var nodes=skillTrees[p.id]||[],branches=[];nodes.forEach(function(node){if(branches.indexOf(node.branch)<0)branches.push(node.branch)});
-  var columns=branches.map(function(branch){var branchNodes=nodes.filter(function(node){return node.branch===branch});return'<section class="skill-branch"><h4>'+esc(branch)+'</h4><div class="skill-path">'+branchNodes.map(function(node){var unlocked=hasSkill(p,node.id),available=canUnlockSkill(p,node),status=skillRequirement(p,node);return'<article class="skill-node tier-'+node.tier+' '+(unlocked?'unlocked':available?'available':'locked')+'"><span class="skill-tier">0'+node.tier+'</span><div><b>'+esc(node.name)+'</b><p>'+esc(node.desc)+'</p><small>'+esc(status)+' · '+node.cost+' PF</small></div><button data-unlock-skill="'+node.id+'" '+(!available?'disabled':'')+'>'+(unlocked?'Adquirida':'Desbloquear')+'</button></article>'}).join('')+'</div></section>'}).join('');
-  return'<section class="skill-tree"><div class="skill-tree-head"><span><b>Árbol de habilidades</b><small>Los puntos son compartidos: especializa al grupo según la ruta de esta partida.</small></span><em>Puntos de facción <strong>'+state.factionPoints+'</strong></em></div><div class="skill-branches">'+columns+'</div></section>'
-}
-function profileTabsHtml(p){var tabs=[{id:"inventory",label:"Equipamiento"},{id:"crafting",label:"Crafteo"},{id:"skills",label:"Habilidades"}];return'<nav class="profile-tabs" role="tablist" aria-label="Secciones del loadout">'+tabs.map(function(tab){var active=profileTab===tab.id,alert=tab.id==="skills"&&hasUnspentSkill(p)?'<span class="profile-tab-alert">'+state.factionPoints+'</span>':"";return'<button id="profileTab-'+tab.id+'" role="tab" aria-selected="'+(active?'true':'false')+'" aria-controls="profilePane-'+tab.id+'" tabindex="'+(active?'0':'-1')+'" class="'+(active?'active':'')+'" data-profile-tab="'+tab.id+'">'+tab.label+alert+'</button>'}).join('')+'</nav>'}
-function setProfileTab(i,tab,focusTab){if(["inventory","crafting","skills"].indexOf(tab)<0)return;profileTab=tab;renderProfile(i);if(focusTab){var button=$("profileTab-"+tab);if(button)button.focus()}}
-function profileSwitcherHtml(currentIndex){
-  return '<nav class="profile-switcher" aria-label="Cambiar superviviente">'+state.party.map(function(p,i){var ready=hasUnspentSkill(p),active=i===currentIndex,status=p.hp<=0?"Agotado":p.hp<10?"Crítico":p.hunger<10?"Sin energía":"Listo",mind=psychState(p).name;return '<button class="profile-switch '+(active?"active ":"")+(ready?"skill-ready ":"")+(status!=="Listo"?"warning":"")+'" data-profile-switch="'+i+'" '+(active?'aria-current="true"':"")+'><span class="profile-switch-photo">'+assetImage("portraits/"+p.id+".webp",p.name,"",590,885)+'</span><span><b>'+esc(p.name+" · "+status)+'</b><small>Lvl. '+p.level+' · '+p.hp+'/'+p.maxHp+' HP · '+esc(mind)+' · Mochila '+bagUsed(p)+'/'+bagCapacity(p)+'</small>'+(ready?'<strong class="skill-ready-copy">Habilidad disponible</strong>':"")+'</span><em>'+(active?"Activo":"Ver")+'</em></button>'}).join("")+'</nav>'
-}
-function switchProfile(currentIndex,nextIndex){
-  if(battleState||!state.party[nextIndex]||nextIndex===currentIndex)return;closeTransferModal();closeDiscardModal();renderProfile(nextIndex);var active=document.querySelector('[data-profile-switch="'+nextIndex+'"]');if(active)active.focus()
-}
-function renderProfile(i,feedback){
-  var p=state.party[i];if(!p)return;$('profileTitle').textContent=p.name+" · "+p.role;
-  var bag=p.bag.length?p.bag.map(function(entry,index){var d=gear(entry.id),equip=canEquip(p,d),usable=profileItemUsable(p,entry.id),label=d&&d.kind==="weapon"&&p.categories.indexOf(d.category)<0?"Incompatible":"Equipar",targets=state.party.some(function(other,j){return j!==i&&canReceive(other,entry.id,1)}),units=Math.max(1,Number(entry.qty)||1),dur=d&&d.maxDurability?' · Durabilidad '+entry.durability+'/'+d.maxDurability:"",actions=(d&&d.slot?'<button class="equip-btn" data-equip="'+index+'" '+(!equip?'disabled':'')+'>'+esc(label)+'</button>':"")+(usable||["food","meds","bandage","medkit"].indexOf(entry.id)>=0?'<button class="profile-use-btn" data-profile-use="'+index+'" '+(!usable?'disabled':'')+'>Usar</button>':"")+'<button class="discard-open-btn" data-discard-profile="'+index+'">Descartar</button><button class="transfer-open-btn" data-transfer-open="'+index+'" '+(!targets?'disabled':'')+'>Transferir</button>'+profileDisassembleAction(i,index,entry);return'<article '+itemDetailAttributes(entry.id)+' class="bag-item">'+itemArt(entry.id,d&&d.name,"",true)+'<span class="bag-copy"><b>'+esc((d?d.name:entry.id)+(entry.qty>1?" ×"+entry.qty:""))+'</b><small>'+esc((d?d.desc:"Objeto recuperado")+dur)+'</small><em>'+units+' espacio'+(units===1?'':'s')+'</em></span><div class="bag-actions">'+actions+'</div></article>'}).join(""):'<p class="empty">La mochila está vacía.</p>';
-  var hungerClass=p.hunger<=10?"critical":p.hunger<=35?"low":"",skills=skillTreeHtml(p),workshop=professionWorkshopHtml(p),inventory='<div class="loadout-inventory"><div class="loadout-side">'+slotHtml("Arma",i,"weapon")+slotHtml("Mochila",i,"backpack")+'</div><div class="bag-panel"><div class="bag-head"><span>Inventario personal</span><b>'+bagUsed(p)+' / '+bagCapacity(p)+' espacios</b></div><div class="bag-slots">'+bag+'</div></div></div>';
-  var mind=psychState(p),defense=Math.max(0,gearDefense(p)+psychDefenseBonus(p));$('profileContent').innerHTML=profileSwitcherHtml(i)+'<div class="loadout-grid"><div class="loadout-side">'+slotHtml("Cabeza",i,"head")+slotHtml("Cuerpo",i,"body")+'</div><div class="loadout-person">'+assetImage("characters/"+p.id+"-loadout.webp",p.name+", "+p.role,"loadout-character-art",768,1152)+psychPanelHtml(p)+profileVitalFloat(feedback)+'<div class="profile-vitals '+(feedback?'fx-'+feedback.kind:"")+'"><div class="vital-row hp-row"><span>HP</span><div class="vital-track">'+profileVitalFill("hp",p.hp,p.maxHp,feedback,"")+'</div><b>'+p.hp+'/'+p.maxHp+'</b></div><div class="vital-row energy-row"><span>Energía</span><div class="vital-track">'+profileVitalFill("energy",p.hunger,100,feedback,hungerClass)+'</div><b>'+p.hunger+'%</b></div><div class="person-stats"><div class="person-stat">Rango<b>Lvl. '+p.level+'</b></div><div class="person-stat">XP<b>'+p.xp+'/'+xpNeeded(p)+'</b></div><div class="person-stat">Mental<b>'+esc(mind.name)+'</b></div><div class="person-stat">Defensa<b>+'+defense+'</b></div></div></div></div><section class="loadout-hub">'+profileTabsHtml(p)+'<div id="profilePane-inventory" role="tabpanel" aria-labelledby="profileTab-inventory" class="profile-pane inventory '+(profileTab==="inventory"?'active':'')+'">'+inventory+'</div><div id="profilePane-crafting" role="tabpanel" aria-labelledby="profileTab-crafting" class="profile-pane crafting '+(profileTab==="crafting"?'active':'')+'">'+workshop+'</div><div id="profilePane-skills" role="tabpanel" aria-labelledby="profileTab-skills" class="profile-pane skills '+(profileTab==="skills"?'active':'')+'">'+skills+'</div></section></div>';
-  Array.prototype.forEach.call(document.querySelectorAll("[data-equip]"),function(b){b.addEventListener("click",function(){equipBagItem(i,Number(b.dataset.equip))})});
-  Array.prototype.forEach.call(document.querySelectorAll("[data-profile-use]"),function(b){b.addEventListener("click",function(){useProfileItem(i,Number(b.dataset.profileUse))})});
-  Array.prototype.forEach.call(document.querySelectorAll("[data-disassemble-profile]"),function(b){b.addEventListener("click",function(){openDisassemblyFromProfile(i,Number(b.dataset.disassembleProfile))})});
-  Array.prototype.forEach.call(document.querySelectorAll("[data-transfer-open]"),function(b){b.addEventListener("click",function(){openTransferModal(i,Number(b.dataset.transferOpen))})});
-  Array.prototype.forEach.call(document.querySelectorAll("[data-discard-profile]"),function(b){b.addEventListener("click",function(){openDiscardModal(i,Number(b.dataset.discardProfile))})});
-  Array.prototype.forEach.call(document.querySelectorAll("[data-profile-switch]"),function(b){b.addEventListener("click",function(){switchProfile(i,Number(b.dataset.profileSwitch))})});
-  Array.prototype.forEach.call(document.querySelectorAll("[data-psych-toggle]"),function(b){b.addEventListener("click",function(){psychPanelExpanded=!psychPanelExpanded;renderProfile(i);var toggle=document.querySelector("[data-psych-toggle]");if(toggle)toggle.focus()})});
-  Array.prototype.forEach.call(document.querySelectorAll("[data-repair]"),function(b){b.addEventListener("click",function(){repairEquipment(i,b.dataset.repair)})});
-  Array.prototype.forEach.call(document.querySelectorAll("[data-craft]"),function(b){b.addEventListener("click",function(){craftItem(i,b.dataset.craft)})});
-  Array.prototype.forEach.call(document.querySelectorAll("[data-unlock-skill]"),function(b){b.addEventListener("click",function(){unlockSkill(i,b.dataset.unlockSkill)})});
-  Array.prototype.forEach.call(document.querySelectorAll("[data-profile-tab]"),function(b){b.addEventListener("click",function(){setProfileTab(i,b.dataset.profileTab,true)});b.addEventListener("keydown",function(e){var order=["inventory","crafting","skills"],current=order.indexOf(b.dataset.profileTab),next=current;if(e.key==="ArrowRight")next=(current+1)%order.length;else if(e.key==="ArrowLeft")next=(current+order.length-1)%order.length;else if(e.key==="Home")next=0;else if(e.key==="End")next=order.length-1;else return;e.preventDefault();setProfileTab(i,order[next],true)})})
-}
-function transferTargetHtml(fromIndex,bagIndex,toIndex){
-  var to=state.party[toIndex],used=bagUsed(to),capacity=bagCapacity(to),free=bagFree(to),can=free>=1;
-  return'<button class="transfer-target" data-transfer-target="'+toIndex+'" '+(!can?'disabled':'')+'><span><b>'+esc(to.name)+'</b><small>'+esc(to.role)+' · '+used+'/'+capacity+' espacios ocupados</small></span><em>'+free+' libre'+(free===1?'':'s')+'</em></button>'
-}
-function renderTransferModal(){
-  if(!transferDraft)return;var from=state.party[transferDraft.fromIndex],entry=from&&from.bag[transferDraft.bagIndex],d=entry&&gear(entry.id);if(!from||!entry){closeTransferModal();return}
-  var units=Math.max(1,Number(entry.qty)||1),max=d&&d.stack?units:1,targets=state.party.map(function(_,j){return j!==transferDraft.fromIndex?transferTargetHtml(transferDraft.fromIndex,transferDraft.bagIndex,j):""}).join("");
-  $("transferObject").innerHTML=itemArt(entry.id,d&&d.name)+'<span><b>'+esc((d?d.name:entry.id)+(entry.qty>1?" ×"+entry.qty:""))+'</b><small>'+esc(d?d.desc:"Objeto recuperado")+'</small><em>Sale desde '+esc(from.name)+'</em></span>';
-  $("transferQty").max=max;$("transferQty").value=Math.min(max,Math.max(1,Number($("transferQty").value)||1));$("transferQty").disabled=max===1;
-  $("transferTargets").innerHTML=targets||'<p class="empty">No hay otro aliado disponible.</p>';
-  $("transferMessage").classList.toggle("hidden",state.party.some(function(_,j){return j!==transferDraft.fromIndex&&bagFree(state.party[j])>0}));
-  Array.prototype.forEach.call(document.querySelectorAll("[data-transfer-target]"),function(b){b.addEventListener("click",function(){confirmTransferTarget(Number(b.dataset.transferTarget))})})
-}
-function openTransferModal(fromIndex,bagIndex){
-  if(battleState)return;var from=state.party[fromIndex],entry=from&&from.bag[bagIndex];if(!from||!entry){toast("No se pudo abrir la transferencia");return}
-  transferDraft={fromIndex:fromIndex,bagIndex:bagIndex};$("transferModal").classList.remove("hidden");$("transferQty").value=1;renderTransferModal();$("transferQty").focus()
-}
-function confirmTransferTarget(toIndex){
-  if(!transferDraft)return;var qty=Number($("transferQty").value)||1;if(transferBagItem(transferDraft.fromIndex,transferDraft.bagIndex,toIndex,qty))closeTransferModal()
-}
-function closeTransferModal(){
-  transferDraft=null;if($("transferModal"))$("transferModal").classList.add("hidden")
-}
-function renderDiscardModal(){
-  if(!discardDraft)return;var p=state.party[discardDraft.pIndex],entry=p&&p.bag[discardDraft.bagIndex],d=entry&&gear(entry.id);if(!p||!entry){closeDiscardModal();return}
-  var units=Math.max(1,Number(entry.qty)||1),name=d?d.name:entry.id;
-  $("discardObject").innerHTML=itemArt(entry.id,name)+'<span><b>'+esc(name+(entry.qty>1?" ×"+entry.qty:""))+'</b><small>'+esc(d?d.desc:"Objeto recuperado")+'</small><em>Se perderá de forma permanente · libera '+units+' espacio'+(units===1?'':'s')+'</em></span>';
-  $("discardWarning").textContent="¿Seguro que quieres botar "+name+(entry.qty>1?" ×"+entry.qty:"")+" de la mochila de "+p.name+"? Esta acción no se puede deshacer.";
-}
-function openDiscardModal(pIndex,bagIndex){
-  if(battleState)return;var p=state.party[pIndex],entry=p&&p.bag[bagIndex];if(!p||!entry){toast("No se pudo abrir el descarte");return}
-  closeTransferModal();discardDraft={pIndex:pIndex,bagIndex:bagIndex};$("discardModal").classList.remove("hidden");renderDiscardModal();$("cancelDiscard").focus()
-}
-function closeDiscardModal(){
-  discardDraft=null;if($("discardModal"))$("discardModal").classList.add("hidden")
 }
 function confirmDiscardProfileItem(){
   if(!discardDraft)return;var p=state.party[discardDraft.pIndex],entry=p&&p.bag[discardDraft.bagIndex],d=entry&&gear(entry.id),qty=entry?Math.max(1,Number(entry.qty)||1):0,name=d?d.name:entry&&entry.id;if(!p||!entry){closeDiscardModal();return}
@@ -1273,7 +1204,6 @@ function attemptDisassembly(){
 function closeDisassemblyModal(){
   clearInterval(disassemblyTimer);disassemblyState=null;$("disassemblyModal").classList.add("hidden")
 }
-function openProfile(i){if(battleState)return;profileTab="inventory";psychPanelExpanded=false;renderProfile(i);$('profileModal').classList.remove('hidden');$('closeProfile').focus()}
 function closeProfile(){closeItemDetails(false);closeTransferModal();closeDiscardModal();psychPanelExpanded=false;if(disassemblyState&&disassemblyState.source.type==="profile")closeDisassemblyModal();$('profileModal').classList.add('hidden');if(state.refuge.active)renderRefuge()}
 function equipBagItem(pIndex,bagIndex){
   var p=state.party[pIndex],entry=p&&p.bag[bagIndex],d=entry&&gear(entry.id);if(!p||!entry||!canEquip(p,d)){toast("Ese superviviente no domina esa categoría");return}
