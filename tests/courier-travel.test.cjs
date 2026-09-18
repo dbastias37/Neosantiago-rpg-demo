@@ -16,7 +16,7 @@ async function session({saved,reduced=false}={}){
  ctx.animateRoute=args=>animateRoute({...args,requestFrame:fn=>frames.push(fn),now:()=>clock});vm.createContext(ctx);
  const code=fs.readFileSync(root+'/extensions/mensajeros/play.mjs','utf8').replace(/^import .*;\n/gm,'').replaceAll('import.meta.url',JSON.stringify('https://game.test/extensions/mensajeros/play.mjs'));
  await vm.runInContext('(async()=>{'+code+'})()',ctx);
- return {document,data,storage,sampled,world:()=>E.restore(data,storage.get(data.save_key)),click(){document.getElementById('advanceButton').dispatchEvent(new window.Event('click',{bubbles:true}))},async frame(ms){clock=ms;const batch=frames.splice(0);batch.forEach(fn=>fn(ms));await Promise.resolve();}};
+ return {document,data,storage,sampled,world:()=>E.restore(data,storage.get(data.save_key)),click(selector='#advanceButton'){document.querySelector(selector).dispatchEvent(new window.Event('click',{bubbles:true}))},async frame(ms){clock=ms;const batch=frames.splice(0);batch.forEach(fn=>fn(ms));await Promise.resolve();}};
 }
 test('Vicuña–Tobalaba follows the full unfilled path, blinks for 1 second, then opens the encounter once',async()=>{
  const a=await session(),d=a.document,before=a.world().run.minutes;a.click();a.click();
@@ -42,4 +42,25 @@ test('a cancelled journey cannot reveal an encounter after the run changes',asyn
  const {document}=parseHTML('<svg><circle id="m"/></svg>'),marker=document.getElementById('m');
  const completed=animateRoute({path:{getTotalLength:()=>100,getPointAtLength:n=>({x:n,y:0})},marker,destination:{x:100,y:0},now:()=>0,requestFrame:fn=>frames.push(fn),isCurrent:()=>valid});
  frames.shift()(900);assert.ok(marker.classList.contains('arriving'));valid=false;frames.shift()(1900);assert.equal(await completed,false);assert.equal(marker.classList.contains('arriving'),false);
+});
+
+test('resolving an encounter closes its dialog and the next leg still waits for travel and arrival',async()=>{
+ const a=await session(),d=a.document;a.click();await a.frame(1800);await a.frame(2800);
+ assert.equal(d.getElementById('dialog').open,true);
+ a.click('#dialog .choices button:not([disabled])');
+ assert.equal(a.world().run.pending,null);assert.equal(a.world().run.index,1);
+ assert.equal(d.getElementById('dialog').open,false);
+ assert.match(d.getElementById('advanceButton').textContent,/Avanzar a/);
+ a.click();assert.equal(d.getElementById('dialog').open,false);
+ await a.frame(4600);assert.equal(d.getElementById('dialog').open,false);
+ await a.frame(5600);assert.equal(d.getElementById('dialog').open,true);
+ assert.equal(a.world().run.pending.edgeIndex,1);
+});
+test('choosing combat dismisses the encounter dialog before showing the battle',async()=>{
+ const E=await import('../extensions/mensajeros/production.mjs'),data=E.prepare(JSON.parse(fs.readFileSync(root+'/extensions/mensajeros/production.json')));
+ let saved;for(let seed=0;seed<100;seed++){saved=E.advance(data,E.start(data,E.createWorld(data,{seed}),'adasme-01'));if(saved.run.pending.category==='hostile')break;}
+ const a=await session({saved});a.click();assert.equal(a.document.getElementById('dialog').open,true);
+ a.click('[data-choice="fight"]');assert.ok(a.world().run.pending.combat);
+ assert.equal(a.document.getElementById('dialog').open,false);
+ assert.equal(a.document.getElementById('battleLayer').classList.contains('hidden'),false);
 });

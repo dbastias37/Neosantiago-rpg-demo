@@ -108,7 +108,16 @@ async function animateAdvance(){
 }
 document.addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b||busy)return;
  if(b.dataset.close){close($(b.dataset.close));return;}if(b.dataset.item){itemModal(b.dataset.item);return;}if(b.hasAttribute('data-catalog')||b.id==='catalogButton'){catalog();return;}if(b.dataset.offer){offer(b.dataset.offer);return;}if(b.dataset.accept){if(apply(E.start,b.dataset.accept)){close(dialog);announce('Encargo aceptado.');}return;}if(b.hasAttribute('data-resume')){close(dialog);return;}if(b.dataset.receipt){receipt(b.dataset.receipt);return;}
- if(b.dataset.choice){if(apply(E.choose,b.dataset.choice)){sound('ui/click-metal.mp3');if(world.run?.pending?.combat)renderBattle();else if(world.run?.status==='completed')receipt();else pendingModal();}return;}
+ if(b.dataset.choice){
+  if(apply(E.choose,b.dataset.choice)){
+   close(dialog);sound('ui/click-metal.mp3');
+   if(world.run?.pending?.combat)renderBattle();
+   else if(world.run?.status==='completed')receipt();
+   else if(world.run?.status==='active'&&world.run.pending)pendingModal();
+   else ($('advanceButton')||$('retryButton'))?.focus({preventScroll:true});
+  }
+  return;
+ }
  if(b.id==='advanceButton'){animateAdvance();return;}if(b.id==='routeButton'){displayRoute();return;}if(b.id==='restButton'){restModal();return;}if(b.hasAttribute('data-rest-confirm')){if(apply(E.rest))close(dialog);return;}if(b.id==='retryButton'){apply(E.retry);return;}
  if(b.hasAttribute('data-abandon')){open('DEVOLVER ENCARGO',`<div class="dialog-body"><h2 id="dialogTitle">¿Devolver el encargo?</h2><p>No habrá pago. La vigilancia provocada permanece.</p></div><div class="dialog-actions"><button data-close="dialog">Seguir</button><button data-abandon-confirm class="danger">Devolver</button></div>`);return;}if(b.hasAttribute('data-abandon-confirm')){if(apply(E.abandon))close(dialog);return;}
  if(b.dataset.filter){filter=b.dataset.filter;catalog();return;}if(b.dataset.previewRoute){displayRoute(b.dataset.previewRoute);return;}if(b.dataset.contact){contact(b.dataset.contact);return;}if(b.id==='contactsButton'){contacts();return;}
