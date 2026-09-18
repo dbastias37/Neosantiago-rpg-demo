@@ -20,3 +20,93 @@ html:has(#profileLayer:not(.hidden)),body:has(#profileLayer:not(.hidden)){overfl
 @media(max-width:700px){.cargo-columns{grid-template-columns:1fr}.cargo-summary{margin-top:15px}}
 
 #map svg .route-station-label{font-size:11px;letter-spacing:0;fill:var(--paper);pointer-events:none}
+
+/* The route stays in the viewport; long content scrolls inside its own panel. */
+html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+body{height:100dvh;min-height:0;display:flex;flex-direction:column}
+.topbar{flex:none;min-height:64px;padding:10px 16px;gap:12px}
+.topbar .brand{font-size:21px}.brand small{margin-top:6px}
+.topbar nav{gap:6px}.topbar nav button{padding:8px 12px}
+#shell{flex:1;width:100%;min-height:0;grid-template-columns:minmax(180px,.85fr) minmax(0,2.4fr) minmax(210px,.95fr);grid-template-rows:minmax(0,1fr) 88px;gap:10px;padding:10px;align-items:stretch;overflow:hidden}
+.mission-panel,.cargo-panel{padding:12px;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin}
+.cargo-panel{display:block;grid-column:auto}
+.mission-portrait{height:clamp(100px,19dvh,180px);margin:0 0 10px}
+.mission-panel p{font-size:13px;line-height:1.45;margin-bottom:8px}
+.mission-panel h2{font-size:18px;margin-bottom:8px}
+.mission-panel .chip{margin-bottom:8px}.mission-panel .primary{margin-top:4px}
+.panel-head{flex:none;padding:12px 14px 6px;align-items:center}
+.panel-head h1{font-size:clamp(19px,2vw,28px);margin-bottom:4px}
+.panel-head>div{min-width:0}.panel-head .small{flex:none;min-height:40px;padding:6px 9px;font-size:9px}
+#mapViewport{flex:1;min-height:0}#map{height:100%}
+#map svg{width:100%;height:100%;min-height:0;aspect-ratio:auto;touch-action:manipulation}
+.map-controls{bottom:7px;right:7px}
+.legend{flex:none;padding:6px 14px;gap:10px;font-size:9px}
+#travel{flex:none;margin:0;padding:10px 14px}
+#travel p{margin-bottom:8px;font-size:12px}
+.travel-head{font-size:11px;margin-bottom:6px}.progress{margin-bottom:10px}
+.travel-actions{gap:6px}.travel-actions button{padding:8px 10px}
+.meter-label{margin:6px 0;font-size:11px}
+.deadline{gap:2px;margin:8px 0;padding:7px;font-size:12px}
+.status-data{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin:8px 0}
+.status-data div{padding:5px;font-size:9px}.status-data b{font-size:14px}
+.crew-mini{margin:8px 0;gap:4px}.crew-mini img{width:32px;height:42px}.crew-mini small{font-size:9px}
+.cargo-summary{padding-top:8px}.cargo-summary p{font-size:10px;margin-bottom:6px}.cargo-summary button{padding:8px;font-size:10px}
+.journal{min-height:0;padding:8px 12px;display:flex;flex-direction:column}
+.journal-head{flex:none}.journal-head .eyebrow{margin-bottom:5px}
+#journal{height:auto;min-height:0;flex:1;overscroll-behavior:contain;font-size:11px}
+.footer{flex:none;width:100%;margin:0 auto;padding:0 12px max(4px,env(safe-area-inset-bottom));gap:8px}
+.footer .text-button{min-height:32px;padding:5px;font-size:9px}
+#journalButton{display:none}
+
+/* A native dialog owns scrolling until it closes, including nested inspection. */
+html:has(dialog[open]),body:has(dialog[open]){overflow:hidden;overscroll-behavior:none}
+dialog{overscroll-behavior:contain;max-width:calc(100% - 16px);max-height:calc(100dvh - 16px);scrollbar-width:thin}
+#dialog:has(~#itemDialog[open]){overflow:hidden}
+.dialog-actions{position:sticky;bottom:0;background:#090e0c;z-index:1;padding:12px 18px}
+.dialog-head{padding:12px 18px}.dialog-body{padding:18px}
+.dialog-body .offer-grid{padding:14px 0 0}
+
+@media(max-width:1000px){
+ #shell{grid-template-columns:minmax(0,1fr) 240px;grid-template-rows:auto minmax(0,1fr);grid-template-areas:"mission cargo" "map cargo"}
+ .mission-panel{grid-area:mission;padding:8px 10px;overflow:hidden}.mission-panel>.eyebrow{display:none}
+ #brief{display:grid;grid-template-columns:48px minmax(0,1fr) auto;column-gap:10px;align-items:center}
+ .mission-portrait{grid-column:1;grid-row:1/4;width:48px;height:60px;margin:0;float:none;border-bottom:0}
+ .portrait-name{display:none}#brief .chip{grid-column:2;grid-row:1;justify-self:start;font-size:8px;line-height:1.2;padding:2px 4px;margin:0}
+ #brief h2{grid-column:2;grid-row:2;font-size:15px;margin:3px 0;line-height:1.15}
+ #brief p{display:none}#brief .primary{grid-column:3;grid-row:1/4;min-height:44px;padding:6px 8px;font-size:9px;margin:0}
+ #brief .text-button{grid-column:2;grid-row:3;justify-self:start;min-height:24px;padding:0;font-size:8px}
+ .map-panel{grid-area:map;min-height:0}.cargo-panel{grid-area:cargo}.journal{display:none}
+ #journalButton{display:block}.footer>span{margin-right:auto}
+}
+@media(max-width:700px){
+ .topbar{padding:7px 10px;gap:7px;min-height:0}
+ .topbar .brand{font-size:17px;min-width:0;width:100%;display:flex;align-items:baseline;gap:6px}
+ .brand small{font-size:6px;letter-spacing:.08em;margin:0 0 0 auto}
+ .topbar nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;margin:0;width:100%}
+ .topbar nav button{min-width:0;min-height:40px;padding:5px 2px;font-size:9px;letter-spacing:0}
+ #shell{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto;grid-template-areas:"mission" "map" "cargo";gap:6px;padding:6px}
+ .mission-panel{padding:6px 8px}.mission-portrait{height:48px}#brief{column-gap:7px}#brief h2{font-size:13px}
+ .panel-head{padding:8px 10px 4px;gap:7px}.panel-head .eyebrow{display:none}.panel-head h1{font-size:19px}
+ .legend{padding:4px 10px;font-size:8px;gap:9px}.map-controls button{min-height:36px;min-width:36px}
+ #travel{padding:7px 10px}.travel-actions{display:flex;flex-wrap:wrap}.travel-actions button{width:auto;min-height:42px;font-size:10px}
+ #travel>.primary{min-height:42px;padding:7px 10px;font-size:10px}
+ .travel-head{flex-wrap:nowrap;font-size:10px;gap:6px}.progress{margin-bottom:6px}
+ .cargo-panel{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:6px;padding:6px 8px;overflow:visible}
+ .cargo-panel>.eyebrow,#crewSummary{display:none}
+ #status{display:grid;grid-template-columns:auto 1fr;column-gap:8px;min-width:0;font-size:11px}
+ #status>p{font-size:10px;margin:0}#status>.progress{display:none}
+ .meter-label{margin:0;grid-column:1/-1;justify-content:start;gap:6px;font-size:10px}
+ .deadline{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:2px 7px;padding:0;margin:2px 0;border:0;background:none;font-size:10px}
+ .deadline small{font-size:9px}.status-data,#status .status-data{grid-column:1/-1;display:flex;gap:8px;margin:0}
+ .status-data div{padding:0;border:0;background:none;font-size:9px}.status-data b{display:inline;margin-left:3px;font-size:10px}
+ .cargo-summary{border:0;padding:0;margin:0;max-width:112px}.cargo-summary p{display:none}.cargo-summary button{min-height:42px;font-size:9px}
+ .footer{padding:0 8px max(3px,env(safe-area-inset-bottom));gap:4px}.footer>span{display:none}.footer .text-button{min-height:32px}.footer #resetCouriers{margin-left:auto}
+ dialog{width:calc(100% - 12px);max-width:none;max-height:calc(100dvh - 12px)}
+ .dialog-head{padding:9px 12px}.dialog-head .close{min-width:44px;min-height:44px}
+ .dialog-body,.item-detail{padding:14px}.dialog-body h2{font-size:23px;margin-bottom:12px}
+ .dialog-body p{font-size:14px;line-height:1.55}.dialog-actions{padding:10px;gap:6px}.dialog-actions button{min-width:100px;font-size:10px;padding:8px}
+ .offer-grid{gap:10px}.offer{padding:12px;grid-template-columns:65px minmax(0,1fr);gap:6px 10px}
+ .offer img{height:100px}.offer h3{font-size:18px}.offer p{grid-column:1/-1}.offer button{grid-column:1/-1}
+ .hero-brief{grid-template-columns:70px minmax(0,1fr);gap:12px}.hero-brief>img{height:120px}
+ .route-list li{grid-template-columns:20px minmax(0,1fr) 75px;gap:6px}
+}

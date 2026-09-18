@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="es">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NeoSantiago · revisión de tamaños</title>
+<style>
+body{margin:0;background:#171b1a;color:#fff;font:14px Arial}header{display:flex;gap:14px;align-items:center;padding:8px;flex-wrap:wrap}select{padding:5px}iframe{display:block;border:1px solid #75d3d7;margin:0 auto;width:1280px;height:720px;background:#070a09}p{margin:0;font-size:12px}
+</style>
+<header>
+ <label>Pantalla <select id="screen"><option value="../neosantiago-demo.html">Juego completo</option><option value="../extensions/mensajeros/play.html">Encargos</option></select></label>
+ <label>Tamaño <select id="size"><option value="1280,720">1280 × 720</option><option value="1024,600">1024 × 600</option><option value="390,844">390 × 844 · vertical</option><option value="360,640">360 × 640 · vertical</option></select></label>
+ <p>Revisión manual. Comparte el guardado del juego; cambiar tamaño no reinicia la partida.</p>
+</header>
+<iframe id="preview" title="Juego en el tamaño seleccionado" src="../neosantiago-demo.html"></iframe>
+<script>
+const preview=document.getElementById('preview');
+document.getElementById('screen').addEventListener('change',e=>preview.src=e.target.value);
+document.getElementById('size').addEventListener('change',e=>{const [w,h]=e.target.value.split(',');preview.style.width=w+'px';preview.style.height=h+'px'});
+</script>
+</html>

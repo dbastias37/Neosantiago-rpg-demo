@@ -87,3 +87,11 @@ Cada segmento L4 cuesta 2 minutos narrativos y 1 de desgaste, más 1 al cargar a
 Las partidas `2026-09-18.production.1` migran a `.2` sin reiniciarse. Los índices, descansos, tiradas y snapshots se traducen a las nuevas estaciones; se preservan inventarios, HP, pagos y alertas. Un encuentro antiguo ya iniciado conserva su destino, turno y loot, sin cobrar de nuevo el recorrido. Solo los desplazamientos futuros recorren las estaciones añadidas. Los guardados actuales no se migran una segunda vez.
 
 Regresiones específicas: `tests/courier-network.test.cjs` y `tests/courier-travel.test.cjs` verifican estaciones de ida/vuelta, migración durante combate/saqueo, bloqueo de mercado, batalla en la llegada, guardado, reintento, detención del viaje y ausencia de pagos duplicados.
+
+## Altura de pantalla y ventanas
+
+La central de Encargos ocupa la altura disponible dentro del juego. El mapa y las acciones de avance permanecen en pantalla; el registro largo se consulta mediante «Registro de viaje». En pantallas estrechas, el encargo se presenta en una franja compacta, el estado del viaje queda bajo el mapa y las fichas completas siguen disponibles en «Equipo». Carga y suministros mantienen su ventana propia.
+
+Los diálogos contienen el desplazamiento, la inspección de objetos bloquea la ventana inferior y el documento anfitrión no se desplaza mientras Encargos está visible. El pie del refugio de Exploración agrupa «Actividades» y «Volver a la expedición» en la misma fila reservada, sin recortar la segunda acción.
+
+`tests/layout-preview.html` permite revisar el juego completo y Encargos a 1280×720, 1024×600, 390×844 y 360×640. Usa el guardado del mismo navegador; cambiar el tamaño no reinicia la sesión.
