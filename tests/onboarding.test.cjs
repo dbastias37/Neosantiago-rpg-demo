@@ -17,7 +17,7 @@ test('prologue and guide precede Mara, and her explanation precedes the shop',()
     c.revealIntroText();assert.equal(a.nodes.get('introActions').classList.contains('ready'),true);
     c.advanceGameIntro();
   }
-  assert.equal(c.state.refuge.active,true);assert.equal(c.state.introCompleted,true);
+  assert.equal(c.state.refuge.active,false);assert.equal(a.nodes.get('activityMenu').classList.contains('hidden'),false);c.resumeStoryActivity();assert.equal(c.state.refuge.active,true);assert.equal(c.state.introCompleted,true);
   assert.equal(c.state.refuge.visits,1);assert.equal(c.introTypeTimer,null);
   assert.equal(a.nodes.get('gameIntro').classList.contains('hidden'),true);
   c.advanceGameIntro();c.completeIntro();assert.equal(c.state.refuge.visits,1);
@@ -28,7 +28,7 @@ test('unfinished introduction resumes its page, completed saves resume the exist
   const a=boot(),c=a.ctx;c.newGame();reachMara(c);
   const b=boot(a.storage);b.ctx.continueGame();
   assert.equal(b.ctx.introStep,c.introPages.length-1);assert.equal(b.ctx.state.refuge.active,false);
-  next(b.ctx);b.ctx.acceptStarterKit();const credits=b.ctx.state.credits;
+  next(b.ctx);b.ctx.resumeStoryActivity();b.ctx.acceptStarterKit();const credits=b.ctx.state.credits;
   const d=boot(a.storage);d.ctx.continueGame();
   assert.equal(d.ctx.state.refuge.active,true);assert.equal(d.ctx.state.refuge.visits,1);
   assert.equal(d.ctx.state.credits,credits);assert.equal(d.ctx.state.starterKitGiven,true);
@@ -72,7 +72,7 @@ test('intro consumes expedition shortcuts and keeps tab navigation in the window
   assert.equal(prevented,true);assert.equal(c.document.activeElement,a.nodes.get('introReading'));
 });
 test('simplified departure preserves readiness checks and starts only one signal tutorial',()=>{
-  const a=boot(),c=a.ctx;c.newGame();reachMara(c);next(c);
+  const a=boot(),c=a.ctx;c.newGame();reachMara(c);next(c);c.resumeStoryActivity();
   assert.equal(c.confirmLeaveRefuge(),false);c.acceptStarterKit();
   assert.equal(c.leaveRefuge(),true);assert.equal(a.nodes.get('logisticsModal').classList.contains('hidden'),false);
   c.state.morale=0;assert.equal(c.confirmLeaveRefuge(),false);assert.equal(c.state.refuge.active,true);

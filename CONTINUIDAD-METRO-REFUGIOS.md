@@ -1,3 +1,5 @@
+> Actualización 18-sep-2026: el usuario autorizó activar la expansión. La implementación vigente y las reglas de continuidad están en [INTEGRACION-JUGABLE.md](docs/metro-refugios/INTEGRACION-JUGABLE.md). Los bloques de inactividad siguientes describen etapas históricas.
+
 # Continuidad: mapa, refugios, facciones y encomiendas
 
 Documento de traspaso para continuar este trabajo en otro chat. Fecha: 14 de septiembre de 2026. Repositorio: `dbastias37/Neosantiago-rpg-demo`. Base consultada: `434b1ca53eed534d3a16be17fededae6c45bec72`.

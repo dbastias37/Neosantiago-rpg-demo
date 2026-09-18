@@ -41,6 +41,7 @@
   };
 
   function handleBack() {
+    if(typeof window.activityBack === "function" && window.activityVisible()) return window.activityBack();
     var top = topWindow();
     if (top) {
       var close = window[closers[top.id]];

@@ -1,0 +1,54 @@
+/* Common entry for the existing story and the courier activity. No campaign state is shared. */
+function activityVisible(){return !$("activityMenu").classList.contains("hidden")||!$("courierScreen").classList.contains("hidden")}
+function hideActivities(){["activityMenu","courierScreen"].forEach(function(id){$(id).classList.add("hidden")});document.querySelectorAll('[data-activity-inert]').forEach(function(n){n.removeAttribute('inert');n.removeAttribute('data-activity-inert')})}
+function lockActivityBackground(){document.querySelectorAll('body > .app, body > .overlay, body > .field-collection').forEach(function(n){if(n.id!=='activityMenu'&&n.id!=='courierScreen'&&!n.hasAttribute('inert')){n.setAttribute('inert','');n.setAttribute('data-activity-inert','')}})}
+function openActivityMenu(){
+ var resume=state.activity==='couriers';
+ $("courierScreen").classList.add("hidden");$("activityMenu").classList.remove("hidden");$("activityMenu").removeAttribute('inert');lockActivityBackground();
+ state.activity=resume?'couriers':'hub';save();
+ $("storyActivityStatus").textContent=state.finished?'Expedición terminada · consultar desenlace':state.starterKitGiven?'Partida guardada · día '+currentDay():'Prepara al grupo con Mara en Los Héroes';
+ $("activityTitle").focus({preventScroll:true});
+}
+function openCourierActivity(){
+ state.activity='couriers';save();$("activityMenu").classList.add("hidden");$("courierScreen").classList.remove("hidden");
+ var frame=$("courierFrame");if(!frame.getAttribute('src'))frame.setAttribute('src','extensions/mensajeros/play.html?v=1');
+ $("courierReturn").focus({preventScroll:true});
+}
+function returnToActivities(){state.activity='hub';openActivityMenu()}
+function resumeStoryActivity(){
+ hideActivities();state.activity='story';signalLastTick=Date.now();save();render();
+ if(state.finished&&state.ending){if(state.summarySeen)showRunSummary();else finish(state.ending)}
+ else if(!state.starterKitGiven)openRefuge('start');
+ else if(state.refuge.active){$('refuge').classList.remove('hidden');renderRefuge();$('refugeActivities').focus({preventScroll:true});}
+ else if(typeof resumeCrate==='function'&&resumeCrate())return;
+ else if(state.inhibitor.pendingContact==='hack'||state.inhibitor.pendingContact==='exposed')startTrackingCombat(state.inhibitor.pendingContact);
+ else $('advance').focus({preventScroll:true});
+}
+function activityBack(){
+ if(!$("courierScreen").classList.contains("hidden")){
+  var frame=$("courierFrame");try{if(frame.contentWindow.NeoCourierBack&&frame.contentWindow.NeoCourierBack())return true}catch(e){}
+  returnToActivities();return true;
+ }
+ if(!$("activityHelpText").classList.contains("hidden")){$("activityHelpText").classList.add("hidden");$("activityHelp").focus();return true}
+ return false;
+}
+$("chooseStory").addEventListener('click',resumeStoryActivity);
+$("chooseCouriers").addEventListener('click',openCourierActivity);
+$("courierReturn").addEventListener('click',returnToActivities);
+$("refugeActivities").addEventListener('click',function(){if(state.refuge.active){state.activity='hub';openActivityMenu()}});
+$("activityHelp").addEventListener('click',function(){$("activityHelpText").classList.toggle('hidden')});
+document.addEventListener('keydown',function(e){
+ if(!activityVisible())return;
+ if(e.key==='Escape'){e.preventDefault();activityBack()}
+ if(e.key==='Tab'&&!$("activityMenu").classList.contains('hidden')){
+  if(e.shiftKey&&document.activeElement===$("activityTitle")){e.preventDefault();$("activityHelp").focus()}
+  else if(!e.shiftKey&&document.activeElement===$("activityHelp")){e.preventDefault();$("activityTitle").focus()}
+ }
+ e.stopImmediatePropagation();
+},true);
+window.addEventListener('message',function(e){
+ if(e.origin!==location.origin||e.source!==$("courierFrame").contentWindow)return;
+ if(e.data&&e.data.type==='neo-courier-return')returnToActivities();
+});
+
+if($('summaryActivities'))$('summaryActivities').addEventListener('click',function(){state.activity='hub';openActivityMenu()});

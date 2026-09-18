@@ -13,11 +13,11 @@ function finish(E,w){for(let i=0;i<160&&w.run.status==='active';i++){
  if(!w.run.pending&&E.here(data,w).rest&&w.run.condition<80&&w.run.supplies.food&&w.run.supplies.water&&!w.run.rested.includes(w.run.index))w=E.rest(data,w);
  w=step(E,w);
  }return w;}
-test('production stays inactive; all catalogs and asset paths are resolvable',()=>{
+test('archived lab remains inert; production is a separate entry and save',()=>{
  assert.equal(data.runtime_enabled,false);const npcs=JSON.parse(fs.readFileSync(path.join(__dirname,'../docs/metro-refugios/npcs.json')));assert.equal(npcs.runtime_enabled,false);
  for(const m of Object.values(data.missions)){assert.equal(m.enabled,false);assert.ok(npcs.npcs.some(n=>n.id===m.npc));const rt=data.routes[m.route];assert.equal(rt.edges.length,rt.nodes.length-1);rt.edges.forEach((e,i)=>{assert.equal(e.from,rt.nodes[i]);assert.equal(e.to,rt.nodes[i+1]);assert.ok(data.nodes[e.to]);});}
  for(const item of Object.values(data.items)){assert.ok(fs.existsSync(path.resolve(__dirname,'../extensions/mensajeros',item.image)));assert.equal(item.trade,false);}
- for(const file of fs.readdirSync(path.join(__dirname,'..')).filter(f=>/\.(html|js|css)$/.test(f)))assert.doesNotMatch(fs.readFileSync(path.join(__dirname,'..',file),'utf8'),/extensions\/mensajeros|mensajeros\.lab\.v1/);
+ for(const file of fs.readdirSync(path.join(__dirname,'..')).filter(f=>/\.(html|js|css)$/.test(f)))assert.doesNotMatch(fs.readFileSync(path.join(__dirname,'..',file),'utf8'),/mensajeros\.lab\.v1/);
 });
 test('canonical L6 order and route checkpoints are explicit',()=>{assert.deepEqual(data.routes['guzman-plaza'].nodes.slice(0,7),['leones','ines','nunoa','estadio','nuble','biobio','franklin']);assert.deepEqual(data.routes['guzman-plaza'].nodes.filter(id=>data.nodes[id].checkpoint),['leones','heroes','uchile','plaza']);assert.equal(data.nodes.provisorio.checkpoint,undefined);assert.equal(data.nodes.uchile.provisional,true);});
 test('passive engine requires explicit lab start and protects mission cargo',async()=>{const E=await ready;assert.throws(()=>E.createWorld(data),/laboratorio/);let w=make(E);assert.deepEqual(w.run.cargo,{rotor:2,'motion-sensor':1});assert.throws(()=>E.start(data,w,'adasme-01'),/actual/);assert.equal(w.run.supplies.smoke,undefined);});

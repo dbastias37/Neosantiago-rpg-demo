@@ -1,3 +1,5 @@
+> **Producción activa, 18-sep-2026:** el juego carga `play.html`, `play.mjs`, `production.json` y `production.mjs` desde su menú de actividades. [Manual de integración](../../docs/metro-refugios/INTEGRACION-JUGABLE.md). El resto de este archivo conserva la documentación histórica del laboratorio aislado.
+
 # Los Mensajeros — estructura inactiva y laboratorio local
 
 17 de septiembre de 2026. Encargos de Guzmán y Adasme; diseño del usuario, implementación de prueba. **No está conectado a la campaña pública.**
