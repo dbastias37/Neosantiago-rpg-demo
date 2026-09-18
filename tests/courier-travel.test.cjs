@@ -10,7 +10,7 @@ async function session({saved,reduced=false}={}){
  window.HTMLElement.prototype.showModal=function(){this.open=true};window.HTMLElement.prototype.close=function(){this.open=false};
  // Model the SVG geometry API. The production browser supplies the curved metro path.
  const sampled=[];window.Element.prototype.getTotalLength=()=>600;
- window.Element.prototype.getPointAtLength=n=>{sampled.push(n);return{x:945+(794-945)*n/600,y:519+(160-519)*n/600}};
+ window.Element.prototype.getPointAtLength=n=>{sampled.push(n);return{x:945+(977-945)*n/600,y:519+(487-519)*n/600}};
  let clock=0;const frames=[];
  const ctx={E,URL,document,console,crypto:{getRandomValues:a=>a},localStorage:{getItem:k=>storage.get(k),setItem:(k,v)=>storage.set(k,v)},matchMedia:()=>({matches:reduced}),setTimeout,clearTimeout,performance:{now:()=>clock},requestAnimationFrame:fn=>frames.push(fn),fetch:async url=>({ok:true,json:async()=>raw,text:async()=>fs.readFileSync(root+'/extensions/mensajeros/map.svg','utf8')})};ctx.window=ctx;
  ctx.animateRoute=args=>animateRoute({...args,requestFrame:fn=>frames.push(fn),now:()=>clock});vm.createContext(ctx);
@@ -18,24 +18,24 @@ async function session({saved,reduced=false}={}){
  await vm.runInContext('(async()=>{'+code+'})()',ctx);
  return {document,data,storage,sampled,world:()=>E.restore(data,storage.get(data.save_key)),click(selector='#advanceButton'){document.querySelector(selector).dispatchEvent(new window.Event('click',{bubbles:true}))},async frame(ms){clock=ms;const batch=frames.splice(0);batch.forEach(fn=>fn(ms));await Promise.resolve();}};
 }
-test('Vicuña–Tobalaba follows the full unfilled path, blinks for 1 second, then opens the encounter once',async()=>{
+test('Vicuña–Macul follows the full unfilled path, blinks for 1 second, then opens the encounter once',async()=>{
  const a=await session(),d=a.document,before=a.world().run.minutes;a.click();a.click();
  const marker=d.getElementById('messenger'),travel=d.querySelector('#missionLayer path[data-edge="0"]');
  assert.equal(travel.getAttribute('fill'),'none');assert.ok([...d.querySelectorAll('#missionLayer path')].every(p=>p.getAttribute('fill')==='none'));
- assert.equal(a.world().run.minutes,before+8);assert.equal(d.getElementById('advanceButton').disabled,true);
- await a.frame(900);assert.equal(d.getElementById('dialog').open,undefined);assert.equal(marker.getAttribute('cx'),'869.5');
- await a.frame(1800);assert.equal(marker.getAttribute('cx'),'794');assert.equal(marker.getAttribute('cy'),'160');assert.ok(marker.classList.contains('arriving'));
+ assert.equal(a.world().run.minutes,before+2);assert.equal(d.getElementById('advanceButton').disabled,true);
+ await a.frame(900);assert.equal(d.getElementById('dialog').open,undefined);assert.equal(marker.getAttribute('cx'),'961');
+ await a.frame(1800);assert.equal(marker.getAttribute('cx'),'977');assert.equal(marker.getAttribute('cy'),'487');assert.ok(marker.classList.contains('arriving'));
  assert.equal(d.getElementById('dialog').open,undefined);await a.frame(2799);assert.equal(d.getElementById('dialog').open,undefined);
- await a.frame(2800);assert.equal(d.getElementById('dialog').open,true);assert.equal(d.getElementById('messenger').getAttribute('cx'),'794');assert.equal(d.getElementById('advanceButton').disabled,false);
- assert.equal(Math.max(...a.sampled),600);assert.equal(a.world().run.minutes,before+8);
+ await a.frame(2800);assert.equal(d.getElementById('dialog').open,true);assert.equal(d.getElementById('messenger').getAttribute('cx'),'977');assert.equal(d.getElementById('advanceButton').disabled,false);
+ assert.equal(Math.max(...a.sampled),600);assert.equal(a.world().run.minutes,before+2);
 });
 test('reduced motion still waits one second at the destination before revealing the encounter',async()=>{
- const a=await session({reduced:true});a.click();await a.frame(0);assert.equal(a.document.getElementById('messenger').getAttribute('cx'),'794');
+ const a=await session({reduced:true});a.click();await a.frame(0);assert.equal(a.document.getElementById('messenger').getAttribute('cx'),'977');
  await a.frame(999);assert.equal(a.document.getElementById('dialog').open,undefined);await a.frame(1000);assert.equal(a.document.getElementById('dialog').open,true);
 });
 test('reload of a pending encounter keeps the marker at its destination and does not charge travel again',async()=>{
  const a=await session();a.click();const w=a.world(),b=await session({saved:w});
- assert.equal(b.document.getElementById('messenger').getAttribute('cx'),'794');b.click();assert.equal(b.document.getElementById('dialog').open,true);assert.equal(b.world().run.minutes,w.run.minutes);
+ assert.equal(b.document.getElementById('messenger').getAttribute('cx'),'977');b.click();assert.equal(b.document.getElementById('dialog').open,true);assert.equal(b.world().run.minutes,w.run.minutes);
 });
 test('a cancelled journey cannot reveal an encounter after the run changes',async()=>{
  const {animateRoute}=await import('../extensions/mensajeros/travel.mjs');let valid=true;const frames=[];
@@ -72,4 +72,22 @@ test('cargo and supplies open separately without stretching the map or advancing
  a.click('#supplies .item-row');assert.equal(d.getElementById('itemDialog').open,true);a.click('#itemDialog [data-close="itemDialog"]');assert.equal(d.getElementById('dialog').open,true);
  a.click('#dialogBody [data-close="dialog"]');assert.equal(d.getElementById('dialog').open,false);assert.equal(a.storage.get(a.data.save_key),before);
  a.click('#crewButton');assert.equal(d.getElementById('profileLayer').classList.contains('hidden'),false);assert.match(d.getElementById('profileLayer').src,/profile.html/);assert.equal(d.getElementById('dialog').open,false);
+});
+
+test('the market button starts a visible journey and a hostile arrival cannot open the shops early',async()=>{
+ const E=await import('../extensions/mensajeros/production.mjs'),data=E.prepare(JSON.parse(fs.readFileSync(root+'/extensions/mensajeros/production.json')));let world;
+ for(let seed=1;seed<100;seed++){world=E.createWorld(data,{seed});world.location='republica';if(E.advance(data,E.travelHeroes(data,world)).run.pending.category==='hostile')break;}
+ const a=await session({saved:world}),d=a.document;a.click('#dialog [data-close="dialog"]');a.click('#heroesButton');
+ assert.match(d.getElementById('dialogBody').textContent,/1 tramos/);a.click('[data-travel-heroes]');
+ assert.equal(a.world().location,'republica');assert.equal(a.world().run.status,'active');assert.equal(d.getElementById('dialog').open,false);assert.equal(d.querySelectorAll('[data-buy]').length,0);assert.ok(d.getElementById('messenger'));
+ a.click();await a.frame(1800);assert.equal(d.getElementById('dialog').open,false);await a.frame(2800);assert.equal(d.getElementById('dialog').open,true);
+ a.click('[data-choice="fight"]');assert.ok(a.world().run.pending.combat);assert.equal(d.getElementById('battleLayer').classList.contains('hidden'),false);assert.equal(d.getElementById('dialog').open,false);assert.equal(E.atHeroes(data,a.world()),false);
+});
+test('finishing a market journey renders arrival and opens both vendors without a fake reward or deadline',async()=>{
+ const E=await import('../extensions/mensajeros/production.mjs'),data=E.prepare(JSON.parse(fs.readFileSync(root+'/extensions/mensajeros/production.json')));
+ let w=E.createWorld(data,{seed:1});w.location='republica';w.credits=50;w=E.advance(data,E.travelHeroes(data,w));
+ const option=E.options(data,w).find(o=>o.id==='scout')||E.options(data,w).find(o=>o.id==='continue')||E.options(data,w).find(o=>E.optionAvailable(w,o)&&!o.combat);w=E.choose(data,w,option.id);
+ assert.equal(w.run.status,'completed');const a=await session({saved:w}),d=a.document;
+ assert.match(d.getElementById('travel').textContent,/Llegaste a Los Héroes/);assert.doesNotMatch(d.getElementById('status').textContent,/undefined|NaN|Pago estimado/);
+ a.click('#travel [data-heroes]');assert.match(d.getElementById('dialogBody').textContent,/Reservas de Mara/);a.click('[data-vendor="armorer"]');assert.match(d.getElementById('dialogBody').textContent,/Banco del Armero/);
 });

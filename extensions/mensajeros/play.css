@@ -18,3 +18,5 @@ html:has(#profileLayer:not(.hidden)),body:has(#profileLayer:not(.hidden)){overfl
 .map-panel{display:flex;flex-direction:column}#travel{margin-top:auto}
 #shell{align-items:start}.map-panel{align-self:stretch}
 @media(max-width:700px){.cargo-columns{grid-template-columns:1fr}.cargo-summary{margin-top:15px}}
+
+#map svg .route-station-label{font-size:11px;letter-spacing:0;fill:var(--paper);pointer-events:none}

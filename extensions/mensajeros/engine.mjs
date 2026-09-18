@@ -13,7 +13,7 @@ export function createWorld(data, {mode, seed = 2130} = {}) {
   requireThat(mode === 'laboratory', 'La expansión solo admite inicio explícito en laboratorio.');
   return {schema: SAVE_VERSION, contentVersion:data.content_version, seed, credits:0, regions:{l6:0,centro:0,oriente:0}, paid:[], completed:{}, run:null};
 }
-export function mission(data, world) { return data.missions[world.run?.mission]; }
+export function mission(data, world) { return data.missions[world.run?.mission] || data.journeys?.[world.run?.mission]; }
 export function route(data, world) { return data.routes[mission(data, world)?.route]; }
 export function here(data, world) { return data.nodes[route(data, world)?.nodes[world.run.index]]; }
 export function nextEdge(data, world) { return route(data, world)?.edges[world.run.index] || null; }
@@ -46,10 +46,10 @@ function checkpoint(data, world) {
   log(run,'Punto de control: '+node.name+'.');
 }
 export function start(data, source, id) {
-  requireThat(data.missions[id], 'Misión desconocida.');
+  requireThat(data.missions[id] || data.journeys?.[id], 'Misión desconocida.');
   requireThat(source.run?.status !== 'active', 'Termina o abandona el viaje actual antes de aceptar otro.');
   requireThat(!source.paid.includes(id), 'Este encargo ya fue entregado.');
-  const world = copy(source), m = data.missions[id];
+  const world = copy(source), m = data.missions[id] || data.journeys[id];
   world.run = {mission:id,status:'active',index:0,pending:null,cargo:copy(m.cargo),supplies:{...m.test_loadout,...m.issued},condition:100,minutes:0,battery:m.issued.jammer?20:0,jammerOn:false,combats:0,evaded:0,history:[],rolls:{},rested:[],rescued:null,log:['Encargo aceptado: '+m.name+'.'],checkpoint:null,receipt:null};
   checkpoint(data, world); return world;
 }
@@ -58,18 +58,19 @@ function roll(data, world, edge, index) {
   if (run.rolls[index]) return copy(run.rolls[index]);
   const node = data.nodes[edge.to], m = mission(data, world);
   let result;
-  if (index === route(data, world).edges.length - 1) result = {category:'delivery',id:'delivery'};
-  else if (node.kind === 'rescue' && !run.rescued) result = {category:'rescue',id:'rescue',injured:fraction(world.seed+':injury')<0.5};
-  else if (node.checkpoint) result = {category:'checkpoint',id:'checkpoint'};
+  if (m.type!=='travel' && index === route(data, world).edges.length - 1) result = {category:'delivery',id:'delivery'};
+  else if (m.type!=='travel' && node.kind === 'rescue' && !run.rescued) result = {category:'rescue',id:'rescue',injured:fraction(world.seed+':injury')<0.5};
+  else if (m.type!=='travel' && node.checkpoint) result = {category:'checkpoint',id:'checkpoint'};
   else {
     const weights = [...data.weights[effectiveRisk(data, world, edge)]];
     if (run.history.slice(-2).length === 2 && run.history.slice(-2).every(x=>x.category==='hostile')) {weights[0] += weights[2];weights[2] = 0;}
-    let value = fraction(world.seed+':'+run.mission+':'+index+':'+world.regions[edge.region])*100, category = 'quiet';
+    const salt=m.type==='travel'?':trip-'+run.travelSerial:'';
+    let value = fraction(world.seed+':'+run.mission+':'+index+':'+world.regions[edge.region]+salt)*100, category = 'quiet';
     for (let i=0;i<weights.length;i++) { value -= weights[i]; if(value<0) {category=data.categories[i];break;} }
-    let pool = data.events.filter(e=>e.category===category && e.regions.includes(edge.region));
+    let pool = data.events.filter(e=>!e.scripted && e.category===category && e.regions.includes(edge.region));
     const fresh = pool.filter(e=>!run.history.slice(-data.rules.event_cooldown).some(h=>h.id===e.id));
     if(fresh.length) pool=fresh;
-    const event = pool[Math.floor(fraction(world.seed+':event:'+run.mission+':'+index)*pool.length)];
+    const event = pool[Math.floor(fraction(world.seed+':event:'+run.mission+':'+index+salt)*pool.length)];
     result = {category,id:event.id};
   }
   run.rolls[index] = copy(result); return result;
@@ -81,7 +82,7 @@ export function advance(data, source) {
   const draw=roll(data,world,edge,run.index);
   run.pending={...draw,edgeIndex:run.index,from:edge.from,to:edge.to,combat:null};
   time(run,edge.minutes + (run.rescued?.mode==='carry'?2:0));
-  wear(run,data.rules.travel_wear + (run.rescued?.mode==='carry'?data.rules.carry_wear:0));
+  wear(run,(edge.wear??data.rules.travel_wear) + (run.rescued?.mode==='carry'?(edge.carry_wear??data.rules.carry_wear):0));
   log(run,'En camino a '+data.nodes[edge.to].name+'.');return world;
 }
 export function eventFor(data, world) { return data.events.find(e=>e.id===world.run?.pending?.id) || null; }
@@ -180,7 +181,7 @@ export function restore(data,text) {
   requireThat(Object.keys(w.regions).every(k=>['l6','centro','oriente'].includes(k))&&['l6','centro','oriente'].every(k=>Number.isInteger(w.regions[k])&&w.regions[k]>=0&&w.regions[k]<=6),'Amenaza inválida.');
   requireThat(w.paid.every(id=>data.missions[id])&&new Set(w.paid).size===w.paid.length,'Recompensas inválidas.');
   if(w.run){
-    const r=w.run,m=data.missions[r.mission],rt=data.routes[m?.route];
+    const r=w.run,m=mission(data,w),rt=data.routes[m?.route];
     requireThat(rt&&Number.isInteger(r.index)&&r.index>=0&&r.index<rt.nodes.length,'Recorrido inválido.');
     requireThat(['active','failed','completed','abandoned'].includes(r.status)&&Number.isFinite(r.condition)&&r.condition>=0&&r.condition<=100&&Number.isFinite(r.battery)&&r.battery>=0&&r.battery<=20&&Array.isArray(r.log)&&Array.isArray(r.history)&&Array.isArray(r.rested)&&r.rolls,'Estado inválido.');
     for(const stock of [r.cargo,r.supplies])requireThat(stock&&Object.entries(stock).every(([id,n])=>data.items[id]&&Number.isInteger(n)&&n>=0),'Inventario inválido.');

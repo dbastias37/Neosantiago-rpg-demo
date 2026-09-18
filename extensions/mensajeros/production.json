@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": "2026-09-18.production.1",
+  "content_version": "2026-09-18.production.2",
   "runtime_enabled": true,
   "status": "playable",
   "balance_status": "initial_release",
@@ -218,6 +218,105 @@
       "checkpoint": true,
       "rest": true,
       "region": "centro"
+    },
+    "macul": {
+      "id": "macul",
+      "name": "Macul",
+      "x": 977,
+      "y": 487,
+      "kind": "station",
+      "region": "oriente",
+      "line": "L4"
+    },
+    "las-torres": {
+      "id": "las-torres",
+      "name": "Las Torres",
+      "x": 985,
+      "y": 447,
+      "kind": "station",
+      "region": "oriente",
+      "line": "L4"
+    },
+    "quilin": {
+      "id": "quilin",
+      "name": "Quilín",
+      "x": 985,
+      "y": 407,
+      "kind": "station",
+      "region": "oriente",
+      "line": "L4"
+    },
+    "presidentes": {
+      "id": "presidentes",
+      "name": "Los Presidentes",
+      "x": 985,
+      "y": 367,
+      "kind": "station",
+      "region": "oriente",
+      "line": "L4"
+    },
+    "grecia": {
+      "id": "grecia",
+      "name": "Grecia",
+      "x": 965,
+      "y": 331,
+      "kind": "station",
+      "region": "oriente",
+      "line": "L4"
+    },
+    "orientales": {
+      "id": "orientales",
+      "name": "Los Orientales",
+      "x": 940,
+      "y": 306,
+      "kind": "station",
+      "region": "oriente",
+      "line": "L4"
+    },
+    "egana": {
+      "id": "egana",
+      "name": "Plaza Egaña",
+      "x": 915,
+      "y": 281,
+      "kind": "station",
+      "region": "oriente",
+      "line": "L4"
+    },
+    "bolivar": {
+      "id": "bolivar",
+      "name": "Simón Bolívar",
+      "x": 891,
+      "y": 257,
+      "kind": "station",
+      "region": "oriente",
+      "line": "L4"
+    },
+    "gales": {
+      "id": "gales",
+      "name": "Príncipe de Gales",
+      "x": 867,
+      "y": 233,
+      "kind": "station",
+      "region": "oriente",
+      "line": "L4"
+    },
+    "bilbao": {
+      "id": "bilbao",
+      "name": "Francisco Bilbao",
+      "x": 843,
+      "y": 209,
+      "kind": "station",
+      "region": "oriente",
+      "line": "L4"
+    },
+    "colon": {
+      "id": "colon",
+      "name": "Cristóbal Colón",
+      "x": 818,
+      "y": 184,
+      "kind": "station",
+      "region": "oriente",
+      "line": "L4"
     }
   },
   "routes": {
@@ -366,23 +465,169 @@
       "id": "adasme-oriente",
       "nodes": [
         "vicuna",
+        "macul",
+        "las-torres",
+        "quilin",
+        "presidentes",
+        "grecia",
+        "orientales",
+        "egana",
+        "bolivar",
+        "gales",
+        "bilbao",
+        "colon",
         "tobalaba",
         "escotilla",
         "provisorio",
         "escotilla",
         "tobalaba",
+        "colon",
+        "bilbao",
+        "gales",
+        "bolivar",
+        "egana",
+        "orientales",
+        "grecia",
+        "presidentes",
+        "quilin",
+        "las-torres",
+        "macul",
         "vicuna"
       ],
       "edges": [
         {
           "from": "vicuna",
+          "to": "macul",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "macul",
+          "to": "las-torres",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente",
+          "path": "M977 487Q985 479 985 467V447"
+        },
+        {
+          "from": "las-torres",
+          "to": "quilin",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "quilin",
+          "to": "presidentes",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "presidentes",
+          "to": "grecia",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente",
+          "path": "M985 367V366Q985 351 975 341L965 331"
+        },
+        {
+          "from": "grecia",
+          "to": "orientales",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "orientales",
+          "to": "egana",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "egana",
+          "to": "bolivar",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "bolivar",
+          "to": "gales",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "gales",
+          "to": "bilbao",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "bilbao",
+          "to": "colon",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "colon",
           "to": "tobalaba",
           "risk": "medium",
-          "line": "L4 · tramo agrupado",
-          "minutes": 8,
-          "kind": "grouped_corridor",
-          "region": "oriente",
-          "path": "M945 519L977 487Q985 479 985 467V366Q985 351 975 341L794 160"
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
         },
         {
           "from": "tobalaba",
@@ -422,13 +667,137 @@
         },
         {
           "from": "tobalaba",
+          "to": "colon",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "colon",
+          "to": "bilbao",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "bilbao",
+          "to": "gales",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "gales",
+          "to": "bolivar",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "bolivar",
+          "to": "egana",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "egana",
+          "to": "orientales",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "orientales",
+          "to": "grecia",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "grecia",
+          "to": "presidentes",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente",
+          "path": "M965 331L975 341Q985 351 985 366V367"
+        },
+        {
+          "from": "presidentes",
+          "to": "quilin",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "quilin",
+          "to": "las-torres",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "las-torres",
+          "to": "macul",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente",
+          "path": "M985 447V467Q985 479 977 487"
+        },
+        {
+          "from": "macul",
           "to": "vicuna",
           "risk": "medium",
-          "line": "L4 · tramo agrupado",
-          "minutes": 8,
-          "kind": "grouped_corridor",
-          "region": "oriente",
-          "path": "M794 160L975 341Q985 351 985 366V467Q985 479 977 487L945 519"
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
         }
       ]
     },
@@ -600,19 +969,154 @@
       "id": "jimenez-enlace",
       "nodes": [
         "vicuna",
+        "macul",
+        "las-torres",
+        "quilin",
+        "presidentes",
+        "grecia",
+        "orientales",
+        "egana",
+        "bolivar",
+        "gales",
+        "bilbao",
+        "colon",
         "tobalaba",
         "leones"
       ],
       "edges": [
         {
           "from": "vicuna",
+          "to": "macul",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "macul",
+          "to": "las-torres",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente",
+          "path": "M977 487Q985 479 985 467V447"
+        },
+        {
+          "from": "las-torres",
+          "to": "quilin",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "quilin",
+          "to": "presidentes",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "presidentes",
+          "to": "grecia",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente",
+          "path": "M985 367V366Q985 351 975 341L965 331"
+        },
+        {
+          "from": "grecia",
+          "to": "orientales",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "orientales",
+          "to": "egana",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "egana",
+          "to": "bolivar",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "bolivar",
+          "to": "gales",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "gales",
+          "to": "bilbao",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "bilbao",
+          "to": "colon",
+          "risk": "medium",
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
+        },
+        {
+          "from": "colon",
           "to": "tobalaba",
           "risk": "medium",
-          "line": "L4 · tramo agrupado",
-          "minutes": 8,
-          "kind": "grouped_corridor",
-          "region": "oriente",
-          "path": "M945 519L977 487Q985 479 985 467V366Q985 351 975 341L794 160"
+          "line": "L4",
+          "minutes": 2,
+          "wear": 1,
+          "carry_wear": 1,
+          "kind": "adjacent_station",
+          "region": "oriente"
         },
         {
           "to": "leones",
@@ -696,7 +1200,7 @@
       },
       "effect": "El operativo regresa a Vicuña Mackenna.",
       "delivery_text": "El compañero llega de regreso a Vicuña Mackenna. Adasme espera el informe y se hace cargo de su atención.",
-      "time_limit": 40,
+      "time_limit": 140,
       "late_step_minutes": 5,
       "late_penalty": 2
     },
@@ -889,7 +1393,7 @@
       },
       "effect": "Los futuros encargos reciben una batería de inhibidor de reserva.",
       "delivery_text": "Técnicos de Los Leones espera el informe y la carga. La entrega cierra el encargo.",
-      "time_limit": 23,
+      "time_limit": 75,
       "late_step_minutes": 5,
       "late_penalty": 2
     }
@@ -1630,26 +2134,6 @@
         }
       ]
     },
-    "jimenez-01:0": {
-      "id": "jimenez-frecuencia",
-      "title": "Una señal demasiado fuerte",
-      "text": "En Tobalaba el receptor capta el enlace, pero emitir con toda su potencia revelaría la posición. Tomás propone una prueba breve desde detrás del muro de servicio.",
-      "choices": [
-        {
-          "id": "passive",
-          "label": "Medir sin transmitir · 5 min",
-          "minutes": 5,
-          "flag": "lectura_pasiva"
-        },
-        {
-          "id": "shield",
-          "label": "Ensayar desde cobertura · desgaste 2 / 3 min",
-          "wear": 2,
-          "minutes": 3,
-          "flag": "enlace_probado"
-        }
-      ]
-    },
     "beatriz-01:1": {
       "id": "beatriz-sello",
       "title": "Un cierre mal ajustado",
@@ -1666,6 +2150,26 @@
           "label": "Bruno asegura el envase · desgaste 2",
           "wear": 2,
           "flag": "carga_asegurada"
+        }
+      ]
+    },
+    "jimenez-01:11": {
+      "id": "jimenez-frecuencia",
+      "title": "Una señal demasiado fuerte",
+      "text": "En Tobalaba el receptor capta el enlace, pero emitir con toda su potencia revelaría la posición. Tomás propone una prueba breve desde detrás del muro de servicio.",
+      "choices": [
+        {
+          "id": "passive",
+          "label": "Medir sin transmitir · 5 min",
+          "minutes": 5,
+          "flag": "lectura_pasiva"
+        },
+        {
+          "id": "shield",
+          "label": "Ensayar desde cobertura · desgaste 2 / 3 min",
+          "wear": 2,
+          "minutes": 3,
+          "flag": "enlace_probado"
         }
       ]
     }

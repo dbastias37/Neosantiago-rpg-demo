@@ -36,7 +36,7 @@ Retratos nuevos generados individualmente con ImageGen, estilo cinematográfico 
 
 Guzmán y Adasme conservan las premisas y recorridos previamente desarrollados. Los otros cinco encargos se completan en esta integración a partir de las funciones de sus NPC; sus escenas y balance son contenido nuevo de esta versión. Ana mantiene el rol de comunidad de paso. No se convierte en médica ni reemplaza a los técnicos de la entrega de Guzmán.
 
-El norte de L3 y Vicuña–Tobalaba se presentan como corredores agrupados, no como estaciones adyacentes. El corte Baquedano–Los Leones permanece cerrado. No se abren combinaciones nuevas por inferencia.
+El norte de L3 conserva su corredor agrupado. La Línea 4 se recorre estación por estación; véase la revisión de viajes al final. El corte Baquedano–Los Leones permanece cerrado. No se abren combinaciones nuevas por inferencia.
 
 ## Mecánicas
 
@@ -70,3 +70,20 @@ Cada personaje comienza con un punto de habilidad y gana otro por nivel. Rama de
 La tienda existente se mantiene; se elimina fabricación de interfaz y motor. Las reservas antiguas de materiales pueden venderse. Carga protegida y suministros prestados no pueden venderse. La campaña principal conserva sus sistemas.
 
 Validación de esta revisión: 184 pruebas automatizadas aprobadas, incluida migración, prerrequisitos, escucha, retirada, límites de uso y comercio. Balance inicial pendiente de experiencia con jugadores.
+
+
+## Viajes al mercado y estaciones de Línea 4 — 18-sep-2026
+
+El botón «Viajar a Los Héroes» inicia ahora un recorrido independiente, sin teletransporte, pago ni XP por entrega. Sale de `world.location` y sigue el camino de menor tiempo entre los corredores ya abiertos por los encargos. Desde Vicuña Mackenna sube por L4, cruza a Los Leones y usa L6–Franklin–L2. El corte de Baquedano sigue cerrado. Incluso el último tramo puede generar un contacto hostil: las tiendas se habilitan después de resolverlo y terminar el saqueo.
+
+Cada avance usa el mismo sorteo, animación de ruta, aviso de llegada de un segundo, decisiones, batalla y saqueo de Encargos. Mochilas, heridas, loot y alertas se conservan. No se entrega dotación gratuita ni recompensa por ir al mercado. Se puede detener el viaje en el último andén alcanzado o reintentar desde su punto de control tras una derrota. Durante un encargo activo se conserva su itinerario: hay que llegar a Los Héroes por él, o devolverlo antes de iniciar el regreso. Los encargos que comienzan en Los Héroes requieren estar allí para aceptarlos.
+
+`network.mjs` construye los recorridos del mercado a partir de las conexiones existentes, fuera del catálogo de siete encargos. `engine.mjs` comparte desplazamiento y sorteos; `production.mjs` resuelve llegada, combate y persistencia sin pasar por el pago de encargos.
+
+L4 incorpora, en sentido Vicuña Mackenna → Tobalaba: Macul, Las Torres, Quilín, Los Presidentes, Grecia, Los Orientales, Plaza Egaña, Simón Bolívar, Príncipe de Gales, Francisco Bilbao y Cristóbal Colón. El regreso usa el orden inverso. [Referencia del orden de estaciones](https://es.wikipedia.org/wiki/L%C3%ADnea_4_del_Metro_de_Santiago#Estaciones). Son puntos de instancia, no refugios nuevos. Los puntos y rótulos del mapa son interactivos; la luz sigue la geometría de cada tramo sin rellenar los SVG.
+
+Cada segmento L4 cuesta 2 minutos narrativos y 1 de desgaste, más 1 al cargar al rescatado antes de aplicar la ayuda de Bruno. No son tiempos reales del Metro. Adasme tiene 28 tramos y plazo de 140 minutos; Jiménez, 13 tramos y plazo de 75. Su prueba de enlace permanece en Tobalaba. Se mantiene el descuento por demora y la recompensa sin combates.
+
+Las partidas `2026-09-18.production.1` migran a `.2` sin reiniciarse. Los índices, descansos, tiradas y snapshots se traducen a las nuevas estaciones; se preservan inventarios, HP, pagos y alertas. Un encuentro antiguo ya iniciado conserva su destino, turno y loot, sin cobrar de nuevo el recorrido. Solo los desplazamientos futuros recorren las estaciones añadidas. Los guardados actuales no se migran una segunda vez.
+
+Regresiones específicas: `tests/courier-network.test.cjs` y `tests/courier-travel.test.cjs` verifican estaciones de ida/vuelta, migración durante combate/saqueo, bloqueo de mercado, batalla en la llegada, guardado, reintento, detención del viaje y ausencia de pagos duplicados.
