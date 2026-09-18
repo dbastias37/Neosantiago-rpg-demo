@@ -658,7 +658,10 @@
         "ammo556": 12
       },
       "effect": "Defensas de Plaza de Armas restauradas.",
-      "delivery_text": "Los técnicos verifican los dos rotores y el sensor antes de recibirlos. La entrega pone nuevamente en servicio las torretas de la salida."
+      "delivery_text": "Los técnicos verifican los dos rotores y el sensor antes de recibirlos. La entrega pone nuevamente en servicio las torretas de la salida.",
+      "time_limit": 130,
+      "late_step_minutes": 5,
+      "late_penalty": 2
     },
     "adasme-01": {
       "id": "adasme-01",
@@ -692,7 +695,10 @@
         "ammo556": 12
       },
       "effect": "El operativo regresa a Vicuña Mackenna.",
-      "delivery_text": "El compañero llega de regreso a Vicuña Mackenna. Adasme espera el informe y se hace cargo de su atención."
+      "delivery_text": "El compañero llega de regreso a Vicuña Mackenna. Adasme espera el informe y se hace cargo de su atención.",
+      "time_limit": 40,
+      "late_step_minutes": 5,
+      "late_penalty": 2
     },
     "romero-01": {
       "id": "romero-01",
@@ -730,7 +736,10 @@
         "cargo": {
           "medical-case": 1
         }
-      }
+      },
+      "time_limit": 22,
+      "late_step_minutes": 5,
+      "late_penalty": 2
     },
     "beatriz-01": {
       "id": "beatriz-01",
@@ -768,7 +777,10 @@
         "cargo": {
           "nutrients": 1
         }
-      }
+      },
+      "time_limit": 50,
+      "late_step_minutes": 5,
+      "late_penalty": 2
     },
     "ana-01": {
       "id": "ana-01",
@@ -800,7 +812,10 @@
         "success": "Recibimos el registro y el acuerdo. Las familias podrán organizar su siguiente relevo."
       },
       "effect": "La comunidad habilita un descanso adicional en Universidad de Chile.",
-      "delivery_text": "Responsables de acceso · Los Héroes espera el informe y la carga. La entrega cierra el encargo."
+      "delivery_text": "Responsables de acceso · Los Héroes espera el informe y la carga. La entrega cierra el encargo.",
+      "time_limit": 28,
+      "late_step_minutes": 5,
+      "late_penalty": 2
     },
     "morales-01": {
       "id": "morales-01",
@@ -838,7 +853,10 @@
         "cargo": {
           "survey": 1
         }
-      }
+      },
+      "time_limit": 34,
+      "late_step_minutes": 5,
+      "late_penalty": 2
     },
     "jimenez-01": {
       "id": "jimenez-01",
@@ -870,7 +888,10 @@
         "success": "Lectura y módulo recibidos. El Frente vuelve a contar con un canal de respaldo."
       },
       "effect": "Los futuros encargos reciben una batería de inhibidor de reserva.",
-      "delivery_text": "Técnicos de Los Leones espera el informe y la carga. La entrega cierra el encargo."
+      "delivery_text": "Técnicos de Los Leones espera el informe y la carga. La entrega cierra el encargo.",
+      "time_limit": 23,
+      "late_step_minutes": 5,
+      "late_penalty": 2
     }
   },
   "items": {
@@ -1034,7 +1055,7 @@
     "electronics": {
       "id": "electronics",
       "name": "Electrónica recuperada",
-      "description": "Material para fabricar señuelos y trampas de demora en los puntos de control.",
+      "description": "Tecnología recuperada de drones y sensores. Mara la compra para reparar la red.",
       "kind": "supply",
       "image": "../../items/electronics.webp",
       "trade": false,
@@ -1044,12 +1065,119 @@
     "scrap": {
       "id": "scrap",
       "name": "Piezas metálicas",
-      "description": "Material para fabricar señuelos y trampas de demora en los puntos de control.",
+      "description": "Piezas metálicas recuperadas de armas y equipos. El Armero las compra.",
       "kind": "supply",
       "image": "../../items/scrap.webp",
       "trade": false,
       "discard": false,
       "disassemble": false
+    },
+    "ammo9": {
+      "id": "ammo9",
+      "name": "Munición 9 mm",
+      "description": "Cartuchos para pistolas y armas cortas.",
+      "kind": "supply",
+      "image": "../../items/ammo9.webp",
+      "trade": true,
+      "discard": true,
+      "disassemble": false,
+      "stack": true
+    },
+    "bandage": {
+      "id": "bandage",
+      "name": "Venda de campaña",
+      "description": "Recupera 14 HP fuera de combate.",
+      "kind": "medical",
+      "image": "../../items/bandage.webp",
+      "trade": true,
+      "discard": true,
+      "disassemble": false,
+      "stack": true,
+      "heal": 14
+    },
+    "battery": {
+      "id": "battery",
+      "name": "Batería recuperada",
+      "description": "Celda de energía que Mara compra y que alimenta equipo electrónico.",
+      "kind": "material",
+      "image": "../../items/battery.webp",
+      "trade": true,
+      "discard": true,
+      "disassemble": false,
+      "stack": true
+    },
+    "knife": {
+      "id": "knife",
+      "name": "Cuchillo de túnel",
+      "description": "Arma cercana liviana. No consume munición.",
+      "kind": "weapon",
+      "image": "../../items/knife.webp",
+      "trade": true,
+      "discard": true,
+      "disassemble": false,
+      "stack": false,
+      "slot": "weapon",
+      "weapon": "melee",
+      "damage": 2,
+      "accuracy": 0
+    },
+    "pistol9": {
+      "id": "pistol9",
+      "name": "Pistola 9 mm",
+      "description": "Arma corta equilibrada. Consume una munición 9 mm por disparo.",
+      "kind": "weapon",
+      "image": "../../items/pistol9.webp",
+      "trade": true,
+      "discard": true,
+      "disassemble": false,
+      "stack": false,
+      "slot": "weapon",
+      "weapon": "firearm",
+      "ammo": "ammo9",
+      "damage": 3,
+      "accuracy": 0
+    },
+    "rifle556": {
+      "id": "rifle556",
+      "name": "Carabina 5,56",
+      "description": "Arma precisa de mayor daño. Consume una munición 5,56 mm por disparo.",
+      "kind": "weapon",
+      "image": "../../items/rifle556.webp",
+      "trade": true,
+      "discard": true,
+      "disassemble": false,
+      "stack": false,
+      "slot": "weapon",
+      "weapon": "firearm",
+      "ammo": "ammo556",
+      "damage": 6,
+      "accuracy": 0.05
+    },
+    "vestLight": {
+      "id": "vestLight",
+      "name": "Chaleco ligero",
+      "description": "Protección flexible para corredores. Reduce un punto de daño.",
+      "kind": "armor",
+      "image": "../../items/vestLight.webp",
+      "trade": true,
+      "discard": true,
+      "disassemble": false,
+      "stack": false,
+      "slot": "body",
+      "armor": 1
+    },
+    "vestTactical": {
+      "id": "vestTactical",
+      "name": "Chaleco táctico",
+      "description": "Protección reforzada. Reduce dos puntos de daño.",
+      "kind": "armor",
+      "image": "../../items/vestTactical.webp",
+      "trade": true,
+      "discard": true,
+      "disassemble": false,
+      "stack": false,
+      "slot": "body",
+      "armor": 2
     }
   },
   "events": [
@@ -1374,7 +1502,22 @@
       "skill": "Paso silencioso",
       "ability": "scout",
       "description": "Conoce las marcas de los relevos. Una vez por encargo permite evitar un contacto sin gastar suministros. En combate, Marca expone al enemigo para el siguiente ataque.",
-      "image": "../../characters/mensajeros/rocio.webp"
+      "image": "../../characters/mensajeros/rocio.webp",
+      "equipment": {
+        "weapon": "pistol9",
+        "body": "vestLight"
+      },
+      "bag": [
+        {
+          "id": "ammo9",
+          "qty": 4
+        },
+        {
+          "id": "bandage",
+          "qty": 1
+        }
+      ],
+      "capacity": 14
     },
     {
       "id": "tomas",
@@ -1385,7 +1528,18 @@
       "skill": "Interferencia",
       "ability": "jam",
       "description": "Ciego, delgado y atlético. Se orienta por sonidos y memoria de los túneles. Falla el 55% de disparos y el 40% de golpes cercanos; el ruido electrónico añade 15 puntos de fallo. Escuchar consume un turno y mejora su siguiente ataque cercano. Puede reconocer un desvío una vez por encargo y guiar una retirada con menor desgaste. Conserva su técnica de interferencia.",
-      "image": "../../characters/mensajeros/tomas.webp"
+      "image": "../../characters/mensajeros/tomas.webp",
+      "equipment": {
+        "weapon": "knife",
+        "body": null
+      },
+      "bag": [
+        {
+          "id": "water",
+          "qty": 1
+        }
+      ],
+      "capacity": 14
     },
     {
       "id": "bruno",
@@ -1396,7 +1550,22 @@
       "skill": "Carga segura",
       "ability": "carry",
       "description": "Delgado y atlético, transporta carga con técnica y resistencia. Reduce el desgaste de cargar a un herido y cubre al grupo en combate.",
-      "image": "../../characters/mensajeros/bruno.webp"
+      "image": "../../characters/mensajeros/bruno.webp",
+      "equipment": {
+        "weapon": "rifle556",
+        "body": "vestLight"
+      },
+      "bag": [
+        {
+          "id": "ammo556",
+          "qty": 4
+        },
+        {
+          "id": "food",
+          "qty": 1
+        }
+      ],
+      "capacity": 14
     }
   ],
   "scripted": {
@@ -1556,37 +1725,92 @@
     {
       "id": "food",
       "price": 5,
-      "qty": 1
+      "qty": 1,
+      "vendor": "mara"
     },
     {
       "id": "water",
       "price": 4,
-      "qty": 1
+      "qty": 1,
+      "vendor": "mara"
     },
     {
       "id": "ammo556",
       "price": 7,
-      "qty": 6
+      "qty": 6,
+      "vendor": "mara"
     },
     {
       "id": "smoke",
       "price": 9,
-      "qty": 1
+      "qty": 1,
+      "vendor": "mara"
     },
     {
       "id": "decoy",
       "price": 8,
-      "qty": 1
+      "qty": 1,
+      "vendor": "mara"
     },
     {
       "id": "trap",
       "price": 8,
-      "qty": 1
+      "qty": 1,
+      "vendor": "mara"
     },
     {
       "id": "medkit",
       "price": 10,
-      "qty": 1
+      "qty": 1,
+      "vendor": "mara"
+    },
+    {
+      "id": "ammo9",
+      "price": 8,
+      "qty": 4,
+      "vendor": "mara"
+    },
+    {
+      "id": "bandage",
+      "price": 7,
+      "qty": 1,
+      "vendor": "mara"
+    },
+    {
+      "id": "battery",
+      "price": 7,
+      "qty": 1,
+      "vendor": "mara"
+    },
+    {
+      "id": "knife",
+      "price": 6,
+      "qty": 1,
+      "vendor": "armorer"
+    },
+    {
+      "id": "pistol9",
+      "price": 18,
+      "qty": 1,
+      "vendor": "armorer"
+    },
+    {
+      "id": "rifle556",
+      "price": 30,
+      "qty": 1,
+      "vendor": "armorer"
+    },
+    {
+      "id": "vestLight",
+      "price": 12,
+      "qty": 1,
+      "vendor": "armorer"
+    },
+    {
+      "id": "vestTactical",
+      "price": 24,
+      "qty": 1,
+      "vendor": "armorer"
     }
   ],
   "recipes": [],

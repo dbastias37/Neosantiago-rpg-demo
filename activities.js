@@ -1,7 +1,7 @@
 /* Common entry for the existing story and the courier activity. No campaign state is shared. */
-function activityVisible(){return !$("activityMenu").classList.contains("hidden")||!$("courierScreen").classList.contains("hidden")}
-function hideActivities(){["activityMenu","courierScreen"].forEach(function(id){$(id).classList.add("hidden")});document.querySelectorAll('[data-activity-inert]').forEach(function(n){n.removeAttribute('inert');n.removeAttribute('data-activity-inert')})}
-function lockActivityBackground(){document.querySelectorAll('body > .app, body > .overlay, body > .field-collection').forEach(function(n){if(n.id!=='activityMenu'&&n.id!=='courierScreen'&&!n.hasAttribute('inert')){n.setAttribute('inert','');n.setAttribute('data-activity-inert','')}})}
+function activityVisible(){return !$("activityMenu").classList.contains("hidden")||!$("courierScreen").classList.contains("hidden")||!$("storyPrelude").classList.contains("hidden")}
+function hideActivities(){["activityMenu","courierScreen","storyPrelude"].forEach(function(id){$(id).classList.add("hidden")});document.querySelectorAll('[data-activity-inert]').forEach(function(n){n.removeAttribute('inert');n.removeAttribute('data-activity-inert')})}
+function lockActivityBackground(){document.querySelectorAll('body > .app, body > .overlay, body > .field-collection').forEach(function(n){if(n.id!=='activityMenu'&&n.id!=='courierScreen'&&n.id!=='storyPrelude'&&!n.hasAttribute('inert')){n.setAttribute('inert','');n.setAttribute('data-activity-inert','')}})}
 function openActivityMenu(){
  var resume=state.activity==='couriers';
  $("courierScreen").classList.add("hidden");$("activityMenu").classList.remove("hidden");$("activityMenu").removeAttribute('inert');lockActivityBackground();
@@ -15,7 +15,7 @@ function openCourierActivity(){
  $("courierReturn").focus({preventScroll:true});
 }
 function returnToActivities(){state.activity='hub';openActivityMenu()}
-function resumeStoryActivity(){
+function enterStoryActivity(){
  hideActivities();state.activity='story';signalLastTick=Date.now();save();render();
  if(state.finished&&state.ending){if(state.summarySeen)showRunSummary();else finish(state.ending)}
  else if(!state.starterKitGiven)openRefuge('start');
@@ -24,16 +24,27 @@ function resumeStoryActivity(){
  else if(state.inhibitor.pendingContact==='hack'||state.inhibitor.pendingContact==='exposed')startTrackingCombat(state.inhibitor.pendingContact);
  else $('advance').focus({preventScroll:true});
 }
+function openStoryPrelude(){
+ $("activityMenu").classList.add("hidden");$("storyPrelude").classList.remove("hidden");$("storyPrelude").removeAttribute('inert');
+ state.activity='story';save();$("storyPreludeContinue").focus({preventScroll:true});
+}
+function resumeStoryActivity(){
+ if(!state.storyPreludeSeen&&!state.starterKitGiven){openStoryPrelude();return}
+ enterStoryActivity();
+}
+function finishStoryPrelude(){state.storyPreludeSeen=true;save();enterStoryActivity()}
 function activityBack(){
  if(!$("courierScreen").classList.contains("hidden")){
   var frame=$("courierFrame");try{if(frame.contentWindow.NeoCourierBack&&frame.contentWindow.NeoCourierBack())return true}catch(e){}
   returnToActivities();return true;
  }
+ if(!$("storyPrelude").classList.contains("hidden")){state.activity='hub';openActivityMenu();return true}
  if(!$("activityHelpText").classList.contains("hidden")){$("activityHelpText").classList.add("hidden");$("activityHelp").focus();return true}
  return false;
 }
 $("chooseStory").addEventListener('click',resumeStoryActivity);
 $("chooseCouriers").addEventListener('click',openCourierActivity);
+$("storyPreludeContinue").addEventListener('click',finishStoryPrelude);
 $("courierReturn").addEventListener('click',returnToActivities);
 $("refugeActivities").addEventListener('click',function(){if(state.refuge.active){state.activity='hub';openActivityMenu()}});
 $("activityHelp").addEventListener('click',function(){$("activityHelpText").classList.toggle('hidden')});

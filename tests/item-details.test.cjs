@@ -10,7 +10,7 @@ function session(){
   Object.defineProperty(window.HTMLElement.prototype,'clientWidth',{configurable:true,get(){return 800}});
   Object.defineProperty(window.HTMLElement.prototype,'clientHeight',{configurable:true,get(){return 700}});
   const a=boot(new Map(),{document}),c=a.ctx;
-  c.newGame();while(!c.state.introCompleted){c.revealIntroText();c.advanceGameIntro()}c.resumeStoryActivity();
+  c.newGame();while(!c.state.introCompleted){c.revealIntroText();c.advanceGameIntro()}c.resumeStoryActivity();c.finishStoryPrelude();
   c.continueRefugeHelp();c.acceptStarterKit();
   return Object.assign(a,{document,click(node){assert.ok(node,'Clickable node exists');node.dispatchEvent(new window.Event('click',{bubbles:true,cancelable:true}))}})
 }
