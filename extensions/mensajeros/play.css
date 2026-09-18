@@ -10,3 +10,4 @@
 @media(max-width:600px){.loadout-person{grid-template-columns:90px 1fr}.loadout-person>img{width:90px;height:160px}.equipped-list,.shop-grid,.skill-tree{grid-template-columns:1fr}.bag-card{grid-template-columns:58px minmax(0,1fr)}.bag-card>img{width:58px;height:58px}}
 
 .courier-combat-frame{position:fixed;inset:0;z-index:300;width:100%;height:100dvh;border:0;background:#070a09}.courier-combat-frame.hidden{display:none}
+html:has(#battleLayer:not(.hidden)),body:has(#battleLayer:not(.hidden)){overflow:hidden}
