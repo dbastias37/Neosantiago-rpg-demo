@@ -21,7 +21,7 @@ test('market travel follows existing connections from every station and respects
  const {E,d}=await setup();
  for(const node of Object.keys(d.nodes).filter(id=>id!=='heroes')){
   let w=connectedWorld(E,d,{seed:4});w.location=node;w.credits=30;const before=JSON.stringify(w);w=E.travelHeroes(d,w);const route=E.route(d,w);
-  assert.equal(w.location,node);assert.throws(()=>E.start(d,{...w,run:null},'morales-01'),/Viaja a Los Héroes/);assert.equal(route.nodes[0],node);assert.equal(route.nodes.at(-1),'heroes');assert.equal(E.atHeroes(d,w),false);assert.throws(()=>E.buy(d,w,'water','rocio'),/Los Héroes/);assert.throws(()=>E.sell(d,w,'ammo9','rocio'),/Los Héroes/);assert.throws(()=>E.recover(d,w),/Los Héroes/);
+  assert.equal(w.location,node);if(node!=='plaza')assert.throws(()=>E.start(d,{...w,run:null},'morales-01'),/Viaja a Plaza de Armas/);assert.equal(route.nodes[0],node);assert.equal(route.nodes.at(-1),'heroes');assert.equal(E.atHeroes(d,w),false);assert.throws(()=>E.buy(d,w,'water','rocio'),/Los Héroes/);assert.throws(()=>E.sell(d,w,'ammo9','rocio'),/Los Héroes/);assert.throws(()=>E.recover(d,w),/Los Héroes/);
   assert.equal(w.credits,30);assert.deepEqual(w.crew,JSON.parse(before).crew);assert.equal(E.rewardForecast(d,w),null);
   assert.ok(!route.nodes.includes('baquedano'));route.edges.forEach((e,i)=>{assert.equal(e.from,route.nodes[i]);assert.equal(e.to,route.nodes[i+1]);});
   assert.deepEqual(E.restore(d,E.serialize(w)),w);
@@ -49,8 +49,8 @@ test('market encounters persist through reload and retry, and stopping never tel
 test('independent market trips finish, preserve earlier receipts and never award another mission payment',async()=>{
  const {E,d}=await setup();
  for(const origin of ['plaza','libertadores','leones','vicuna']){
-  let w=connectedWorld(E,d,{seed:1});w.location=origin;w.credits=30;w.paid=['ana-01'];w.completed={'ana-01':{amount:30}};w.effects=['ana-01'];
-  w=finish(E,d,E.travelHeroes(d,w));assert.equal(E.atHeroes(d,w),true,origin);assert.equal(w.credits,30);assert.deepEqual(w.completed,{'ana-01':{amount:30}});assert.deepEqual(w.paid,['ana-01']);
+  let w=connectedWorld(E,d,{seed:1});w.location=origin;w.credits=30;w.paid=['ana-01'];w.completed={'ana-01':{amount:30,corridorVersion:1}};w.effects=['ana-01'];
+  w=finish(E,d,E.travelHeroes(d,w));assert.equal(E.atHeroes(d,w),true,origin);assert.equal(w.credits,30);assert.deepEqual(w.completed,{'ana-01':{amount:30,corridorVersion:1}});assert.deepEqual(w.paid,['ana-01']);
  }
 });
 function legacy(E){

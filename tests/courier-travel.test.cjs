@@ -122,22 +122,22 @@ test('the compact layout keeps the full travel journal accessible in a closable 
  assert.ok(d.getElementById('advanceButton'));
 });
 
-test('fresh interface exposes one local offer and two map nodes; contacts do not reveal the distant atlas',async()=>{
+test('fresh interface exposes one corridor offer and four map nodes; contacts do not reveal the distant atlas',async()=>{
  const E=await import('../extensions/mensajeros/production.mjs'),data=E.prepare(JSON.parse(fs.readFileSync(root+'/extensions/mensajeros/production.json')));
  const a=await session({saved:E.createWorld(data,{seed:1}),reduced:true}),d=a.document;
  assert.equal(d.querySelectorAll('#dialogBody [data-offer]').length,1);assert.equal(d.querySelector('#dialogBody [data-offer]').dataset.offer,'relevo-01');
- assert.equal(d.querySelectorAll('#missionLayer [role="button"]').length,2);assert.ok(!d.querySelector('#map').textContent.includes('Vicuña'));
+ assert.equal(d.querySelectorAll('#missionLayer [role="button"]').length,4);assert.ok(!d.querySelector('#map').textContent.includes('Vicuña'));
  a.click('#contactsButton');assert.equal(d.querySelectorAll('[data-contact]').length,1);assert.equal(d.querySelector('[data-contact]').dataset.contact,'hmorales');
  a.click('[data-contact]');a.click('[data-offer="relevo-01"]');a.click('[data-preview-route]');assert.match(d.querySelector('#dialogBody').textContent,/La Moneda/);assert.ok(!d.querySelector('#dialogBody').textContent.includes('Los Leones'));
 });
 test('first delivery reveals its two successors in the receipt and map, survives reload, and reset hides them again',async()=>{
  const E=await import('../extensions/mensajeros/production.mjs'),data=E.prepare(JSON.parse(fs.readFileSync(root+'/extensions/mensajeros/production.json')));
  const a=await session({saved:E.createWorld(data,{seed:1}),reduced:true}),d=a.document;
- a.click('[data-offer="relevo-01"]');a.click('[data-accept]');a.click();await a.frame(0);await a.frame(1000);a.click('[data-choice="confirm"]');a.click();await a.frame(1001);await a.frame(2001);a.click('[data-choice="deliver"]');
- assert.equal(a.world().paid.length,1);assert.match(d.querySelector('#dialogBody').textContent,/Rocío confirma/);assert.ok(!d.querySelector('#dialogBody').textContent.includes('«Rocío confirma'));assert.match(d.querySelector('#dialogBody').textContent,/«Ya sé a qué hora/);assert.match(d.querySelector('#dialogBody').textContent,/La entrega abrió nuevos trabajos/);assert.match(d.querySelector('#dialogBody').textContent,/Reserva de emergencia/);assert.ok(d.querySelector('#map').textContent.includes('República'));assert.ok(!d.querySelector('#map').textContent.includes('Vicuña'));
+ a.click('[data-offer="relevo-01"]');a.click('[data-accept]');a.click();await a.frame(0);await a.frame(1000);a.click('[data-choice="confirm"]');a.click();await a.frame(1001);await a.frame(2001);a.click('[data-choice="windows"]');a.click();await a.frame(2002);await a.frame(3002);a.click('[data-choice="deliver"]');
+ assert.equal(a.world().paid.length,1);assert.match(d.querySelector('#dialogBody').textContent,/Elena recibió/);assert.ok(!d.querySelector('#dialogBody').textContent.includes('«Ana lee'));assert.match(d.querySelector('#dialogBody').textContent,/«Voy a trabajar/);assert.match(d.querySelector('#dialogBody').textContent,/La entrega abrió nuevos trabajos/);assert.match(d.querySelector('#dialogBody').textContent,/Una reserva, tres puestos/);assert.ok(d.querySelector('#map').textContent.includes('República'));assert.ok(!d.querySelector('#map').textContent.includes('Vicuña'));
  const restored=await session({saved:a.world(),reduced:true});restored.click('#catalogButton');assert.equal(restored.document.querySelectorAll('#dialogBody [data-offer]').length,3);
  a.click('[data-catalog]');a.click('[data-filter="available"]');assert.equal(d.querySelectorAll('#dialogBody [data-offer]').length,2);
- a.click('#resetCouriers');a.click('[data-reset-confirm]');assert.equal(d.querySelectorAll('#dialogBody [data-offer]').length,1);assert.equal(d.querySelectorAll('#missionLayer [role="button"]').length,2);assert.equal(a.world().paid.length,0);
+ a.click('#resetCouriers');a.click('[data-reset-confirm]');assert.equal(d.querySelectorAll('#dialogBody [data-offer]').length,1);assert.equal(d.querySelectorAll('#missionLayer [role="button"]').length,4);assert.equal(a.world().paid.length,0);
 });
 
 test('Adasme opens the return scene, postponing does not choose, and reload preserves a single response',async()=>{
@@ -152,15 +152,15 @@ test('a later message is available from the main panel and remains readable thro
 });
 
 test('remote offer previews the approach without moving; arrival exposes acceptance and a fresh assignment clock',async()=>{
- const {setup,finish}=require('./courier-return-fixtures.cjs'),{E,d:data}=await setup();let saved=finish(E,data,E.start(data,E.createWorld(data,{seed:1}),'relevo-01'));
+ const {setup,finish}=require('./courier-return-fixtures.cjs'),{E,d:data}=await setup();let saved=finish(E,data,E.start(data,E.createWorld(data,{seed:1}),'relevo-01'));saved={...saved,run:null,location:'uchile',encounters:{version:1,resolved:{'centro-lista':'fechas'}}};
  const a=await session({saved,reduced:true}),d=a.document,before=E.serialize(a.world());
  a.click('#catalogButton');a.click('[data-offer="romero-01"]');assert.ok(!d.querySelector('[data-accept]'));assert.ok(d.querySelector('[data-approach="romero-01"]'));
- a.click('[data-approach]');assert.match(d.querySelector('#dialogBody').textContent,/Llegar a República/);assert.match(d.querySelector('#dialogBody').textContent,/1 tramo/);assert.match(d.querySelector('#dialogBody').textContent,/La carga se recoge después en Los Héroes/);assert.match(d.querySelector('#dialogBody').textContent,/1 ración, 1 reserva de agua/);assert.match(d.querySelector('#dialogBody').textContent,/cuando lo aceptes/);assert.equal(E.serialize(a.world()),before);
- a.click('[data-start-approach]');assert.equal(a.world().location,'heroes');assert.equal(a.world().run.kind,'travel');assert.doesNotMatch(d.querySelector('#status').textContent,/Pago estimado/);
+ a.click('[data-approach]');assert.match(d.querySelector('#dialogBody').textContent,/Llegar a Plaza de Armas/);assert.match(d.querySelector('#dialogBody').textContent,/1 tramo/);assert.match(d.querySelector('#dialogBody').textContent,/La carga se recoge después en Universidad de Chile/);assert.match(d.querySelector('#dialogBody').textContent,/1 ración, 1 reserva de agua/);assert.match(d.querySelector('#dialogBody').textContent,/cuando lo aceptes/);assert.equal(E.serialize(a.world()),before);
+ a.click('[data-start-approach]');assert.equal(a.world().location,'uchile');assert.equal(a.world().run.kind,'travel');assert.doesNotMatch(d.querySelector('#status').textContent,/Pago estimado/);
  a.click();await a.frame(0);await a.frame(1000);assert.ok(a.world().run.pending);assert.ok(!d.querySelector('[data-accept]'));
  const option=E.options(data,a.world()).find(o=>E.optionAvailable(a.world(),o)&&['scout','avoid','continue'].includes(o.id))||E.options(data,a.world()).find(o=>E.optionAvailable(a.world(),o));a.click('[data-choice="'+option.id+'"]');
- assert.equal(a.world().location,'republica');assert.equal(a.world().run.status,'completed');assert.deepEqual(a.world().paid,['relevo-01']);assert.match(d.querySelector('#travel').textContent,/Llegaste a República/);
- a.click('#travel [data-offer]');assert.ok(d.querySelector('[data-accept="romero-01"]'));assert.ok(!d.querySelector('[data-approach]'));a.click('[data-accept]');assert.equal(a.world().run.minutes,0);assert.equal(a.world().run.mission,'romero-01');assert.equal(a.world().location,'republica');
+ assert.equal(a.world().location,'plaza');assert.equal(a.world().run.status,'completed');assert.deepEqual(a.world().paid,['relevo-01']);assert.match(d.querySelector('#travel').textContent,/Llegaste a Plaza de Armas/);
+ a.click('#travel [data-offer]');assert.ok(d.querySelector('[data-accept="romero-01"]'));assert.ok(!d.querySelector('[data-approach]'));a.click('[data-accept]');assert.equal(a.world().run.minutes,0);assert.equal(a.world().run.mission,'romero-01');assert.equal(a.world().location,'plaza');
 });
 test('Tobalaba acceptance shows only the actual extraction legs, deadline and zero progress after reload',async()=>{
  const {setup}=require('./courier-return-fixtures.cjs'),{E,d:data}=await setup();let saved=connectedWorld(E,data,{seed:1});saved.location='tobalaba';

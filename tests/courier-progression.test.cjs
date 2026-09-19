@@ -17,14 +17,14 @@ function finish(E,d,w,choice){
  assert.equal(w.run.status,'completed',w.run.log.join('\n'));return w;
 }
 function deliver(E,d,w,id,choice){if(!E.atMissionOrigin(d,w,id))w=finish(E,d,E.travelToMission(d,w,id));return finish(E,d,E.start(d,w,id),choice);}
-test('fresh team sees only the two-leg local job, with distant missions enforced in the engine',async()=>{
- const {E,d}=await setup(),w=E.createWorld(d,{seed:1});assert.deepEqual(E.knownMissions(d,w).map(m=>m.id),['relevo-01']);assert.deepEqual(new Set(E.knownNodes(d,w)),new Set(['heroes','moneda']));
+test('fresh team sees only the three-post corridor, with distant missions enforced in the engine',async()=>{
+ const {E,d}=await setup(),w=E.createWorld(d,{seed:1});assert.deepEqual(E.knownMissions(d,w).map(m=>m.id),['relevo-01']);assert.deepEqual(new Set(E.knownNodes(d,w)),new Set(['heroes','moneda','uchile','plaza']));
  for(const id of Object.keys(d.missions).filter(id=>id!=='relevo-01'))assert.throws(()=>E.start(d,w,id),/contacto/);
- assert.equal(d.routes[d.missions['relevo-01'].route].edges.length,2);assert.deepEqual(E.restore(d,E.serialize(w)),w);
+ assert.equal(d.routes[d.missions['relevo-01'].route].edges.length,3);assert.deepEqual(E.restore(d,E.serialize(w)),w);
 });
 test('both first choices pay once, remember the response and introduce the same nearby jobs without creating their receipts',async()=>{
  const {E,d}=await setup();for(const choice of ['confirm','return-message']){
-  const w=deliver(E,d,E.createWorld(d,{seed:1}),'relevo-01',choice);assert.equal(w.run.combats,0);assert.equal(w.location,'heroes');assert.equal(w.credits,12);assert.deepEqual(new Set(w.run.receipt.opened),new Set(['romero-01','morales-01']));assert.deepEqual(Object.keys(w.completed),['relevo-01']);assert.ok(w.run.receipt.narration.includes(choice==='confirm'?'Rocío confirma':'Bruno entrega'));assert.throws(()=>E.start(d,w,'relevo-01'),/entregado/);assert.deepEqual(new Set(w.progression.visited),new Set(['heroes','moneda']));assert.equal(w.run.minutes,choice==='confirm'?12:9);
+  const w=deliver(E,d,E.createWorld(d,{seed:1}),'relevo-01',choice);assert.equal(w.run.combats,0);assert.equal(w.location,'plaza');assert.equal(w.credits,18);assert.deepEqual(new Set(w.run.receipt.opened),new Set(['romero-01','morales-01']));assert.deepEqual(Object.keys(w.completed),['relevo-01']);assert.ok(w.run.receipt.narration.includes(choice==='confirm'?'Elena recibió':'respuesta pendiente'));assert.throws(()=>E.start(d,w,'relevo-01'),/entregado/);assert.deepEqual(new Set(w.progression.visited),new Set(['heroes','moneda','uchile','plaza']));assert.equal(w.run.minutes,choice==='confirm'?25:22);
  }
 });
 test('accepting, abandoning or retrying the first job never opens contacts',async()=>{

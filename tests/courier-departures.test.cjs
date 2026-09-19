@@ -7,8 +7,8 @@ test('remote contacts require a physical approach; previews do not mutate or rev
  assert.equal(E.departurePlan(d,fresh,'romero-01'),null);assert.equal(E.approachJourney(d,fresh,'adasme-01'),null);
  assert.throws(()=>E.travelToMission(d,fresh,'romero-01'),/contacto/);assert.equal(E.serialize(fresh),raw);
  const w=finish(E,d,E.start(d,fresh,'relevo-01')),before=E.serialize(w),plan=E.departurePlan(d,w,'romero-01');
- assert.equal(plan.destination,'republica');assert.deepEqual(d.routes[plan.journey.route].nodes,['heroes','republica']);
- assert.throws(()=>E.start(d,w,'romero-01'),/Viaja a República/);assert.equal(E.serialize(w),before);
+ assert.equal(plan.destination,'plaza');assert.equal(plan.journey,null);
+ assert.equal(E.start(d,w,'romero-01').location,'plaza');assert.equal(E.serialize(w),before);
  assert.equal(E.approachJourney(d,w,'adasme-01'),null);assert.ok(!E.knownNodes(d,w).includes('vicuna'));
 });
 
@@ -18,18 +18,18 @@ test('approach preserves wounds and owned supplies, resolves arrival, and starts
  assert.equal(journey.location,'heroes');assert.deepEqual(journey.run.party,crew);assert.deepEqual(journey.run.borrowedStock,{});assert.deepEqual(journey.run.cargo,{});assert.equal(journey.run.timeLimit,null);assert.equal(E.rewardForecast(d,journey),null);
  assert.throws(()=>E.start(d,journey,'romero-01'));assert.throws(()=>E.travelToMission(d,journey,'ana-01'),/Termina/);
  const pending=E.advance(d,journey),saved=E.restore(d,E.serialize(pending));assert.deepEqual(saved,pending);assert.equal(saved.location,'heroes');assert.notEqual(saved.run.pending.category,'delivery');
- w=finish(E,d,saved);assert.equal(w.location,'republica');assert.equal(w.run.status,'completed');assert.ok(w.run.minutes>0);assert.deepEqual(w.paid,[]);assert.deepEqual(w.completed,{});assert.deepEqual(w.effects,[]);assert.deepEqual(w.progression.known,known);assert.equal(w.credits,0);assert.equal(w.hubVisits,0);assert.deepEqual(w.run.cargo,{});
+ w=finish(E,d,saved);assert.equal(w.location,'plaza');assert.equal(w.run.status,'completed');assert.ok(w.run.minutes>0);assert.deepEqual(w.paid,[]);assert.deepEqual(w.completed,{});assert.deepEqual(w.effects,[]);assert.deepEqual(w.progression.known,known);assert.equal(w.credits,0);assert.equal(w.hubVisits,0);assert.deepEqual(w.run.cargo,{});
  assert.equal(E.atMissionOrigin(d,w,'romero-01'),true);assert.deepEqual(E.restore(d,E.serialize(w)),w);
- const accepted=E.start(d,w,'romero-01');assert.equal(accepted.run.minutes,0);assert.equal(accepted.run.timeLimit,d.missions['romero-01'].time_limit);assert.equal(accepted.run.startIndex,0);assert.equal(accepted.location,'republica');assert.deepEqual(accepted.run.cargo,{});assert.ok(Object.keys(accepted.run.borrowedStock).length>0);
+ const accepted=E.start(d,w,'romero-01');assert.equal(accepted.run.minutes,0);assert.equal(accepted.run.timeLimit,d.missions['romero-01'].time_limit);assert.equal(accepted.run.startIndex,0);assert.equal(accepted.location,'plaza');assert.deepEqual(accepted.run.cargo,{});assert.ok(Object.keys(accepted.run.borrowedStock).length>0);
 });
 
 test('hostile final approach keeps contact inaccessible through combat and loot until the passage resolves',async()=>{
  const {E,d}=await setup();let w;
- for(let seed=1;seed<100;seed++){w=E.advance(d,E.travelToMission(d,connectedWorld(E,d,{seed}),'romero-01'));if(w.run.pending.category==='hostile')break;}
+ for(let seed=1;seed<100;seed++){w=E.advance(d,E.travelToMission(d,{...connectedWorld(E,d,{seed}),location:'uchile',encounters:{version:1,resolved:{'centro-lista':'fechas','plaza-turnos':'mostrar','norte-turnos':'revisar'}}},'romero-01'));if(w.run.pending.category==='hostile')break;}
  assert.equal(w.run.pending.category,'hostile');w=E.choose(d,w,'fight');assert.throws(()=>E.start(d,w,'romero-01'));
  for(let i=0;i<100&&w.run.pending?.combat?.phase==='combat';i++)w=E.choose(d,w,E.options(d,w).some(o=>o.id==='fire')?'fire':'melee');
- assert.equal(w.run.pending.combat.phase,'loot');assert.equal(w.location,'heroes');assert.equal(w.run.status,'active');assert.throws(()=>E.start(d,w,'romero-01'));
- w=E.restore(d,E.serialize(w));w=E.finishLoot(d,w);assert.equal(w.location,'republica');assert.equal(w.run.status,'completed');assert.equal(E.start(d,w,'romero-01').run.mission,'romero-01');
+ assert.equal(w.run.pending.combat.phase,'loot');assert.equal(w.location,'uchile');assert.equal(w.run.status,'active');assert.throws(()=>E.start(d,w,'romero-01'));
+ w=E.restore(d,E.serialize(w));w=E.finishLoot(d,w);assert.equal(w.location,'plaza');assert.equal(w.run.status,'completed');assert.equal(E.start(d,w,'romero-01').run.mission,'romero-01');
 });
 
 test('the rescue uses the nearest preparation point without inventing visits or skipping its return',async()=>{

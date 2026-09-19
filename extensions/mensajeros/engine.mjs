@@ -1,3 +1,4 @@
+import {runAssignment} from './corridors.mjs';
 // Passive module. No DOM, campaign globals, storage or timers. Only the local lab calls it.
 export const SAVE_VERSION = 1;
 const copy = value => JSON.parse(JSON.stringify(value));
@@ -13,7 +14,7 @@ export function createWorld(data, {mode, seed = 2130} = {}) {
   requireThat(mode === 'laboratory', 'La expansión solo admite inicio explícito en laboratorio.');
   return {schema: SAVE_VERSION, contentVersion:data.content_version, seed, credits:0, regions:{l6:0,centro:0,oriente:0}, paid:[], completed:{}, run:null};
 }
-export function mission(data, world) { return data.missions[world.run?.mission] || data.journeys?.[world.run?.mission]; }
+export function mission(data, world) { return runAssignment(data,world); }
 export function route(data, world) { return data.routes[mission(data, world)?.route]; }
 export function here(data, world) { return data.nodes[route(data, world)?.nodes[world.run.index]]; }
 export function nextEdge(data, world) { return route(data, world)?.edges[world.run.index] || null; }
@@ -184,7 +185,7 @@ export function restore(data,text) {
   requireThat(Object.keys(w.regions).every(k=>['l6','centro','oriente'].includes(k))&&['l6','centro','oriente'].every(k=>Number.isInteger(w.regions[k])&&w.regions[k]>=0&&w.regions[k]<=6),'Amenaza inválida.');
   requireThat(w.paid.every(id=>data.missions[id])&&new Set(w.paid).size===w.paid.length,'Recompensas inválidas.');
   if(w.run){
-    const r=w.run,m=mission(data,w),rt=data.routes[m?.route];
+    const r=w.run,m=mission(data,w),rt=route(data,w);
     requireThat(rt&&Number.isInteger(r.index)&&r.index>=0&&r.index<rt.nodes.length,'Recorrido inválido.');
     requireThat(['active','failed','completed','abandoned'].includes(r.status)&&Number.isFinite(r.condition)&&r.condition>=0&&r.condition<=100&&Number.isFinite(r.battery)&&r.battery>=0&&r.battery<=20&&Array.isArray(r.log)&&Array.isArray(r.history)&&Array.isArray(r.rested)&&r.rolls,'Estado inválido.');
     for(const stock of [r.cargo,r.supplies])requireThat(stock&&Object.entries(stock).every(([id,n])=>data.items[id]&&Number.isInteger(n)&&n>=0),'Inventario inválido.');

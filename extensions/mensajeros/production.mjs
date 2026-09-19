@@ -1,3 +1,5 @@
+import {prepareCorridors,restoreCorridors,scriptAt,rememberCorridor,arrivalAccount,communityMemory,assignment} from './corridors.mjs';
+export {communityMemory,currentPurpose,assignment} from './corridors.mjs';
 import {prepareEncounters,restoreEncounters,directEncounter,rememberEncounter} from './encounters.mjs';
 export {encounterText,passageReady,routeWarning,sectorFor,sectors} from './encounters.mjs';
 import {rescueOutcome,refreshAftermath} from './aftermath.mjs';
@@ -50,7 +52,11 @@ function ownedParty(data,r){
 export function prepare(data){
  const d=copy(data);for(const m of Object.values(d.missions))m.test_loadout=m.loadout;
  for(const e of Object.values(d.scripted))d.events.push({...e,scripted:true,category:'decision',regions:['centro','oriente','l6']});
- return prepareJourneys(prepareEncounters(d));
+ const legacy=prepareJourneys(copy(d));
+ const prepared=prepareJourneys(prepareEncounters(prepareCorridors(d)));
+ prepared.legacyJourneys={};
+ for(const [id,m]of Object.entries(legacy.journeys)){const route='legacy-'+m.route;prepared.legacyJourneys[id]={...m,route};prepared.routes[route]={...legacy.routes[m.route],id:route};}
+ return prepared;
 }
 export function createWorld(data,{seed=Date.now()}={}){
  const w=Base.createWorld(data,{mode:'laboratory',seed});
@@ -64,7 +70,7 @@ export function start(data,source,id){
  const entry=entryPoints(data,id).find(p=>p.node===source.location);
  need(entry,'Viaja a '+entryPoints(data,id).map(p=>data.nodes[p.node].name).join(' o ')+' antes de aceptar este encargo.');
  const w=Base.start(data,source,id),r=w.run,m=data.missions[id],issued=copy(r.supplies);
- restoreEncounters(w);r.directorVersion=1;r.startIndex=entry.index;r.index=entry.index;
+ restoreEncounters(w);r.corridorVersion=2;r.directorVersion=1;r.startIndex=entry.index;r.index=entry.index;
  r.party=copy(w.crew).map(c=>memberBase(data,{...c,hp:Math.max(c.hp,Math.ceil(c.maxHp*.4))}));
  // Migrate any old shared reserve into individual bags before leaving the hub.
  for(const [key,n]of Object.entries(w.stock||{}))distribute(data,r.party,key,n);
@@ -78,6 +84,8 @@ export function start(data,source,id){
 function updateCheckpoint(data,w){
  const r=w.run;if(r?.status!=='active'||r.pending)return;
  w.location=Base.here(data,w).id;refreshProgression(data,w);refreshAftermath(w);
+ const echoes=communityMemory(w,w.location),memoryKey='community-'+r.index;
+ if(echoes.length&&!r.used[memoryKey]){r.used[memoryKey]=true;r.log.push(...echoes);if(!r.lastEncounter)r.lastEncounter={title:'Lo que quedó en este puesto',text:echoes.join(' ')};}
  if(w.location==='plaza'&&w.effects.includes('guzman-01')&&!r.used['plaza-'+r.index]){r.used['plaza-'+r.index]=true;r.log.push('La torreta de Plaza sigue girando. El guardia reconoce al equipo y señala el banco que dejó Ana: hay agua y una ración para descansar sin gastar las propias.');}
  if(Base.mission(data,w).type==='travel'&&r.index===Base.route(data,w).edges.length){
   r.status='completed';r.jammerOn=false;w.crew=copy(r.party);if(w.location==='heroes')w.hubVisits=(w.hubVisits||0)+1;
@@ -86,8 +94,8 @@ function updateCheckpoint(data,w){
  if(Base.here(data,w).checkpoint){const {checkpoint,rolls,log,...snapshot}=r;r.checkpoint={node:Base.here(data,w).id,snapshot:copy(snapshot)};}
 }
 export function advance(data,source){
- let w=Base.advance(data,source),r=w.run,p=r.pending;r.withdrawn=false;const scene=data.scripted[r.mission+':'+p.edgeIndex];
- if(scene){Object.assign(p,{id:scene.id,category:'decision'});r.rolls[p.edgeIndex]={id:scene.id,category:'decision'};}
+ let w=Base.advance(data,source),r=w.run,p=r.pending;r.withdrawn=false;const scene=scriptAt(data,r,p.edgeIndex);
+ if(scene){Object.assign(p,{id:scene.id,category:scene.category||'decision'});r.rolls[p.edgeIndex]={id:scene.id,category:scene.category||'decision'};}
  directEncounter(data,w,source);r.lastEncounter=null;
  if(r.rescued?.mode==='carry'&&r.party.find(x=>x.id==='bruno')?.hp>0&&r.status==='active')r.condition=Math.min(100,r.condition+(has(r.party.find(x=>x.id==='bruno'),'carry')?2:1));
  w.location=p.from;return w;
@@ -108,7 +116,7 @@ export function options(data,w){
   if(r.party.some(x=>x.id==='tomas'&&x.hp>0))opts.push({id:'guided-retreat',label:'Tomás guía la retirada · desgaste '+(has(r.party.find(x=>x.id==='tomas'),'exit')?2:5)+(Base.eventFor(data,w)?.electronic?' + 4 por ruido':'')});
   opts.push({id:'retreat',label:'Retirada al último andén · desgaste 12'});return opts;
  }
- let opts=Base.options(data,w).map(copy);if(p.category==='delivery')opts[0].label=r.mission==='adasme-01'?'Acompañar a Darío hasta Adasme':'Entregar a '+data.missions[r.mission].recipient;
+ let opts=Base.options(data,w).map(copy);if(p.category==='delivery')opts[0].label=r.mission==='adasme-01'?'Acompañar a Darío hasta Adasme':'Entregar a '+Base.mission(data,w).recipient;
  if(p.category==='hostile'){
   if(Base.eventFor(data,w)?.mandatory)return [...opts,{id:'withdraw',label:'Volver al andén · el paso seguirá bloqueado'}];
   opts.unshift({id:'scout',label:'Rocío busca un paso silencioso · 1 uso por encargo',requiresCrew:'rocio',once:'scout',limit:has(r.party.find(x=>x.id==='rocio'),'trail')?2:1},{id:'decoy',label:'Distraer con un señuelo · 1 unidad',cost:{decoy:1}});
@@ -161,12 +169,14 @@ export function choose(data,source,id){
  need(source.run?.status==='active','No hay un encargo activo.');const option=options(data,source).find(o=>o.id===id);need(option,'Acción no disponible.');need(optionAvailable(source,option),'No se cumplen los requisitos de esta acción.');let w=copy(source),r=w.run,p=r.pending;
  if(p.combat){spend(r,option.cost);return combatTurn(data,w,id);}if(option.combat){openCombat(data,w);return w;}if(id==='withdraw'){time(r,2);retreat(w);return w;}
  if(['scout','jam-skill','decoy','echo-path'].includes(id)){spend(r,option.cost);if(option.once)r.used[option.once]=(Number(r.used[option.once])||0)+1;if(id==='echo-path'){r.condition=Math.max(0,r.condition-(Base.eventFor(data,w)?.electronic?6:2));if(!r.condition){r.status='failed';return w;}}r.evaded++;time(r,2);r.log.push(option.label+'.');arrive(data,w);return w;}
- const wasDelivery=p.category==='delivery',pickup=Base.mission(data,w).pickup,before=copy(r.supplies);w=Base.choose(data,w,id);r=w.run;mirrorChanges(data,r,before);if(!r.pending)rememberEncounter(data,w,p,option);
+ const wasDelivery=p.category==='delivery',pickup=Base.mission(data,w).pickup,before=copy(r.supplies);w=Base.choose(data,w,id);r=w.run;mirrorChanges(data,r,before);if(!r.pending){rememberEncounter(data,w,p,option);rememberCorridor(data,w,p,option);}
  if(option.flag){r.flags.push(option.flag);r.log.push('Registrado: '+option.label+'.');}if(pickup&&!r.pickupDone&&Base.here(data,w).id===pickup.node){r.cargo=copy(pickup.cargo);r.pickupDone=true;r.log.push('Carga recogida y sellada para el destinatario.');}
  if(wasDelivery&&r.status==='completed'){
-  const m=data.missions[r.mission],gross=r.receipt.amount,late=Math.max(0,r.minutes-(r.timeLimit??m.time_limit)),penalty=Math.min(Math.floor(gross*.5),Math.ceil(late/m.late_step_minutes)*m.late_penalty);w.credits-=penalty;r.receipt.amount-=penalty;r.receipt.gross=gross;r.receipt.timeLimit=r.timeLimit??m.time_limit;r.receipt.minutes=r.minutes;r.receipt.late=late;r.receipt.penalty=penalty;r.receipt.provisional=false;r.receipt.effect=m.effect;r.receipt.flags=copy(r.flags);r.receipt.startIndex=r.startIndex||0;
+  const m=Base.mission(data,w),gross=r.receipt.amount,late=Math.max(0,r.minutes-(r.timeLimit??m.time_limit)),penalty=Math.min(Math.floor(gross*.5),Math.ceil(late/m.late_step_minutes)*m.late_penalty);w.credits-=penalty;r.receipt.amount-=penalty;r.receipt.gross=gross;r.receipt.timeLimit=r.timeLimit??m.time_limit;r.receipt.minutes=r.minutes;r.receipt.late=late;r.receipt.penalty=penalty;r.receipt.provisional=false;r.receipt.effect=m.effect;r.receipt.flags=copy(r.flags);r.receipt.startIndex=r.startIndex||0;
   r.receipt.narration=m.delivery_reaction||'';
-  if(r.mission==='relevo-01')r.receipt.narration=(r.flags.includes('relevo_confirmado')?'Rocío confirma que el hermano quedó ayudando en el depósito. Morales anota que el próximo grupo debe avisar antes de salir. ':'Bruno entrega la pregunta de la mujer. Morales pide al siguiente relevo que lleve la respuesta: el hermano se quedó ayudando en el depósito. ');
+  r.receipt.corridorVersion=r.corridorVersion||1;
+  if(r.mission==='relevo-01'&&r.corridorVersion!==2)r.receipt.narration=(r.flags.includes('relevo_confirmado')?'Rocío confirma que el hermano quedó ayudando en el depósito. Morales anota que el próximo grupo debe avisar antes de salir. ':'Bruno entrega la pregunta de la mujer. Morales pide al siguiente relevo que lleve la respuesta: el hermano se quedó ayudando en el depósito. ');
+  r.receipt.narration=arrivalAccount(r)??r.receipt.narration;
   if(r.mission==='adasme-01')r.receipt.rescueOutcome=rescueOutcome(r);
   const previouslyOpen=[...w.progression.known];refreshProgression(data,w);r.receipt.opened=w.progression.known.filter(id=>!previouslyOpen.includes(id));w.completed[r.mission]=copy(r.receipt);w.effects.push(r.mission);
   addCombatXp(r,35);w.crew=copy(ownedParty(data,r));w.location=Base.here(data,w).id;if(r.mission==='morales-01')w.regions.centro=Math.max(0,w.regions.centro-1);r.log[r.log.length-1]='Entrega completada · '+r.receipt.amount+' fichas'+(penalty?' tras descontar '+penalty+' por demora':' sin descuento por demora')+'. '+r.receipt.effect;
@@ -206,14 +216,14 @@ export function approachJourney(data,w,id){return missionOpen(data,w,id)&&!w.pai
 export function departurePlan(data,w,id){
  if(!missionOpen(data,w,id))return null;
  const current=w.run?.mission===id&&['active','failed'].includes(w.run.status)?w.run:null,receipt=w.completed[id],record=receipt||current;
- if(record){const index=record.startIndex||0;return {journey:null,destination:data.routes[data.missions[id].route].nodes[index],index,limit:record.timeLimit??entryDeadline(data,id,index),legs:data.routes[data.missions[id].route].edges.length-index};}
+ if(record){const index=record.startIndex||0,m=assignment(data,w,id),rt=data.routes[m.route];return {journey:null,destination:rt.nodes[index],index,limit:record.timeLimit??m.time_limit,legs:rt.edges.length-index};}
  const entry=entryPoints(data,id).find(p=>p.node===w.location),journey=entry?null:approachJourney(data,w,id),index=entry?.index??journey?.entryIndex;
  if(index===undefined)return null;
  return {journey,destination:entry?.node||journey.destination,index,limit:entryDeadline(data,id,index),legs:data.routes[data.missions[id].route].edges.length-index};
 }
 function beginTravel(data,source,journey){
  const w=Base.start(data,source,journey.id),r=w.run;
- restoreEncounters(w);r.directorVersion=1;r.kind='travel';r.travelSerial=w.travelSerial=(w.travelSerial||0)+1;r.party=copy(w.crew);
+ restoreEncounters(w);r.corridorVersion=2;r.directorVersion=1;r.kind='travel';r.travelSerial=w.travelSerial=(w.travelSerial||0)+1;r.party=copy(w.crew);
  for(const [id,n]of Object.entries(w.stock||{}))distribute(data,r.party,id,n);
  w.stock={};r.ownedStock=partyTotals(r.party);r.borrowedStock={};r.supplies=partyTotals(r.party);
  r.flags=[];r.used={};r.withdrawn=false;r.pickupDone=true;r.combatSerial=0;r.timeLimit=null;r.rewardPenalty=0;
@@ -271,10 +281,11 @@ export function skillPoints(c){return c.level-(c.skills||[]).length;}
 export function learn(data,source,memberId,skillId){const w=copy(source);need(!w.run||w.run.status!=='active'||(!w.run.pending&&Base.here(data,w).checkpoint),'Aprende habilidades en un punto de control.');const party=activeParty(w),c=party.find(x=>x.id===memberId),skill=data.skillTrees[memberId]?.find(x=>x.id===skillId);need(c&&skill,'Habilidad desconocida.');need(!has(c,skillId)&&skillPoints(c)>0,'No hay puntos disponibles o ya aprendiste la habilidad.');need(!skill.requires||has(c,skill.requires),'Aprende primero la habilidad anterior.');c.skills=[...(c.skills||[]),skillId];if(w.run?.status==='active')updateCheckpoint(data,w);return w;}
 export function rewardForecast(data,w){const r=w.run,m=Base.mission(data,w);if(!r||!m||m.type==='travel')return null;if(r.status==='completed'&&r.receipt?.gross!==undefined){const p=r.receipt;return{gross:p.gross,amount:p.amount,late:p.late,penalty:p.penalty,limit:p.timeLimit,minutes:p.minutes};}const gross=m.reward.base+(r.combats===0?m.reward.stealth_bonus:0),late=Math.max(0,r.minutes-(r.timeLimit??m.time_limit)),penalty=Math.min(Math.floor(gross*.5),Math.ceil(late/m.late_step_minutes)*m.late_penalty);return{gross,amount:gross-penalty,late,penalty,limit:r.timeLimit??m.time_limit,minutes:r.minutes};}
 export function restore(data,text){
- const w=Base.restore(data,migrateNetworkSave(data,text));need(w.mode==='production'&&Array.isArray(w.crew)&&Array.isArray(w.effects)&&w.stock,'Guardado de encargos inválido.');w.location??=(w.run&&Base.here(data,w)?.id)||'heroes';w.hubVisits??=0;
+ const migrated=restoreCorridors(data,JSON.parse(migrateNetworkSave(data,text)));
+ const w=Base.restore(data,JSON.stringify(migrated));need(w.mode==='production'&&Array.isArray(w.crew)&&Array.isArray(w.effects)&&w.stock,'Guardado de encargos inválido.');w.location??=(w.run&&Base.here(data,w)?.id)||'heroes';w.hubVisits??=0;
  for(const c of w.crew)memberBase(data,c);
  if(w.run){const r=w.run;
-  if(r.startIndex!==undefined)need(Number.isInteger(r.startIndex)&&r.startIndex>=0&&r.startIndex<=r.index&&!!data.missions[r.mission]&&entryPoints(data,r.mission).some(p=>p.index===r.startIndex),'Punto de incorporación inválido.');
+  if(r.startIndex!==undefined)need(Number.isInteger(r.startIndex)&&r.startIndex>=0&&r.startIndex<=r.index&&!!data.missions[r.mission]&&(Base.mission(data,w).entry_points||[{index:0}]).some(p=>p.index===r.startIndex),'Punto de incorporación inválido.');
   r.party.forEach(c=>memberBase(data,c));r.ownedStock??=copy(w.stock||{});r.borrowedStock??={};r.flags??=[];r.used??={};r.timeLimit??=(Base.mission(data,w).time_limit??null);r.rewardPenalty??=0;
   if(!r.party.some(c=>c.bag?.length)){for(const [id,n]of Object.entries(r.supplies||{}))distribute(data,r.party,id,n);}sync(r);
   const combat=r.pending?.combat;if(combat){combat.phase??='combat';combat.enemies.forEach((e,i)=>e.loot??=lootFor(w,e.id==='drone',r.combatSerial||0,i));}

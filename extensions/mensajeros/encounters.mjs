@@ -1,3 +1,4 @@
+import {scriptAt,runAssignment} from './corridors.mjs';
 // Authored situations have a place, a prerequisite and a remembered consequence.
 // New runs opt in; already drawn encounters and legacy runs keep their original roll.
 export const sectors = {
@@ -36,7 +37,7 @@ export function restoreEncounters(w){
 }
 export function directEncounter(data,w,source){
  const r=w.run,p=r.pending;
- if(data.content_version!=='2026-09-18.production.2'||r.directorVersion!==1||['rescue','delivery'].includes(p.category)||data.scripted[r.mission+':'+p.edgeIndex])return;
+ if(data.content_version!=='2026-09-18.production.2'||r.directorVersion!==1||['rescue','delivery'].includes(p.category)||scriptAt(data,r,p.edgeIndex))return;
  if(source.run.rolls[p.edgeIndex]){
   if(w.encounters.resolved[p.id]){p.id='paso-'+sectorFor(p.to);p.category='quiet';r.rolls[p.edgeIndex]={id:p.id,category:p.category};}
   return;
@@ -48,7 +49,7 @@ export function directEncounter(data,w,source){
  let scene=available[0];
  // Consecutive non-landmark incidents get a breather. Required corridors retain an encounter.
  if(!scene&&p.category!=='checkpoint'){
-  const edge=data.routes[(data.missions[r.mission]||data.journeys[r.mission]).route].edges[p.edgeIndex];
+  const edge=data.routes[runAssignment(data,w).route].edges[p.edgeIndex];
   if(p.category==='quiet'||!edge.required_encounter&&r.history.length&&r.history.at(-1).category!=='quiet')scene={id:'paso-'+sectorFor(p.to),category:'quiet'};
  }
  if(scene){p.id=scene.id;p.category=scene.category||'decision';r.rolls[p.edgeIndex]={id:p.id,category:p.category};}
