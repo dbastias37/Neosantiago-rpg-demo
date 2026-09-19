@@ -1260,7 +1260,7 @@
       "issuer": "Adasme",
       "recipient": "Adasme · Vicuña Mackenna",
       "summary": "Encuentra al operativo incomunicado entre Los Leones y Tobalaba. Lleva provisiones y vuelve con él evitando enfrentamientos.",
-      "briefing": "El grupo entró por la escotilla con las cajas y recién abajo notó que faltaba Darío. Ahora están desplegados y no puedo mandar a los mismos de vuelta. Busquen en el refugio provisorio entre Los Leones y Tobalaba. Él sabe llegar ahí si pierde contacto. Les doy tres bombas de humo y un inhibidor con veinte minutos de batería. Si no puede caminar, tendrán que cargarlo. Eviten los enfrentamientos: después de ustedes todavía hay gente que tiene que pasar.",
+      "briefing": "El grupo entró por la escotilla con las cajas y recién abajo notó que faltaba Darío. Ahora están desplegados y no puedo mandar a los mismos de vuelta. Busquen en el refugio provisorio entre Los Leones y Tobalaba. Él sabe llegar ahí si pierde contacto. Les doy tres bombas de humo y un inhibidor con veinte minutos de batería. Si no puede caminar, tendrán que cargarlo. Eviten los enfrentamientos: después de ustedes todavía hay gente que tiene que pasar. Con el enlace de Jiménez confirmado, el relevo de Tobalaba también puede entregarles el equipo. Si están cerca de Los Leones, prepárense ahí; no hace falta venir hasta Vicuña antes de buscarlo.",
       "cargo": {},
       "issued": {
         "smoke": 3,
@@ -1289,7 +1289,17 @@
         "jimenez-01"
       ],
       "lead": "Entrega el enlace de respaldo. Con esa comunicación, operaciones podrá confiarte una búsqueda más larga.",
-      "introduction": "El enlace quedó entregado. Adasme puede coordinar ahora la búsqueda y el regreso de un operativo. Reserva suministros para la ida y la vuelta."
+      "introduction": "El enlace quedó entregado. Adasme coordina la búsqueda y el regreso de Darío. Puedes recibir el equipo en Vicuña Mackenna o en el relevo de Tobalaba, según dónde te encuentres.",
+      "entry_points": [
+        {
+          "node": "vicuna",
+          "index": 0
+        },
+        {
+          "node": "tobalaba",
+          "index": 12
+        }
+      ]
     },
     "romero-01": {
       "id": "romero-01",

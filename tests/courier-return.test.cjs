@@ -2,7 +2,7 @@ const test=require('node:test'),assert=require('node:assert/strict');
 const {setup,extraction,finish}=require('./courier-return-fixtures.cjs');
 function material(w){return JSON.stringify({credits:w.credits,crew:w.crew,stock:w.stock,regions:w.regions,paid:w.paid,completed:w.completed,run:w.run});}
 test('a return exists only after the confirmed extraction, never at rescue, failure or abandonment',async()=>{
- const {E,d}=await setup();let w=E.createWorld(d,{seed:1});assert.equal(E.returnStatus(w),null);w.progression.known.push('adasme-01');w=E.start(d,w,'adasme-01');w.run.rescued={mode:'carry',assisted:true,ammoGiven:0};assert.equal(E.returnStatus(E.restore(d,E.serialize(w))),null);w.run.status='failed';assert.equal(E.returnStatus(E.abandon(d,w)),null);assert.throws(()=>E.answerReturn(d,w,'rest'));
+ const {E,d}=await setup();let w=E.createWorld(d,{seed:1});assert.equal(E.returnStatus(w),null);w.progression.known.push('adasme-01');w.location='vicuna';w=E.start(d,w,'adasme-01');w.run.rescued={mode:'carry',assisted:true,ammoGiven:0};assert.equal(E.returnStatus(E.restore(d,E.serialize(w))),null);w.run.status='failed';assert.equal(E.returnStatus(E.abandon(d,w)),null);assert.throws(()=>E.answerReturn(d,w,'rest'));
 });
 test('real extractions preserve walking/carrying, aid and ammunition in a durable receipt',async()=>{
  const modes=new Set();for(const seed of [1,4,18,2130])for(const aid of ['assist-ammo','none']){
@@ -36,7 +36,7 @@ test('malformed facts and unsupported outcomes are rejected; reset clears the re
 });
 
 test('arriving at Los Héroes through another completed assignment opens the message immediately',async()=>{
- const {E,d,w}=await extraction();let next=E.answerReturn(d,w,'rest');next=finish(E,d,E.start(d,next,'ana-01'));assert.equal(next.location,'heroes');assert.equal(E.returnStatus(next).stage,'followup');assert.equal(E.returnScene(next).choices[0].id,'acknowledge');
+ const {E,d,w}=await extraction();let next=E.answerReturn(d,w,'rest');next=finish(E,d,E.travelToMission(d,next,'ana-01'));next=finish(E,d,E.start(d,next,'ana-01'));assert.equal(next.location,'heroes');assert.equal(E.returnStatus(next).stage,'followup');assert.equal(E.returnScene(next).choices[0].id,'acknowledge');
 });
 test('a saved fact cannot silently contradict the recorded extraction outcome',async()=>{
  const {E,d,w}=await extraction();w.aftermath.rescueReturn.outcome.assisted=!w.aftermath.rescueReturn.outcome.assisted;assert.throws(()=>E.restore(d,E.serialize(w)),/contradice/);

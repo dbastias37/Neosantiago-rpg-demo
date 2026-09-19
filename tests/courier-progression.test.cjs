@@ -1,5 +1,5 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
-const {connectedWorld}=require('./courier-fixtures.cjs');
+const {connectedWorld,atOrigin}=require('./courier-fixtures.cjs');
 const source=JSON.parse(fs.readFileSync(path.join(__dirname,'../extensions/mensajeros/production.json')));
 async function setup(){const E=await import('../extensions/mensajeros/production.mjs');return {E,d:E.prepare(source)};}
 function finish(E,d,w,choice){
@@ -16,7 +16,7 @@ function finish(E,d,w,choice){
  }
  assert.equal(w.run.status,'completed',w.run.log.join('\n'));return w;
 }
-function deliver(E,d,w,id,choice){if(d.routes[d.missions[id].route].nodes[0]==='heroes'&&!E.atHeroes(d,w))w=finish(E,d,E.travelHeroes(d,w));return finish(E,d,E.start(d,w,id),choice);}
+function deliver(E,d,w,id,choice){if(!E.atMissionOrigin(d,w,id))w=finish(E,d,E.travelToMission(d,w,id));return finish(E,d,E.start(d,w,id),choice);}
 test('fresh team sees only the two-leg local job, with distant missions enforced in the engine',async()=>{
  const {E,d}=await setup(),w=E.createWorld(d,{seed:1});assert.deepEqual(E.knownMissions(d,w).map(m=>m.id),['relevo-01']);assert.deepEqual(new Set(E.knownNodes(d,w)),new Set(['heroes','moneda']));
  for(const id of Object.keys(d.missions).filter(id=>id!=='relevo-01'))assert.throws(()=>E.start(d,w,id),/contacto/);
@@ -36,15 +36,15 @@ test('either nearby delivery opens Ana: no mandatory completion of both branches
  }
 });
 test('an uninterrupted new-game chain reaches the north, workshops, relay and rescue without deadlocks',async()=>{
- const {E,d}=await setup();let w=E.createWorld(d,{seed:1});
+ const {E,d}=await setup();for(const seed of [1,4,18,2130]){let w=E.createWorld(d,{seed});
  for(const id of ['relevo-01','romero-01','ana-01','beatriz-01','guzman-01','jimenez-01','adasme-01','morales-01']){
   assert.ok(E.missionOpen(d,w,id),id);w=deliver(E,d,w,id);assert.equal(w.paid.filter(x=>x===id).length,1);
  }
- assert.equal(w.paid.length,8);assert.match(E.nextLead(d,w),/conversación de regreso/);assert.ok(w.crew.every(c=>c.hp>0));
+ assert.equal(w.paid.length,8);assert.match(E.nextLead(d,w),/conversación de regreso/);assert.ok(w.crew.every(c=>c.hp>0));}
 });
 test('legacy active, failed and abandoned runs retain route, encounter and retry access without invented payments',async()=>{
  const {E,d}=await setup();for(const status of ['active','failed','abandoned']){
-  let w=E.advance(d,E.start(d,connectedWorld(E,d,{seed:1}),'adasme-01'));w.run.status=status;delete w.progression;
+  let w=E.advance(d,E.start(d,atOrigin(d,connectedWorld(E,d,{seed:1}),'adasme-01'),'adasme-01'));w.run.status=status;delete w.progression;
   const before=structuredClone(w),restored=E.restore(d,JSON.stringify(w));assert.deepEqual(restored.run,before.run);assert.deepEqual(restored.paid,[]);assert.equal(restored.credits,before.credits);assert.ok(E.missionOpen(d,restored,'adasme-01'));assert.ok(!E.missionOpen(d,restored,'jimenez-01'));assert.deepEqual(w,before);
   if(status==='failed')assert.equal(E.retry(d,restored).run.status,'active');
  }
@@ -61,7 +61,7 @@ test('only restored Plaza supplies rest, at the normal duration and once per sto
  const without=structuredClone(w);without.effects=[];assert.throws(()=>E.rest(d,without),/Falta/);without.effects=['guzman-01'];without.run.index=1;without.location='uchile';assert.equal(E.shelteredPlaza(d,without),false);assert.throws(()=>E.rest(d,without),/Falta/);
 });
 test('returning to repaired Plaza acknowledges the delivery and keeps the acknowledgement after reload',async()=>{
- const {E,d}=await setup();let w=deliver(E,d,connectedWorld(E,d,{seed:1}),'guzman-01');w=E.start(d,w,'beatriz-01');w=E.advance(d,w);assert.equal(w.run.pending.to,'plaza');const options=E.options(d,w).filter(o=>E.optionAvailable(w,o));let o=options.find(o=>['continue','scout','jam-skill','avoid'].includes(o.id))||options[0];assert.ok(o);w=E.choose(d,w,o.id);assert.equal(E.here(d,w).id,'plaza');assert.equal(w.run.log.filter(x=>x.includes('La torreta de Plaza')).length,1);w=E.restore(d,E.serialize(w));assert.equal(w.run.log.filter(x=>x.includes('La torreta de Plaza')).length,1);
+ const {E,d}=await setup();let w=deliver(E,d,connectedWorld(E,d,{seed:1}),'guzman-01');w=finish(E,d,E.travelToMission(d,w,'beatriz-01'));w=E.start(d,w,'beatriz-01');w=E.advance(d,w);assert.equal(w.run.pending.to,'plaza');const options=E.options(d,w).filter(o=>E.optionAvailable(w,o));let o=options.find(o=>['continue','scout','jam-skill','avoid'].includes(o.id))||options[0];assert.ok(o);w=E.choose(d,w,o.id);assert.equal(E.here(d,w).id,'plaza');assert.equal(w.run.log.filter(x=>x.includes('La torreta de Plaza')).length,1);w=E.restore(d,E.serialize(w));assert.equal(w.run.log.filter(x=>x.includes('La torreta de Plaza')).length,1);
 });
 test('reset removes discoveries and infrastructure; malformed discovery saves are rejected',async()=>{
  const {E,d}=await setup(),w=E.createWorld(d,{seed:1});for(const patch of [{known:['missing']},{visited:['missing']},{version:99},{known:['relevo-01','relevo-01']}]){const bad=structuredClone(w);Object.assign(bad.progression,patch);assert.throws(()=>E.restore(d,JSON.stringify(bad)),/Progreso/);}assert.deepEqual(w.effects,[]);assert.deepEqual(w.progression.known,['relevo-01']);

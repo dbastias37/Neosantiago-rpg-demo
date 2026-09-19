@@ -1,11 +1,11 @@
-const {connectedWorld}=require('./courier-fixtures.cjs');
+const {connectedWorld,atOrigin}=require('./courier-fixtures.cjs');
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const {parseHTML}=require('linkedom');
 const root=path.resolve(__dirname,'..');
 async function battle(saved){
  const E=await import('../extensions/mensajeros/production.mjs'),data=E.prepare(JSON.parse(fs.readFileSync(root+'/extensions/mensajeros/production.json')));
  let world=saved,stored='',errors=[],refreshes=0;
- if(!world){for(let seed=0;seed<100;seed++){world=E.advance(data,E.start(data,connectedWorld(E,data,{seed}),'adasme-01'));if(world.run.pending.category==='hostile')break;}world=E.choose(data,world,'fight');}
+ if(!world){for(let seed=0;seed<100;seed++){world=E.advance(data,E.start(data,atOrigin(data,connectedWorld(E,data,{seed}),'adasme-01'),'adasme-01'));if(world.run.pending.category==='hostile')break;}world=E.choose(data,world,'fight');}
  const {document,window}=parseHTML(fs.readFileSync(root+'/neosantiago-demo.html','utf8'));
  window.HTMLElement.prototype.focus=function(){};
  Object.defineProperty(window.HTMLElement.prototype,'clientWidth',{configurable:true,get(){return /Units$/.test(this.id)?400:800}});

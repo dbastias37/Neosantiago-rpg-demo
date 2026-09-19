@@ -8,7 +8,7 @@ export function refreshProgression(data,world){
   if((!requirements.length||requirements.some(id=>world.paid.includes(id)))&&!p.known.includes(m.id))p.known.push(m.id);
  }
  const r=world.run,route=r&&(data.routes[(data.missions[r.mission]||data.journeys[r.mission])?.route]);
- const visited=[world.location,...(route?route.nodes.slice(0,r.index+1):[])];
+ const visited=[world.location,...(route?route.nodes.slice(r.startIndex||0,r.index+1):[])];
  for(const id of visited)if(data.nodes[id]&&!p.visited.includes(id))p.visited.push(id);
  return world;
 }

@@ -1,5 +1,5 @@
 const fs=require('node:fs'),path=require('node:path');
-const {connectedWorld}=require('./courier-fixtures.cjs');
+const {connectedWorld,atOrigin}=require('./courier-fixtures.cjs');
 exports.setup=async()=>{const E=await import('../extensions/mensajeros/production.mjs');return {E,d:E.prepare(JSON.parse(fs.readFileSync(path.join(__dirname,'../extensions/mensajeros/production.json'))))};};
 function finish(E,d,source,{aid='assist',fight=false}={}){
  let w=source,fought=false;
@@ -17,4 +17,4 @@ function finish(E,d,source,{aid='assist',fight=false}={}){
  if(w.run.status!=='completed')throw Error(w.run.log.join('\n'));return w;
 }
 exports.finish=finish;
-exports.extraction=async function(options={}){const {E,d}=await exports.setup();return {E,d,w:finish(E,d,E.start(d,connectedWorld(E,d,{seed:options.seed??2130}),'adasme-01'),options)};};
+exports.extraction=async function(options={}){const {E,d}=await exports.setup();return {E,d,w:finish(E,d,E.start(d,atOrigin(d,connectedWorld(E,d,{seed:options.seed??2130}),'adasme-01'),'adasme-01'),options)};};

@@ -1,4 +1,4 @@
-const {connectedWorld}=require('./courier-fixtures.cjs');
+const {connectedWorld,atOrigin}=require('./courier-fixtures.cjs');
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const {parseHTML}=require('linkedom'),root=path.resolve(__dirname,'..');
 async function profile(saved){
@@ -42,7 +42,7 @@ test('shared transfer quantity, confirmation, healing, equipment and skills pers
  const saved=a.E.restore(a.data,a.stored()),reload=await profile(saved);assert.equal(reload.world().crew[0].equipment.body,'vestTactical');assert.equal(reload.world().crew[0].hp,42);assert.ok(reload.world().crew[0].skills.includes('trail'));assert.deepEqual(a.errors,[]);
 });
 test('full bags reject quantity transfers atomically and protected supplies cannot be discarded',async()=>{
- const a=await profile();let w=a.E.start(a.data,a.world(),'guzman-01'),before=JSON.stringify(w),cargo=JSON.stringify(w.run.cargo);
+ const a=await profile();let w=a.E.start(a.data,atOrigin(a.data,a.world(),'guzman-01'),'guzman-01'),before=JSON.stringify(w),cargo=JSON.stringify(w.run.cargo);
  assert.throws(()=>a.E.discardItem(a.data,w,'rocio','rotor'),/protegido/);assert.throws(()=>a.E.discardItem(a.data,w,'tomas','water'),/protegido/);
  assert.equal(JSON.stringify(w),before);w.run.party[1].bag=[{id:'scrap',qty:a.E.bagCapacity(a.data,w.run.party[1])-1}];before=JSON.stringify(w);
  assert.throws(()=>a.E.transfer(a.data,w,'rocio','tomas','ammo9',2),/espacio/);assert.equal(JSON.stringify(w),before);
@@ -51,7 +51,7 @@ test('full bags reject quantity transfers atomically and protected supplies cann
  assert.equal(a.E.restore(a.data,a.E.serialize(w)).run.party[0].bag.find(x=>x.id==='ammo9').qty,2);
 });
 test('medkits heal from the shared profile and choices retain protected mission supplies',async()=>{
- const a=await profile();a.world().crew[0].bag.push({id:'medkit',qty:1});let w=a.E.start(a.data,a.world(),'adasme-01');const p=w.run.party.find(p=>p.bag.some(x=>x.id==='medkit'));
+ const a=await profile();a.world().crew[0].bag.push({id:'medkit',qty:1});let w=a.E.start(a.data,atOrigin(a.data,a.world(),'adasme-01'),'adasme-01');const p=w.run.party.find(p=>p.bag.some(x=>x.id==='medkit'));
  assert.ok(p);p.hp-=30;const hp=p.hp,cargo=JSON.stringify(w.run.cargo),stock=w.run.supplies.medkit;
  w=a.E.useItem(a.data,w,p.id,'medkit');assert.equal(w.run.party.find(x=>x.id===p.id).hp,hp+24);assert.equal(w.run.supplies.medkit||0,stock-1);assert.equal(JSON.stringify(w.run.cargo),cargo);
 });

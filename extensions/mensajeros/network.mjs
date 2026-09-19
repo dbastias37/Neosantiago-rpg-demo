@@ -12,6 +12,18 @@ export function reversePath(path) {
  }
  return 'M'+point.join(' ')+segments.reverse().map(s=>s.control?'Q'+s.control.join(' ')+' '+s.from.join(' '):'L'+s.from.join(' ')).join('');
 }
+export function entryPoints(data,id){
+ const m=data.missions[id];return m.entry_points||[{node:data.routes[m.route].nodes[0],index:0}];
+}
+function shortestPath(graph,origin,destination){
+ const queue=[{node:origin,edges:[],minutes:0}],visited=new Set();
+ while(queue.length){
+  queue.sort((a,b)=>a.minutes-b.minutes);const next=queue.shift();if(visited.has(next.node))continue;visited.add(next.node);
+  if(next.node===destination)return next;
+  for(const edge of graph.get(next.node).values())if(!visited.has(edge.to))queue.push({node:edge.to,edges:[...next.edges,edge],minutes:next.minutes+edge.minutes});
+ }
+ return null;
+}
 export function prepareJourneys(data) {
  const graph=new Map(Object.keys(data.nodes).map(id=>[id,new Map()]));
  for(const route of Object.values(data.routes))for(const edge of route.edges){
@@ -24,16 +36,19 @@ export function prepareJourneys(data) {
  data.journeys={};
  for(const origin of graph.keys()){
   if(origin==='heroes')continue;
-  const queue=[{node:origin,edges:[],minutes:0}],visited=new Set();let edges;
-  while(queue.length){
-   queue.sort((a,b)=>a.minutes-b.minutes);const next=queue.shift();if(visited.has(next.node))continue;visited.add(next.node);
-   if(next.node==='heroes'){edges=next.edges;break;}
-   for(const edge of graph.get(next.node).values())if(!visited.has(edge.to))queue.push({node:edge.to,edges:[...next.edges,edge],minutes:next.minutes+edge.minutes});
-  }
+  const path=shortestPath(graph,origin,'heroes'),edges=path?.edges;
   if(!edges)throw Error('Sin recorrido a Los Héroes desde '+origin);
   const id='market-'+origin,route='journey-'+origin;
   data.routes[route]={id:route,nodes:[origin,...edges.map(e=>e.to)],edges};
-  data.journeys[id]={id,type:'travel',origin,route,issuer:'Los Mensajeros',name:'Viaje a Los Héroes',recipient:'Mara y el Armero',portrait:'../../characters/mara-trader.webp',cargo:{},issued:{},test_loadout:{},summary:'Recorre los andenes hasta Los Héroes. El mercado abre al llegar; en el camino puede haber encuentros, combates y saqueo.'};
+  data.journeys[id]={id,type:'travel',origin,destination:'heroes',route,issuer:'Los Mensajeros',name:'Viaje a Los Héroes',recipient:'Mara y el Armero',portrait:'../../characters/mara-trader.webp',cargo:{},issued:{},test_loadout:{},summary:'Recorre los andenes hasta Los Héroes. El mercado abre al llegar; en el camino puede haber encuentros, combates y saqueo.'};
+ }
+ for(const m of Object.values(data.missions))for(const origin of graph.keys()){
+  const points=entryPoints(data,m.id);if(points.some(p=>p.node===origin))continue;
+  const candidates=points.map(point=>({point,path:shortestPath(graph,origin,point.node)})).filter(x=>x.path).sort((a,b)=>a.path.minutes-b.path.minutes);
+  if(!candidates.length)continue;
+  const {point,path}=candidates[0],id='approach-'+m.id+'-'+origin,route='route-'+id;
+  data.routes[route]={id:route,nodes:[origin,...path.edges.map(e=>e.to)],edges:path.edges};
+  data.journeys[id]={id,type:'travel',purpose:'assignment',assignment:m.id,entryIndex:point.index,origin,destination:point.node,route,issuer:m.issuer,name:'Encuentro con '+m.issuer,recipient:m.issuer,portrait:m.portrait,cargo:{},issued:{},test_loadout:{},summary:'Viaja a '+data.nodes[point.node].name+' para preparar «'+m.name+'». Conservas tus heridas y suministros. El plazo comienza cuando aceptes el encargo al llegar.'};
  }
  return data;
 }

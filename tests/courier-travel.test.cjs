@@ -1,10 +1,10 @@
-const {connectedWorld}=require('./courier-fixtures.cjs');
+const {connectedWorld,atOrigin}=require('./courier-fixtures.cjs');
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const {parseHTML}=require('linkedom'),root=path.resolve(__dirname,'..');
 async function session({saved,reduced=false}={}){
  const E=await import('../extensions/mensajeros/production.mjs'),{animateRoute}=await import('../extensions/mensajeros/travel.mjs');
  const raw=JSON.parse(fs.readFileSync(root+'/extensions/mensajeros/production.json')),data=E.prepare(raw);
- const world=saved||E.start(data,connectedWorld(E,data,{seed:2130}),'adasme-01');world.helpSeen=true;
+ const world=saved||E.start(data,atOrigin(data,connectedWorld(E,data,{seed:2130}),'adasme-01'),'adasme-01');world.helpSeen=true;
  const storage=new Map([[data.save_key,E.serialize(world)]]);
  const {document,window}=parseHTML(fs.readFileSync(root+'/extensions/mensajeros/play.html','utf8'));
  window.HTMLElement.prototype.focus=function(){};
@@ -59,7 +59,7 @@ test('resolving an encounter closes its dialog and the next leg still waits for 
 });
 test('choosing combat dismisses the encounter dialog before showing the battle',async()=>{
  const E=await import('../extensions/mensajeros/production.mjs'),data=E.prepare(JSON.parse(fs.readFileSync(root+'/extensions/mensajeros/production.json')));
- let saved;for(let seed=0;seed<100;seed++){saved=E.advance(data,E.start(data,connectedWorld(E,data,{seed}),'adasme-01'));if(saved.run.pending.category==='hostile')break;}
+ let saved;for(let seed=0;seed<100;seed++){saved=E.advance(data,E.start(data,atOrigin(data,connectedWorld(E,data,{seed}),'adasme-01'),'adasme-01'));if(saved.run.pending.category==='hostile')break;}
  const a=await session({saved});a.click();assert.equal(a.document.getElementById('dialog').open,true);
  a.click('[data-choice="fight"]');assert.ok(a.world().run.pending.combat);
  assert.equal(a.document.getElementById('dialog').open,false);
@@ -131,4 +131,22 @@ test('Adasme opens the return scene, postponing does not choose, and reload pres
 test('a later message is available from the main panel and remains readable through Adasme after closing',async()=>{
  const {extraction,finish}=require('./courier-return-fixtures.cjs'),{E,d,w}=await extraction();let saved=finish(E,d,E.travelHeroes(d,E.answerReturn(d,w,'account')));const a=await session({saved}),doc=a.document;
  assert.match(doc.querySelector('#brief [data-return-story]').textContent,/Llegó una respuesta/);a.click('#brief [data-return-story]');assert.match(doc.querySelector('#dialogBody').textContent,/cada caja queda asignada a dos personas/);a.click('[data-return-answer="acknowledge"]');assert.equal(a.world().aftermath.rescueReturn.closed,true);assert.equal(doc.querySelectorAll('[data-return-answer]').length,0);a.click('#dialogBody [data-close]');a.click('#contactsButton');a.click('[data-contact="adasme"]');assert.match(doc.querySelector('#dialogBody').textContent,/Lo que quedó después del regreso/);
+});
+
+test('remote offer previews the approach without moving; arrival exposes acceptance and a fresh assignment clock',async()=>{
+ const {setup,finish}=require('./courier-return-fixtures.cjs'),{E,d:data}=await setup();let saved=finish(E,data,E.start(data,E.createWorld(data,{seed:1}),'relevo-01'));
+ const a=await session({saved,reduced:true}),d=a.document,before=E.serialize(a.world());
+ a.click('#catalogButton');a.click('[data-offer="romero-01"]');assert.ok(!d.querySelector('[data-accept]'));assert.ok(d.querySelector('[data-approach="romero-01"]'));
+ a.click('[data-approach]');assert.match(d.querySelector('#dialogBody').textContent,/Llegar a República/);assert.match(d.querySelector('#dialogBody').textContent,/1 tramos/);assert.match(d.querySelector('#dialogBody').textContent,/cuando lo aceptes/);assert.equal(E.serialize(a.world()),before);
+ a.click('[data-start-approach]');assert.equal(a.world().location,'heroes');assert.equal(a.world().run.kind,'travel');assert.doesNotMatch(d.querySelector('#status').textContent,/Pago estimado/);
+ a.click();await a.frame(0);await a.frame(1000);assert.ok(a.world().run.pending);assert.ok(!d.querySelector('[data-accept]'));
+ const option=E.options(data,a.world()).find(o=>E.optionAvailable(a.world(),o)&&['scout','avoid','continue'].includes(o.id))||E.options(data,a.world()).find(o=>E.optionAvailable(a.world(),o));a.click('[data-choice="'+option.id+'"]');
+ assert.equal(a.world().location,'republica');assert.equal(a.world().run.status,'completed');assert.deepEqual(a.world().paid,['relevo-01']);assert.match(d.querySelector('#travel').textContent,/Llegaste a República/);
+ a.click('#travel [data-offer]');assert.ok(d.querySelector('[data-accept="romero-01"]'));assert.ok(!d.querySelector('[data-approach]'));a.click('[data-accept]');assert.equal(a.world().run.minutes,0);assert.equal(a.world().run.mission,'romero-01');assert.equal(a.world().location,'republica');
+});
+test('Tobalaba acceptance shows only the actual extraction legs, deadline and zero progress after reload',async()=>{
+ const {setup}=require('./courier-return-fixtures.cjs'),{E,d:data}=await setup();let saved=connectedWorld(E,data,{seed:1});saved.location='tobalaba';
+ const a=await session({saved}),d=a.document;a.click('[data-offer="adasme-01"]');assert.match(d.querySelector('#dialogBody').textContent,/116 minutos/);a.click('[data-preview-route]');assert.equal(d.querySelectorAll('.route-list li').length,17);assert.equal(d.querySelector('.route-list li').textContent.includes('Tobalaba'),true);
+ a.click('#catalogButton');a.click('[data-offer="adasme-01"]');a.click('[data-accept]');assert.match(d.querySelector('#travel').textContent,/0\/16/);assert.match(d.querySelector('#status').textContent,/0 \/ 116 min/);assert.equal(d.querySelectorAll('#missionLayer path.route-selected').length,16);
+ const b=await session({saved:a.world()});assert.match(b.document.querySelector('#travel').textContent,/0\/16/);assert.equal(b.world().run.index,12);assert.ok(!b.world().progression.visited.includes('macul'));
 });

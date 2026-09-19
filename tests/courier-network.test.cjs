@@ -1,4 +1,4 @@
-const {connectedWorld}=require('./courier-fixtures.cjs');
+const {connectedWorld,atOrigin}=require('./courier-fixtures.cjs');
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs');
 const source=JSON.parse(fs.readFileSync(require('node:path').join(__dirname,'../extensions/mensajeros/production.json')));
 async function setup(){const E=await import('../extensions/mensajeros/production.mjs');return {E,d:E.prepare(source)}}
@@ -14,7 +14,7 @@ test('Line 4 visits all eleven real intermediate stations in both directions and
  const {E,d}=await setup(),names=['Vicuña Mackenna','Macul','Las Torres','Quilín','Los Presidentes','Grecia','Los Orientales','Plaza Egaña','Simón Bolívar','Príncipe de Gales','Francisco Bilbao','Cristóbal Colón','Tobalaba'];
  const r=d.routes['adasme-oriente'];assert.deepEqual(r.nodes.slice(0,13).map(id=>d.nodes[id].name),names);assert.deepEqual(r.nodes.slice(16).map(id=>d.nodes[id].name),names.toReversed());
  assert.ok(r.edges.filter(e=>e.line==='L4').every(e=>e.kind==='adjacent_station'));assert.equal(r.edges.length,28);
- let w=E.start(d,connectedWorld(E,d,{seed:1}),'jimenez-01');w.run.index=11;w.location='colon';w=E.advance(d,w);
+ let w=E.start(d,atOrigin(d,connectedWorld(E,d,{seed:1}),'jimenez-01'),'jimenez-01');w.run.index=11;w.location='colon';w=E.advance(d,w);
  assert.equal(w.run.pending.to,'tobalaba');assert.equal(w.run.pending.id,'jimenez-frecuencia');assert.ok(E.options(d,w).some(o=>o.id==='passive'));
 });
 test('market travel follows existing connections from every station and respects the Baquedano closure',async()=>{
@@ -62,7 +62,7 @@ function legacy(E){
 }
 test('old pending battles, loot and checkpoint saves migrate without rerolling, resetting HP or charging another leg',async()=>{
  const {E,d}=await setup(),old=legacy(E);let w;
- for(let seed=0;seed<100;seed++){w=E.advance(old,E.start(old,connectedWorld(E,old,{seed}),'adasme-01'));if(w.run.pending.category==='hostile')break;}
+ for(let seed=0;seed<100;seed++){w=E.advance(old,E.start(old,atOrigin(old,connectedWorld(E,old,{seed}),'adasme-01'),'adasme-01'));if(w.run.pending.category==='hostile')break;}
  w=E.choose(old,w,'fight');w=E.choose(old,w,'fire');const combat=structuredClone(w.run.pending.combat),hp=w.run.party.map(c=>c.hp),minutes=w.run.minutes;
  let n=E.restore(d,E.serialize(w));assert.equal(n.run.index,11);assert.equal(n.run.pending.from,'colon');assert.equal(n.run.pending.to,'tobalaba');assert.deepEqual(n.run.pending.combat,combat);assert.deepEqual(n.run.party.map(c=>c.hp),hp);assert.equal(n.run.minutes,minutes);assert.deepEqual(n.run.rolls[11],w.run.rolls[0]);assert.equal(n.run.checkpoint.snapshot.index,0);assert.deepEqual(E.restore(d,E.serialize(n)),n);
  while(w.run.pending.combat.phase==='combat')w=step(E,old,w);w=E.revealLoot(old,w,0);n=E.restore(d,E.serialize(w));assert.equal(n.run.pending.combat.phase,'loot');assert.equal(n.run.pending.combat.enemies[0].searched,true);
@@ -71,10 +71,10 @@ test('old pending battles, loot and checkpoint saves migrate without rerolling, 
 test('legacy extraction progress maps repeated stations correctly and returns through the expanded Line 4',async()=>{
  const {E,d}=await setup(),old=legacy(E),positions=[0,12,13,14,15,16,28];
  for(let index=0;index<7;index++){
-  let w=E.start(old,connectedWorld(E,old,{seed:1}),'adasme-01');w.run.index=index;w.location=old.routes['adasme-oriente'].nodes[index];if(index===6)w.run.status='completed';
+  let w=E.start(old,atOrigin(old,connectedWorld(E,old,{seed:1}),'adasme-01'),'adasme-01');w.run.index=index;w.location=old.routes['adasme-oriente'].nodes[index];if(index===6)w.run.status='completed';
   const n=E.restore(d,E.serialize(w));assert.equal(n.run.index,positions[index]);assert.equal(E.here(d,n).id,E.here(old,w).id);if(index===5)assert.equal(E.nextEdge(d,n).to,'colon');
  }
- let w=E.advance(old,E.start(old,connectedWorld(E,old,{seed:1}),'jimenez-01'));w=E.restore(d,E.serialize(w));assert.equal(w.run.pending.id,'jimenez-frecuencia');assert.equal(w.run.index,11);
+ let w=E.advance(old,E.start(old,atOrigin(old,connectedWorld(E,old,{seed:1}),'jimenez-01'),'jimenez-01'));w=E.restore(d,E.serialize(w));assert.equal(w.run.pending.id,'jimenez-frecuencia');assert.equal(w.run.index,11);
 });
 test('reverse paths retain the metro curves instead of cutting across the map',async()=>{
  const {reversePath}=await import('../extensions/mensajeros/network.mjs');assert.equal(reversePath('M750 204L771 225Q780 234 780 247V278'),'M780 278L780 247Q780 234 771 225L750 204');
@@ -89,7 +89,7 @@ test('random market encounters never borrow the fixed scenes from another assign
  }
 });
 test('a paid legacy extraction retains its original deadline and penalty after the route expansion',async()=>{
- const {E,d}=await setup(),old=legacy(E);let w=E.start(old,connectedWorld(E,old,{seed:1}),'adasme-01');
+ const {E,d}=await setup(),old=legacy(E);let w=E.start(old,atOrigin(old,connectedWorld(E,old,{seed:1}),'adasme-01'),'adasme-01');
  w.run.index=6;w.run.status='completed';w.run.minutes=52;w.run.receipt={gross:70,amount:64,late:12,penalty:6,timeLimit:40,minutes:52};w.credits=64;w.completed['adasme-01']=structuredClone(w.run.receipt);w.paid=['adasme-01'];
  w=E.restore(d,E.serialize(w));assert.deepEqual(E.rewardForecast(d,w),{gross:70,amount:64,late:12,penalty:6,limit:40,minutes:52});assert.equal(w.credits,64);assert.equal(w.run.index,28);
 });
@@ -97,7 +97,7 @@ test('a paid legacy extraction retains its original deadline and penalty after t
 test('north checkpoint approaches and the south corridor cannot silently skip their required encounters',async()=>{
  const {E,d}=await setup();
  for(let seed=1;seed<=100;seed++){
-  let north=E.advance(d,E.start(d,connectedWorld(E,d,{seed}),'beatriz-01'));
+  let north=E.advance(d,E.start(d,atOrigin(d,connectedWorld(E,d,{seed}),'beatriz-01'),'beatriz-01'));
   assert.equal(north.run.pending.to,'plaza');assert.ok(['decision','hostile','opportunity'].includes(north.run.pending.category));
   assert.deepEqual(E.restore(d,E.serialize(north)).run.pending,north.run.pending);
   // Return journeys reverse the south route while retaining encounter requirements.
