@@ -1,3 +1,5 @@
+import {prepareEncounters,restoreEncounters,directEncounter,rememberEncounter} from './encounters.mjs';
+export {encounterText,passageReady,routeWarning,sectorFor,sectors} from './encounters.mjs';
 import {rescueOutcome,refreshAftermath} from './aftermath.mjs';
 export {answerReturn,returnScene,returnStatus} from './aftermath.mjs';
 // Los Mensajeros: transitions, combat, loot, equipment and economy kept separate from the campaign save.
@@ -48,11 +50,11 @@ function ownedParty(data,r){
 export function prepare(data){
  const d=copy(data);for(const m of Object.values(d.missions))m.test_loadout=m.loadout;
  for(const e of Object.values(d.scripted))d.events.push({...e,scripted:true,category:'decision',regions:['centro','oriente','l6']});
- return prepareJourneys(d);
+ return prepareJourneys(prepareEncounters(d));
 }
 export function createWorld(data,{seed=Date.now()}={}){
  const w=Base.createWorld(data,{mode:'laboratory',seed});
- return refreshProgression(data,{...w,aftermath:{version:1,rescueReturn:null},progression:{version:1,known:[],visited:['heroes']},mode:'production',crew:data.crew.map(c=>memberBase(data,{id:c.id,hp:c.maxHp,maxHp:c.maxHp,xp:0,level:1,skills:[],bag:copy(c.bag||[]),equipment:copy(c.equipment||{})})),stock:{},effects:[],helpSeen:false,location:'heroes',hubVisits:0});
+ return refreshProgression(data,{...w,encounters:{version:1,resolved:{}},aftermath:{version:1,rescueReturn:null},progression:{version:1,known:[],visited:['heroes']},mode:'production',crew:data.crew.map(c=>memberBase(data,{id:c.id,hp:c.maxHp,maxHp:c.maxHp,xp:0,level:1,skills:[],bag:copy(c.bag||[]),equipment:copy(c.equipment||{})})),stock:{},effects:[],helpSeen:false,location:'heroes',hubVisits:0});
 }
 export function start(data,source,id){
  need(data.missions[id],'Encargo desconocido.');
@@ -62,7 +64,7 @@ export function start(data,source,id){
  const entry=entryPoints(data,id).find(p=>p.node===source.location);
  need(entry,'Viaja a '+entryPoints(data,id).map(p=>data.nodes[p.node].name).join(' o ')+' antes de aceptar este encargo.');
  const w=Base.start(data,source,id),r=w.run,m=data.missions[id],issued=copy(r.supplies);
- r.startIndex=entry.index;r.index=entry.index;
+ restoreEncounters(w);r.directorVersion=1;r.startIndex=entry.index;r.index=entry.index;
  r.party=copy(w.crew).map(c=>memberBase(data,{...c,hp:Math.max(c.hp,Math.ceil(c.maxHp*.4))}));
  // Migrate any old shared reserve into individual bags before leaving the hub.
  for(const [key,n]of Object.entries(w.stock||{}))distribute(data,r.party,key,n);
@@ -86,6 +88,7 @@ function updateCheckpoint(data,w){
 export function advance(data,source){
  let w=Base.advance(data,source),r=w.run,p=r.pending;r.withdrawn=false;const scene=data.scripted[r.mission+':'+p.edgeIndex];
  if(scene){Object.assign(p,{id:scene.id,category:'decision'});r.rolls[p.edgeIndex]={id:scene.id,category:'decision'};}
+ directEncounter(data,w,source);r.lastEncounter=null;
  if(r.rescued?.mode==='carry'&&r.party.find(x=>x.id==='bruno')?.hp>0&&r.status==='active')r.condition=Math.min(100,r.condition+(has(r.party.find(x=>x.id==='bruno'),'carry')?2:1));
  w.location=p.from;return w;
 }
@@ -107,6 +110,7 @@ export function options(data,w){
  }
  let opts=Base.options(data,w).map(copy);if(p.category==='delivery')opts[0].label=r.mission==='adasme-01'?'Acompañar a Darío hasta Adasme':'Entregar a '+data.missions[r.mission].recipient;
  if(p.category==='hostile'){
+  if(Base.eventFor(data,w)?.mandatory)return [...opts,{id:'withdraw',label:'Volver al andén · el paso seguirá bloqueado'}];
   opts.unshift({id:'scout',label:'Rocío busca un paso silencioso · 1 uso por encargo',requiresCrew:'rocio',once:'scout',limit:has(r.party.find(x=>x.id==='rocio'),'trail')?2:1},{id:'decoy',label:'Distraer con un señuelo · 1 unidad',cost:{decoy:1}});
   if(Base.eventFor(data,w)?.electronic)opts.unshift({id:'jam-skill',label:'Tomás confunde el sensor · 1 uso por encargo',requiresCrew:'tomas',once:'jam'});
   opts.unshift({id:'echo-path',label:'Tomás escucha y encuentra un desvío'+(Base.eventFor(data,w)?.electronic?' · ruido: desgaste 6':' · desgaste 2'),requiresCrew:'tomas',once:'echo',limit:has(r.party.find(x=>x.id==='tomas'),'echo')?2:1});opts.push({id:'withdraw',label:'Retroceder al andén · el paso seguirá bloqueado'});
@@ -123,7 +127,7 @@ function openCombat(data,w){
  p.combat={phase:'combat',actor:r.party.findIndex(x=>x.hp>0),target:0,turn:0,round:1,covered:[],marked:null,enemies:electronic?[enemy('drone','Dron Red UNO',36,'drone.webp',0)]:[enemy('scout','Merodeador',26,'merodeador.webp',0),enemy('guard','Vigía armado',24,'merodeador2.webp',1)]};r.log.push('Contacto armado. La vigilancia del corredor aumenta.');if(p.combat.actor<0)r.status='failed';
 }
 export function target(data,source,index){const w=copy(source),c=w.run?.pending?.combat;need(c?.phase==='combat'&&Number.isInteger(index)&&c.enemies[index]?.hp>0,'Objetivo no disponible.');c.target=index;return w;}
-function arrive(data,w){const r=w.run,p=r.pending;r.history.push({id:p.id,category:p.category,node:p.to});r.index=p.edgeIndex+1;r.pending=null;w.location=Base.here(data,w).id;r.log.push('Llegada a '+Base.here(data,w).name+'.');updateCheckpoint(data,w);}
+function arrive(data,w){const r=w.run,p=r.pending;rememberEncounter(data,w,p,{});r.history.push({id:p.id,category:p.category,node:p.to});r.index=p.edgeIndex+1;r.pending=null;w.location=Base.here(data,w).id;r.log.push('Llegada a '+Base.here(data,w).name+'.');updateCheckpoint(data,w);}
 function retreat(w,wear=0){const r=w.run;r.condition=Math.max(0,r.condition-wear);r.pending=null;r.withdrawn=true;r.status=r.condition?'active':'failed';r.log.push('Retroceden al andén anterior. Conservan carga, heridas y vigilancia; el paso sigue pendiente.');}
 export function hitChance(data,w,id){
  const r=w.run,c=r.pending.combat,a=r.party[c.actor],gear=weapon(data,a);let miss=id==='fire'?.08:.15;
@@ -157,7 +161,7 @@ export function choose(data,source,id){
  need(source.run?.status==='active','No hay un encargo activo.');const option=options(data,source).find(o=>o.id===id);need(option,'Acción no disponible.');need(optionAvailable(source,option),'No se cumplen los requisitos de esta acción.');let w=copy(source),r=w.run,p=r.pending;
  if(p.combat){spend(r,option.cost);return combatTurn(data,w,id);}if(option.combat){openCombat(data,w);return w;}if(id==='withdraw'){time(r,2);retreat(w);return w;}
  if(['scout','jam-skill','decoy','echo-path'].includes(id)){spend(r,option.cost);if(option.once)r.used[option.once]=(Number(r.used[option.once])||0)+1;if(id==='echo-path'){r.condition=Math.max(0,r.condition-(Base.eventFor(data,w)?.electronic?6:2));if(!r.condition){r.status='failed';return w;}}r.evaded++;time(r,2);r.log.push(option.label+'.');arrive(data,w);return w;}
- const wasDelivery=p.category==='delivery',pickup=Base.mission(data,w).pickup,before=copy(r.supplies);w=Base.choose(data,w,id);r=w.run;mirrorChanges(data,r,before);
+ const wasDelivery=p.category==='delivery',pickup=Base.mission(data,w).pickup,before=copy(r.supplies);w=Base.choose(data,w,id);r=w.run;mirrorChanges(data,r,before);if(!r.pending)rememberEncounter(data,w,p,option);
  if(option.flag){r.flags.push(option.flag);r.log.push('Registrado: '+option.label+'.');}if(pickup&&!r.pickupDone&&Base.here(data,w).id===pickup.node){r.cargo=copy(pickup.cargo);r.pickupDone=true;r.log.push('Carga recogida y sellada para el destinatario.');}
  if(wasDelivery&&r.status==='completed'){
   const m=data.missions[r.mission],gross=r.receipt.amount,late=Math.max(0,r.minutes-(r.timeLimit??m.time_limit)),penalty=Math.min(Math.floor(gross*.5),Math.ceil(late/m.late_step_minutes)*m.late_penalty);w.credits-=penalty;r.receipt.amount-=penalty;r.receipt.gross=gross;r.receipt.timeLimit=r.timeLimit??m.time_limit;r.receipt.minutes=r.minutes;r.receipt.late=late;r.receipt.penalty=penalty;r.receipt.provisional=false;r.receipt.effect=m.effect;r.receipt.flags=copy(r.flags);r.receipt.startIndex=r.startIndex||0;
@@ -209,7 +213,7 @@ export function departurePlan(data,w,id){
 }
 function beginTravel(data,source,journey){
  const w=Base.start(data,source,journey.id),r=w.run;
- r.kind='travel';r.travelSerial=w.travelSerial=(w.travelSerial||0)+1;r.party=copy(w.crew);
+ restoreEncounters(w);r.directorVersion=1;r.kind='travel';r.travelSerial=w.travelSerial=(w.travelSerial||0)+1;r.party=copy(w.crew);
  for(const [id,n]of Object.entries(w.stock||{}))distribute(data,r.party,id,n);
  w.stock={};r.ownedStock=partyTotals(r.party);r.borrowedStock={};r.supplies=partyTotals(r.party);
  r.flags=[];r.used={};r.withdrawn=false;r.pickupDone=true;r.combatSerial=0;r.timeLimit=null;r.rewardPenalty=0;
@@ -279,7 +283,7 @@ export function restore(data,text){
  for(const party of [w.crew,w.run?.party,w.run?.checkpoint?.snapshot?.party].filter(Boolean)){
   need(Array.isArray(party)&&party.length===3&&new Set(party.map(x=>x.id)).size===3,'Equipo inválido.');for(const c of party){need(data.crew.some(x=>x.id===c.id)&&Number.isInteger(c.hp)&&c.hp>=0&&c.hp<=c.maxHp&&Number.isInteger(c.level)&&c.level>0&&Number.isInteger(c.xp)&&c.xp>=0,'Estado de Mensajero inválido.');need(Array.isArray(c.bag)&&bagUsed(c)<=bagCapacity(data,c)&&c.bag.every(x=>data.items[x.id]&&Number.isInteger(x.qty)&&x.qty>0),'Mochila inválida.');need(Array.isArray(c.skills)&&new Set(c.skills).size===c.skills.length&&c.skills.length<=c.level&&c.skills.every(id=>{const s=data.skillTrees[c.id]?.find(s=>s.id===id);return s&&(!s.requires||c.skills.includes(s.requires));}),'Habilidades inválidas.');}
  }
- return refreshAftermath(restoreProgression(data,w));
+ return refreshAftermath(restoreProgression(data,restoreEncounters(w)));
 }
 export function craft(){throw Error('Los Mensajeros no pueden fabricar. Compra suministros en Los Héroes.');}
 

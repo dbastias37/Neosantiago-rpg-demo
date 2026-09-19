@@ -6,6 +6,7 @@ function normalizeExpeditionRest(){
   var ledger=restLedger();if(ledger.version!==1||!ledger.nights||typeof ledger.nights!=="object"||Array.isArray(ledger.nights))throw Error("Descanso inválido");
   Object.keys(ledger.nights).forEach(function(key){var n=ledger.nights[key];
     if(!n||!["1","2"].includes(key)||n.day!==Number(key)||!["planning","settled","closed"].includes(n.phase)||![null,"fled","exhausted","morale"].includes(n.returnToRefuge)||typeof n.context!=="string")throw Error("Noche inválida");
+    normalizeNightConversations(n);
     if(n.phase==="closed"&&currentDay()<=n.day)throw Error("Descanso futuro");
     if(n.phase!=="closed"&&state.index!==events.findIndex(function(e){return e.day===n.day+1}))throw Error("Noche fuera de jornada");
     if(n.phase==="planning"){if(n.receipt!==null||n.choice!==null)throw Error("Descanso sin confirmar");}
@@ -37,13 +38,13 @@ function showNight(){
   $("nightShare").classList.toggle("hidden",settled);$("nightShare").textContent=stockCount("food")?"Compartir una ración y descansar":"Descansar con lo que queda";
   $("nightKeep").classList.toggle("hidden",settled||!stockCount("food"));$("nightKeep").textContent="Guardar la comida · energía −8 · moral "+nightForecast("save-food").morale;
   $("nextDay").classList.toggle("hidden",!settled);$("nextDay").textContent=n.returnToRefuge||state.morale<10||state.party.some(function(p){return p.hp<10||p.hunger<10})?"Preparar al equipo en el refugio":"Comenzar el día "+(n.day+1);
-  $("night").classList.remove("hidden");$("nightReading").scrollTop=0;$("nightReading").focus({preventScroll:true});return true;
+  renderNightConversation();$("night").classList.remove("hidden");$("nightReading").scrollTop=0;$("nightReading").focus({preventScroll:true});return true;
 }
 function prepareNight(day,returnToRefuge){
   if(![1,2].includes(day)||state.finished||state.index!==events.findIndex(function(e){return e.day===day+1}))return false;
   var ledger=restLedger();if(ledger.nights[day])return showNight();
   state.inhibitor.active=false;state.inhibitor.remainingMs=0;state.inhibitor.exposed=true;state.inhibitor.needsSync=true;state.inhibitor.exposedMoves=0;
-  ledger.nights[day]={day:day,phase:"planning",returnToRefuge:returnToRefuge||null,choice:null,receipt:null,context:nightContext(day)};
+  ledger.nights[day]={day:day,phase:"planning",returnToRefuge:returnToRefuge||null,choice:null,receipt:null,context:nightContext(day),conversations:{}};nightCompanion=null;
   save();render();renderSignalHud();return showNight();
 }
 function settleNight(mode){
@@ -67,7 +68,7 @@ function continueAfterNight(){
 }
 function nightKeydown(e){
   if($("night").classList.contains("hidden"))return false;
-  if(e.key==="Tab"){var controls=[$("nightReading"),$("nightShare"),$("nightKeep"),$("nextDay")].filter(function(b){return !b.classList.contains("hidden")&&!b.disabled}),first=controls[0],last=controls[controls.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}
+  if(e.key==="Tab"){var controls=[$("nightReading"),...$("nightPeople").querySelectorAll("button"),...$("nightConversation").querySelectorAll("button"),$("nightShare"),$("nightKeep"),$("nextDay")].filter(function(b){return !b.classList.contains("hidden")&&!b.disabled}),first=controls[0],last=controls[controls.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}
   if(e.key==="Escape"||["1","2","3","4"].includes(e.key))e.preventDefault();return true;
 }
 $("nightShare").addEventListener("click",function(){settleNight("share")});

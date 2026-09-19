@@ -19,6 +19,24 @@ async function session({saved,reduced=false}={}){
  await vm.runInContext('(async()=>{'+code+'})()',ctx);
  return {document,data,storage,sampled,world:()=>E.restore(data,storage.get(data.save_key)),click(selector='#advanceButton'){document.querySelector(selector).dispatchEvent(new window.Event('click',{bubbles:true}))},async frame(ms){clock=ms;const batch=frames.splice(0);batch.forEach(fn=>fn(ms));await Promise.resolve();}};
 }
+test('brisk travel stops at a compulsory confrontation and never chooses combat for the player',async()=>{
+ const E=await import('../extensions/mensajeros/production.mjs'),data=E.prepare(JSON.parse(fs.readFileSync(root+'/extensions/mensajeros/production.json')));
+ let w=connectedWorld(E,data,{seed:1});w.location='rondizzoni';w=E.travelToMission(data,w,'guzman-01');
+ const a=await session({saved:w});a.click('#advanceUntilButton');await a.frame(350);await a.frame(500);
+ assert.equal(a.document.getElementById('dialog').open,true);assert.equal(a.world().run.pending.id,'sur-bloqueo');assert.equal(a.world().run.pending.combat,null);assert.equal(a.world().run.index,0);
+ const before=a.storage.get(a.data.save_key);await a.frame(2000);assert.equal(a.storage.get(a.data.save_key),before);assert.ok(a.document.querySelector('[data-choice="fight"]'));
+});
+test('brisk travel crosses consecutive quiet legs without clicks, charges each leg and stops at the next decision',async()=>{
+ const E=await import('../extensions/mensajeros/production.mjs'),data=E.prepare(JSON.parse(fs.readFileSync(root+'/extensions/mensajeros/production.json')));let start;
+ for(let seed=1;seed<200;seed++){
+  let w=connectedWorld(E,data,{seed});w.location='bilbao';start=E.travelToMission(data,w,'jimenez-01');w=E.advance(data,start);if(!E.passageReady(data,w))continue;
+  w=E.advance(data,E.choose(data,w,'continue'));if(E.passageReady(data,w))break;start=null;
+ }
+ assert.ok(start);const a=await session({saved:start});a.click('#advanceUntilButton');
+ for(let clock=0;clock<10000&&!a.document.getElementById('dialog').open;clock+=250)await a.frame(clock);
+ const w=a.world();assert.ok(w.run.index>=2);assert.ok(w.run.pending);assert.equal(E.passageReady(data,w),false);assert.equal(a.document.getElementById('dialog').open,true);
+ assert.equal(w.run.minutes,E.route(data,w).edges.slice(0,w.run.index+1).reduce((n,e)=>n+e.minutes,0));assert.equal(w.run.history.length,w.run.index);
+});
 test('Vicuña–Macul follows the full unfilled path, blinks for 1 second, then opens the encounter once',async()=>{
  const a=await session(),d=a.document,before=a.world().run.minutes;a.click();a.click();
  const marker=d.getElementById('messenger'),travel=d.querySelector('#missionLayer path[data-edge="0"]');
@@ -45,7 +63,7 @@ test('a cancelled journey cannot reveal an encounter after the run changes',asyn
  frames.shift()(900);assert.ok(marker.classList.contains('arriving'));valid=false;frames.shift()(1900);assert.equal(await completed,false);assert.equal(marker.classList.contains('arriving'),false);
 });
 
-test('resolving an encounter closes its dialog and the next leg still waits for travel and arrival',async()=>{
+test('resolving an encounter closes its dialog and a quiet next leg arrives without another confirmation',async()=>{
  const a=await session(),d=a.document;a.click();await a.frame(1800);await a.frame(2800);
  assert.equal(d.getElementById('dialog').open,true);
  a.click('#dialog .choices button:not([disabled])');
@@ -54,8 +72,8 @@ test('resolving an encounter closes its dialog and the next leg still waits for 
  assert.match(d.getElementById('advanceButton').textContent,/Avanzar a/);
  a.click();assert.equal(d.getElementById('dialog').open,false);
  await a.frame(4600);assert.equal(d.getElementById('dialog').open,false);
- await a.frame(5600);assert.equal(d.getElementById('dialog').open,true);
- assert.equal(a.world().run.pending.edgeIndex,1);
+ await a.frame(5600);assert.equal(d.getElementById('dialog').open,false);
+ assert.equal(a.world().run.pending,null);assert.equal(a.world().run.index,2);assert.ok(d.querySelector('.travel-outcome'));assert.match(d.getElementById('travel').textContent,/Controles de la Línea 4/);
 });
 test('choosing combat dismisses the encounter dialog before showing the battle',async()=>{
  const E=await import('../extensions/mensajeros/production.mjs'),data=E.prepare(JSON.parse(fs.readFileSync(root+'/extensions/mensajeros/production.json')));
