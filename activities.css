@@ -15,3 +15,6 @@ html:has(#courierScreen:not(.hidden)),body:has(#courierScreen:not(.hidden)){over
  #refuge .refuge-footer-buttons .primary{max-width:none}
 }
 @media(max-width:620px){.courier-frame-bar{padding:4px 8px}.courier-frame-bar button{min-height:36px;padding:6px 10px;font-size:9px}}
+
+/* The briefing remains readable on short desktop and mobile viewports. */
+.story-prelude{overflow:auto;align-items:flex-start}

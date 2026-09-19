@@ -901,7 +901,7 @@
   <link rel="stylesheet" href="field-upgrades.css?v=3">
   <link rel="stylesheet" href="item-details.css?v=1">
   <link rel="stylesheet" href="loot-crates.css?v=2">
-<link rel="stylesheet" href="activities.css?v=2-responsive">
+<link rel="stylesheet" href="activities.css?v=opening-02-2-responsive">
 </head>
 <body>
   <div class="app">
@@ -1001,11 +1001,11 @@
   <section class="overlay hidden intro-layer" id="gameIntro" role="dialog" aria-modal="true" aria-labelledby="introTitle">
     <article class="modal welcome-modal">
       <figure class="welcome-scene" id="introScene">
-        <img id="introImage" src="backgrounds/day-alameda.webp" alt="La Alameda recuperada por la naturaleza" decoding="async">
-        <figcaption id="introLocation">NeoSantiago · 2130</figcaption>
+        <img id="introImage" src="backgrounds/station-ruins.webp" alt="El andén del Metro convertido en refugio" decoding="async">
+        <figcaption id="introLocation">Antigua Línea 1 · Los Héroes</figcaption>
       </figure>
       <div class="welcome-content">
-        <header class="welcome-head"><p class="kicker" id="introChapter">Prólogo · La superficie</p><h2 id="introTitle">La ciudad que quedó</h2></header>
+        <header class="welcome-head"><p class="kicker" id="introChapter">Prólogo · Los Héroes</p><h2 id="introTitle">Antes de que abran</h2></header>
         <div class="welcome-reading" id="introReading" tabindex="0" aria-label="Relato de introducción">
           <p class="welcome-text" id="introText" aria-hidden="true"></p>
           <p class="welcome-accessible" id="introAccessible" aria-live="polite" aria-atomic="true"></p>
@@ -1018,7 +1018,7 @@
           </div>
           <div class="welcome-links">
             <button class="secondary" id="openGameHelp">Cómo jugar y objetivos</button>
-            <button class="welcome-lore" id="openWorldLore">Leer la historia completa</button>
+            <button class="welcome-lore" id="openWorldLore">Conocer más la historia</button>
           </div>
         </footer>
       </div>
@@ -1046,22 +1046,33 @@
     <article class="modal world-lore-modal">
       <header class="world-lore-head">
         <div>
-          <p class="kicker">Archivo de mundo · Lectura inmersiva</p>
+          <p class="kicker">Conocer más la historia</p>
           <h2 id="worldLoreTitle">Neo Santiago 2130</h2>
-          <p>Una guía extensa construida desde <i>La ciudad de los rotos</i>. El canon literario y las reglas creadas para esta demo aparecen identificados por separado.</p>
+          <p>Empieza por la vida del refugio y el motivo de la expedición. Las otras secciones amplían el mundo de <i>La ciudad de los rotos</i>; puedes volver al juego en cualquier momento.</p>
           <span class="fiction-mark">Universo de ficción · Diego Bastías Alfaro · 2023</span>
         </div>
         <button class="close" id="closeWorldLore" aria-label="Cerrar archivo de mundo">×</button>
       </header>
       <nav class="world-lore-tabs" role="tablist" aria-label="Secciones del archivo de mundo">
-        <button class="active" id="loreTabHistory" role="tab" aria-selected="true">Historia</button>
-        <button id="loreTabTunnels" role="tab" aria-selected="false">Bajo tierra</button>
-        <button id="loreTabGovernance" role="tab" aria-selected="false">Gobernanza y la Red UNO</button>
+        <button class="active" id="loreTabOpening" role="tab" aria-selected="true" aria-controls="lorePanelOpening">Para empezar</button>
+        <button id="loreTabTunnels" role="tab" aria-selected="false">La vida en los túneles</button>
+        <button id="loreTabGovernance" role="tab" aria-selected="false">El control de la ciudad</button>
+        <button id="loreTabHistory" role="tab" aria-selected="false">Cómo llegamos aquí</button>
         <button id="loreTabFactions" role="tab" aria-selected="false">Facciones</button>
         <button id="loreTabExtracts" role="tab" aria-selected="false">Texto original</button>
       </nav>
       <div class="world-lore-scroll" id="worldLoreScroll">
-        <section class="lore-panel" id="lorePanelHistory" role="tabpanel">
+        <section class="lore-panel" id="lorePanelOpening" role="tabpanel" aria-labelledby="loreTabOpening">
+          <header class="lore-panel-head"><div><span class="game-tag">El comienzo del juego · Sin revelar desenlaces</span><h3>Por qué alguien tiene que salir</h3></div><p>No necesitas conocer todas las fechas ni todas las facciones para empezar. Estas son las necesidades que ponen en marcha la expedición.</p></header>
+          <div class="lore-essay">
+            <section><h4>Un lugar al que volver</h4><p>Los Héroes es el refugio desde el que parten Sara, Elías y Noa. Allí se guarda comida, se arregla lo que todavía sirve y se atiende a quienes regresan heridos. Mara prepara suministros; el Armero mantiene las armas. Cada expedición necesita una parte de las reservas que también usan los demás.</p><p>En los túneles del libro, recibir a los cazadores significa volver a comer juntos y saber quién sobrevivió al viaje. Esa espera está detrás de la preparación del grupo: salir tiene sentido porque hay personas que necesitan que vuelvan.</p></section>
+            <section><h4>Lo que cambió esta noche</h4><p>Una voz atravesó una frecuencia de la Red UNO. Dijo «todavía estamos aquí», sin dejar un nombre. La expedición dispone de tres días para investigar. No sabe todavía quién habla, desde dónde ni por qué utiliza la red de quienes vigilan la ciudad.</p><p>Ignorarla puede dejar a alguien sin ayuda. Responder sin cuidado puede revelar a quienes viven ocultos. Ese es el problema con el que empieza la campaña; sus respuestas se descubren jugando.</p></section>
+            <section><h4>Tres personas ante el mismo problema</h4><p><strong>Sara</strong> se ocupa de las heridas y de las personas que encuentran. Pedirle que conserve medicina puede significar pedirle que deje a alguien sin atender.</p><p><strong>Elías</strong> entiende los equipos y busca información. Un dispositivo puede servirle para abrir una puerta y, al mismo tiempo, conectar al grupo con una red que lo rastrea.</p><p><strong>Noa</strong> conoce las rutas y se ocupa de que puedan regresar. Un desvío para ayudar a otro grupo también cambia las condiciones de la vuelta.</p><p>Las decisiones son de la expedición. Sus integrantes tienen motivos distintos para apoyarlas o discutirlas.</p></section>
+            <section><h4>La ciudad también necesita mensajeros</h4><p>Rocío, Tomás y Bruno transportan suministros y ayudan a conectar comunidades. Puedes elegir sus encargos desde el menú de actividades y volver a la campaña después. Ambos equipos tienen guardados y recursos separados; un encargo no adelanta los días de la expedición.</p></section>
+            <section><h4>Si quieres conocer el pasado</h4><p>«La vida en los túneles» explica las costumbres y las necesidades de los Rotos. «El control de la ciudad» presenta la Gobernanza y la Red UNO. «Cómo llegamos aquí» reúne la cronología de la novela.</p><p>Las secciones del libro, especialmente las facciones y los fragmentos originales, revelan secretos que los personajes aún pueden desconocer. Son lecturas opcionales. La señal, esta expedición y sus protagonistas pertenecen a la adaptación jugable.</p><p><a href="https://neo2130.onrender.com/" target="_blank" rel="noopener noreferrer">Leer La ciudad de los rotos, de Diego Bastías Alfaro (abre otra pestaña)</a></p></section>
+          </div>
+        </section>
+        <section class="lore-panel hidden" id="lorePanelHistory" role="tabpanel">
           <header class="lore-panel-head"><div><span class="canon-tag">Canon del libro</span><h3>De Santiago a NeoSantiago</h3></div><p>La novela imagina una ciudad dividida por la vigilancia, la memoria y la forma en que cada grupo decidió sobrevivir.</p></header>
           <div class="world-layers">
             <article class="world-layer"><b>La superficie</b><p>Una capital parcialmente habitable, cubierta por naturaleza, vitrinas vacías, semáforos todavía activos, drones automáticos y máquinas que continúan dando órdenes a una población que ya no existe.</p></article>
@@ -1078,7 +1089,7 @@
               <article class="timeline-event"><time>2045</time><div><b>La Línea 1 se detiene</b><p>El deterioro y los atentados atribuidos a la TAM obligan a suspender el Metro. Sus estaciones se transformarán en refugio.</p></div></article>
               <article class="timeline-event"><time>2047</time><div><b>El gran apagón</b><p>Se aceptan protocolos de Gobernanza Mundial. La resistencia destruye o abandona dispositivos y el país entra en una rebelión prolongada.</p></div></article>
               <article class="timeline-event"><time>Décadas después</time><div><b>La expedición a El Valle</b><p>Cazadores de los túneles roban tecnología y documentos. El desacuerdo sobre implantes divide a la comunidad y origina el destierro de quienes serán llamados merodeadores.</p></div></article>
-              <article class="timeline-event"><time>2130</time><div><b>La ciudad de los Rotos</b><p>Los túneles siguen habitados; la Red UNO vigila el territorio controlado; los merodeadores sobreviven arriba y una señal imposible vuelve a conectar mundos que aprendieron a ignorarse.</p></div></article>
+              <article class="timeline-event"><time>2130</time><div><b>La ciudad de los Rotos</b><p>Los túneles siguen habitados; la Red UNO vigila el territorio controlado y los merodeadores sobreviven arriba. La expedición que sigue una señal es el punto de partida de la adaptación jugable, no un episodio de esta cronología del libro.</p></div></article>
             </div></section>
             <blockquote class="book-quote">“Santiago ya no suena como antes. No hay motores, ni voces, ni pasos apurados cruzando las calles. Solo el crujir de ramas que nacen entre el concreto y el viento que se cuela entre edificios vacíos. Bajo la ciudad, donde antes pasaban trenes llenos de gente, aún hay vida.”<cite>Prólogo · Neo Santiago 2130: La ciudad de los rotos</cite></blockquote>
           </div>
@@ -1103,7 +1114,7 @@
               <div><b>Memoria</b><p>Eliminar textos que pudieran alentar subversión, especialmente filosofía, música y arte.</p></div>
               <div><b>Comercio</b><p>Restringir todo intercambio fuera del sistema establecido.</p></div>
               <div><b>Acceso</b><p>Limitar internet y cualquier forma de recopilar o descargar archivos.</p></div>
-              <div><b>Monitoreo</b><p>SONAR combina pulso, respiración, temperatura y ubicación para estimar amenazas. Infiere estados a partir de señales físicas; no lee pensamientos.</p></div>
+              <div><b>Monitoreo</b><p>El capítulo III atribuye a SONAR el monitoreo de salud, ubicación y pensamientos mediante metales y nanobots. El juego lo adapta como rastreo de señales físicas; esa es la regla que utiliza la expedición.</p></div>
             </div></section>
             <section><h4>Qué es la Red UNO</h4><blockquote class="book-quote">“La Red UNO era una forma de controlar y abastecer a todos los ciudadanos del sector controlado por este organismo. La Red UNO permitía saber dónde se encontraba cada ciudadano con cada latido que su corazón emitía, volviéndolos así una especie de sonar o GPS que controla todas las pequeñas formas de disidencia.”<cite>Capítulo I · La olvidada ciudad de Santiago</cite></blockquote><p>La Red UNO funciona a la vez como identificación, red de beneficios y mecanismo de obediencia. Quien no posee una identidad reconocida no puede acercarse al perímetro. Quien está afiliado no puede ocultar su posición ni oponerse sin ser detectado.</p></section>
             <section><h4>SONAR y la amenaza en la demo</h4><span class="game-tag">Adaptación jugable</span><p>La barra de amenaza representa cuánto ha aprendido la red sobre la expedición. Disparos, transmisiones, rutas expuestas y decisiones arriesgadas elevan ese valor. La oscuridad, el silencio, los accesos analógicos y algunos archivos pueden reducirlo o abrir alternativas.</p><p>Los drones son extensiones mecánicas de la vigilancia y pueden ser dañados o aturdidos mediante EMP. Los agentes son humanos protegidos por equipo de la Red UNO: el pulso electromagnético no los neutraliza y requieren cobertura, daño concentrado o ataques que atraviesen su defensa.</p></section>
@@ -1620,7 +1631,7 @@
   </aside>
   <div class="toast hidden" id="toast" role="status"></div>
 
-  <script src="campaign-v2.js?v=73"></script>
+  <script src="campaign-v2.js?v=opening-02-73"></script>
   <script>
   "use strict";
   var KEY="neosantiago2130_demo_v3";
@@ -1947,11 +1958,11 @@
   </section>
   <button id="fieldCollection" class="field-collection hidden" type="button" aria-haspopup="dialog">Mejoras <span id="fieldCount">0/4</span></button>
 
-  <script src="decision-v2.js?v=4"></script>
+  <script src="decision-v2.js?v=opening-02-4"></script>
   <script src="item-details.js?v=2"></script>
   <script src="combat-common.js?v=1"></script>
   <script src="profile-common.js?v=1"></script>
-  <script src="game-v2.js?v=94-new-game-reset"></script>
+  <script src="game-v2.js?v=95-narrative-opening"></script>
   <script src="field-upgrades.js?v=2"></script>
   <script src="narrative-v3.js?v=3-finale"></script>
   <script src="narrative-chapters.js?v=1"></script>
@@ -1962,14 +1973,17 @@
   <section id="storyPrelude" class="overlay hidden story-prelude" role="dialog" aria-modal="true" aria-labelledby="storyPreludeTitle">
     <article class="story-prelude-card">
       <figure><img src="portraits/npc-varela.webp" alt="Varela, anciana del consejo y memoria del refugio"><figcaption>LOS HÉROES · ARCHIVO DEL CONSEJO</figcaption></figure>
-      <div><p class="kicker">EXPLORACIÓN · HISTORIA PRINCIPAL</p><h2 id="storyPreludeTitle">Lo que espera en la superficie</h2>
-      <p>Varela deja sobre la mesa un registro de voces borradas. La señal que atraviesa la Red UNO no parece una orden automática: alguien sigue intentando hablar desde las instalaciones de superficie.</p>
-      <p>«Sara mantendrá vivo al grupo. Elías podrá entender lo que encuentren. Noa conoce las rutas donde todavía se puede respirar. Tienen tres días para seguir esa voz, descubrir quién la envió y decidir si el refugio debe escuchar la verdad.»</p>
-      <p>Antes de salir, Mara conserva las provisiones y las fichas de intercambio. El Armero mantiene las armas que todavía pueden disparar. Ambos forman parte de esta expedición.</p>
+      <div><p class="kicker">EXPLORACIÓN · HISTORIA PRINCIPAL</p><h2 id="storyPreludeTitle">Lo que sabemos de la voz</h2>
+      <p>Varela acerca la hoja a la lámpara. Ha leído las tres palabras varias veces. Cuando Sara le pregunta si reconoce a quien habló, niega con la cabeza.</p>
+      <p>—Quiero saber quién está ahí. Pero no voy a decirles que es seguro salir. El consejo autorizó tres días. Busquen de dónde viene la voz y qué necesita quien la envió.</p>
+      <p>Noa apoya un dedo en el plano, sobre el acceso al refugio.</p>
+      <p>—¿Y si nos piden que respondamos?</p>
+      <p>—Entonces tendrán que decidir con lo que sepan allá arriba. Desde aquí no puedo hacerlo por ustedes.</p>
+      <p>Sara dobla la hoja y se la pasa a Elías. Antes de salir necesitan recoger las provisiones de Mara, repartir la carga y revisar las armas con el Armero.</p>
       <button class="primary" id="storyPreludeContinue">Continuar a Los Héroes</button></div>
     </article>
   </section>
-  <section id="activityMenu" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="activityTitle"><div class="activity-panel"><p class="activity-kicker">NEO SANTIAGO 2130 · RED DE REFUGIOS</p><h1 id="activityTitle" tabindex="-1">La ciudad sigue viva</h1><p class="activity-intro">Una señal aguarda en la superficie. Bajo ella, las comunidades necesitan seguir conectadas.</p><div class="activity-grid"><article class="activity-card story-card"><span class="activity-number">01 / CAMPAÑA</span><h2>Exploración</h2><p>Sigue la historia de Sara, Elías y Noa. Tus decisiones revelan la señal de la Red UNO y definen el destino de la expedición.</p><small id="storyActivityStatus"></small><button class="primary" id="chooseStory">Continuar historia principal</button></article><article class="activity-card courier-card"><span class="activity-number">02 / LOS MENSAJEROS</span><h2>Encargos</h2><p>Conecta los refugios con Rocío, Tomás y Bruno. Transporta suministros, ayuda a las comunidades y extrae a quienes quedaron aislados.</p><small id="courierActivityStatus">Siete contactos · rutas, decisiones y recompensas</small><button class="primary" id="chooseCouriers">Abrir central de encargos</button></article></div><p class="activity-note">Cada equipo conserva su propio progreso y sus recursos. Puedes cambiar de actividad desde el refugio; la historia espera mientras realizas encargos.</p><button class="secondary" id="activityHelp">¿Cómo se conectan las actividades?</button><p id="activityHelpText" class="hidden" role="status">Exploración es la campaña principal de tres días. Los encargos son viajes independientes de Los Mensajeros: acepta uno, revisa la carga, avanza por las estaciones y entrega al destinatario. Se guardan después de cada acción. Si vuelves a la historia, el encargo queda donde lo dejaste. Nueva partida reinicia solo la campaña; la central tiene su propio reinicio con confirmación.</p></div></section>
+  <section id="activityMenu" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="activityTitle"><div class="activity-panel"><p class="activity-kicker">NEO SANTIAGO 2130 · RED DE REFUGIOS</p><h1 id="activityTitle" tabindex="-1">La ciudad sigue viva</h1><p class="activity-intro">Una expedición busca a quien logró hablar por la Red UNO. Los Mensajeros llevan suministros a quienes siguen esperando bajo tierra.</p><div class="activity-grid"><article class="activity-card story-card"><span class="activity-number">01 / CAMPAÑA</span><h2>Exploración</h2><p>Acompaña a Sara, Elías y Noa durante tres días. Investiga la voz, decide a quién ayudar y qué información llevar de vuelta al refugio.</p><small id="storyActivityStatus"></small><button class="primary" id="chooseStory">Continuar historia principal</button></article><article class="activity-card courier-card"><span class="activity-number">02 / LOS MENSAJEROS</span><h2>Encargos</h2><p>Conecta los refugios con Rocío, Tomás y Bruno. Transporta suministros, ayuda a las comunidades y extrae a quienes quedaron aislados.</p><small id="courierActivityStatus">Siete contactos · rutas, decisiones y recompensas</small><button class="primary" id="chooseCouriers">Abrir central de encargos</button></article></div><p class="activity-note">Cada equipo conserva su propio progreso y sus recursos. Puedes cambiar de actividad desde el refugio; la historia espera mientras realizas encargos.</p><button class="secondary" id="activityHelp">¿Cómo se conectan las actividades?</button><p id="activityHelpText" class="hidden" role="status">Exploración es la campaña principal de tres días. Los encargos son viajes independientes de Los Mensajeros: acepta uno, revisa la carga, avanza por las estaciones y entrega al destinatario. Se guardan después de cada acción. Si vuelves a la historia, el encargo queda donde lo dejaste. Nueva partida reinicia la campaña y los encargos. Dentro de la central también puedes reiniciar solo Los Mensajeros, con confirmación.</p></div></section>
 <section id="courierScreen" class="overlay hidden" role="dialog" aria-modal="true" aria-label="Los Mensajeros"><header class="courier-frame-bar"><span>LOS MENSAJEROS / ENCARGOS</span><button class="secondary" id="courierReturn">Volver a actividades</button></header><iframe id="courierFrame" title="Central de encargos y mapa de refugios" loading="lazy"></iframe></section>
 <script src="activities.js?v=4-new-game-reset"></script>
 <script src="mobile-back.js?v=4"></script>
