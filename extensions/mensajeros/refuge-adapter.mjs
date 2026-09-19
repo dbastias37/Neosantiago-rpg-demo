@@ -22,6 +22,7 @@ function render(){
  $('traderName').textContent=arm?'Bruno, el Armero':'Mara, la Comerciante';
  $('traderRole').textContent=arm?'Armero de túnel · taller del refugio':'Intercambista del Andén 4';
  $('traderDialogue').textContent=arm?'“Nada de esto salió entero de una fábrica. Yo elijo lo que todavía sirve y vuelvo a darle propósito.”':'“Yo cambio objetos, no milagros. Descansen, repartan medicina y elijan qué vale más.”';
+ if(!arm&&w.paid.includes('morales-01')&&w.completed['morales-01']?.provisional===false)$('traderDialogue').textContent='«Morales dejó una copia de su informe para Noa. Está junto al plano. Ahora revisen sus mochilas: si necesitan algo para el próximo encargo, vemos qué queda.»';
  for(const [id,active]of [['npcTabMara',!arm],['npcTabArmorer',arm]]){$(id).classList.toggle('active',active);$(id).setAttribute('aria-selected',String(active));}
  $('tradeCredits').textContent=w.credits+' fichas';$('tradeSectionTitle').textContent=arm?'Armas reconstruidas':'Compra y venta';
  $('tradeSectionHint').textContent='Destino de compras: '+name(recipient);
@@ -35,7 +36,7 @@ function render(){
 }
 function message(text){$('refugeMessage').textContent=text;$('refugeMessage').classList.remove('hidden');}
 function transact(fn,...args){if(host.transact(fn,...args)){render();message('Intercambio realizado.');}else message(host.error());}
-$('starterKit').remove();$('refugeActivities').remove();
+$('starterKit').remove();$('refugeActivities').remove();$('worldNewsEntry')?.remove();
 $('refugeRejoin').textContent='Gestionar equipo';$('refugeRejoin').onclick=()=>host.profile(recipient);
 $('refugeParty').previousElementSibling.querySelector('small').textContent='Selecciona quién recibe las compras';
 $('npcTabMara').onclick=()=>{vendor='mara';render();};$('npcTabArmorer').onclick=()=>{vendor='armorer';render();};

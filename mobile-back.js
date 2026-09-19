@@ -24,6 +24,7 @@
   }
 
   var closers = {
+    worldNewsModal: 'closeWorldNews',
     fieldModal: 'fieldBack',
     itemDetailModal: 'closeItemDetails',
     crateModal: 'crateBack',

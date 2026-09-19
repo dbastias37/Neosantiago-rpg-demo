@@ -14,7 +14,7 @@ function session(intro=false){
   // linkedom has no layout engine; model the page's stacking levels explicitly.
   const z={titleScreen:90,drawer:55,worldLoreModal:72,signalWarningModal:73,signalModal:74,
     decisionModal:74,decisionOutcomeModal:75,disassemblyModal:76,npcDialogueModal:68,
-    routeNarrativeModal:69,gameHelpModal:170,refugeHelpModal:170,itemDetailModal:220};
+    routeNarrativeModal:69,gameHelpModal:170,refugeHelpModal:170,worldNewsModal:180,itemDetailModal:220};
   c.getComputedStyle=node=>({zIndex:String(z[node.id]||50)});
   c.newGame();
   if(!intro){while(!c.state.introCompleted){c.revealIntroText();c.advanceGameIntro()}c.resumeStoryActivity();c.finishStoryPrelude();c.continueRefugeHelp();c.acceptStarterKit()}
@@ -39,6 +39,16 @@ function expedition(a){a.ctx.state.refuge.active=false;a.document.getElementById
 function combat(a,enemies=['drone']){
   expedition(a);a.ctx.startCombat({title:'Prueba de regreso',enemies,canFlee:true},{label:'Prueba',_decisionChanges:[]});
 }
+
+test('Back closes the courier report without preparing or spending its departure help',()=>{
+  const a=session(),c=a.ctx;a.arm();
+  c.state.worldContinuity.facts[c.WORLD_MORALES_FACT]={sourceMission:'morales-01',approach:'detour',receivedDay:1,receivedIndex:0,read:false,prepared:false,used:false};
+  c.renderRefuge();c.openWorldNews();const before=JSON.stringify(c.state);
+  assert.equal(a.shown('worldNewsModal'),true);a.back();
+  assert.equal(a.shown('worldNewsModal'),false);assert.equal(a.shown('refuge'),true);
+  assert.equal(JSON.stringify(c.state),before);assert.equal(a.document.getElementById('refuge').hasAttribute('inert'),false);
+  assert.equal(a.document.activeElement.id,'worldNewsButton');
+});
 
 test('Back is armed by interaction, reuses one guard and never reaches the previous site',()=>{
   const a=session(),c=a.ctx;

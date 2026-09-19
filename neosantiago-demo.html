@@ -902,6 +902,7 @@
   <link rel="stylesheet" href="item-details.css?v=1">
   <link rel="stylesheet" href="loot-crates.css?v=2">
 <link rel="stylesheet" href="activities.css?v=opening-02-2-responsive">
+<link rel="stylesheet" href="world-continuity.css?v=1">
 </head>
 <body>
   <div class="app">
@@ -1068,7 +1069,7 @@
             <section><h4>Un lugar al que volver</h4><p>Los Héroes es el refugio desde el que parten Sara, Elías y Noa. Allí se guarda comida, se arregla lo que todavía sirve y se atiende a quienes regresan heridos. Mara prepara suministros; el Armero mantiene las armas. Cada expedición necesita una parte de las reservas que también usan los demás.</p><p>En los túneles del libro, recibir a los cazadores significa volver a comer juntos y saber quién sobrevivió al viaje. Esa espera está detrás de la preparación del grupo: salir tiene sentido porque hay personas que necesitan que vuelvan.</p></section>
             <section><h4>Lo que cambió esta noche</h4><p>Una voz atravesó una frecuencia de la Red UNO. Dijo «todavía estamos aquí», sin dejar un nombre. La expedición dispone de tres días para investigar. No sabe todavía quién habla, desde dónde ni por qué utiliza la red de quienes vigilan la ciudad.</p><p>Ignorarla puede dejar a alguien sin ayuda. Responder sin cuidado puede revelar a quienes viven ocultos. Ese es el problema con el que empieza la campaña; sus respuestas se descubren jugando.</p></section>
             <section><h4>Tres personas ante el mismo problema</h4><p><strong>Sara</strong> se ocupa de las heridas y de las personas que encuentran. Pedirle que conserve medicina puede significar pedirle que deje a alguien sin atender.</p><p><strong>Elías</strong> entiende los equipos y busca información. Un dispositivo puede servirle para abrir una puerta y, al mismo tiempo, conectar al grupo con una red que lo rastrea.</p><p><strong>Noa</strong> conoce las rutas y se ocupa de que puedan regresar. Un desvío para ayudar a otro grupo también cambia las condiciones de la vuelta.</p><p>Las decisiones son de la expedición. Sus integrantes tienen motivos distintos para apoyarlas o discutirlas.</p></section>
-            <section><h4>La ciudad también necesita mensajeros</h4><p>Rocío, Tomás y Bruno transportan suministros y ayudan a conectar comunidades. Puedes elegir sus encargos desde el menú de actividades y volver a la campaña después. Ambos equipos tienen guardados y recursos separados; un encargo no adelanta los días de la expedición.</p></section>
+            <section><h4>La ciudad también necesita mensajeros</h4><p>Rocío, Tomás y Bruno transportan suministros y ayudan a conectar comunidades. Puedes elegir sus encargos desde el menú de actividades y volver a la campaña después. Ambos equipos conservan sus recursos y su avance; un encargo no adelanta los días de la expedición. Si los Mensajeros entregan el informe de Morales en Los Héroes, Noa podrá revisarlo al preparar una salida de la campaña.</p></section>
             <section><h4>Si quieres conocer el pasado</h4><p>«La vida en los túneles» explica las costumbres y las necesidades de los Rotos. «El control de la ciudad» presenta la Gobernanza y la Red UNO. «Cómo llegamos aquí» reúne la cronología de la novela.</p><p>Las secciones del libro, especialmente las facciones y los fragmentos originales, revelan secretos que los personajes aún pueden desconocer. Son lecturas opcionales. La señal, esta expedición y sus protagonistas pertenecen a la adaptación jugable.</p><p><a href="https://neo2130.onrender.com/" target="_blank" rel="noopener noreferrer">Leer La ciudad de los rotos, de Diego Bastías Alfaro (abre otra pestaña)</a></p></section>
           </div>
         </section>
@@ -1287,6 +1288,10 @@
           <section class="refuge-section">
             <div class="refuge-section-head"><h3>Estado del grupo</h3><small>Abre una ficha para curar, fabricar o transferir</small></div>
             <div class="refuge-party" id="refugeParty"></div>
+            <div class="world-news-entry hidden" id="worldNewsEntry">
+              <p id="worldNewsStatus"></p>
+              <button class="secondary" id="worldNewsButton" aria-haspopup="dialog" aria-controls="worldNewsModal">Informe de Morales</button>
+            </div>
           </section>
           <p class="refuge-message hidden" id="refugeMessage" aria-live="polite"></p>
           <section class="refuge-section">
@@ -1962,7 +1967,7 @@
   <script src="item-details.js?v=2"></script>
   <script src="combat-common.js?v=1"></script>
   <script src="profile-common.js?v=1"></script>
-  <script src="game-v2.js?v=95-narrative-opening"></script>
+  <script src="game-v2.js?v=96-world-continuity"></script>
   <script src="field-upgrades.js?v=2"></script>
   <script src="narrative-v3.js?v=3-finale"></script>
   <script src="narrative-chapters.js?v=1"></script>
@@ -1983,9 +1988,22 @@
       <button class="primary" id="storyPreludeContinue">Continuar a Los Héroes</button></div>
     </article>
   </section>
-  <section id="activityMenu" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="activityTitle"><div class="activity-panel"><p class="activity-kicker">NEO SANTIAGO 2130 · RED DE REFUGIOS</p><h1 id="activityTitle" tabindex="-1">La ciudad sigue viva</h1><p class="activity-intro">Una expedición busca a quien logró hablar por la Red UNO. Los Mensajeros llevan suministros a quienes siguen esperando bajo tierra.</p><div class="activity-grid"><article class="activity-card story-card"><span class="activity-number">01 / CAMPAÑA</span><h2>Exploración</h2><p>Acompaña a Sara, Elías y Noa durante tres días. Investiga la voz, decide a quién ayudar y qué información llevar de vuelta al refugio.</p><small id="storyActivityStatus"></small><button class="primary" id="chooseStory">Continuar historia principal</button></article><article class="activity-card courier-card"><span class="activity-number">02 / LOS MENSAJEROS</span><h2>Encargos</h2><p>Conecta los refugios con Rocío, Tomás y Bruno. Transporta suministros, ayuda a las comunidades y extrae a quienes quedaron aislados.</p><small id="courierActivityStatus">Siete contactos · rutas, decisiones y recompensas</small><button class="primary" id="chooseCouriers">Abrir central de encargos</button></article></div><p class="activity-note">Cada equipo conserva su propio progreso y sus recursos. Puedes cambiar de actividad desde el refugio; la historia espera mientras realizas encargos.</p><button class="secondary" id="activityHelp">¿Cómo se conectan las actividades?</button><p id="activityHelpText" class="hidden" role="status">Exploración es la campaña principal de tres días. Los encargos son viajes independientes de Los Mensajeros: acepta uno, revisa la carga, avanza por las estaciones y entrega al destinatario. Se guardan después de cada acción. Si vuelves a la historia, el encargo queda donde lo dejaste. Nueva partida reinicia la campaña y los encargos. Dentro de la central también puedes reiniciar solo Los Mensajeros, con confirmación.</p></div></section>
+  <section id="activityMenu" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="activityTitle"><div class="activity-panel"><p class="activity-kicker">NEO SANTIAGO 2130 · RED DE REFUGIOS</p><h1 id="activityTitle" tabindex="-1">La ciudad sigue viva</h1><p class="activity-intro">Una expedición busca a quien logró hablar por la Red UNO. Los Mensajeros llevan suministros a quienes siguen esperando bajo tierra.</p><div class="activity-grid"><article class="activity-card story-card"><span class="activity-number">01 / CAMPAÑA</span><h2>Exploración</h2><p>Acompaña a Sara, Elías y Noa durante tres días. Investiga la voz, decide a quién ayudar y qué información llevar de vuelta al refugio.</p><small id="storyActivityStatus"></small><button class="primary" id="chooseStory">Continuar historia principal</button></article><article class="activity-card courier-card"><span class="activity-number">02 / LOS MENSAJEROS</span><h2>Encargos</h2><p>Conecta los refugios con Rocío, Tomás y Bruno. Transporta suministros, ayuda a las comunidades y extrae a quienes quedaron aislados.</p><small id="courierActivityStatus">Siete contactos · rutas, decisiones y recompensas</small><button class="primary" id="chooseCouriers">Abrir central de encargos</button></article></div><p class="activity-note">Cada equipo conserva sus recursos y su avance. El informe de Morales puede llegar a la expedición: entrégalo y revísalo con Noa en el refugio. La historia espera mientras realizas encargos.</p><button class="secondary" id="activityHelp">¿Cómo se conectan las actividades?</button><p id="activityHelpText" class="hidden" role="status">Exploración es la campaña principal de tres días. Los encargos son viajes independientes de Los Mensajeros: acepta uno, revisa la carga, avanza por las estaciones y entrega al destinatario. Se guardan después de cada acción. Si vuelves a la historia, el encargo queda donde lo dejaste. La expedición conserva los informes que ya recibió, incluso si reinicias solo Los Mensajeros; repetir una entrega no vuelve a conceder su ayuda. Nueva partida reinicia la campaña y los encargos. Dentro de la central también puedes reiniciar solo Los Mensajeros, con confirmación.</p></div></section>
 <section id="courierScreen" class="overlay hidden" role="dialog" aria-modal="true" aria-label="Los Mensajeros"><header class="courier-frame-bar"><span>LOS MENSAJEROS / ENCARGOS</span><button class="secondary" id="courierReturn">Volver a actividades</button></header><iframe id="courierFrame" title="Central de encargos y mapa de refugios" loading="lazy"></iframe></section>
-<script src="activities.js?v=4-new-game-reset"></script>
-<script src="mobile-back.js?v=4"></script>
+<section id="worldNewsModal" class="overlay hidden story-prelude world-news-modal" role="dialog" aria-modal="true" aria-labelledby="worldNewsTitle" aria-describedby="worldNewsEffect">
+  <article class="story-prelude-card">
+    <figure><img src="portraits/noa.webp" alt="Noa, cazadora de la expedición"><figcaption>LOS HÉROES · UNA COPIA DEL INFORME</figcaption></figure>
+    <div class="world-news-copy">
+      <p class="kicker">Los Mensajeros · Morales · La expedición</p>
+      <h2 id="worldNewsTitle">Lo que vieron en el corredor</h2>
+      <div id="worldNewsReading" class="world-news-reading" tabindex="0" aria-label="Conversación sobre el informe de Morales"><p id="worldNewsText"></p></div>
+      <p id="worldNewsEffect" class="world-news-effect" role="status"></p>
+      <div class="world-news-buttons"><button class="secondary" id="worldNewsClose">Guardar para después</button><button class="primary" id="worldNewsPrepare">Preparar la salida con Noa</button></div>
+    </div>
+  </article>
+</section>
+<script src="world-continuity.js?v=1"></script>
+<script src="activities.js?v=5-world-continuity"></script>
+<script src="mobile-back.js?v=5-world-continuity"></script>
 </body>
 </html>

@@ -1,0 +1,27 @@
+/* The report uses the refuge palette and the existing narrative portrait layout. */
+.world-news-entry{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding-top:9px;border-top:1px solid var(--line)}
+.world-news-entry p{margin:0;color:var(--muted);font-size:11px;line-height:1.5}
+.world-news-entry button{min-height:40px;font-size:10px;white-space:normal}
+.world-news-modal{z-index:180}
+.world-news-modal .story-prelude-card{max-height:calc(100dvh - 60px);grid-template-columns:minmax(180px,.6fr) minmax(0,1.4fr)}
+.world-news-modal figure{min-height:0;overflow:hidden}
+.world-news-modal figure img{position:absolute;inset:0}
+.world-news-modal .world-news-copy{display:flex;flex-direction:column;min-height:0;padding:26px;align-self:stretch}
+.world-news-modal h2{font-size:clamp(24px,3vw,36px);margin:8px 0 12px}
+.world-news-reading{min-height:0;overflow-y:auto;overscroll-behavior:contain}
+.world-news-reading p{font:16px/1.65 Georgia,"Times New Roman",serif;white-space:pre-line;margin:0}
+.world-news-modal .world-news-effect{font-size:12px;line-height:1.5;color:var(--cyan);margin:14px 0 0}
+.world-news-buttons{display:flex;gap:10px;margin-top:14px;flex-shrink:0}
+.world-news-buttons button{margin:0;min-height:44px;white-space:normal}
+.world-news-reading:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+@media(max-width:700px){
+ .world-news-entry{align-items:stretch;flex-direction:column}
+ .world-news-modal .story-prelude-card{grid-template-columns:1fr;grid-template-rows:110px minmax(0,1fr);max-height:calc(100dvh - 20px)}
+ .world-news-modal figure{height:110px;max-height:110px}
+ .world-news-modal figure img{object-position:center 22%}
+ .world-news-modal figcaption{padding:10px}
+ .world-news-modal .world-news-copy{padding:16px}
+ .world-news-reading p{font-size:15px;line-height:1.55}
+ .world-news-modal .kicker{margin:0;font-size:9px}
+ .world-news-buttons{flex-direction:column;gap:7px;margin-top:10px}
+}

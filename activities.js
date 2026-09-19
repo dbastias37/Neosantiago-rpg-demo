@@ -1,12 +1,15 @@
-/* Common entry for the existing story and the courier activity. No campaign state is shared. */
+/* Common entry for the existing story and the courier activity. Inventories remain separate; confirmed courier reports can reach the campaign. */
 function activityVisible(){return !$("activityMenu").classList.contains("hidden")||!$("courierScreen").classList.contains("hidden")||!$("storyPrelude").classList.contains("hidden")}
 function hideActivities(){["activityMenu","courierScreen","storyPrelude"].forEach(function(id){$(id).classList.add("hidden")});document.querySelectorAll('[data-activity-inert]').forEach(function(n){n.removeAttribute('inert');n.removeAttribute('data-activity-inert')})}
 function lockActivityBackground(){document.querySelectorAll('body > .app, body > .overlay, body > .field-collection').forEach(function(n){if(n.id!=='activityMenu'&&n.id!=='courierScreen'&&n.id!=='storyPrelude'&&!n.hasAttribute('inert')){n.setAttribute('inert','');n.setAttribute('data-activity-inert','')}})}
 function openActivityMenu(){
+ if(typeof syncWorldContinuity==='function')syncWorldContinuity();
  var resume=state.activity==='couriers';
  $("courierScreen").classList.add("hidden");$("activityMenu").classList.remove("hidden");$("activityMenu").removeAttribute('inert');lockActivityBackground();
  state.activity=resume?'couriers':'hub';save();
  $("storyActivityStatus").textContent=state.finished?'Expedición terminada · consultar desenlace':state.starterKitGiven?'Partida guardada · día '+currentDay():'Prepara al grupo con Mara en Los Héroes';
+ var report=typeof worldMoralesFact==='function'?worldMoralesFact():null;
+ if(report&&!report.read&&!state.finished)$("storyActivityStatus").textContent+=' · Morales dejó un informe';
  $("activityTitle").focus({preventScroll:true});
 }
 function courierAudioVisible(active){var frame=$('courierFrame');try{if(frame.contentWindow&&frame.contentWindow.NeoCourierVisibility)frame.contentWindow.NeoCourierVisibility(active)}catch(e){}}
@@ -24,11 +27,12 @@ function resetActivityProgress(){
 function openCourierActivity(){
  setSceneAmbience(null);courierAudioVisible(true);
  state.activity='couriers';save();$("activityMenu").classList.add("hidden");$("courierScreen").classList.remove("hidden");
- var frame=$("courierFrame");if(!frame.getAttribute('src'))frame.setAttribute('src','extensions/mensajeros/play.html?v=2-shared-combat');
+ var frame=$("courierFrame");if(!frame.getAttribute('src'))frame.setAttribute('src','extensions/mensajeros/play.html?v=3-world-continuity');
  $("courierReturn").focus({preventScroll:true});
 }
 function returnToActivities(){courierAudioVisible(false);setSceneAmbience('ambience-title',AUDIO_CROSSFADE_MS);state.activity='hub';openActivityMenu()}
 function enterStoryActivity(){
+ if(typeof syncWorldContinuity==='function')syncWorldContinuity();
  hideActivities();state.activity='story';signalLastTick=Date.now();save();render();
  if(state.finished&&state.ending){if(state.summarySeen)showRunSummary();else finish(state.ending)}
  else if(!state.starterKitGiven)openRefuge('start');

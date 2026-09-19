@@ -1,5 +1,7 @@
 # NeoSantiago 2130 · Desarrollo narrativo de la versión 0.2
 
+La segunda entrega ya conecta el informe de Morales con una preparación de salida de la expedición. Alcance, persistencia y límites: [continuidad-0.2-entrega-2.md](continuidad-0.2-entrega-2.md).
+
 ## Entrega 1: entrar en una comunidad antes de recibir una misión
 
 Implementación sobre `main` e40fe8c73d5e5fb1ee62e4ba46abd3b523902b3b. Esta entrega inicia la actualización 0.2; no declara terminada la versión ni reemplaza las etapas ya registradas en `NARRATIVA-ETAPAS.md`.

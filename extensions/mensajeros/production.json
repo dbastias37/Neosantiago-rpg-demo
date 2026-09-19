@@ -1356,16 +1356,16 @@
         "medkit": 1
       },
       "summary": "Reconoce las marcas del corredor central y vuelve con un informe útil.",
-      "briefing": "Quiero saber por dónde están cruzando los merodeadores. Miren las huellas y las marcas cerca de Universidad de Chile. No necesito trofeos: necesito una ruta que podamos usar.",
+      "briefing": "Hay grupos que preguntan por ese cruce antes de salir y yo solo tengo este plano viejo. Miren las huellas cerca de Universidad de Chile y anoten qué pudieron comprobar. Si no pueden acercarse al desvío, observen desde el andén. Necesito distinguir lo que vieron de lo que estamos suponiendo. Dejaré una copia para la expedición en Los Héroes.",
       "reward": {
         "base": 32,
         "stealth_bonus": 0
       },
       "dialogues": {
-        "success": "Con estas marcas podremos guiar a los próximos grupos. Buen recorrido."
+        "success": "Déjenme ver dónde se separan las marcas. Bien: esto sí lo podemos señalar en el plano. Haré una copia para Noa; hay otro grupo preparando su salida. Gracias por volver con las observaciones."
       },
-      "effect": "El informe reduce en uno la vigilancia del corredor central.",
-      "delivery_text": "H. Morales · Los Héroes espera el informe y la carga. La entrega cierra el encargo.",
+      "effect": "El informe reduce en uno la vigilancia del corredor central. Noa podrá revisar una copia en el refugio de la campaña para preparar una salida.",
+      "delivery_text": "Morales despeja una esquina de la mesa para el informe. Señala el plano viejo y pide que le indiquen qué marcas comprobaron en el recorrido. La copia quedará en Los Héroes para el próximo grupo que salga.",
       "pickup": {
         "node": "uchile",
         "cargo": {
@@ -2131,7 +2131,7 @@
     "morales-01:1": {
       "id": "morales-marcas",
       "title": "Huellas que se separan",
-      "text": "Rocío encuentra pisadas junto a marcas de arrastre. Seguirlas permite ubicar el desvío de los merodeadores; observar desde el andén conserva fuerzas.",
+      "text": "Junto al andén, las pisadas se separan de las marcas de arrastre. Hay que acercarse para comprobar a dónde lleva el desvío. Desde aquí pueden observar el cruce sin gastar tantas fuerzas, aunque no alcanzarán a revisar el otro paso. Morales necesitará saber cuál de las dos cosas pudieron comprobar.",
       "choices": [
         {
           "id": "trace",
