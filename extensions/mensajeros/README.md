@@ -1,3 +1,5 @@
+> **Continuidad del proyecto:** [informe vigente de V0.2](../../INFORME-CONTINUIDAD-V0.2.md), con estado implementado, pendientes y contexto para otro chat.
+
 > **Actualización 0.2, entrega 12:** los cuatro primeros encargos se preparan con `corridors.mjs`. `production.json` mantiene sus versiones históricas para restaurar guardados. [Diseño, compatibilidad y pruebas](../../docs/corredores-0.2-entrega-12.md).
 
 > **Producción activa, 18-sep-2026:** el juego carga `play.html`, `play.mjs`, `production.json` y `production.mjs` desde su menú de actividades. [Manual de integración](../../docs/metro-refugios/INTEGRACION-JUGABLE.md). El resto de este archivo conserva la documentación histórica del laboratorio aislado.
