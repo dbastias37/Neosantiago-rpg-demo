@@ -60,7 +60,7 @@ Los criterios de voz, elección informada y autonomía se mantienen documentados
 
 247 pruebas automatizadas aprobadas, incluidas trece nuevas: inicio con un único trabajo, ambas respuestas del relevo, pagos únicos, ausencia de avance al abandonar o reintentar, caminos alternativos hasta Ana, recorrido completo desde cero hasta la extracción, migración de partidas activas/fallidas/abandonadas y recibos antiguos, regreso al mercado, descanso de Plaza sin generar suministros, reconocimiento al volver, datos inválidos, reinicio y catálogo/mapa tras recarga. También se mantienen las pruebas de combate, perfiles, mochilas y continuidad con Noa.
 
-Las pruebas unitarias de combate y economía usan explícitamente un escenario con contactos establecidos, sin inventar pagos ni experiencia. Las pruebas de progresión recorren el juego nuevo sin ese escenario. Sintaxis de módulos y `git diff --check` comprobados.
+Las pruebas unitarias de combate y economía usan explícitamente un escenario con contactos establecidos, sin inventar pagos ni experiencia. Las pruebas de progresión recorren el juego nuevo sin ese escenario. Sintaxis de módulos y `git diff --check` comprobados. La revisión de la versión publicada confirmó la migración de un informe de Morales anterior, el inicio con una única oferta, el mapa de dos estaciones y la lectura en formato vertical de 390 × 844.
 
 ## Siguiente vacío a abordar
 
