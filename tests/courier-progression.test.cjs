@@ -24,7 +24,7 @@ test('fresh team sees only the two-leg local job, with distant missions enforced
 });
 test('both first choices pay once, remember the response and introduce the same nearby jobs without creating their receipts',async()=>{
  const {E,d}=await setup();for(const choice of ['confirm','return-message']){
-  const w=deliver(E,d,E.createWorld(d,{seed:1}),'relevo-01',choice);assert.equal(w.run.combats,0);assert.equal(w.location,'heroes');assert.equal(w.credits,12);assert.deepEqual(new Set(w.run.receipt.opened),new Set(['romero-01','morales-01']));assert.deepEqual(Object.keys(w.completed),['relevo-01']);assert.ok(w.run.receipt.dialogue.includes(choice==='confirm'?'Rocío confirma':'Bruno entrega'));assert.throws(()=>E.start(d,w,'relevo-01'),/entregado/);assert.deepEqual(new Set(w.progression.visited),new Set(['heroes','moneda']));assert.equal(w.run.minutes,choice==='confirm'?12:9);
+  const w=deliver(E,d,E.createWorld(d,{seed:1}),'relevo-01',choice);assert.equal(w.run.combats,0);assert.equal(w.location,'heroes');assert.equal(w.credits,12);assert.deepEqual(new Set(w.run.receipt.opened),new Set(['romero-01','morales-01']));assert.deepEqual(Object.keys(w.completed),['relevo-01']);assert.ok(w.run.receipt.narration.includes(choice==='confirm'?'Rocío confirma':'Bruno entrega'));assert.throws(()=>E.start(d,w,'relevo-01'),/entregado/);assert.deepEqual(new Set(w.progression.visited),new Set(['heroes','moneda']));assert.equal(w.run.minutes,choice==='confirm'?12:9);
  }
 });
 test('accepting, abandoning or retrying the first job never opens contacts',async()=>{

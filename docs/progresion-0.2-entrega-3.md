@@ -25,7 +25,7 @@ La bifurcación inicial importa: se puede ocuparse primero de una reserva médic
 
 ## La escena pequeña y su voz
 
-Morales pide llevar una lista de relevo a La Moneda y volver con una respuesta. Una mujer necesita saber por qué su hermano no llegó. Rocío propone esperar confirmación; Bruno propone llevar la pregunta al regreso. El jugador conoce el tiempo de cada opción. El recibo recuerda lo que eligió, sin un premio moral ni una promesa de relación permanente que aún no existe.
+Morales pide llevar una lista de relevo a La Moneda y volver con una respuesta. Una mujer necesita saber por qué su hermano no llegó. Rocío propone esperar confirmación; Bruno propone llevar la pregunta al regreso. El jugador conoce el tiempo de cada opción. El recibo separa la narración de las palabras de Morales y recuerda lo que eligió, sin un premio moral ni una promesa de relación permanente que aún no existe.
 
 La mujer tiene una necesidad independiente del jugador. Morales debe organizar personas que esperan y personas cansadas; su trabajo no es explicar una interfaz. La voz busca la relación entre vida comunitaria, tareas y preocupación concreta identificada en la lectura de la novela de la primera entrega. Esta escena es material de adaptación creado para el juego, no un episodio atribuido al libro.
 
@@ -60,7 +60,7 @@ Los criterios de voz, elección informada y autonomía se mantienen documentados
 
 247 pruebas automatizadas aprobadas, incluidas trece nuevas: inicio con un único trabajo, ambas respuestas del relevo, pagos únicos, ausencia de avance al abandonar o reintentar, caminos alternativos hasta Ana, recorrido completo desde cero hasta la extracción, migración de partidas activas/fallidas/abandonadas y recibos antiguos, regreso al mercado, descanso de Plaza sin generar suministros, reconocimiento al volver, datos inválidos, reinicio y catálogo/mapa tras recarga. También se mantienen las pruebas de combate, perfiles, mochilas y continuidad con Noa.
 
-Las pruebas unitarias de combate y economía usan explícitamente un escenario con contactos establecidos, sin inventar pagos ni experiencia. Las pruebas de progresión recorren el juego nuevo sin ese escenario. Sintaxis de módulos y `git diff --check` comprobados. La revisión de la versión publicada confirmó la migración de un informe de Morales anterior, el inicio con una única oferta, el mapa de dos estaciones y la lectura en formato vertical de 390 × 844.
+Las pruebas unitarias de combate y economía usan explícitamente un escenario con contactos establecidos, sin inventar pagos ni experiencia. Las pruebas de progresión recorren el juego nuevo sin ese escenario. Sintaxis de módulos y `git diff --check` comprobados. La revisión de la versión publicada confirmó la migración de un informe de Morales anterior, el inicio con una única oferta, el mapa de dos estaciones, la entrega de 12 fichas con apertura de los dos encargos cercanos y la lectura en formato vertical de 390 × 844.
 
 ## Siguiente vacío a abordar
 

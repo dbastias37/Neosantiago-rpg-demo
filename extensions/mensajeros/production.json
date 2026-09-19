@@ -1229,7 +1229,7 @@
         "stealth_bonus": 0
       },
       "dialogues": {
-        "success": "La técnica monta el sensor y espera a que la torreta complete el giro. Después llama al guardia que llevaba toda la noche junto al acceso. «Anda a comer. Ahora podemos turnarnos». Ana aparta una caja del banco: cuando vuelvan, habrá sitio y una ración para el equipo.",
+        "success": "Probamos el giro y la detección. Funcionan. Si vuelve a fallar, se lo avisaremos a Guzmán; no vamos a dejar otra noche a una sola persona cuidando el acceso.",
         "issuer_report": "Los técnicos confirmaron la entrega. Buen trabajo. Esas piezas hacían falta."
       },
       "loadout": {
@@ -1246,7 +1246,8 @@
         "ana-01"
       ],
       "lead": "Resuelve el paso que pide Ana. Los talleres necesitan una recepción segura para sus piezas.",
-      "introduction": "Ana confirmó quién recibirá las piezas. Guzmán puede incorporarte al relevo de los talleres. Es tu primer encargo largo: revisa las paradas antes de salir."
+      "introduction": "Ana confirmó quién recibirá las piezas. Guzmán puede incorporarte al relevo de los talleres. Es tu primer encargo largo: revisa las paradas antes de salir.",
+      "delivery_reaction": "La técnica monta el sensor y espera a que la torreta complete el giro. Después llama al guardia que llevaba toda la noche junto al acceso. «Anda a comer. Ahora podemos turnarnos». Ana aparta una caja del banco: cuando vuelvan, habrá sitio y una ración para el equipo."
     },
     "adasme-01": {
       "id": "adasme-01",
