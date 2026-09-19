@@ -35,6 +35,7 @@ function enterStoryActivity(){
  if(typeof syncWorldContinuity==='function')syncWorldContinuity();
  hideActivities();state.activity='story';signalLastTick=Date.now();save();render();
  if(state.finished&&state.ending){if(state.summarySeen)showRunSummary();else finish(state.ending)}
+ else if(typeof pendingNight==="function"&&pendingNight())showNight();
  else if(!state.starterKitGiven)openRefuge('start');
  else if(state.refuge.active){$('refuge').classList.remove('hidden');renderRefuge();$('refugeActivities').focus({preventScroll:true});}
  else if(typeof resumeCrate==='function'&&resumeCrate())return;

@@ -26,6 +26,7 @@ for(const copy of [true,false])test('continuous campaign through encounters, con
   if(c.routeNarrativeState){if(c.routeNarrativeState.finished){c.advanceRouteNarrative();continue}c.revealRouteNarrativeText();const opts=c.currentRouteNarrativeScene().options;const i=opts.findIndex(o=>!c.reason(o));assert.ok(i>=0);c.selectRouteNarrativeChoice(i);continue}
   if(c.npcDialogueState){c.revealNpcDialogueText();if(c.npcDialogueState.selected){c.closeNpcDialogueAndContinue();continue}const opts=c.npcDialogueState.options;const i=c.state.index===24&&c.npcDialogueState.nodeId==='consent'?(copy?1:3):opts.findIndex(o=>!c.reason(o)&&!o.combat);assert.ok(i>=0);c.selectNpcDialogueChoice(i);continue}
   if(c.activeCrate()){if(c.activeCrate().phase==="waiting"){const timer=a.timers.get(c.crateNoticeTimer);assert.ok(timer);timer.fn();}else c.leaveCrate();continue}
+  if(c.pendingNight()){if(c.pendingNight().phase==="planning")c.settleNight("share");else c.continueAfterNight();continue}
   if(c.pending){c.advance();continue}
   if(c.state.refuge.active){c.acceptStarterKit();c.restAtRefuge();c.rejoinAtRefuge();c.confirmLeaveRefuge();continue}
   visited.add(c.state.index);const choices=c.eventDisplay(c.events[c.state.index],c.state.index).choices;

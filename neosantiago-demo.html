@@ -903,6 +903,15 @@
   <link rel="stylesheet" href="loot-crates.css?v=2">
 <link rel="stylesheet" href="activities.css?v=opening-02-2-responsive">
 <link rel="stylesheet" href="world-continuity.css?v=1">
+<style>
+    #night .night-modal{display:flex;flex-direction:column;width:min(860px,calc(100% - 24px));max-height:calc(100dvh - 24px);overflow:hidden;padding:24px}
+    .night-reading{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding-right:8px}
+    #night .buttons{flex-shrink:0;flex-wrap:wrap}#night .buttons button{flex:1 1 220px}
+    #night .modal-copy{white-space:pre-line;font-size:15px;line-height:1.6}
+    #night .result-chip strong{font-size:14px}#night .result-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    body:has(#night:not(.hidden)){overflow:hidden}
+    @media(max-width:600px){#night .night-modal{padding:16px}#night h2{font-size:25px}#night .buttons{gap:8px;margin-top:12px}#night .buttons button{font-size:11px}#night .result-grid{grid-template-columns:1fr}}
+  </style>
 </head>
 <body>
   <div class="app">
@@ -1233,13 +1242,15 @@
     </div>
   </section>
 
-  <section class="overlay hidden" id="night" role="dialog" aria-modal="true">
-    <div class="modal">
-      <p class="kicker">Fin de jornada</p>
-      <h2 id="nightTitle">La noche cae</h2>
-      <p class="modal-copy" id="nightText"></p>
-      <div class="result-grid" id="nightChanges"></div>
-      <div class="buttons"><button class="primary" id="nextDay">Comenzar el día siguiente</button></div>
+  <section class="overlay hidden" id="night" role="dialog" aria-modal="true" aria-labelledby="nightTitle">
+    <div class="modal night-modal">
+      <header><p class="kicker">Fin de jornada · sin límite de lectura</p><h2 id="nightTitle">Preparar la noche</h2></header>
+      <div id="nightReading" class="night-reading" tabindex="0" aria-label="Conversación y efectos del descanso">
+        <p class="modal-copy" id="nightText"></p>
+        <p class="modal-copy" id="nightExplanation"></p>
+        <div class="result-grid" id="nightChanges"></div>
+      </div>
+      <div class="buttons"><button class="primary" id="nightShare">Compartir y descansar</button><button class="secondary" id="nightKeep">Guardar la comida</button><button class="primary hidden" id="nextDay">Comenzar el día siguiente</button></div>
     </div>
   </section>
 
@@ -1359,6 +1370,7 @@
       <div class="departure-reading">
         <p class="logistics-copy">Lleva comida y agua para el descanso, medicina para las heridas y munición para tus armas. Lo que recuperes al explorar puede servir para fabricar, reparar o intercambiar con Mara.</p>
         <p class="logistics-copy">Al salir, Elías te guiará para ocultar al grupo de la Red UNO. Podrás revisar las mochilas desde las fichas de los personajes.</p>
+        <p class="logistics-copy" id="expeditionReserves"></p>
         <p class="logistics-warning" id="logisticsWarning"></p>
       </div>
       <footer class="logistics-actions"><button class="secondary" id="backToRefuge">Volver al refugio</button><button class="primary" id="confirmLogistics">Avanzar</button></footer>
@@ -1967,7 +1979,8 @@
   <script src="item-details.js?v=2"></script>
   <script src="combat-common.js?v=1"></script>
   <script src="profile-common.js?v=1"></script>
-  <script src="game-v2.js?v=96-world-continuity"></script>
+  <script src="game-v2.js?v=97-expedition-rest"></script>
+  <script src="expedition-rest.js?v=1"></script>
   <script src="field-upgrades.js?v=2"></script>
   <script src="narrative-v3.js?v=3-finale"></script>
   <script src="narrative-chapters.js?v=1"></script>
@@ -2003,7 +2016,7 @@
   </article>
 </section>
 <script src="world-continuity.js?v=1"></script>
-<script src="activities.js?v=5-world-continuity"></script>
+<script src="activities.js?v=6-expedition-rest"></script>
 <script src="mobile-back.js?v=5-world-continuity"></script>
 </body>
 </html>

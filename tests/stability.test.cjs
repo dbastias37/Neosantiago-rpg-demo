@@ -232,7 +232,7 @@ test('three correct signal sequences grant coverage once; stale transitions cann
 test('day transition commits once and the tower closure has no ending selector', () => {
   const a=session(),c=a.ctx;c.state.index=8;c.encounterSaveLocked=true;
   c.pending={ending:null,returnToRefuge:null};c.continuePendingAdvance();
-  assert.equal(c.state.index,9);assert.equal(c.state.stats.rests,1);
+  assert.equal(c.state.index,9);assert.equal(c.state.stats.rests,0);c.settleNight("share");assert.equal(c.state.stats.rests,1);
   const b=boot(a.storage);b.ctx.continueGame();assert.equal(b.ctx.state.stats.rests,1);
   const d=session(),s=d.ctx;s.state.index=26;s.render();
   assert.equal(s.eventDisplay(s.events[26],26).choices.length,0);
