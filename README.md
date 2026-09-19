@@ -8,6 +8,8 @@ Leer primero [INFORME-CONTINUIDAD-V0.2.md](INFORME-CONTINUIDAD-V0.2.md). Reúne 
 
 El historial de entregas está en [NARRATIVA-ETAPAS.md](NARRATIVA-ETAPAS.md). Sus propuestas antiguas deben contrastarse con el informe de continuidad y el código vigente.
 
+La [bibliografía narrativa](docs/BIBLIOGRAFIA-NARRATIVA.md) reúne las fuentes utilizadas, nuevas referencias sobre narrativa coral y decisiones, y galerías visuales para continuar la investigación.
+
 ## Juego
 
 [Abrir Neo Santiago 2130](https://neosantiago-rpg-demo.onrender.com/neosantiago-demo.html). La actividad de encargos se integra desde el menú del juego; su implementación está en `extensions/mensajeros/`.
