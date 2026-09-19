@@ -1,3 +1,4 @@
+import {returnStatus} from './aftermath.mjs';
 // Discovery is separate from payment: opening a contact never fabricates a receipt.
 export function missionOpen(data,world,id){return !!data.missions[id]&&!!world.progression?.known.includes(id);}
 export function refreshProgression(data,world){
@@ -27,6 +28,8 @@ export function knownNodes(data,world){
  return [...new Set([...world.progression.visited,world.location,...routes.flatMap(r=>r.nodes)])];
 }
 export function nextLead(data,world){
+ const aftermath=returnStatus(world);
+ if(aftermath&&aftermath.stage!=='closed')return aftermath.stage==='arrival'?'Darío está a resguardo. Queda pendiente la conversación de regreso con Adasme.':aftermath.stage==='waiting'?'El próximo relevo llevará la respuesta de Darío a Los Héroes. Recorre el regreso para recibirla.':'Llegó la respuesta de Darío. Puedes leerla desde su registro de regreso o consultar a Adasme.';
  const locked=Object.values(data.missions).find(m=>!missionOpen(data,world,m.id)&&(m.requires_any||[]).some(id=>missionOpen(data,world,id)));
  if(!locked)return world.paid.length===Object.keys(data.missions).length?'La red de esta versión está atendida. Puedes revisar sus resultados y regresar a la expedición.':'Los contactos abiertos conservan sus encargos: elige a quién ayudar.';
  return locked.lead;

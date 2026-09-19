@@ -1,3 +1,5 @@
+import {rescueOutcome,refreshAftermath} from './aftermath.mjs';
+export {answerReturn,returnScene,returnStatus} from './aftermath.mjs';
 // Los Mensajeros: transitions, combat, loot, equipment and economy kept separate from the campaign save.
 import {missionOpen,refreshProgression,restoreProgression} from './progression.mjs';
 export {missionOpen,knownMissions,knownNodes,nextLead} from './progression.mjs';
@@ -50,7 +52,7 @@ export function prepare(data){
 }
 export function createWorld(data,{seed=Date.now()}={}){
  const w=Base.createWorld(data,{mode:'laboratory',seed});
- return refreshProgression(data,{...w,progression:{version:1,known:[],visited:['heroes']},mode:'production',crew:data.crew.map(c=>memberBase(data,{id:c.id,hp:c.maxHp,maxHp:c.maxHp,xp:0,level:1,skills:[],bag:copy(c.bag||[]),equipment:copy(c.equipment||{})})),stock:{},effects:[],helpSeen:false,location:'heroes',hubVisits:0});
+ return refreshProgression(data,{...w,aftermath:{version:1,rescueReturn:null},progression:{version:1,known:[],visited:['heroes']},mode:'production',crew:data.crew.map(c=>memberBase(data,{id:c.id,hp:c.maxHp,maxHp:c.maxHp,xp:0,level:1,skills:[],bag:copy(c.bag||[]),equipment:copy(c.equipment||{})})),stock:{},effects:[],helpSeen:false,location:'heroes',hubVisits:0});
 }
 export function start(data,source,id){
  need(data.missions[id],'Encargo desconocido.');
@@ -70,7 +72,7 @@ export function start(data,source,id){
 }
 function updateCheckpoint(data,w){
  const r=w.run;if(r?.status!=='active'||r.pending)return;
- w.location=Base.here(data,w).id;refreshProgression(data,w);
+ w.location=Base.here(data,w).id;refreshProgression(data,w);refreshAftermath(w);
  if(w.location==='plaza'&&w.effects.includes('guzman-01')&&!r.used['plaza-'+r.index]){r.used['plaza-'+r.index]=true;r.log.push('La torreta de Plaza sigue girando. El guardia reconoce al equipo y señala el banco que dejó Ana: hay agua y una ración para descansar sin gastar las propias.');}
  if(Base.mission(data,w).type==='travel'&&r.index===Base.route(data,w).edges.length){
   r.status='completed';r.jammerOn=false;w.crew=copy(r.party);w.hubVisits=(w.hubVisits||0)+1;
@@ -100,7 +102,7 @@ export function options(data,w){
   if(r.party.some(x=>x.id==='tomas'&&x.hp>0))opts.push({id:'guided-retreat',label:'Tomás guía la retirada · desgaste '+(has(r.party.find(x=>x.id==='tomas'),'exit')?2:5)+(Base.eventFor(data,w)?.electronic?' + 4 por ruido':'')});
   opts.push({id:'retreat',label:'Retirada al último andén · desgaste 12'});return opts;
  }
- let opts=Base.options(data,w).map(copy);if(p.category==='delivery')opts[0].label='Entregar a '+data.missions[r.mission].recipient;
+ let opts=Base.options(data,w).map(copy);if(p.category==='delivery')opts[0].label=r.mission==='adasme-01'?'Acompañar a Darío hasta Adasme':'Entregar a '+data.missions[r.mission].recipient;
  if(p.category==='hostile'){
   opts.unshift({id:'scout',label:'Rocío busca un paso silencioso · 1 uso por encargo',requiresCrew:'rocio',once:'scout',limit:has(r.party.find(x=>x.id==='rocio'),'trail')?2:1},{id:'decoy',label:'Distraer con un señuelo · 1 unidad',cost:{decoy:1}});
   if(Base.eventFor(data,w)?.electronic)opts.unshift({id:'jam-skill',label:'Tomás confunde el sensor · 1 uso por encargo',requiresCrew:'tomas',once:'jam'});
@@ -158,10 +160,11 @@ export function choose(data,source,id){
   const m=data.missions[r.mission],gross=r.receipt.amount,late=Math.max(0,r.minutes-m.time_limit),penalty=Math.min(Math.floor(gross*.5),Math.ceil(late/m.late_step_minutes)*m.late_penalty);w.credits-=penalty;r.receipt.amount-=penalty;r.receipt.gross=gross;r.receipt.timeLimit=m.time_limit;r.receipt.minutes=r.minutes;r.receipt.late=late;r.receipt.penalty=penalty;r.receipt.provisional=false;r.receipt.effect=m.effect;r.receipt.flags=copy(r.flags);
   r.receipt.narration=m.delivery_reaction||'';
   if(r.mission==='relevo-01')r.receipt.narration=(r.flags.includes('relevo_confirmado')?'Rocío confirma que el hermano quedó ayudando en el depósito. Morales anota que el próximo grupo debe avisar antes de salir. ':'Bruno entrega la pregunta de la mujer. Morales pide al siguiente relevo que lleve la respuesta: el hermano se quedó ayudando en el depósito. ');
+  if(r.mission==='adasme-01')r.receipt.rescueOutcome=rescueOutcome(r);
   const previouslyOpen=[...w.progression.known];refreshProgression(data,w);r.receipt.opened=w.progression.known.filter(id=>!previouslyOpen.includes(id));w.completed[r.mission]=copy(r.receipt);w.effects.push(r.mission);
   addCombatXp(r,35);w.crew=copy(ownedParty(data,r));w.location=Base.here(data,w).id;if(r.mission==='morales-01')w.regions.centro=Math.max(0,w.regions.centro-1);r.log[r.log.length-1]='Entrega completada · '+r.receipt.amount+' fichas'+(penalty?' tras descontar '+penalty+' por demora':' sin descuento por demora')+'. '+r.receipt.effect;
  }
- refreshProgression(data,w);updateCheckpoint(data,w);return w;
+ refreshProgression(data,w);refreshAftermath(w);updateCheckpoint(data,w);return w;
 }
 export function lootRemaining(w){const c=w.run?.pending?.combat;return c?.phase==='loot'?c.enemies.reduce((n,e)=>n+e.loot.reduce((a,x)=>a+x.qty,0),0):0;}
 export function canLoot(data,w,memberId,itemId){const r=w.run,c=r?.pending?.combat,m=r?.party.find(x=>x.id===memberId);return !!(c?.phase==='loot'&&m?.hp>0&&data.items[itemId]&&bagUsed(m)<bagCapacity(data,m));}
@@ -249,7 +252,7 @@ export function restore(data,text){
  for(const party of [w.crew,w.run?.party,w.run?.checkpoint?.snapshot?.party].filter(Boolean)){
   need(Array.isArray(party)&&party.length===3&&new Set(party.map(x=>x.id)).size===3,'Equipo inválido.');for(const c of party){need(data.crew.some(x=>x.id===c.id)&&Number.isInteger(c.hp)&&c.hp>=0&&c.hp<=c.maxHp&&Number.isInteger(c.level)&&c.level>0&&Number.isInteger(c.xp)&&c.xp>=0,'Estado de Mensajero inválido.');need(Array.isArray(c.bag)&&bagUsed(c)<=bagCapacity(data,c)&&c.bag.every(x=>data.items[x.id]&&Number.isInteger(x.qty)&&x.qty>0),'Mochila inválida.');need(Array.isArray(c.skills)&&new Set(c.skills).size===c.skills.length&&c.skills.length<=c.level&&c.skills.every(id=>{const s=data.skillTrees[c.id]?.find(s=>s.id===id);return s&&(!s.requires||c.skills.includes(s.requires));}),'Habilidades inválidas.');}
  }
- return restoreProgression(data,w);
+ return refreshAftermath(restoreProgression(data,w));
 }
 export function craft(){throw Error('Los Mensajeros no pueden fabricar. Compra suministros en Los Héroes.');}
 

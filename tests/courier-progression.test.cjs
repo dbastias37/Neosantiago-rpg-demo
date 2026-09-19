@@ -40,7 +40,7 @@ test('an uninterrupted new-game chain reaches the north, workshops, relay and re
  for(const id of ['relevo-01','romero-01','ana-01','beatriz-01','guzman-01','jimenez-01','adasme-01','morales-01']){
   assert.ok(E.missionOpen(d,w,id),id);w=deliver(E,d,w,id);assert.equal(w.paid.filter(x=>x===id).length,1);
  }
- assert.equal(w.paid.length,8);assert.match(E.nextLead(d,w),/versión está atendida/);assert.ok(w.crew.every(c=>c.hp>0));
+ assert.equal(w.paid.length,8);assert.match(E.nextLead(d,w),/conversación de regreso/);assert.ok(w.crew.every(c=>c.hp>0));
 });
 test('legacy active, failed and abandoned runs retain route, encounter and retry access without invented payments',async()=>{
  const {E,d}=await setup();for(const status of ['active','failed','abandoned']){

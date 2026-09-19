@@ -1260,7 +1260,7 @@
       "issuer": "Adasme",
       "recipient": "Adasme · Vicuña Mackenna",
       "summary": "Encuentra al operativo incomunicado entre Los Leones y Tobalaba. Lleva provisiones y vuelve con él evitando enfrentamientos.",
-      "briefing": "Venían de recuperar municiones y equipo de defensa electrónica. Al entrar por la escotilla notaron que faltaba uno. Su grupo está en otra misión y no puede volver. Busquen en el refugio provisorio que conocemos. Les doy tres bombas de humo y un inhibidor: tiene veinte minutos de batería. Si no puede caminar, habrá que cargarlo. Eviten las peleas; alertar la ruta pondrá en peligro a los siguientes.",
+      "briefing": "El grupo entró por la escotilla con las cajas y recién abajo notó que faltaba Darío. Ahora están desplegados y no puedo mandar a los mismos de vuelta. Busquen en el refugio provisorio entre Los Leones y Tobalaba. Él sabe llegar ahí si pierde contacto. Les doy tres bombas de humo y un inhibidor con veinte minutos de batería. Si no puede caminar, tendrán que cargarlo. Eviten los enfrentamientos: después de ustedes todavía hay gente que tiene que pasar.",
       "cargo": {},
       "issued": {
         "smoke": 3,
@@ -1271,17 +1271,17 @@
         "stealth_bonus": 30
       },
       "dialogues": {
-        "stealth": "Volvieron con él y no hubo enfrentamientos. Eso era lo que necesitábamos. Les corresponde la recompensa completa.",
-        "combat": "Me alegra que lo hayan traído. Pero los enfrentamientos alertaron el corredor. Habrá más vigilancia en los túneles y afuera. La recompensa será menor, como les advertí.",
-        "carried": "Me dijeron que tuvieron que cargarlo. Gracias por no dejarlo ahí."
+        "stealth": "Avisaré que volvieron sin enfrentamientos. Dejen la carga a un lado; primero vamos a hacerle sitio.",
+        "combat": "Voy a avisar de los enfrentamientos antes de mandar a otro relevo. Ustedes ya lo trajeron. El detalle de lo que pasó puede esperar a que esté atendido.",
+        "carried": "Les ayudo a acomodarlo. Despacio con la pierna."
       },
       "loadout": {
         "food": 3,
         "water": 3,
         "ammo556": 12
       },
-      "effect": "El operativo regresa a Vicuña Mackenna.",
-      "delivery_text": "El compañero llega de regreso a Vicuña Mackenna. Adasme espera el informe y se hace cargo de su atención.",
+      "effect": "Darío queda a resguardo en Vicuña Mackenna. Hay una conversación de regreso pendiente con Adasme; su respuesta continuará cuando el equipo llegue a Los Héroes.",
+      "delivery_text": "En Vicuña Mackenna, Adasme llama a alguien para atender a Darío y aparta las cajas del banco. Él pregunta por su mochila antes de sentarse. Rocío se la deja al alcance. El informe puede esperar a que terminen de acomodarlo.",
       "time_limit": 140,
       "late_step_minutes": 5,
       "late_penalty": 2,

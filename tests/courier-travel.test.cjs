@@ -121,3 +121,14 @@ test('first delivery reveals its two successors in the receipt and map, survives
  a.click('[data-catalog]');a.click('[data-filter="available"]');assert.equal(d.querySelectorAll('#dialogBody [data-offer]').length,2);
  a.click('#resetCouriers');a.click('[data-reset-confirm]');assert.equal(d.querySelectorAll('#dialogBody [data-offer]').length,1);assert.equal(d.querySelectorAll('#missionLayer [role="button"]').length,2);assert.equal(a.world().paid.length,0);
 });
+
+test('Adasme opens the return scene, postponing does not choose, and reload preserves a single response',async()=>{
+ const {extraction}=require('./courier-return-fixtures.cjs'),{w}=await extraction();const a=await session({saved:w}),d=a.document;
+ a.click('#contactsButton');a.click('[data-contact="adasme"]');assert.match(d.querySelector('#dialogBody').textContent,/Después de traer a Darío/);assert.ok(!d.querySelector('#dialogBody [data-offer]'));a.click('#dialogBody [data-close]');assert.equal(a.world().aftermath.rescueReturn.approach,null);
+ a.click('#brief [data-return-story]');a.click('[data-return-answer="rest"]');assert.match(d.querySelector('#dialogBody').textContent,/Una respuesta pendiente/);assert.equal(d.querySelectorAll('[data-return-answer]').length,0);assert.ok(d.querySelector('#dialogBody [data-heroes]'));
+ const b=await session({saved:a.world()});b.click('#brief [data-return-story]');assert.match(b.document.querySelector('#dialogBody').textContent,/deja pendiente la de Darío/);assert.equal(b.world().credits,w.credits);
+});
+test('a later message is available from the main panel and remains readable through Adasme after closing',async()=>{
+ const {extraction,finish}=require('./courier-return-fixtures.cjs'),{E,d,w}=await extraction();let saved=finish(E,d,E.travelHeroes(d,E.answerReturn(d,w,'account')));const a=await session({saved}),doc=a.document;
+ assert.match(doc.querySelector('#brief [data-return-story]').textContent,/Llegó una respuesta/);a.click('#brief [data-return-story]');assert.match(doc.querySelector('#dialogBody').textContent,/cada caja queda asignada a dos personas/);a.click('[data-return-answer="acknowledge"]');assert.equal(a.world().aftermath.rescueReturn.closed,true);assert.equal(doc.querySelectorAll('[data-return-answer]').length,0);a.click('#dialogBody [data-close]');a.click('#contactsButton');a.click('[data-contact="adasme"]');assert.match(doc.querySelector('#dialogBody').textContent,/Lo que quedó después del regreso/);
+});
