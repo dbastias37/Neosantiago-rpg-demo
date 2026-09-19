@@ -23,6 +23,7 @@ function render(){
  $('traderRole').textContent=arm?'Armero de túnel · taller del refugio':'Intercambista del Andén 4';
  $('traderDialogue').textContent=arm?'“Nada de esto salió entero de una fábrica. Yo elijo lo que todavía sirve y vuelvo a darle propósito.”':'“Yo cambio objetos, no milagros. Descansen, repartan medicina y elijan qué vale más.”';
  if(!arm&&w.paid.includes('morales-01')&&w.completed['morales-01']?.provisional===false)$('traderDialogue').textContent='«Morales dejó una copia de su informe para Noa. Está junto al plano. Ahora revisen sus mochilas: si necesitan algo para el próximo encargo, vemos qué queda.»';
+ if(!arm&&w.effects.includes('guzman-01'))$('traderDialogue').textContent='«Ana mandó aviso: ya pudieron relevar al guardia de Plaza. Les dejó un banco y comida para cuando pasen. Aprovechen de descansar allá si lo necesitan; no hace falta que gasten otra ración de la mochila.»';
  for(const [id,active]of [['npcTabMara',!arm],['npcTabArmorer',arm]]){$(id).classList.toggle('active',active);$(id).setAttribute('aria-selected',String(active));}
  $('tradeCredits').textContent=w.credits+' fichas';$('tradeSectionTitle').textContent=arm?'Armas reconstruidas':'Compra y venta';
  $('tradeSectionHint').textContent='Destino de compras: '+name(recipient);

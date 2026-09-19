@@ -1,4 +1,6 @@
-// Routes to the market use only corridors already opened by the assignments.
+// Market returns use the physical corridors in the assignment network.
+// Return travel remains available from a saved location, even before its contacts
+// are introduced, so migration and abandonment cannot strand a team.
 // In particular, the destroyed Baquedano–Los Leones connection is never added.
 export function reversePath(path) {
  const tokens=path.match(/[MLQHV]|-?\d+(?:\.\d+)?/g),segments=[];let i=0,point;

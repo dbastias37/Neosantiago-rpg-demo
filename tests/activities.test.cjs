@@ -1,3 +1,4 @@
+const {connectedWorld}=require('./courier-fixtures.cjs');
 const test=require('node:test'),assert=require('node:assert/strict');const {boot}=require('./runtime-harness.cjs');
 function intro(c){c.newGame();while(!c.state.introCompleted){c.revealIntroText();c.advanceGameIntro()}}
 test('the mission briefing precedes the supply handoff and starts only after the player continues',()=>{const a=boot(),c=a.ctx;intro(c);assert.equal(c.state.activity,'hub');assert.equal(c.state.refuge.active,false);assert.equal(c.state.starterKitGiven,false);assert.equal(c.activityVisible(),true);c.resumeStoryActivity();assert.equal(a.nodes.get('storyPrelude').classList.contains('hidden'),false);assert.equal(c.state.refuge.active,false);assert.equal(c.state.storyPreludeSeen,false);c.finishStoryPrelude();assert.equal(c.state.storyPreludeSeen,true);assert.equal(c.state.activity,'story');assert.equal(c.state.refuge.active,true);assert.equal(c.state.refuge.visits,1);});
@@ -26,7 +27,7 @@ test('New game resets both saves and unloads the old courier session before reop
 test('Continue restores campaign and preserves an in-progress courier journey byte for byte',async()=>{
  const fs=require('node:fs'),E=await import('../extensions/mensajeros/production.mjs');
  const d=E.prepare(JSON.parse(fs.readFileSync(require('node:path').join(__dirname,'../extensions/mensajeros/production.json'))));
- let w=E.advance(d,E.start(d,E.createWorld(d,{seed:4}),'adasme-01'));
+ let w=E.advance(d,E.start(d,connectedWorld(E,d,{seed:4}),'adasme-01'));
  w.credits=37;w.crew[0].xp=21;w.run.party[0].hp-=7;
  const courierSave=E.serialize(w),a=boot();intro(a.ctx);a.ctx.openCourierActivity();
  a.ctx.state.flags.oldDecision=true;a.ctx.save();a.storage.set(d.save_key,courierSave);

@@ -157,7 +157,7 @@ export function rest(data,source) {
   requireThat(!run.pending&&node.rest,'No puedes descansar aquí.');
   requireThat(!run.rested.includes(run.index),'Ya descansaste en esta parada.');
   requireThat(run.condition<100,'El grupo ya está recuperado.');
-  pay(run,{food:1,water:1});time(run,data.rules.rest_minutes);run.condition=Math.min(100,run.condition+data.rules.rest_heal);run.rested.push(run.index);
+  pay(run,node.rest_cost??{food:1,water:1});time(run,data.rules.rest_minutes);run.condition=Math.min(100,run.condition+data.rules.rest_heal);run.rested.push(run.index);
   log(run,'Descanso: −1 agua, −1 ración; recuperación parcial.');checkpoint(data,world);return world;
 }
 export function toggleJammer(data,source) {

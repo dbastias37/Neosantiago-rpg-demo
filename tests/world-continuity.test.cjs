@@ -1,3 +1,4 @@
+const {connectedWorld}=require('./courier-fixtures.cjs');
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const {boot,root}=require('./runtime-harness.cjs');
 const {parseHTML}=require('linkedom');
@@ -6,7 +7,7 @@ const content=JSON.parse(fs.readFileSync(path.join(root,'extensions/mensajeros/p
 const EReady=import('../extensions/mensajeros/production.mjs');
 
 async function delivery(approach='trace'){
-  const E=await EReady,d=E.prepare(content);let w=E.start(d,E.createWorld(d,{seed:2130}),'morales-01'),snapshots=[];
+  const E=await EReady,d=E.prepare(content);let w=E.start(d,connectedWorld(E,d,{seed:2130}),'morales-01'),snapshots=[];
   for(let i=0;i<100&&w.run.status==='active';i++){
     snapshots.push(E.serialize(w));
     if(!w.run.pending)w=E.advance(d,w);
@@ -41,7 +42,7 @@ test('a real delivery crosses from courier receipts into the refuge without tran
 test('accepting, travelling, abandoning or failing the assignment cannot create a world fact',async()=>{
   const {E,d,snapshots}=await delivery(),a=start(),c=a.ctx;
   for(const raw of snapshots){a.storage.set(c.WORLD_COURIER_KEY,raw);assert.equal(c.syncWorldContinuity(),false)}
-  let w=E.start(d,E.createWorld(d,{seed:2130}),'morales-01');
+  let w=E.start(d,connectedWorld(E,d,{seed:2130}),'morales-01');
   a.storage.set(c.WORLD_COURIER_KEY,E.serialize(E.abandon(d,w)));assert.equal(c.syncWorldContinuity(),false);
   w.run.status='failed';w.run.condition=0;a.storage.set(c.WORLD_COURIER_KEY,E.serialize(w));assert.equal(c.syncWorldContinuity(),false);
   assert.equal(c.worldMoralesFact(),null);

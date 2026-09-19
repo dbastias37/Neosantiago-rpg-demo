@@ -1,9 +1,10 @@
+const {connectedWorld}=require('./courier-fixtures.cjs');
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const {parseHTML}=require('linkedom'),root=path.resolve(__dirname,'..');
 async function session({saved,reduced=false}={}){
  const E=await import('../extensions/mensajeros/production.mjs'),{animateRoute}=await import('../extensions/mensajeros/travel.mjs');
  const raw=JSON.parse(fs.readFileSync(root+'/extensions/mensajeros/production.json')),data=E.prepare(raw);
- const world=saved||E.start(data,E.createWorld(data,{seed:2130}),'adasme-01');world.helpSeen=true;
+ const world=saved||E.start(data,connectedWorld(E,data,{seed:2130}),'adasme-01');world.helpSeen=true;
  const storage=new Map([[data.save_key,E.serialize(world)]]);
  const {document,window}=parseHTML(fs.readFileSync(root+'/extensions/mensajeros/play.html','utf8'));
  window.HTMLElement.prototype.focus=function(){};
@@ -58,7 +59,7 @@ test('resolving an encounter closes its dialog and the next leg still waits for 
 });
 test('choosing combat dismisses the encounter dialog before showing the battle',async()=>{
  const E=await import('../extensions/mensajeros/production.mjs'),data=E.prepare(JSON.parse(fs.readFileSync(root+'/extensions/mensajeros/production.json')));
- let saved;for(let seed=0;seed<100;seed++){saved=E.advance(data,E.start(data,E.createWorld(data,{seed}),'adasme-01'));if(saved.run.pending.category==='hostile')break;}
+ let saved;for(let seed=0;seed<100;seed++){saved=E.advance(data,E.start(data,connectedWorld(E,data,{seed}),'adasme-01'));if(saved.run.pending.category==='hostile')break;}
  const a=await session({saved});a.click();assert.equal(a.document.getElementById('dialog').open,true);
  a.click('[data-choice="fight"]');assert.ok(a.world().run.pending.combat);
  assert.equal(a.document.getElementById('dialog').open,false);
@@ -76,7 +77,7 @@ test('cargo and supplies open separately without stretching the map or advancing
 
 test('the market button starts a visible journey and a hostile arrival cannot open the shops early',async()=>{
  const E=await import('../extensions/mensajeros/production.mjs'),data=E.prepare(JSON.parse(fs.readFileSync(root+'/extensions/mensajeros/production.json')));let world;
- for(let seed=1;seed<100;seed++){world=E.createWorld(data,{seed});world.location='republica';if(E.advance(data,E.travelHeroes(data,world)).run.pending.category==='hostile')break;}
+ for(let seed=1;seed<100;seed++){world=connectedWorld(E,data,{seed});world.location='republica';if(E.advance(data,E.travelHeroes(data,world)).run.pending.category==='hostile')break;}
  const a=await session({saved:world}),d=a.document;a.click('#dialog [data-close="dialog"]');a.click('#heroesButton');
  assert.match(d.getElementById('dialogBody').textContent,/1 tramos/);a.click('[data-travel-heroes]');
  assert.equal(a.world().location,'republica');assert.equal(a.world().run.status,'active');assert.equal(d.getElementById('dialog').open,false);assert.equal(d.querySelectorAll('[data-buy]').length,0);assert.ok(d.getElementById('messenger'));
@@ -85,7 +86,7 @@ test('the market button starts a visible journey and a hostile arrival cannot op
 });
 test('finishing a market journey renders arrival and opens both vendors without a fake reward or deadline',async()=>{
  const E=await import('../extensions/mensajeros/production.mjs'),data=E.prepare(JSON.parse(fs.readFileSync(root+'/extensions/mensajeros/production.json')));
- let w=E.createWorld(data,{seed:1});w.location='republica';w.credits=50;w=E.advance(data,E.travelHeroes(data,w));
+ let w=connectedWorld(E,data,{seed:1});w.location='republica';w.credits=50;w=E.advance(data,E.travelHeroes(data,w));
  const option=E.options(data,w).find(o=>o.id==='scout')||E.options(data,w).find(o=>o.id==='continue')||E.options(data,w).find(o=>E.optionAvailable(w,o)&&!o.combat);w=E.choose(data,w,option.id);
  assert.equal(w.run.status,'completed');const a=await session({saved:w}),d=a.document;
  assert.match(d.getElementById('travel').textContent,/Llegaste a Los Héroes/);assert.doesNotMatch(d.getElementById('status').textContent,/undefined|NaN|Pago estimado/);
@@ -101,4 +102,22 @@ test('the compact layout keeps the full travel journal accessible in a closable 
  a.click('#dialogBody [data-close="dialog"]');
  assert.equal(d.getElementById('dialog').open,false);
  assert.ok(d.getElementById('advanceButton'));
+});
+
+test('fresh interface exposes one local offer and two map nodes; contacts do not reveal the distant atlas',async()=>{
+ const E=await import('../extensions/mensajeros/production.mjs'),data=E.prepare(JSON.parse(fs.readFileSync(root+'/extensions/mensajeros/production.json')));
+ const a=await session({saved:E.createWorld(data,{seed:1}),reduced:true}),d=a.document;
+ assert.equal(d.querySelectorAll('#dialogBody [data-offer]').length,1);assert.equal(d.querySelector('#dialogBody [data-offer]').dataset.offer,'relevo-01');
+ assert.equal(d.querySelectorAll('#missionLayer [role="button"]').length,2);assert.ok(!d.querySelector('#map').textContent.includes('Vicuña'));
+ a.click('#contactsButton');assert.equal(d.querySelectorAll('[data-contact]').length,1);assert.equal(d.querySelector('[data-contact]').dataset.contact,'hmorales');
+ a.click('[data-contact]');a.click('[data-offer="relevo-01"]');a.click('[data-preview-route]');assert.match(d.querySelector('#dialogBody').textContent,/La Moneda/);assert.ok(!d.querySelector('#dialogBody').textContent.includes('Los Leones'));
+});
+test('first delivery reveals its two successors in the receipt and map, survives reload, and reset hides them again',async()=>{
+ const E=await import('../extensions/mensajeros/production.mjs'),data=E.prepare(JSON.parse(fs.readFileSync(root+'/extensions/mensajeros/production.json')));
+ const a=await session({saved:E.createWorld(data,{seed:1}),reduced:true}),d=a.document;
+ a.click('[data-offer="relevo-01"]');a.click('[data-accept]');a.click();await a.frame(0);await a.frame(1000);a.click('[data-choice="confirm"]');a.click();await a.frame(1001);await a.frame(2001);a.click('[data-choice="deliver"]');
+ assert.equal(a.world().paid.length,1);assert.match(d.querySelector('#dialogBody').textContent,/La entrega abrió nuevos trabajos/);assert.match(d.querySelector('#dialogBody').textContent,/Reserva de emergencia/);assert.ok(d.querySelector('#map').textContent.includes('República'));assert.ok(!d.querySelector('#map').textContent.includes('Vicuña'));
+ const restored=await session({saved:a.world(),reduced:true});restored.click('#catalogButton');assert.equal(restored.document.querySelectorAll('#dialogBody [data-offer]').length,3);
+ a.click('[data-catalog]');a.click('[data-filter="available"]');assert.equal(d.querySelectorAll('#dialogBody [data-offer]').length,2);
+ a.click('#resetCouriers');a.click('[data-reset-confirm]');assert.equal(d.querySelectorAll('#dialogBody [data-offer]').length,1);assert.equal(d.querySelectorAll('#missionLayer [role="button"]').length,2);assert.equal(a.world().paid.length,0);
 });

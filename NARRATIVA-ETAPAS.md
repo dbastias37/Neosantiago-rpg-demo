@@ -1,6 +1,6 @@
 # Renovación narrativa por etapas
 
-La actualización hacia 0.2 comienza con una entrega específica de entrada, voz y contexto. Su alcance, fuentes, criterios de personajes y pendientes están en [docs/narrativa-0.2.md](docs/narrativa-0.2.md). La [segunda entrega](docs/continuidad-0.2-entrega-2.md) conecta una entrega de Los Mensajeros con el conocimiento y la preparación de la expedición. Las etapas anteriores de este documento se conservan como historial.
+La actualización hacia 0.2 comienza con una entrega específica de entrada, voz y contexto. Su alcance, fuentes, criterios de personajes y pendientes están en [docs/narrativa-0.2.md](docs/narrativa-0.2.md). La [segunda entrega](docs/continuidad-0.2-entrega-2.md) conecta una entrega de Los Mensajeros con el conocimiento y la preparación de la expedición. La [tercera entrega](docs/progresion-0.2-entrega-3.md) incorpora un primer encargo breve, apertura gradual de rutas y descanso abastecido tras reparar Plaza de Armas. Las etapas anteriores de este documento se conservan como historial.
 
 Base revisada: main 2aa39997d09bf44c6ca0a998d0b50aaad6252472.
 Etapas 1, 2 y 3 implementadas; revisión de código y documento de la etapa 4 realizada, con validación humana y visual pendiente. En las partidas nuevas y las antiguas aún en curso, el cierre ocurre automáticamente. Los finales de partidas antiguas ya terminadas conservan su versión original.

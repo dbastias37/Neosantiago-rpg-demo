@@ -1142,9 +1142,71 @@
           "from": "tobalaba"
         }
       ]
+    },
+    "relevo-cercano": {
+      "id": "relevo-cercano",
+      "nodes": [
+        "heroes",
+        "moneda",
+        "heroes"
+      ],
+      "edges": [
+        {
+          "from": "heroes",
+          "to": "moneda",
+          "risk": "low",
+          "line": "L1",
+          "minutes": 4,
+          "wear": 2,
+          "kind": "adjacent_station",
+          "region": "centro"
+        },
+        {
+          "from": "moneda",
+          "to": "heroes",
+          "risk": "low",
+          "line": "L1",
+          "minutes": 4,
+          "wear": 2,
+          "kind": "adjacent_station",
+          "region": "centro"
+        }
+      ]
     }
   },
   "missions": {
+    "relevo-01": {
+      "id": "relevo-01",
+      "npc": "hmorales",
+      "issuer": "H. Morales",
+      "portrait": "../../characters/encargos/hmorales.webp",
+      "name": "Antes de que cambie el turno",
+      "type": "delivery",
+      "route": "relevo-cercano",
+      "recipient": "H. Morales · Los Héroes",
+      "cargo": {
+        "shift-note": 1
+      },
+      "issued": {},
+      "loadout": {},
+      "reward": {
+        "base": 12,
+        "stealth_bonus": 0
+      },
+      "time_limit": 20,
+      "late_step_minutes": 5,
+      "late_penalty": 2,
+      "summary": "Lleva la lista del relevo a La Moneda y vuelve con la hora acordada. Dos tramos, cerca de casa.",
+      "briefing": "Los de La Moneda llevan desde la madrugada en el puesto. Su relevo salió tarde y nadie les avisó. Lleven esta lista, acuerden a qué hora podemos mandar al siguiente grupo y tráiganme la respuesta. Primero eso. Los recorridos largos pueden esperar.",
+      "delivery_text": "Morales deja sitio para la hoja entre dos platos. Antes de leerla pregunta si los del puesto siguen esperando. Rocío le cuenta lo que acordaron; Bruno se queda de pie, con la mochila puesta, hasta saber quién irá a relevarlos.",
+      "dialogues": {
+        "success": "Ya sé a qué hora mandar gente. Gracias. Romero necesita una recogida cerca de aquí; también tengo un recorrido de observación, si prefieren seguir por este lado."
+      },
+      "effect": "Romero y Morales abren dos encargos cercanos. Puedes elegir cuál atender primero.",
+      "requires_any": [],
+      "lead": "",
+      "introduction": "Empieza con un aviso cercano. Conocer el camino también es trabajo."
+    },
     "guzman-01": {
       "id": "guzman-01",
       "enabled": true,
@@ -1167,7 +1229,7 @@
         "stealth_bonus": 0
       },
       "dialogues": {
-        "success": "Llegaron los dos rotores y el sensor. Con esto podemos recuperar el movimiento y la detección de las torretas. Gracias por traerlos.",
+        "success": "La técnica monta el sensor y espera a que la torreta complete el giro. Después llama al guardia que llevaba toda la noche junto al acceso. «Anda a comer. Ahora podemos turnarnos». Ana aparta una caja del banco: cuando vuelvan, habrá sitio y una ración para el equipo.",
         "issuer_report": "Los técnicos confirmaron la entrega. Buen trabajo. Esas piezas hacían falta."
       },
       "loadout": {
@@ -1175,11 +1237,16 @@
         "water": 3,
         "ammo556": 12
       },
-      "effect": "Defensas de Plaza de Armas restauradas.",
+      "effect": "Guardia de Plaza de Armas restablecida. En sus siguientes visitas, el equipo puede descansar allí con agua y ración de la posta, sin gastar las propias; el descanso sigue tomando 10 minutos.",
       "delivery_text": "Los técnicos verifican los dos rotores y el sensor antes de recibirlos. La entrega pone nuevamente en servicio las torretas de la salida.",
       "time_limit": 130,
       "late_step_minutes": 5,
-      "late_penalty": 2
+      "late_penalty": 2,
+      "requires_any": [
+        "ana-01"
+      ],
+      "lead": "Resuelve el paso que pide Ana. Los talleres necesitan una recepción segura para sus piezas.",
+      "introduction": "Ana confirmó quién recibirá las piezas. Guzmán puede incorporarte al relevo de los talleres. Es tu primer encargo largo: revisa las paradas antes de salir."
     },
     "adasme-01": {
       "id": "adasme-01",
@@ -1216,7 +1283,12 @@
       "delivery_text": "El compañero llega de regreso a Vicuña Mackenna. Adasme espera el informe y se hace cargo de su atención.",
       "time_limit": 140,
       "late_step_minutes": 5,
-      "late_penalty": 2
+      "late_penalty": 2,
+      "requires_any": [
+        "jimenez-01"
+      ],
+      "lead": "Entrega el enlace de respaldo. Con esa comunicación, operaciones podrá confiarte una búsqueda más larga.",
+      "introduction": "El enlace quedó entregado. Adasme puede coordinar ahora la búsqueda y el regreso de un operativo. Reserva suministros para la ida y la vuelta."
     },
     "romero-01": {
       "id": "romero-01",
@@ -1257,7 +1329,12 @@
       },
       "time_limit": 22,
       "late_step_minutes": 5,
-      "late_penalty": 2
+      "late_penalty": 2,
+      "requires_any": [
+        "relevo-01"
+      ],
+      "lead": "Vuelve con la respuesta de La Moneda. Morales podrá presentarte otros trabajos cerca de Los Héroes.",
+      "introduction": "Morales dejó tu nombre en la posta. Romero necesita recuperar una reserva; el recorrido de ida y vuelta tiene dos tramos."
     },
     "beatriz-01": {
       "id": "beatriz-01",
@@ -1298,7 +1375,12 @@
       },
       "time_limit": 50,
       "late_step_minutes": 5,
-      "late_penalty": 2
+      "late_penalty": 2,
+      "requires_any": [
+        "ana-01"
+      ],
+      "lead": "Resuelve el paso que pide Ana. Después podrá coordinar una entrega con los cultivos del norte.",
+      "introduction": "Con el acuerdo del paso confirmado, Ana puede coordinar contigo la recogida de nutrientes para Beatriz."
     },
     "ana-01": {
       "id": "ana-01",
@@ -1333,7 +1415,13 @@
       "delivery_text": "Responsables de acceso · Los Héroes espera el informe y la carga. La entrega cierra el encargo.",
       "time_limit": 28,
       "late_step_minutes": 5,
-      "late_penalty": 2
+      "late_penalty": 2,
+      "requires_any": [
+        "romero-01",
+        "morales-01"
+      ],
+      "lead": "Completa la reserva de Romero o el informe de Morales. Su aviso te pondrá en contacto con la comunidad de paso.",
+      "introduction": "El aviso de tu entrega llegó a Plaza de Armas. Ana necesita que el siguiente relevo no vuelva a quedar detenido por dos listas distintas."
     },
     "morales-01": {
       "id": "morales-01",
@@ -1374,7 +1462,12 @@
       },
       "time_limit": 34,
       "late_step_minutes": 5,
-      "late_penalty": 2
+      "late_penalty": 2,
+      "requires_any": [
+        "relevo-01"
+      ],
+      "lead": "Vuelve con la respuesta de La Moneda para abrir los encargos del corredor central.",
+      "introduction": "Ya volviste con un aviso de La Moneda. Morales te propone comprobar el corredor hasta Universidad de Chile."
     },
     "jimenez-01": {
       "id": "jimenez-01",
@@ -1409,7 +1502,12 @@
       "delivery_text": "Técnicos de Los Leones espera el informe y la carga. La entrega cierra el encargo.",
       "time_limit": 75,
       "late_step_minutes": 5,
-      "late_penalty": 2
+      "late_penalty": 2,
+      "requires_any": [
+        "guzman-01"
+      ],
+      "lead": "Lleva las piezas de los talleres a Plaza de Armas. Su confirmación abrirá el enlace con Vicuña Mackenna.",
+      "introduction": "Los técnicos avisaron que las piezas llegaron y que la guardia de Plaza vuelve a funcionar. Jiménez recibió esa confirmación y pide un enlace de respaldo."
     }
   },
   "items": {
@@ -1696,6 +1794,16 @@
       "stack": false,
       "slot": "body",
       "armor": 2
+    },
+    "shift-note": {
+      "id": "shift-note",
+      "name": "Lista de relevo",
+      "description": "Nombres y hora de regreso del puesto de La Moneda. Morales espera la respuesta para organizar el próximo turno.",
+      "kind": "cargo",
+      "image": "../../items/routeMap.webp",
+      "trade": false,
+      "discard": false,
+      "disassemble": false
     }
   },
   "events": [
@@ -2184,6 +2292,25 @@
           "wear": 2,
           "minutes": 3,
           "flag": "enlace_probado"
+        }
+      ]
+    },
+    "relevo-01:0": {
+      "id": "relevo-espera",
+      "title": "Todavía falta alguien",
+      "text": "Una mujer del puesto mira la lista y vuelve a contar los nombres. «Mi hermano venía en el relevo. Si se queda atendiendo allá, que alguien me lo diga». Rocío ofrece esperar mientras confirman. Bruno señala el último nombre: pueden llevar la pregunta de vuelta sin retrasar el aviso. Nadie sabe todavía por qué falta.",
+      "choices": [
+        {
+          "id": "confirm",
+          "label": "Esperar la confirmación con ella · 4 min",
+          "minutes": 4,
+          "flag": "relevo_confirmado"
+        },
+        {
+          "id": "return-message",
+          "label": "Llevar su pregunta a Morales · 1 min",
+          "minutes": 1,
+          "flag": "pregunta_relevo"
         }
       ]
     }

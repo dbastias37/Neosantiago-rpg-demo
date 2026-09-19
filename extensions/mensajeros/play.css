@@ -112,3 +112,12 @@ dialog{overscroll-behavior:contain;max-width:calc(100% - 16px);max-height:calc(1
 }
 .courier-refuge-frame{position:fixed;inset:0;z-index:280;width:100%;height:100dvh;border:0;background:#070a09}.courier-refuge-frame.hidden{display:none}
 html:has(#refugeLayer:not(.hidden)),body:has(#refugeLayer:not(.hidden)){overflow:hidden}
+
+/* Discovery shares the courier palette and grows without exposing the full atlas. */
+.network-progress{margin:16px 0;padding:14px;border:1px solid #425348;border-left:3px solid #c3a979;background:#121b16;border-radius:6px}
+.network-progress p{font-size:.88rem;line-height:1.5;margin:8px 0;overflow-wrap:anywhere}
+.network-progress h3{margin:0 0 8px;font-size:1rem}
+.contact-introduction{color:#c9b991;border-left:2px solid #786b49;padding-left:12px}
+.route-known{stroke:#6b8172;stroke-width:3;opacity:.6;stroke-linejoin:round;stroke-linecap:round}
+#missionLayer .visited{stroke:#d8bd88;stroke-width:3}
+#missionLayer .route-station-label{font-size:12px}

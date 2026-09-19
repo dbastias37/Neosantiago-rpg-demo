@@ -1,8 +1,9 @@
+const {connectedWorld}=require('./courier-fixtures.cjs');
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const {parseHTML}=require('linkedom'),root=path.resolve(__dirname,'..');
 async function profile(saved){
  const E=await import('../extensions/mensajeros/production.mjs'),data=E.prepare(JSON.parse(fs.readFileSync(root+'/extensions/mensajeros/production.json')));
- let world=saved||E.createWorld(data,{seed:2130}),stored='',view,closed=false;const errors=[],sounds=[];
+ let world=saved||connectedWorld(E,data,{seed:2130}),stored='',view,closed=false;const errors=[],sounds=[];
  const {document,window}=parseHTML(fs.readFileSync(root+'/neosantiago-demo.html','utf8'));
  window.HTMLElement.prototype.focus=function(){};const base=document.createElement('base');base.setAttribute('href','https://game.test/');document.head.prepend(base);
  const host={data,world:()=>world,announce:()=>{},refresh:()=>{},close:()=>{closed=true},ready:v=>view=v,transact(fn,...args){try{world=fn(data,world,...args);stored=E.serialize(world);return true;}catch(e){errors.push(e.message);return false;}}};
