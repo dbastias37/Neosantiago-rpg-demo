@@ -77,7 +77,7 @@ function careNightReflection(){
 }
 function normalizeCompanionCommitments(){
  state.companionCommitments??={version:1,care:null};var ledger=state.companionCommitments,r=ledger.care;
- if(ledger.version!==1||r!==null&&(!r||typeof r!=="object"||Array.isArray(r)))throw Error("Registro de acuerdos inválido");if(typeof normalizeNoaRoute==="function")normalizeNoaRoute();if(!r)return;
+ if(ledger.version!==1||r!==null&&(!r||typeof r!=="object"||Array.isArray(r)))throw Error("Registro de acuerdos inválido");if(typeof normalizeNoaRoute==="function")normalizeNoaRoute();if(typeof normalizeEvidence==="function")normalizeEvidence();if(!r)return;
  if(![null,"compartir","limites"].includes(r.agreement)||r.agreement!==careAgreement()||![null,"treat","extract","water","leave"].includes(r.decision)||![null,true,false].includes(r.witnessed))throw Error("Decisión de clínica inválida");
  if(r.discussion!==null){var d=r.discussion;if(!d||![d.meds,d.water].every(function(n){return Number.isInteger(n)&&n>=0})||!Array.isArray(d.lines)||d.lines.length!==4||!d.lines.every(function(s){return typeof s==="string"}))throw Error("Conversación de clínica inválida");}
  if(state.index<careIndex()||!r.decision&&(state.index!==careIndex()||!r.discussion||r.response!==null||r.witnessed!==null)||r.decision&&(typeof r.response!=="string"||typeof r.witnessed!=="boolean"))throw Error("Acuerdo fuera de escena");

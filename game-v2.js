@@ -589,7 +589,7 @@ var missionDefs=[
   {id:"ghost",title:"Fuera del mapa",description:"Completa 2 sincronizaciones del inhibidor sin activar una alarma.",target:2,reward:"Amenaza −4 · Electrónica +1"}
 ];
 
-function fresh(){return{companionCommitments:{version:1,care:null,route:null},expeditionRest:{version:1,nights:{}},worldContinuity:{version:1,facts:{}},fieldUpgrades:typeof fieldFresh==="function"?fieldFresh():null,version:3,finaleRevision:1,campaignRevision:3,inventoryRevision:5,progressionRevision:1,introCompleted:false,introPage:0,storyPreludeSeen:false,logisticsSeen:false,economyHelpSeen:false,index:0,threat:18,morale:64,credits:0,factionPoints:0,tradeStock:tradeStockForDay(1),tradeStockDay:1,armorerStock:armorerStockForDay(1),armorerStockDay:1,starterKitGiven:false,refuge:{active:false,reason:null,rested:false,rejoined:false,visits:0,npc:"mara",message:""},inhibitor:{active:false,remainingMs:0,durationMs:270000,exposed:true,needsSync:true,tutorialSeen:false,successes:0,failures:0,alarms:0,exposedMoves:0},summarySeen:false,finalTier:null,score:0,engineeringUses:3,medicalUses:3,ordnanceUses:3,res:{food:0,water:4,meds:0,ammo:0,battery:0},cons:{bandage:0,emp:0,grenade:0},party:[
+function fresh(){return{companionCommitments:{version:1,care:null,route:null,information:null},expeditionRest:{version:1,nights:{}},worldContinuity:{version:1,facts:{}},fieldUpgrades:typeof fieldFresh==="function"?fieldFresh():null,version:3,finaleRevision:1,campaignRevision:3,inventoryRevision:5,progressionRevision:1,introCompleted:false,introPage:0,storyPreludeSeen:false,logisticsSeen:false,economyHelpSeen:false,index:0,threat:18,morale:64,credits:0,factionPoints:0,tradeStock:tradeStockForDay(1),tradeStockDay:1,armorerStock:armorerStockForDay(1),armorerStockDay:1,starterKitGiven:false,refuge:{active:false,reason:null,rested:false,rejoined:false,visits:0,npc:"mara",message:""},inhibitor:{active:false,remainingMs:0,durationMs:270000,exposed:true,needsSync:true,tutorialSeen:false,successes:0,failures:0,alarms:0,exposedMoves:0},summarySeen:false,finalTier:null,score:0,engineeringUses:3,medicalUses:3,ordnanceUses:3,res:{food:0,water:4,meds:0,ammo:0,battery:0},cons:{bandage:0,emp:0,grenade:0},party:[
   {id:"sara",name:"Sara",role:"Médico",hp:44,maxHp:44,hunger:82,xp:0,level:1,skills:[],guard:0,bleed:0,psyche:{stress:0,empathy:2,resolve:1,pragmatism:0},categories:["sidearm","melee"],equipment:{head:null,body:"vestLight",weapon:"pistol9",backpack:"packMedic"},durability:{head:null,body:10},bag:[{id:"ammo9",qty:6},{id:"bandage",qty:1},{id:"meds",qty:1},{id:"food",qty:2}]},
   {id:"elias",name:"Elías",role:"Ingeniero",hp:40,maxHp:40,hunger:76,xp:0,level:1,skills:[],guard:0,bleed:0,psyche:{stress:0,empathy:0,resolve:1,pragmatism:2},categories:["sidearm","shotgun","rifle","melee"],equipment:{head:"helmetWork",body:null,weapon:"crowbar",backpack:"packRig"},durability:{head:8,body:null},bag:[{id:"shell12",qty:4},{id:"emp",qty:1},{id:"food",qty:1},{id:"battery",qty:1},{id:"tool",qty:1}]},
   {id:"noa",name:"Noa",role:"Cazadora",hp:38,maxHp:38,hunger:88,xp:0,level:1,skills:[],guard:0,bleed:0,psyche:{stress:1,empathy:0,resolve:2,pragmatism:1},categories:["rifle","sidearm","melee"],equipment:{head:null,body:"vestLight",weapon:"rifle556",backpack:"packHunt"},durability:{head:null,body:10},bag:[{id:"ammo556",qty:6},{id:"grenade",qty:1},{id:"food",qty:1}]}
@@ -902,6 +902,7 @@ function psychAxisForText(text){
   return"stress"
 }
 function inferPsychImpulse(o){
+  if(o&&o._mechanicsSource)o=o._mechanicsSource;
   var fx=o&&o.fx||{},text=[o&&o.label,o&&o.hint,o&&o.title,o&&o.result,o&&o.text,o&&o.cost].filter(Boolean).join(" ").toLowerCase(),d={stress:0,empathy:0,resolve:0,pragmatism:0};
   if(/preguntar|escuchar|ofrecer|prometer|ayudar|rescatar|estabilizar|cuidar|cubrir|entregar agua|compart|venda|familia|voluntad/.test(text)){d.empathy++;d.stress--}
   if(/silencio|ruta|señuelo|borrar|copiar|técnic|tecnic|calcular|medir|protocolo|frecuencia|conservar|guardar distancia|priorizar|marcar/.test(text)){d.pragmatism++;d.stress--}
@@ -915,6 +916,7 @@ function psychPreview(o){
   var d=inferPsychImpulse(o),priority=["resolve","empathy","pragmatism","stress"],axis=priority.sort(function(a,b){return Math.abs(d[b])-Math.abs(d[a])||((d[b]>0?1:0)-(d[a]>0?1:0))})[0];return axis&&Math.abs(d[axis])>0?"Pulso: "+psychAxisLabels[axis]:""
 }
 function psychTargets(o,dialogue){
+  if(o&&o._mechanicsSource)o=o._mechanicsSource;
   var text=[o&&o.label,o&&o.hint,o&&o.title,o&&o.result,dialogue&&dialogue.npc].filter(Boolean).join(" ").toLowerCase(),ids=[];["sara","elias","noa"].forEach(function(id){if(text.indexOf(id)>=0||text.indexOf(id==="elias"?"elías":id)>=0)ids.push(id)});
   if(dialogue&&["sara","elias","noa"].indexOf(dialogue.npc)>=0&&ids.indexOf(dialogue.npc)<0)ids.push(dialogue.npc);
   return ids.length?state.party.filter(function(p){return ids.indexOf(p.id)>=0}):state.party.slice()
@@ -1096,7 +1098,7 @@ var eventAudioClues={
   3:[{id:"hunter-mother",title:"Mensaje de la madre cazadora",kicker:"Grabación doméstica",source:"Cinta recuperada · Último andén habitado",duration:"00:21",src:"audio/lore/voice/hunter-mother.mp3",summary:"La necesidad de agua deja de ser un número: la familia cazadora tiene una historia y una deuda posible.",transcript:"Si no volvemos antes de la segunda luz, no salgan por las escaleras grandes. La marca de tres líneas es descanso. La de una cruz no es muerte: es deuda."}],
   4:[{id:"red-lights-border",title:"Golpes en el hormigón",kicker:"Señal de frontera",source:"Registro de contacto · Túnel de enlace",duration:"00:16",src:"audio/lore/voice/red-lights-border.mp3",summary:"Los merodeadores no suenan como una horda: se coordinan, advierten y protegen una frontera.",transcript:"Dos golpes. Pausa. Dos golpes. No cruzar. No sangre. Marca vieja. Torre miente. Núcleo recuerda."}],
   8:[{id:"matias-fever",title:"Advertencia de Matías",kicker:"Voz febril",source:"Grabadora de farmacia · Enlace",duration:"00:24",src:"audio/lore/voice/matias-fever.mp3",summary:"Matías transforma el dilema del rescate en información táctica: la Red UNO detecta fiebre, no solo armas.",transcript:"República no. Si el cielo está quieto, no es calma. Están midiendo calor. Usen mi pulso si deben, pero no dejen que Sara respire primero."}],
-  13:[{id:"terminal-memory",title:"Fragmento del terminal",kicker:"Memoria dañada",source:"Nodo 14 · Terminal de rutas",duration:"00:20",src:"audio/lore/voice/terminal-memory.mp3",summary:"La máquina confirma que la lista de refugios puede salvar comunidades o convertirlas en objetivos.",transcript:"Consulta incompleta. Refugios no registrados: ciento doce. Identidades detectadas: activas. Origen de intervención: soporte vital humano. Riesgo de transmisión: alto."}],
+  13:[{id:"terminal-memory",title:"Fragmento del terminal",kicker:"Memoria dañada",source:"Nodo 14 · Terminal de rutas",duration:"00:20",src:"audio/lore/voice/terminal-memory.mp3",summary:"Diagnóstico automático sin fecha legible. Sus categorías no confirman quién sigue vivo hoy.",transcript:"Consulta incompleta. Refugios no registrados: ciento doce. Identidades detectadas: activas. Origen de intervención: soporte vital humano. Riesgo de transmisión: alto."}],
   15:[{id:"lira-core",title:"Pulso de Lira",kicker:"Núcleo expuesto",source:"Camilla improvisada · Superficie",duration:"00:23",src:"audio/lore/voice/lira-core.mp3",summary:"La pista vuelve más pesada la extracción del núcleo: no es una llave neutra, también es memoria viva.",transcript:"Me llamaban Eliana abajo. Lira fue lo que quedó cuando cerraron la puerta. Si arrancan el núcleo, abren una ruta. Si lo dejan, quizá abran otra cosa."}],
   18:[{id:"sunken-voices",title:"Voces del edificio hundido",kicker:"Auxilio abierto",source:"Radio civil · Alameda superior",duration:"00:15",src:"audio/lore/voice/sunken-voices.mp3",summary:"El rescate deja de ser abstracto: hay personas pidiendo ayuda mientras la patrulla avanza.",transcript:"Hay tres aquí. Una no puede bajar. Si alguien escucha, no disparen al dron todavía. La escalera norte cayó. Repito: la norte cayó."}],
   24:[{id:"irene-heart",title:"El corazón de Irene",kicker:"Soporte vital",source:"Sala de antenas · Canal interno",duration:"00:28",src:"audio/lore/voice/irene-heart.mp3",summary:"La señal revela su centro humano: Irene no es solo una fuente de datos, es una voluntad atrapada.",transcript:"Usaron mi corazón como contraseña. Yo usé sus pausas como puerta. No transmitan solo mi nombre. Transmitan las rutas, los muertos y las órdenes."}],
@@ -1113,8 +1115,8 @@ function dossierIdsForEvent(ev){
   return ids.filter(function(id,i,list){return archives[id]&&list.indexOf(id)===i}).slice(0,3)
 }
 function contextArchiveHtml(id){
-  var summary=archives[id],unlocked=archiveUnlocked(id);
-  return'<button class="context-archive '+(unlocked?'unlocked':'locked')+'" data-context-archive="'+esc(id)+'"><span><b>'+esc(summary[0])+'</b><small>'+esc(dossierNotes[id]||summary[1])+'</small><em>'+(unlocked?'Recuperado · leer completo':'Pista parcial · abrir')+'</em></span></button>'
+  var summary=archives[id],unlocked=archiveUnlocked(id),evidencePreview=typeof evidenceArchivePreview==="function"?evidenceArchivePreview(id):null;
+  return'<button class="context-archive '+(unlocked?'unlocked':'locked')+'" data-context-archive="'+esc(id)+'"><span><b>'+esc(summary[0])+'</b><small>'+esc(evidencePreview?evidencePreview.summary:dossierNotes[id]||summary[1])+'</small><em>'+(unlocked?'Recuperado · leer completo':'Pista parcial · abrir')+'</em></span></button>'
 }
 function audioCluesForEvent(){
   return(eventAudioClues[state.index]||[]).slice(0,1)
@@ -1135,6 +1137,7 @@ function openContextArchive(id,opener){
   var summary=archives[id],doc=archiveTexts[id],unlocked=archiveUnlocked(id),body;if(!summary||!doc)return;
   if(unlocked){openArchive(id,opener);return}
   body=[dossierNotes[id]||summary[1],doc.body&&doc.body[0]?doc.body[0]:"La información completa sigue fragmentada. La expedición deberá recuperar el archivo para confirmar esta pista.","Lectura parcial: este expediente ayuda a decidir la escena actual, pero no se suma al archivo recuperado de la partida."];
+  var evidencePreview=typeof evidenceArchivePreview==="function"?evidenceArchivePreview(id):null;if(evidencePreview){summary=[summary[0],evidencePreview.summary];body=evidencePreview.body;}
   archiveOpener=opener||null;$("archiveDocClass").textContent="Dossier contextual · no recuperado";$("archiveDocTitle").textContent=summary[0];$("archiveDocSource").textContent=doc.source;$("archiveDocDate").textContent=doc.date;$("archiveDocSummary").textContent=summary[1];$("archiveDocBody").innerHTML=body.map(function(p){return"<p>"+esc(p)+"</p>"}).join("");$("archiveModal").classList.remove("hidden");$("archiveReaderScroll").scrollTop=0;$("closeArchive").focus()
 }
 function repairCost(p,slot){var d=gear(p.equipment[slot]),dur=gearDurability(p,slot);if(!d||!d.maxDurability||dur>=d.maxDurability)return 0;return dur===0||d.maxDurability-dur>=Math.ceil(d.maxDurability/2)?2:1}
@@ -1234,6 +1237,7 @@ function craftItem(pIndex,id){
   if(battleState)return;var p=state.party[pIndex],recipe=workshopRecipes.filter(function(x){return x.id===id&&p&&x.owner===p.id})[0],d=gear(id);if(!recipe||!canCraft(p,recipe)){toast("Faltan recursos, espacio, habilidad o acciones profesionales");return}var qty=Math.max(1,Number(recipe.qty)||1),xp=recipe.xp||8;Object.keys(recipe.cost).forEach(function(costId){for(var n=0;n<recipe.cost[costId];n++)consumeStock(costId,pIndex)});addToBag(p,id,qty);state.stats.crafts++;addStatItem("craftedItems",id,qty);state.stats.xpFromCrafting+=xp;var levels=addPersonalXp(pIndex,xp,"fabricar "+d.name);if(p.id==="sara")state.medicalUses--;else if(p.id==="noa")state.ordnanceUses--;else state.engineeringUses--;save();renderMini();renderProfile(pIndex);if(state.refuge.active)renderRefuge();toast((p.id==="sara"?"Sara prepara ":p.name+" fabrica ")+d.name+(qty>1?" ×"+qty:"")+" · +"+xp+" XP"+(levels.length?" · "+levels[0]:""))
 }
 function reason(c){
+  if(typeof evidenceBlocked==="function"){var evidenceBlock=evidenceBlocked(c);if(evidenceBlock)return evidenceBlock;}
   if(typeof companionCareBlocked==="function"){var careBlock=companionCareBlocked(c);if(careBlock)return careBlock;}
   if(typeof narrativeBlocked==="function"&&narrativeBlocked(c))return "Camino cerrado por lo ocurrido";
   var k;if(c.req){for(k in c.req)if(stockCount(k)<c.req[k])return"Falta "+resName(k).toLowerCase()}
@@ -1261,17 +1265,19 @@ function choose(i){
   if(pending||battleState||decisionState)return;var ev=eventDisplay(events[state.index],state.index),c=ev.choices[i];if(!c||reason(c))return;
   if(c.roll){openDecision(c,ev);return}
   save();encounterSaveLocked=true;
-  if(!c._noaRecorded)drainHunger(4);
+  if(!c._noaRecorded&&!c._evidenceRecorded)drainHunger(4);
   if(c.combat){startCombat(c.combat,c);return}
   completeChoice(c,c,null,null)
 }
 function completeChoice(choice,out,roll,check,extra){
   var careResponse=typeof recordCareDecision==="function"?recordCareDecision(choice):"";
   var routeResponse=typeof recordNoaRouteDecision==="function"?recordNoaRouteDecision(choice):"";if(routeResponse)careResponse+=(careResponse?"\n\n":"")+routeResponse;
-  var ev=events[state.index],changes=(extra||[]).concat(choice._noaRecorded?[]:apply(out)),factionReward=!choice._noaRecorded&&storyDecisionBenefit(out)?1:0,missionChanges=checkMissions();if(factionReward)changes=awardFactionPoints(factionReward,"decisión con impacto").concat(changes);changes=missionChanges.concat(changes);if(choice.ending)state.ending=choice.ending;
+  var evidenceResponse=typeof recordEvidenceDecision==="function"?recordEvidenceDecision(choice,out):"";if(evidenceResponse)careResponse+=(careResponse?"\n\n":"")+evidenceResponse;
+  var recorded=choice._noaRecorded||choice._evidenceRecorded;
+  var ev=events[state.index],changes=(extra||[]).concat(recorded?[]:apply(out)),factionReward=!recorded&&storyDecisionBenefit(out)?1:0,missionChanges=checkMissions();if(factionReward)changes=awardFactionPoints(factionReward,"decisión con impacto").concat(changes);changes=missionChanges.concat(changes);if(choice.ending)state.ending=choice.ending;
   state.history.push({day:ev.day,loc:ev.loc,choice:choice.label,result:(out.title||choice.title)+(careResponse?". "+careResponse:""),faction:factionReward});pending={ending:choice.ending||null,returnToRefuge:null,dialogue:choice._noDialogue?null:choice._dialogue?choice._dialogue:typeof narrativeDialogue==="function"?narrativeDialogue(contextualDialogueFor(choice,out)):contextualDialogueFor(choice,out),dialogueSeen:false};
   if(state.morale<=0&&!choice.ending&&!(state.finaleRevision===1&&state.index>=22)){pending.returnToRefuge="morale";changes.unshift(["Moral","Regreso obligatorio al refugio"])}
-  if(!choice._noaRecorded&&typeof prepareCrate==="function")prepareCrate(choice,out);
+  if(!recorded&&typeof prepareCrate==="function")prepareCrate(choice,out);
   showResult(out.title||choice.title,(out.result||choice.result)+(careResponse?"\n\n"+careResponse:""),changes,roll,check);render();save()
 }
 function showResult(title,text,changes,roll,check){
@@ -1324,9 +1330,9 @@ function closeNpcDialogueForCombat(opt){
   var combatChoice=Object.assign({title:opt.label,result:"La conversación se quiebra antes de que alguien pueda ordenar la escena."},opt);clearInterval(npcDialogueTimer);npcDialogueTimer=null;recordDialogueChoice(opt,0);npcDialogueState=null;$("npcDialogueModal").classList.add("hidden");$("result").classList.add("hidden");pending=null;startCombat(opt.combat,combatChoice)
 }
 function selectNpcDialogueChoice(i){
-  if(!npcDialogueState||npcDialogueState.selected)return;if(npcDialogueTimer){revealNpcDialogueText();return}var opt=npcDialogueState.options[i];if(!opt||reason(opt))return;npcDialogueState.selected=true;if(opt.combat){closeNpcDialogueForCombat(opt);return}
+  if(!npcDialogueState||npcDialogueState.selected)return;if(npcDialogueTimer){revealNpcDialogueText();return}var opt=npcDialogueState.options[i];if(!opt||reason(opt))return;if(opt._evidenceReport&&!(typeof recordEvidenceReport==="function"&&recordEvidenceReport(opt)))return;npcDialogueState.selected=true;if(opt.combat){closeNpcDialogueForCombat(opt);return}
   if(typeof finaleBeforeEvidence==="function")finaleBeforeEvidence(opt);
-  var terminal=!opt.next,changes=apply(opt),factionReward=terminal&&storyDecisionBenefit(opt)?1:0,missionChanges=checkMissions();if(factionReward)changes=awardFactionPoints(factionReward,"diálogo").concat(changes);changes=missionChanges.concat(changes);recordDialogueChoice(opt,factionReward);npcDialogueState.changes=(npcDialogueState.changes||[]).concat(changes);if(state.morale<=0&&pending&&!pending.ending&&!(state.finaleRevision===1&&state.index>=22)){pending.returnToRefuge="morale";changes.unshift(["Moral","Regreso obligatorio al refugio"])}
+  var terminal=!opt.next,changes=opt._evidenceReport?[]:apply(opt),factionReward=!opt._evidenceReport&&terminal&&storyDecisionBenefit(opt)?1:0,missionChanges=checkMissions();if(factionReward)changes=awardFactionPoints(factionReward,"diálogo").concat(changes);changes=missionChanges.concat(changes);recordDialogueChoice(opt,factionReward);npcDialogueState.changes=(npcDialogueState.changes||[]).concat(changes);if(state.morale<=0&&pending&&!pending.ending&&!(state.finaleRevision===1&&state.index>=22)){pending.returnToRefuge="morale";changes.unshift(["Moral","Regreso obligatorio al refugio"])}
   if(terminal&&opt.routeScene)npcDialogueState.routeScene=opt.routeScene;
   renderMini();save();if(opt.next){setNpcDialogueNode(opt.next);return}
   if(opt.result)$("npcDialogueText").textContent=opt.result;
@@ -1548,7 +1554,7 @@ function useCombatItem(kind){
   else return;$("itemTray").classList.add("hidden");if(lethalFeedback()){settleLethal(function(){if(!livingEnemies().length)beginLootPhase();else endPlayerTurn()});return}endPlayerTurn()
 }
 
-function eventDisplay(ev,index){var result=legacyEventDisplay(ev,index);result=typeof narrativeEvent==="function"?narrativeEvent(result):result;result=typeof narrativeRememberedEvent==="function"?narrativeRememberedEvent(result,index):result;result=typeof companionCareEvent==="function"?companionCareEvent(result,index):result;result=typeof companionRouteEvent==="function"?companionRouteEvent(result,index):result;return typeof finaleEvent==="function"?finaleEvent(result,index):result}
+function eventDisplay(ev,index){var result=legacyEventDisplay(ev,index);result=typeof narrativeEvent==="function"?narrativeEvent(result):result;result=typeof narrativeRememberedEvent==="function"?narrativeRememberedEvent(result,index):result;result=typeof companionCareEvent==="function"?companionCareEvent(result,index):result;result=typeof companionRouteEvent==="function"?companionRouteEvent(result,index):result;result=typeof finaleEvent==="function"?finaleEvent(result,index):result;return typeof companionEvidenceEvent==="function"?companionEvidenceEvent(result,index):result}
 function legacyEventDisplay(ev,index){
   if(state.flags.matiasLateStart&&index===9)return Object.assign({},ev,{time:"09:35",text:"La expedición sale más tarde desde Línea 1. Matías queda en la enfermería, febril pero vivo, y su advertencia viaja con el grupo: no crucen cuando el cielo parezca quieto. En el túnel de servicio, una unidad de la Red UNO desciende y bloquea la subida; no busca movimiento, mide temperatura, respiración y ritmo cardíaco."});
   if(state.flags.unit7RouteCompleted&&index===10){
@@ -1662,7 +1668,7 @@ function renderMini(){
   $("resourceMini").innerHTML=r.map(function(x){return'<div class="resource"><span>'+x[0]+"</span><b>"+x[1]+"</b></div>"}).join("");$("missionMini").innerHTML='<strong>'+esc(main.title)+'</strong><p>'+esc(missionDescription(main))+'</p><div class="mission-track"><span style="width:'+percent+'%"></span></div><small><span>'+progress+' / '+main.target+'</span><span>'+percent+'%</span></small>';$("missionCount").textContent=openMissions;$("archiveCount").textContent=state.docs.length
 }
 function openArchive(id,opener){
-  var summary=archives[id],doc=archiveTexts[id];if(!summary||!doc)return;archiveOpener=opener||null;$("archiveDocClass").textContent=doc.classification;$("archiveDocTitle").textContent=summary[0];$("archiveDocSource").textContent=doc.source;$("archiveDocDate").textContent=doc.date;$("archiveDocSummary").textContent=summary[1];$("archiveDocBody").innerHTML=doc.body.map(function(p){return"<p>"+esc(p)+"</p>"}).join("");$("archiveModal").classList.remove("hidden");$("archiveReaderScroll").scrollTop=0;$("closeArchive").focus()
+  var summary=archives[id],doc=archiveTexts[id];if(!summary||!doc)return;var evidenceNote=typeof evidenceArchiveNote==="function"?evidenceArchiveNote(id):"";if(evidenceNote)doc=Object.assign({},doc,{body:[evidenceNote].concat(doc.body)});archiveOpener=opener||null;$("archiveDocClass").textContent=doc.classification;$("archiveDocTitle").textContent=summary[0];$("archiveDocSource").textContent=doc.source;$("archiveDocDate").textContent=doc.date;$("archiveDocSummary").textContent=summary[1];$("archiveDocBody").innerHTML=doc.body.map(function(p){return"<p>"+esc(p)+"</p>"}).join("");$("archiveModal").classList.remove("hidden");$("archiveReaderScroll").scrollTop=0;$("closeArchive").focus()
 }
 function closeArchive(){if($("archiveModal").classList.contains("hidden"))return;$("archiveModal").classList.add("hidden");if(archiveOpener&&archiveOpener.focus)archiveOpener.focus();archiveOpener=null}
 function findAudioClue(id){

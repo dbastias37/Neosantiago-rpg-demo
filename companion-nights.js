@@ -21,6 +21,7 @@ function companionConversation(id,n){
  var text=previous?previous.later:voice.opening+" Anoche no hablaron de esto; todavía pueden hacerlo antes de salir otra vez.";
  var careMemory=id==="sara"&&typeof careNightReflection==="function"?careNightReflection():"";if(careMemory)text=careMemory;
  var routeMemory=id==="noa"&&typeof noaRouteNightReflection==="function"?noaRouteNightReflection():"";if(routeMemory)text=routeMemory;
+ var evidenceMemory=id==="elias"&&typeof evidenceNightReflection==="function"?evidenceNightReflection():"";if(evidenceMemory)text=evidenceMemory;
  if(id==="sara"&&state.flags.liraDead&&!careMemory)text+=" Al nombrar a Lira, Sara baja la voz. «Lo que pasó no cambia por acordar algo ahora».";
  var conversation={text:text,choices:[
   {id:"sostener",label:"Mantener ese criterio y preguntar qué le preocupa ahora",reply:id==="sara"?"«Que una urgencia decida por nosotros». Sara pide dejar las reservas a mano para poder revisarlas juntos.":id==="elias"?"«Que al contarlo después parezca que siempre supimos qué hacer». Elías conserva las dudas junto al registro, también las que resultaron incómodas.":"«Que demos por hecho que yo siempre voy a poder seguir». Noa vuelve a aflojar la correa y pide revisar el regreso con el resto."},
@@ -33,6 +34,10 @@ function companionConversation(id,n){
  if(routeMemory)conversation.choices=[
   {id:"sostener",label:"Acordar revisar el rumbo cuando cambie lo que saben",reply:"Noa deja el mapa entre los tres. «Pregunten antes de que esté a mitad de la calle». Sara pide hacer esa revisión también si alguno ya no puede cargar. Elías anota dónde se detuvieron."},
   {id:"revisar",label:"Reconocer que explicar el motivo no resuelve el desacuerdo",reply:"«Eso es lo que quería poder decir». Noa mantiene su objeción junto al recorrido. No exige borrar lo que decidieron; pide que la próxima vez todavía puedan cambiar de rumbo cuando la escuchen."}
+ ];
+ if(evidenceMemory)conversation.choices=[
+  {id:"sostener",label:"Conservar las dudas junto a lo que consigan comprobar",reply:"Elías deja la página abierta. «Gracias por no pedirme que la complete igual». Sara acerca el cuaderno a la luz para leer la letra pequeña; quieren llevarse también las preguntas."},
+  {id:"revisar",label:"Acordar que pueden buscar ayuda antes de tener todas las respuestas",reply:"«Sí», responde Elías. «Yo también quiero llegar». Noa le pide entonces una cosa concreta: que diga cuándo recomienda una ruta y cuándo solo teme perder una oportunidad. Él vuelve a leer lo que anotó."}
  ];
  return conversation;
 }
