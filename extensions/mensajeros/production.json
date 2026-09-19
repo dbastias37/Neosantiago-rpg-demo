@@ -1822,7 +1822,7 @@
       "id": "silencio",
       "category": "quiet",
       "title": "Un tramo en silencio",
-      "text": "Solo se oyen las pisadas y el agua que cae sobre los rieles. La carga sigue asegurada.",
+      "text": "Solo se oyen las pisadas y el agua que cae sobre los rieles. Rocío ajusta la correa de su mochila; Bruno baja el paso para que Tomás no quede atrás.",
       "regions": [
         "l6",
         "centro",
@@ -1876,7 +1876,7 @@
       "id": "reja",
       "category": "decision",
       "title": "Una reja trabada",
-      "text": "El paso habitual está cerrado. Tomás examina una bisagra mientras el grupo protege la carga.",
+      "text": "El paso habitual está cerrado. Tomás palpa la bisagra mientras Bruno sostiene la reja para que no le apriete la mano.",
       "regions": [
         "l6",
         "centro",
@@ -1926,7 +1926,7 @@
       "id": "escombros",
       "category": "decision",
       "title": "Escombros sobre el paso",
-      "text": "Hay espacio para cruzar, pero la carga puede engancharse. El grupo debe moverla con cuidado.",
+      "text": "Hay espacio para cruzar, pero las correas se enganchan entre los fierros. Bruno se saca la mochila y busca dónde apoyarla antes de pasar.",
       "regions": [
         "l6",
         "centro",
@@ -1935,7 +1935,7 @@
       "choices": [
         {
           "id": "slow",
-          "label": "Pasar la carga entre todos · 4 min",
+          "label": "Pasar el equipo entre todos · 4 min",
           "minutes": 4
         },
         {
@@ -2097,7 +2097,7 @@
         },
         {
           "id": "leave",
-          "label": "Seguir con el encargo"
+          "label": "Seguir camino"
         }
       ],
       "electronic": false
