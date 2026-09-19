@@ -70,7 +70,9 @@ function narrativeChapterEffects(o){
   if(changed.liraBrotherLost)knows("lira","brotherKilled");
   if(changed.liraCoreCopied)knows("lira","copyWithoutConsent");
   if(changed.rosaWarnedCommunities||f.rosaWarnedCommunities)knows("rosa","communitiesLocated");
-  if(changed.soldRefuge)knows("vera","refugeLocation");
+  if(changed.soldRefuge&&!changed.veraOldListDisclosed)knows("vera","refugeLocation");
+  if(changed.veraLine1Disclosed)knows("vera","line1Access");
+  if(changed.veraOldListDisclosed)knows("vera","historicalRefugeList");
   if(changed.erasedCitizensRestored)knows("vega","namesRestored");
 }
 

@@ -589,7 +589,7 @@ var missionDefs=[
   {id:"ghost",title:"Fuera del mapa",description:"Completa 2 sincronizaciones del inhibidor sin activar una alarma.",target:2,reward:"Amenaza −4 · Electrónica +1"}
 ];
 
-function fresh(){return{companionCommitments:{version:1,care:null,route:null,information:null},expeditionRest:{version:1,nights:{}},worldContinuity:{version:1,facts:{}},fieldUpgrades:typeof fieldFresh==="function"?fieldFresh():null,version:3,finaleRevision:1,campaignRevision:3,inventoryRevision:5,progressionRevision:1,introCompleted:false,introPage:0,storyPreludeSeen:false,logisticsSeen:false,economyHelpSeen:false,index:0,threat:18,morale:64,credits:0,factionPoints:0,tradeStock:tradeStockForDay(1),tradeStockDay:1,armorerStock:armorerStockForDay(1),armorerStockDay:1,starterKitGiven:false,refuge:{active:false,reason:null,rested:false,rejoined:false,visits:0,npc:"mara",message:""},inhibitor:{active:false,remainingMs:0,durationMs:270000,exposed:true,needsSync:true,tutorialSeen:false,successes:0,failures:0,alarms:0,exposedMoves:0},summarySeen:false,finalTier:null,score:0,engineeringUses:3,medicalUses:3,ordnanceUses:3,res:{food:0,water:4,meds:0,ammo:0,battery:0},cons:{bandage:0,emp:0,grenade:0},party:[
+function fresh(){return{companionCommitments:{version:1,care:null,route:null,information:null,trade:null},expeditionRest:{version:1,nights:{}},worldContinuity:{version:1,facts:{}},fieldUpgrades:typeof fieldFresh==="function"?fieldFresh():null,version:3,finaleRevision:1,campaignRevision:3,inventoryRevision:5,progressionRevision:1,introCompleted:false,introPage:0,storyPreludeSeen:false,logisticsSeen:false,economyHelpSeen:false,index:0,threat:18,morale:64,credits:0,factionPoints:0,tradeStock:tradeStockForDay(1),tradeStockDay:1,armorerStock:armorerStockForDay(1),armorerStockDay:1,starterKitGiven:false,refuge:{active:false,reason:null,rested:false,rejoined:false,visits:0,npc:"mara",message:""},inhibitor:{active:false,remainingMs:0,durationMs:270000,exposed:true,needsSync:true,tutorialSeen:false,successes:0,failures:0,alarms:0,exposedMoves:0},summarySeen:false,finalTier:null,score:0,engineeringUses:3,medicalUses:3,ordnanceUses:3,res:{food:0,water:4,meds:0,ammo:0,battery:0},cons:{bandage:0,emp:0,grenade:0},party:[
   {id:"sara",name:"Sara",role:"Médico",hp:44,maxHp:44,hunger:82,xp:0,level:1,skills:[],guard:0,bleed:0,psyche:{stress:0,empathy:2,resolve:1,pragmatism:0},categories:["sidearm","melee"],equipment:{head:null,body:"vestLight",weapon:"pistol9",backpack:"packMedic"},durability:{head:null,body:10},bag:[{id:"ammo9",qty:6},{id:"bandage",qty:1},{id:"meds",qty:1},{id:"food",qty:2}]},
   {id:"elias",name:"Elías",role:"Ingeniero",hp:40,maxHp:40,hunger:76,xp:0,level:1,skills:[],guard:0,bleed:0,psyche:{stress:0,empathy:0,resolve:1,pragmatism:2},categories:["sidearm","shotgun","rifle","melee"],equipment:{head:"helmetWork",body:null,weapon:"crowbar",backpack:"packRig"},durability:{head:8,body:null},bag:[{id:"shell12",qty:4},{id:"emp",qty:1},{id:"food",qty:1},{id:"battery",qty:1},{id:"tool",qty:1}]},
   {id:"noa",name:"Noa",role:"Cazadora",hp:38,maxHp:38,hunger:88,xp:0,level:1,skills:[],guard:0,bleed:0,psyche:{stress:1,empathy:0,resolve:2,pragmatism:1},categories:["rifle","sidearm","melee"],equipment:{head:null,body:"vestLight",weapon:"rifle556",backpack:"packHunt"},durability:{head:null,body:10},bag:[{id:"ammo556",qty:6},{id:"grenade",qty:1},{id:"food",qty:1}]}
@@ -1237,6 +1237,7 @@ function craftItem(pIndex,id){
   if(battleState)return;var p=state.party[pIndex],recipe=workshopRecipes.filter(function(x){return x.id===id&&p&&x.owner===p.id})[0],d=gear(id);if(!recipe||!canCraft(p,recipe)){toast("Faltan recursos, espacio, habilidad o acciones profesionales");return}var qty=Math.max(1,Number(recipe.qty)||1),xp=recipe.xp||8;Object.keys(recipe.cost).forEach(function(costId){for(var n=0;n<recipe.cost[costId];n++)consumeStock(costId,pIndex)});addToBag(p,id,qty);state.stats.crafts++;addStatItem("craftedItems",id,qty);state.stats.xpFromCrafting+=xp;var levels=addPersonalXp(pIndex,xp,"fabricar "+d.name);if(p.id==="sara")state.medicalUses--;else if(p.id==="noa")state.ordnanceUses--;else state.engineeringUses--;save();renderMini();renderProfile(pIndex);if(state.refuge.active)renderRefuge();toast((p.id==="sara"?"Sara prepara ":p.name+" fabrica ")+d.name+(qty>1?" ×"+qty:"")+" · +"+xp+" XP"+(levels.length?" · "+levels[0]:""))
 }
 function reason(c){
+  if(typeof veraBlocked==="function"){var veraBlock=veraBlocked(c);if(veraBlock)return veraBlock;}
   if(typeof evidenceBlocked==="function"){var evidenceBlock=evidenceBlocked(c);if(evidenceBlock)return evidenceBlock;}
   if(typeof companionCareBlocked==="function"){var careBlock=companionCareBlocked(c);if(careBlock)return careBlock;}
   if(typeof narrativeBlocked==="function"&&narrativeBlocked(c))return "Camino cerrado por lo ocurrido";
@@ -1265,7 +1266,7 @@ function choose(i){
   if(pending||battleState||decisionState)return;var ev=eventDisplay(events[state.index],state.index),c=ev.choices[i];if(!c||reason(c))return;
   if(c.roll){openDecision(c,ev);return}
   save();encounterSaveLocked=true;
-  if(!c._noaRecorded&&!c._evidenceRecorded)drainHunger(4);
+  if(!c._noaRecorded&&!c._evidenceRecorded&&!c._veraRecorded)drainHunger(4);
   if(c.combat){startCombat(c.combat,c);return}
   completeChoice(c,c,null,null)
 }
@@ -1273,11 +1274,12 @@ function completeChoice(choice,out,roll,check,extra){
   var careResponse=typeof recordCareDecision==="function"?recordCareDecision(choice):"";
   var routeResponse=typeof recordNoaRouteDecision==="function"?recordNoaRouteDecision(choice):"";if(routeResponse)careResponse+=(careResponse?"\n\n":"")+routeResponse;
   var evidenceResponse=typeof recordEvidenceDecision==="function"?recordEvidenceDecision(choice,out):"";if(evidenceResponse)careResponse+=(careResponse?"\n\n":"")+evidenceResponse;
-  var recorded=choice._noaRecorded||choice._evidenceRecorded;
-  var ev=events[state.index],changes=(extra||[]).concat(recorded?[]:apply(out)),factionReward=!recorded&&storyDecisionBenefit(out)?1:0,missionChanges=checkMissions();if(factionReward)changes=awardFactionPoints(factionReward,"decisión con impacto").concat(changes);changes=missionChanges.concat(changes);if(choice.ending)state.ending=choice.ending;
+  var veraResponse=typeof recordVeraDecision==="function"?recordVeraDecision(choice,out):"";if(veraResponse)careResponse+=(careResponse?"\n\n":"")+veraResponse;
+  var recorded=choice._noaRecorded||choice._evidenceRecorded||choice._veraRecorded;
+  var ev=events[state.index],changes=(extra||[]).concat(recorded||choice._veraOpening?[]:apply(out)),factionReward=!recorded&&!choice._veraOpening&&storyDecisionBenefit(out)?1:0,missionChanges=checkMissions();if(factionReward)changes=awardFactionPoints(factionReward,"decisión con impacto").concat(changes);changes=missionChanges.concat(changes);if(choice.ending)state.ending=choice.ending;
   state.history.push({day:ev.day,loc:ev.loc,choice:choice.label,result:(out.title||choice.title)+(careResponse?". "+careResponse:""),faction:factionReward});pending={ending:choice.ending||null,returnToRefuge:null,dialogue:choice._noDialogue?null:choice._dialogue?choice._dialogue:typeof narrativeDialogue==="function"?narrativeDialogue(contextualDialogueFor(choice,out)):contextualDialogueFor(choice,out),dialogueSeen:false};
   if(state.morale<=0&&!choice.ending&&!(state.finaleRevision===1&&state.index>=22)){pending.returnToRefuge="morale";changes.unshift(["Moral","Regreso obligatorio al refugio"])}
-  if(!recorded&&typeof prepareCrate==="function")prepareCrate(choice,out);
+  if(!recorded&&!choice._veraOpening&&typeof prepareCrate==="function")prepareCrate(choice,out);
   showResult(out.title||choice.title,(out.result||choice.result)+(careResponse?"\n\n"+careResponse:""),changes,roll,check);render();save()
 }
 function showResult(title,text,changes,roll,check){
@@ -1330,7 +1332,7 @@ function closeNpcDialogueForCombat(opt){
   var combatChoice=Object.assign({title:opt.label,result:"La conversación se quiebra antes de que alguien pueda ordenar la escena."},opt);clearInterval(npcDialogueTimer);npcDialogueTimer=null;recordDialogueChoice(opt,0);npcDialogueState=null;$("npcDialogueModal").classList.add("hidden");$("result").classList.add("hidden");pending=null;startCombat(opt.combat,combatChoice)
 }
 function selectNpcDialogueChoice(i){
-  if(!npcDialogueState||npcDialogueState.selected)return;if(npcDialogueTimer){revealNpcDialogueText();return}var opt=npcDialogueState.options[i];if(!opt||reason(opt))return;if(opt._evidenceReport&&!(typeof recordEvidenceReport==="function"&&recordEvidenceReport(opt)))return;npcDialogueState.selected=true;if(opt.combat){closeNpcDialogueForCombat(opt);return}
+  if(!npcDialogueState||npcDialogueState.selected)return;if(npcDialogueTimer){revealNpcDialogueText();return}var opt=npcDialogueState.options[i];if(!opt||reason(opt))return;if(opt._evidenceReport&&!(typeof recordEvidenceReport==="function"&&recordEvidenceReport(opt)))return;if(opt._veraTrade&&!(typeof recordVeraTrade==="function"&&recordVeraTrade(opt)))return;npcDialogueState.selected=true;if(opt.combat){closeNpcDialogueForCombat(opt);return}
   if(typeof finaleBeforeEvidence==="function")finaleBeforeEvidence(opt);
   var terminal=!opt.next,changes=opt._evidenceReport?[]:apply(opt),factionReward=!opt._evidenceReport&&terminal&&storyDecisionBenefit(opt)?1:0,missionChanges=checkMissions();if(factionReward)changes=awardFactionPoints(factionReward,"diálogo").concat(changes);changes=missionChanges.concat(changes);recordDialogueChoice(opt,factionReward);npcDialogueState.changes=(npcDialogueState.changes||[]).concat(changes);if(state.morale<=0&&pending&&!pending.ending&&!(state.finaleRevision===1&&state.index>=22)){pending.returnToRefuge="morale";changes.unshift(["Moral","Regreso obligatorio al refugio"])}
   if(terminal&&opt.routeScene)npcDialogueState.routeScene=opt.routeScene;
@@ -1554,7 +1556,7 @@ function useCombatItem(kind){
   else return;$("itemTray").classList.add("hidden");if(lethalFeedback()){settleLethal(function(){if(!livingEnemies().length)beginLootPhase();else endPlayerTurn()});return}endPlayerTurn()
 }
 
-function eventDisplay(ev,index){var result=legacyEventDisplay(ev,index);result=typeof narrativeEvent==="function"?narrativeEvent(result):result;result=typeof narrativeRememberedEvent==="function"?narrativeRememberedEvent(result,index):result;result=typeof companionCareEvent==="function"?companionCareEvent(result,index):result;result=typeof companionRouteEvent==="function"?companionRouteEvent(result,index):result;result=typeof finaleEvent==="function"?finaleEvent(result,index):result;return typeof companionEvidenceEvent==="function"?companionEvidenceEvent(result,index):result}
+function eventDisplay(ev,index){var result=legacyEventDisplay(ev,index);result=typeof narrativeEvent==="function"?narrativeEvent(result):result;result=typeof narrativeRememberedEvent==="function"?narrativeRememberedEvent(result,index):result;result=typeof companionCareEvent==="function"?companionCareEvent(result,index):result;result=typeof companionRouteEvent==="function"?companionRouteEvent(result,index):result;result=typeof finaleEvent==="function"?finaleEvent(result,index):result;result=typeof companionEvidenceEvent==="function"?companionEvidenceEvent(result,index):result;return typeof veraNegotiationEvent==="function"?veraNegotiationEvent(result,index):result}
 function legacyEventDisplay(ev,index){
   if(state.flags.matiasLateStart&&index===9)return Object.assign({},ev,{time:"09:35",text:"La expedición sale más tarde desde Línea 1. Matías queda en la enfermería, febril pero vivo, y su advertencia viaja con el grupo: no crucen cuando el cielo parezca quieto. En el túnel de servicio, una unidad de la Red UNO desciende y bloquea la subida; no busca movimiento, mide temperatura, respiración y ritmo cardíaco."});
   if(state.flags.unit7RouteCompleted&&index===10){

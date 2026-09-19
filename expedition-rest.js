@@ -44,7 +44,7 @@ function prepareNight(day,returnToRefuge){
   if(![1,2].includes(day)||state.finished||state.index!==events.findIndex(function(e){return e.day===day+1}))return false;
   var ledger=restLedger();if(ledger.nights[day])return showNight();
   state.inhibitor.active=false;state.inhibitor.remainingMs=0;state.inhibitor.exposed=true;state.inhibitor.needsSync=true;state.inhibitor.exposedMoves=0;
-  ledger.nights[day]={day:day,phase:"planning",returnToRefuge:returnToRefuge||null,choice:null,receipt:null,context:nightContext(day),conversations:{}};nightCompanion=null;
+  ledger.nights[day]={day:day,phase:"planning",returnToRefuge:returnToRefuge||null,choice:null,receipt:null,context:nightContext(day)+(day===2&&typeof veraNightContext==="function"&&veraNightContext()?"\n\n"+veraNightContext():""),conversations:{}};nightCompanion=null;
   save();render();renderSignalHud();return showNight();
 }
 function settleNight(mode){

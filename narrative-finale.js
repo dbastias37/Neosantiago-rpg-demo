@@ -64,7 +64,7 @@ function finaleStory(kind){
   if(f.erasedCitizensRestored)story.world+=" Los nombres que Vega restituyó permanecen en el registro, incluso si las pruebas de la torre no llegaron a todos.";
   else if(f.identityRegistryDestroyed)story.world+=" El registro destruido ya no puede reutilizar a los muertos. Las identidades que nadie copió siguen perdidas.";
   if(f.unit7Ally&&!f.unit7Shutdown)story.world+=" S-7 continúa usando los accesos que recuperaron juntos para abrir conductos de mantenimiento.";
-  return story;
+  return typeof veraFinaleStory==="function"?veraFinaleStory(story,kind):story;
 }
 function resolveNarrativeFinale(){
   if(!usesNarrativeFinale()||state.index!==26||pending||battleState)return false;
