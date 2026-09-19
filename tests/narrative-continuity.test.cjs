@@ -23,13 +23,14 @@ for(const copy of [true,false])test('continuous campaign through encounters, con
  for(let step=0;step<500&&!c.state.finished;step++){
   c.state.party.forEach(p=>{p.hp=p.maxHp;p.hunger=100});c.state.morale=Math.max(30,c.state.morale);
   if(c.battleState){c.winCombat();continue}
+  if(c.signalWarningVisible()){if(c.signalWarningMode==="tracking")c.signalWarningPrimaryAction();else c.signalWarningSecondaryAction();continue;}
   if(c.routeNarrativeState){if(c.routeNarrativeState.finished){c.advanceRouteNarrative();continue}c.revealRouteNarrativeText();const opts=c.currentRouteNarrativeScene().options;const i=opts.findIndex(o=>!c.reason(o));assert.ok(i>=0);c.selectRouteNarrativeChoice(i);continue}
   if(c.npcDialogueState){c.revealNpcDialogueText();if(c.npcDialogueState.selected){c.closeNpcDialogueAndContinue();continue}const opts=c.npcDialogueState.options;const i=c.state.index===24&&c.npcDialogueState.nodeId==='consent'?(copy?1:3):opts.findIndex(o=>!c.reason(o)&&!o.combat);assert.ok(i>=0);c.selectNpcDialogueChoice(i);continue}
   if(c.activeCrate()){if(c.activeCrate().phase==="waiting"){const timer=a.timers.get(c.crateNoticeTimer);assert.ok(timer);timer.fn();}else c.leaveCrate();continue}
-  if(c.pendingNight()){if(c.pendingNight().phase==="planning")c.settleNight("share");else c.continueAfterNight();continue}
+  if(c.pendingNight()){if(c.pendingNight().phase==="planning"){if(c.pendingNight().day===1)c.answerNightCompanion("sara","compartir");else{assert.ok(c.careRecord()?.decision);assert.match(c.companionConversation("sara",c.pendingNight()).text,/clínica/);c.answerNightCompanion("sara","sostener");}c.settleNight("share");}else c.continueAfterNight();continue}
   if(c.pending){c.advance();continue}
   if(c.state.refuge.active){c.acceptStarterKit();c.restAtRefuge();c.rejoinAtRefuge();c.confirmLeaveRefuge();continue}
-  visited.add(c.state.index);const choices=c.eventDisplay(c.events[c.state.index],c.state.index).choices;
+  visited.add(c.state.index);if(c.state.index===c.careIndex()){assert.equal(c.discussCare(),true);c.closePanel();}const choices=c.eventDisplay(c.events[c.state.index],c.state.index).choices;
   const i=choices.findIndex(o=>!c.reason(o)&&!o.roll);assert.ok(i>=0,'legal deterministic choice at '+c.state.index);c.choose(i);
  }
  assert.ok(c.state.finished,'campaign terminates '+JSON.stringify({index:c.state.index,npc:c.npcDialogueState&&[c.npcDialogueState.nodeId,c.npcDialogueState.selected],route:c.routeNarrativeState&&c.routeNarrativeState.sceneIndex,crate:c.activeCrate(),refuge:c.state.refuge.active}));assert.equal(visited.size,26);assert.equal(c.state.ending,copy?'archive':'testimony');assert.equal(c.state.index,26);

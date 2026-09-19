@@ -19,11 +19,17 @@ function companionConversation(id,n){
  if(n.day===1)return {text:voice.opening,choices:voice.choices};
  var old=restLedger().nights[1]?.conversations?.[id],previous=voice.choices.find(function(c){return c.id===old?.choice});
  var text=previous?previous.later:voice.opening+" Anoche no hablaron de esto; todavía pueden hacerlo antes de salir otra vez.";
- if(id==="sara"&&state.flags.liraDead)text+=" Al nombrar a Lira, Sara baja la voz. «Lo que pasó no cambia por acordar algo ahora».";
- return {text:text,choices:[
+ var careMemory=id==="sara"&&typeof careNightReflection==="function"?careNightReflection():"";if(careMemory)text=careMemory;
+ if(id==="sara"&&state.flags.liraDead&&!careMemory)text+=" Al nombrar a Lira, Sara baja la voz. «Lo que pasó no cambia por acordar algo ahora».";
+ var conversation={text:text,choices:[
   {id:"sostener",label:"Mantener ese criterio y preguntar qué le preocupa ahora",reply:id==="sara"?"«Que una urgencia decida por nosotros». Sara pide dejar las reservas a mano para poder revisarlas juntos.":id==="elias"?"«Que al contarlo después parezca que siempre supimos qué hacer». Elías conserva las dudas junto al registro, también las que resultaron incómodas.":"«Que demos por hecho que yo siempre voy a poder seguir». Noa vuelve a aflojar la correa y pide revisar el regreso con el resto."},
   {id:"revisar",label:"Admitir que el criterio puede necesitar cambios",reply:id==="sara"?"Sara se toma un momento. «Cambiarlo no me molesta. Enterarme cuando ya prometimos algo, sí». Pide hablar de cada necesidad antes de comprometer reservas.":id==="elias"?"«Podemos cambiar la explicación si aparece algo nuevo». Elías deja espacio en la hoja. No borra lo que habían entendido hasta ahora.":"Noa aparta el lápiz. «Puedo cambiar de rumbo. Necesito que me lo digan antes de estar ahí». Les pide revisar juntos el siguiente tramo."}
  ]};
+ if(careMemory)conversation.choices=[
+  {id:"sostener",label:"Comprometerse a consultar antes de gastar las reservas",reply:"Sara mantiene el cuaderno abierto. «Quiero estar en esa conversación antes de que prometamos ayuda. También cuando termine diciendo algo que no quieran oír». Elías deja la anotación de la clínica donde está."},
+  {id:"revisar",label:"Admitir que no siempre podrán alcanzar un acuerdo",reply:"Sara escucha hasta el final. «Puedo aceptar que no estemos de acuerdo. Necesito poder decirlo antes de que decidan por mí». Deja las reservas al alcance de los tres para preparar la salida."}
+ ];
+ return conversation;
 }
 function normalizeNightConversations(n){
  n.conversations??={};
