@@ -62,3 +62,7 @@ La interfaz muestra el propósito inmediato junto al avance y conserva el catál
 Se verificaron guardados durante encuentros, reintentos, abandono y entregas; pago único, apertura de contactos y persistencia de las banderas de observación. Las pruebas de interfaz ejercitan botones, catálogo, mapa, entrega y recarga mediante DOM; no equivalen a una evaluación humana del ritmo o de la composición visual en dispositivos reales.
 
 El bloque no añade estaciones ni convierte el mapa en exploración libre. El siguiente candidato de desarrollo es prolongar la identidad de los destinatarios en las entregas largas: que Beatriz, Guzmán y Jiménez respondan a problemas propios de su sector y que esas situaciones alteren encargos posteriores. Antes de extender el volumen conviene observar una sesión del inicio revisado y ajustar dónde el jugador vuelve a sentir trámite.
+
+## Ajuste del catálogo · 19 de septiembre
+
+El catálogo pasa de tarjetas extensas a franjas de ancho completo con retrato, título y solicitante. Los datos de recorrido, plazo, recompensa, carga y relato aparecen al abrir el encargo. La explicación del progreso queda disponible en un desplegable. Las imágenes conservan su proporción vertical completa, también en el detalle; ya no se recortan como imágenes horizontales. El encabezado del modal permanece fuera del área desplazable y cada cambio de vista vuelve al inicio de su contenido. Los 18 casos existentes de interfaz de encargos pasan tras este ajuste.
