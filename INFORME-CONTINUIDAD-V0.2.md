@@ -12,6 +12,8 @@ El mapa de Mensajeros ahora se presenta como una [pantalla montada en un panel d
 
 **Acabado de óxido:** se generó y montó una textura WebP propia sobre la carcasa central del mapa, con desgaste concentrado en bordes y tornillos. Conserva la paleta del modal y no cubre el cristal, los retratos ni los compartimentos de lectura. La imagen y sus instrucciones quedan en el repositorio; el resto de la web no recibe esta textura. Detalles en [interfaz del mapa](docs/mapa-panel-0.2.md).
 
+**Interfaz por bloques — bloque 1:** completado el acabado de los marcos de Encargos: cabecera, encargo activo, grupo y suministros y registro reutilizan la misma textura del mapa, sin cambiar formas, colores, fuentes ni distribución. El siguiente bloque propuesto es actualizar las ventanas de encargos y refugios; requiere la revisión del usuario antes de continuar. El resto de pantallas conserva su acabado actual.
+
 **Laboratorio separado:** los [tres paneles de compuertas con quince acertijos](docs/laboratorio-compuertas-0.2.md) siguen disponibles por URL directa en `labs/compuertas/`. El usuario pidió conservarlos en el repositorio para una futura implementación. El mapa toma su lenguaje visual, sin importar su código ni integrar compuertas a viajes, combates o guardados de la campaña. La profundización de Guzmán y Jiménez continúa pendiente.
 
 ### Narrativa y economía — entrega 13

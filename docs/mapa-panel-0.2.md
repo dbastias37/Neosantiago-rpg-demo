@@ -39,6 +39,14 @@ La capa decorativa está detrás del contenido, no recibe pulsaciones y usa más
 
 Prompt de generación (herramienta integrada, no CLI): «Flat straight-on seamless square material texture for the physical metal frame of NeoSantiago 2130. Dark nearly black green-painted industrial steel (#090e0c, #111a15), eroded black paint, fine pitting, layered flaky dark brown oxidation and scattered muted copper rust deposits, fine worn scratches exposing charcoal iron. Approximately 30 percent rust coverage. Even diffuse lighting, no vignette. No text, markings, magenta lines, seams, frame, screws, buttons, screen, symbols or watermark.»
 
+## Bloque 1 — completar Encargos
+
+Se extiende el mismo material aprobado del mapa a los marcos de la cabecera, encargo activo, grupo y suministros y registro de viaje. Los cinco módulos comparten la variable `--console-texture`, la escala de 560 px, la opacidad y la capa decorativa estática. No se generan imágenes adicionales.
+
+En los módulos que contienen lectura directa, las máscaras dejan el centro transparente y concentran el óxido en un perímetro estrecho, reducido en móvil. Se conservan todos los tamaños, posiciones, fondos base, colores, fuentes, retratos y botones. La textura no intercepta el ratón ni el tacto. El mapa mantiene exactamente su acabado anterior.
+
+Solo se modifican la hoja de presentación, su versión de carga y la documentación. Las ventanas de misiones y refugios corresponden al bloque 2 y quedan pendientes de revisión del usuario, al igual que equipo, comercio, combate, expedición e inicio. El laboratorio sigue separado.
+
 ## Alcance y aislamiento
 
 `extensions/mensajeros/map-console.css` contiene la nueva presentación y se carga únicamente en `play.html`. El código de la actividad solo añade las lecturas del panel y el estado de los botones de escala. Se actualizan las versiones de carga del módulo y del acceso desde el juego principal.

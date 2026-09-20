@@ -5,6 +5,7 @@
   --console-metal: #090e0c;
   --console-edge: var(--line);
   --console-muted: var(--muted);
+  --console-texture: url('assets/textures/metal-oxidado.webp');
   --console-font: "Arial Narrow", "Roboto Condensed", Arial, sans-serif;
   --console-digits: ui-monospace, SFMono-Regular, Consolas, monospace;
   font-family: var(--console-font);
@@ -74,7 +75,8 @@
   background: radial-gradient(ellipse at 3% 97%, #d9a15c08, transparent 35%), linear-gradient(115deg, #111a15, var(--console-metal) 50%, #152019);
   box-shadow: inset 0 0 0 1px #e7e2d81c, inset 0 0 17px #030705d9, 4px 5px var(--ink), 8px 14px 22px #0006;
 }
-.control-console::before {
+.control-console::before,
+.courier-console :is(.topbar, .mission-panel, .cargo-panel, .journal)::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -82,11 +84,29 @@
   pointer-events: none;
   border-radius: 3px;
   opacity: .88;
-  background: url('assets/textures/metal-oxidado.webp') center / 560px 560px repeat;
+  background: var(--console-texture) center / 560px 560px repeat;
   /* Keep wear strongest along seams; leave the center of the nameplate quiet. */
   -webkit-mask-image: linear-gradient(90deg, #000, #0003 12%, #0003 88%, #000), linear-gradient(0deg, #000, transparent 28%, transparent 85%, #0009);
   mask-image: linear-gradient(90deg, #000, #0003 12%, #0003 88%, #000), linear-gradient(0deg, #000, transparent 28%, transparent 85%, #0009);
 }
+/* Block 1: reuse the map material on the existing surrounding frames only. */
+.courier-console :is(.topbar, .mission-panel, .cargo-panel, .journal) {
+  position: relative;
+  isolation: isolate;
+  --frame-wear-width: 18px;
+  --frame-wear-height: 12px;
+}
+.courier-console :is(.topbar, .mission-panel, .cargo-panel, .journal)::before {
+  border-radius: inherit;
+  --frame-wear-mask: linear-gradient(90deg, #000, transparent var(--frame-wear-width), transparent calc(100% - var(--frame-wear-width)), #000), linear-gradient(0deg, #000, transparent var(--frame-wear-height), transparent calc(100% - var(--frame-wear-height)), #000);
+  -webkit-mask-image: var(--frame-wear-mask);
+  mask-image: var(--frame-wear-mask);
+}
+.courier-console .topbar {
+  --frame-wear-width: 24px;
+  --frame-wear-height: 14px;
+}
+.courier-console .journal { --frame-wear-height: 8px; }
 .console-screw {
   position: absolute;
   width: 10px;
@@ -308,6 +328,7 @@
   .control-console #routeButton { padding-inline: 8px; gap: 5px; font-size: 8px; }
 }
 @media (max-width:1000px) {
+  .courier-console .mission-panel { --frame-wear-width: 12px; --frame-wear-height: 7px; }
   .courier-console .topbar { min-height: 60px; padding: 10px 12px; }
   .courier-console .topbar nav button { padding-inline: 10px; }
   .courier-console .mission-panel { padding: 8px 10px; border-width: 2px; }
@@ -331,6 +352,8 @@
   .control-console #travel { padding: 10px; }
 }
 @media (max-width:700px) {
+  .courier-console :is(.mission-panel, .cargo-panel) { --frame-wear-width: 10px; --frame-wear-height: 6px; }
+  .courier-console .topbar { --frame-wear-width: 12px; --frame-wear-height: 8px; }
   .courier-console .topbar { min-height: 0; padding: 8px 10px; gap: 7px; border-bottom-width: 2px; }
   .courier-console .topbar .brand { font-size: 16px; letter-spacing: .05em; }
   .courier-console .brand small { font-size: 6px; letter-spacing: .05em; }
