@@ -6,7 +6,7 @@ Fecha: 20 de septiembre de 2026. Continuación de V0.2 solicitada después del l
 
 El mapa de Los Mensajeros se aloja en una carcasa de metal verde con tornillos, placa de identificación, bisel y pantalla oscura. Las rutas y estaciones se dibujan dentro del cristal. Los controles de zoom, centrado y recorrido quedan en la superficie del equipo, con botones en relieve. La escala muestra el porcentaje real y deshabilita sus extremos. La pantalla muestra la posición, el destino del recorrido seleccionado y el número de puntos conocidos.
 
-Los módulos de encargo, grupo y suministros, y registro de viaje comparten los verdes, el papel envejecido y el latón del panel. Los retratos mantienen `object-fit: contain`. La presentación se adapta a las distribuciones existentes de escritorio, tableta y teléfono; el espacio de decisiones conserva desplazamiento propio cuando su contenido supera la altura disponible.
+Los módulos de encargo, grupo y suministros, y registro de viaje comparten los verdes, el papel envejecido y el latón del panel. Los retratos mantienen `object-fit: contain`. La presentación se adapta a las distribuciones existentes de escritorio, tableta y teléfono; el espacio de decisiones conserva desplazamiento propio cuando su contenido supera la altura disponible. En escritorios de hasta 730 píxeles de altura, el registro se consulta desde su botón del pie y la cabecera se compacta para dejar más altura útil al mapa.
 
 El acabado se genera con HTML, CSS y el mapa SVG existente: no necesita fondos nuevos ni descarga imágenes del laboratorio. El cristal decorativo no intercepta pulsaciones. Los controles y las estaciones conservan sus nombres accesibles y navegación por teclado.
 
@@ -22,7 +22,7 @@ No cambian los recorridos, encuentros, recompensas, precios, contratos ni format
 
 `node --check extensions/mensajeros/play.mjs` y `npm test` completados: 359 pruebas aprobadas. La suite incluye el arranque de la interfaz real de Mensajeros, viajes, retornos, encuentros pendientes, selección de trabajos, ampliación de la red y conservación de contratos antiguos.
 
-La revisión visual se realiza desde el mapa publicado y la página existente `tests/layout-preview.html`, que permite comprobar ventanas de escritorio y teléfono sin reiniciar la partida. Los puntos de revisión son la altura útil del mapa, los controles de escala y recorrido, el acceso a los encargos, la lectura de suministros y la presentación completa de los retratos.
+Se revisó el mapa publicado en escritorio y en las ventanas de 390 × 844 y 360 × 640 mediante la página existente `tests/layout-preview.html`, sin reiniciar ni avanzar la partida. El zoom mostró 125 % y cambió el área del mapa; centrado, itinerario, ficha de encargo y carga abrieron sus vistas correctas. Los retratos conservan su imagen completa. La revisión en 1024 × 600 detectó que el registro inferior restaba demasiada altura al mapa, y motivó el ajuste de cabecera y registro descrito arriba.
 
 ## Continuación
 

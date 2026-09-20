@@ -391,15 +391,23 @@
   .control-console .map-controls { gap: 3px; }
 }
 @media (max-height:730px) and (min-width:701px) {
+  .courier-console .topbar { min-height: 56px; padding-block: 7px; }
   .control-console { padding-top: 12px; padding-bottom: 12px; }
   .console-header { padding-bottom: 8px; }
   .console-name small,.console-serial small { display: none; }
   .console-mark { height: 23px; }
   .control-console .panel-head { padding-block: 8px; }
+  .control-console .panel-head .eyebrow { display: none; }
   .control-console .panel-head h1 { font-size: 22px; }
   .map-screen { min-height: 150px; }
   .console-deck { padding-block: 8px; }
   .control-console #travel { padding: 8px 10px; }
+}
+@media (max-height:730px) and (min-width:1001px) {
+  .courier-console #shell { grid-template-rows: minmax(0,1fr); padding-block: 10px; }
+  .courier-console .journal { display: none; }
+  .courier-console #journalButton { display: block; }
+  .courier-console .footer>span { margin-right: auto; }
 }
 @media (max-height:700px) and (max-width:700px) {
   .courier-console .topbar { padding-block: 5px; gap: 5px; }
