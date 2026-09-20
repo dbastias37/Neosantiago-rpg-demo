@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090e0c">
+  <title>Encargos A/B · Neo Santiago 2130</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="styles.css?v=1">
+</head>
+<body data-variant="a">
+  <a class="skip" href="#stage">Ir al boceto</a>
+  <header class="lab-toolbar">
+    <div><span class="eyebrow">NEO SANTIAGO 2130 / DISEÑO</span><strong>Encargos · prueba A/B</strong></div>
+    <nav aria-label="Elegir boceto"><button data-variant="a" aria-pressed="true">A · Registro</button><button data-variant="b" aria-pressed="false">B · Expediente</button></nav>
+    <button id="device" aria-pressed="false">Vista móvil</button>
+  </header>
+  <div class="lab-caption"><p id="description">A · Bandas compactas y una ficha que se abre al elegir un encargo.</p><span>Prueba independiente · no modifica tu partida</span></div>
+  <main id="preview"><div id="stage" tabindex="-1"><p class="loading" role="status">Abriendo el registro…</p></div></main>
+  <footer class="lab-footer">Mismos tres encargos en ambas opciones. Prueba seleccionar, leer y revisar la ruta.</footer>
+  <dialog id="detail" aria-labelledby="detailTitle"><div id="detailContent"></div></dialog>
+  <dialog id="route" aria-labelledby="routeTitle"><div id="routeContent"></div></dialog>
+  <dialog id="confirmation" aria-labelledby="confirmationTitle"><div class="confirmation-body"><span class="eyebrow">PRUEBA DE INTERFAZ</span><h2 id="confirmationTitle">Selección completada</h2><p id="confirmationText"></p><p>Esta es una demostración visual. No se inicia un viaje ni se modifica tu partida.</p><button data-close="confirmation" class="primary">Seguir comparando</button></div></dialog>
+  <script type="module" src="app.mjs?v=1"></script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+[
+  {
+    "id": "relevo-01",
+    "number": "01",
+    "name": "El turno que no alcanza",
+    "issuer": "H. Morales",
+    "recipient": "Ana · Plaza de Armas",
+    "portrait": "../../characters/encargos/hmorales.webp",
+    "summary": "Conecta Los Héroes con Plaza de Armas: averigua por qué falta un relevo y acuerda cómo compartir el paso entre abastecimiento y familias.",
+    "introduction": "Tu primera salida une tres puestos que dependen entre sí. El recorrido termina en Plaza, donde podrás escoger el siguiente trabajo.",
+    "briefing": "La Moneda pide reemplazos, la posta necesita recibir carga y Ana espera gente en Plaza. Cada puesto manda una lista distinta. No puedo sacar otro grupo de acá sin saber dónde lo van a dejar esperando. Hablen con los dos puestos y lleven el acuerdo a Ana. Ella cierra la cuenta y les paga allá; no tienen que volver solo para traerme un papel.",
+    "limit": 32,
+    "reward": 8,
+    "lateStep": 5,
+    "latePenalty": 1,
+    "effect": "El corredor central queda coordinado. Desde Plaza puedes llevar la reserva a República o reconocer el acceso a los talleres. Ana conserva el acuerdo del paso.",
+    "origin": "Los Héroes",
+    "destination": "Plaza de Armas",
+    "route": [
+      "Los Héroes",
+      "La Moneda",
+      "Universidad de Chile",
+      "Plaza de Armas"
+    ],
+    "legs": 3,
+    "pickup": false,
+    "cargo": [
+      {
+        "name": "Lista de relevo",
+        "image": "../../items/routeMap.webp",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "romero-01",
+    "number": "02",
+    "name": "Una reserva, tres puestos",
+    "issuer": "Dr. Romero",
+    "recipient": "Dr. Romero · República",
+    "portrait": "../../characters/encargos/dr-romero.webp",
+    "summary": "Recoge la reserva de la posta y llévala a República. En el camino hay un vigía esperando atención y un relevo que necesita saber qué puede prometer.",
+    "introduction": "La solicitud de Romero viajó con el relevo. Ana te la entrega aquí; el encargo cruza el corredor y termina en la posta de República.",
+    "briefing": "Dejé la solicitud con Ana para que puedan salir desde Plaza. La reserva está en Universidad de Chile. La necesitamos en República, pero el vigía de La Moneda lleva pidiendo un cambio de vendaje desde ayer. Pueden usar el botiquín del equipo o traerme su ubicación para mandar a alguien. El estuche va sellado: no alcanza para repartirlo sin saber qué falta después.",
+    "limit": 46,
+    "reward": 12,
+    "lateStep": 5,
+    "latePenalty": 1,
+    "effect": "La reserva queda registrada en República. Los botiquines pasan a costar 6 créditos en Los Héroes; la posta recuerda qué atención quedó pendiente.",
+    "origin": "Plaza de Armas",
+    "destination": "República",
+    "route": [
+      "Plaza de Armas",
+      "Universidad de Chile",
+      "La Moneda",
+      "Los Héroes",
+      "República"
+    ],
+    "legs": 4,
+    "pickup": true,
+    "cargo": [
+      {
+        "name": "Estuche médico sellado",
+        "image": "../../items/medkit.webp",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "beatriz-01",
+    "number": "03",
+    "name": "Lo que alimenta al norte",
+    "issuer": "Beatriz",
+    "recipient": "Beatriz · Los Libertadores",
+    "portrait": "../../characters/encargos/beatriz.webp",
+    "summary": "Recoge la reserva sellada y vuelve a los huertos. El siguiente turno necesita saber cómo llegó el envase y qué falta revisar.",
+    "introduction": "Con el acuerdo del paso confirmado, Ana puede coordinar contigo la recogida de nutrientes para Beatriz.",
+    "briefing": "Todavía tenemos cultivos, pero queda poco nutriente. La reserva está en Universidad de Chile. Luz está aprendiendo a preparar las mezclas y yo llevo dos turnos revisándolo todo: si falta una indicación, tiene que esperarme. Recojan el envase sin abrirlo. Ella volverá con ustedes desde Plaza; cuéntenle lo que hayan comprobado, también lo que siga pendiente.",
+    "limit": 50,
+    "reward": 14,
+    "lateStep": 5,
+    "latePenalty": 1,
+    "effect": "Las raciones bajan a 3 créditos en la red de abastecimiento.",
+    "origin": "Los Libertadores",
+    "destination": "Los Libertadores",
+    "route": [
+      "Los Libertadores",
+      "Plaza de Armas",
+      "Universidad de Chile",
+      "Plaza de Armas",
+      "Los Libertadores"
+    ],
+    "legs": 4,
+    "pickup": true,
+    "cargo": [
+      {
+        "name": "Reserva de nutrientes",
+        "image": "../../items/food.webp",
+        "qty": 1
+      }
+    ]
+  }
+]
