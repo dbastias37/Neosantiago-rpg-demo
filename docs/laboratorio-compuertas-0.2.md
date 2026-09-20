@@ -55,6 +55,8 @@ Fondo de estación, gabinetes con acabado de metal, luces, teclas con relieve, m
 
 `tests/compuertas-lab.test.cjs` cubre las quince soluciones, los ceros, entradas incompletas, cuatro fallos, restauración de intentos, mediciones en paralelo, rutas equivalentes, aislamiento y protecciones. La suite completa aprobó 359 pruebas al incorporar el laboratorio. Las pruebas automáticas no determinan si la dificultad, la extensión de los textos o la repetición resultan satisfactorias: esa evaluación corresponde a las partidas del laboratorio.
 
+Revisión realizada en el navegador del sitio publicado: apertura correcta en los tres paneles; rechazo de código con descuento de intento; teclado físico con Enter; clave de seis cifras con cero; documentos y pistas en la vista móvil; lectura OL antes de reparar y 0,8 Ω después de instalar el puente; cuatro fallos consecutivos y bloqueo conservado al recargar. Se inspeccionaron el gabinete numérico, el archivo, los cables y la pantalla de apertura. La vista móvil se comprobó con el contenedor angosto del laboratorio, no en un teléfono físico. Las capturas y las mediciones de la interfaz no mostraron desbordamiento horizontal del panel. El sonido opcional requiere valoración humana de volumen y carácter.
+
 ## Pendiente después de probar
 
 Recoger observaciones sobre legibilidad, dificultad y ritmo. Decidir si se mantienen los cuatro intentos y las tres pistas. Solo después seleccionar compuertas para rutas concretas, recordar accesos abiertos por partida y definir las consecuencias de un fallo dentro del juego. El laboratorio no consume recursos, no abre rutas reales ni modifica la economía.

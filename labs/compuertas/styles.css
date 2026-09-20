@@ -15,3 +15,4 @@ dialog{padding:0;border:1px solid #6d7964;background:#101912;color:var(--paper);
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
 @container lab (max-width:760px){.diagnostic-deck{grid-template-columns:minmax(0,1fr) 156px}.circuit .key{width:44px;height:44px;min-height:44px}}
 @container lab (max-width:355px){.diagnostic-deck{grid-template-columns:1fr}.circuit .key{width:100%;height:44px}.meter{min-height:135px}.meter-value{font-size:30px}.probe-digits{margin-top:4px}}
+#resultTitle:focus{outline:none}.lab.mobile-preview~dialog{max-width:420px}.lab.mobile-preview~dialog .outcome{padding:24px 20px}.lab.mobile-preview~dialog .outcome-actions{flex-direction:column}.lab.mobile-preview~dialog .door-scene{height:185px}
