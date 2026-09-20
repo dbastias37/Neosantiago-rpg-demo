@@ -6,22 +6,26 @@ Fecha: 20 de septiembre de 2026. Continuación de V0.2 solicitada después del l
 
 El mapa de Los Mensajeros se aloja en una carcasa de acero oscuro con tornillos, placa de identificación, bisel y pantalla casi negra. Las rutas y estaciones se dibujan dentro del cristal. Los controles de zoom, centrado y recorrido quedan en la superficie del equipo, con botones en relieve. La escala muestra el porcentaje real y deshabilita sus extremos. La pantalla muestra la posición, el destino del recorrido seleccionado y el número de puntos conocidos.
 
-Los módulos de encargo, grupo y suministros, y registro de viaje comparten el grafito, los reflejos de acero y los acentos cian y ámbar del panel. Los retratos mantienen `object-fit: contain`. La presentación se adapta a las distribuciones existentes de escritorio, tableta y teléfono; el espacio de decisiones conserva desplazamiento propio cuando su contenido supera la altura disponible. En escritorios de hasta 730 píxeles de altura, el registro se consulta desde su botón del pie y la cabecera se compacta para dejar más altura útil al mapa.
+Los módulos de encargo, grupo y suministros, y registro de viaje comparten el negro de matiz verde, el marfil y los acentos cian y ámbar del modal de encargos. Los retratos mantienen `object-fit: contain`. La presentación se adapta a las distribuciones existentes de escritorio, tableta y teléfono; el espacio de decisiones conserva desplazamiento propio cuando su contenido supera la altura disponible. En escritorios de hasta 730 píxeles de altura, el registro se consulta desde su botón del pie y la cabecera se compacta para dejar más altura útil al mapa.
 
 El acabado se genera con HTML, CSS y el mapa SVG existente: no necesita fondos nuevos ni descarga imágenes del laboratorio. El cristal decorativo no intercepta pulsaciones. Los controles y las estaciones conservan sus nombres accesibles y navegación por teclado.
 
 ## Revisión de color y tipografía
 
-El usuario aprobó la estructura, pero pidió reemplazar los tonos oliva y beige por colores de metal oscuro, inspirados en sus tres referencias de túneles y paneles industriales. Las referencias orientan la paleta y el acabado; no se copiaron sus formas, distribución ni mecanismos.
+El usuario aprobó la estructura, pero pidió reemplazar los tonos oliva y beige por colores de metal oscuro. Después de revisar la prueba de acero frío, eligió la paleta de la captura del encargo «El turno que no alcanza». Esta selección sustituye la paleta gris azulada anterior. Se midieron los colores de la captura y se contrastaron con `ui.css`: los valores coinciden con los del modal existente. Se conserva la estructura física del panel.
 
 | Uso | Color |
 | --- | --- |
-| Acero y grafito | `#1b2428`, con luces frías y sombras profundas |
-| Bordes de metal | `#465257` |
-| Cristal | `#060c0f`, con iluminación cian tenue |
+| Fondo del modal y base del panel | Negro con matiz verde: `#090e0c` |
+| Compartimentos interiores | `#0d1513` |
+| Bordes y separadores | Ámbar `#d9a15c`, con la transparencia de `--line` |
+| Cristal y sombras | `#070a09` |
 | Señales, enfoque y resistencia | Cian de la campaña: `#75d3d7` |
-| Ruta seleccionada y acciones principales | Ámbar de la campaña: `#d9a15c` / `#f2bd73` |
-| Texto principal | Color de la campaña: `#e7e2d8` |
+| Ruta seleccionada y acción principal | Ámbar claro: `#f2bd73` |
+| Texto principal y títulos | Marfil: `#e7e2d8` |
+| Narrativa y metadatos | `#c0c4bd` / `#9b9b92` |
+
+Las acciones principales usan relleno ámbar claro y texto negro, como «Retomar encargo actual» en la captura. Las secundarias usan fondo oscuro, borde y texto ámbar. Los títulos de los encargos vuelven al marfil y los rótulos al cian.
 
 Los textos, rótulos y botones usan `Arial Narrow`, `Roboto Condensed`, `Arial`, sans-serif, igual que el juego principal. Se elimina Courier New. La familia monoespaciada del reloj de la campaña se reserva para la escala, el contador de red y el identificador del terminal. No se añaden descargas de fuentes.
 

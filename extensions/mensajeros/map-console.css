@@ -1,22 +1,22 @@
 /* Route terminal. This presentation is independent from labs/compuertas. */
 .courier-console {
-  /* Share the campaign's typography, cyan, amber and text colors. */
+  /* Palette sampled from the assignment dialog: near-black green, ivory, cyan and amber. */
   --console-ink: var(--paper);
-  --console-metal: #1b2428;
-  --console-edge: #465257;
-  --console-muted: #aab5b7;
+  --console-metal: #090e0c;
+  --console-edge: var(--line);
+  --console-muted: var(--muted);
   --console-font: "Arial Narrow", "Roboto Condensed", Arial, sans-serif;
   --console-digits: ui-monospace, SFMono-Regular, Consolas, monospace;
   font-family: var(--console-font);
-  background: linear-gradient(180deg, #070b0ec2, #040709ed), url('../../backgrounds/station-ruins.webp') center/cover fixed;
+  background: linear-gradient(180deg, #070a09c2, #040706ed), url('../../backgrounds/station-ruins.webp') center/cover fixed;
 }
 
 .courier-console .topbar {
   padding: 12px 20px;
   min-height: 66px;
-  border-bottom: 3px solid #070b0d;
-  background: linear-gradient(105deg, #29353b, #151d21 58%, #35434a);
-  box-shadow: inset 0 1px #afc2ca26, 0 3px #75d3d718, 0 8px 20px #0006;
+  border-bottom: 3px solid var(--ink);
+  background: linear-gradient(105deg, #111a15, #090e0c 58%, #152019);
+  box-shadow: inset 0 1px #d9a15c18, 0 3px #75d3d718, 0 8px 20px #0006;
 }
 .courier-console .brand { color: var(--paper); font-size: 22px; letter-spacing: .08em; }
 .courier-console .brand span { color: var(--amber2); }
@@ -24,30 +24,31 @@
 
 /* Raised controls sit on the case; the map itself remains a clear display. */
 .courier-console :where(.topbar, #shell) button {
-  border: 1px solid var(--console-edge);
+  border: 1px solid var(--amber);
   border-radius: 3px;
-  color: var(--paper);
-  background: linear-gradient(135deg, #34424a, #1d292f);
-  box-shadow: inset 0 1px #d3e4eb35, 0 3px #070b0d, 1px 4px 5px #0005;
+  color: var(--amber2);
+  background: linear-gradient(135deg, #0d1513, #090e0c);
+  box-shadow: inset 0 1px #e7e2d81c, 0 3px var(--ink), 1px 4px 5px #0005;
   text-shadow: 0 1px #00000075;
   transition: background .16s, box-shadow .12s, transform .12s;
 }
 .courier-console :where(.topbar, #shell) button:hover:not(:disabled) {
-  background: linear-gradient(135deg, #43565e, #293b43);
+  background: linear-gradient(135deg, #1b2219, #151a12);
   transform: none;
 }
 .courier-console :where(.topbar, #shell) button:active:not(:disabled) {
   transform: translateY(2px);
-  box-shadow: inset 0 1px 3px #00000075, 0 1px #070b0d;
+  box-shadow: inset 0 1px 3px #00000075, 0 1px var(--ink);
 }
 .courier-console :where(.topbar, #shell) .primary {
-  border-color: #b07944;
-  color: var(--amber2);
-  background: linear-gradient(125deg, #563d26, #30251d);
+  border-color: var(--amber);
+  color: var(--ink);
+  background: var(--amber2);
+  text-shadow: none;
   box-shadow: inset 0 1px #d9a15c50, 0 3px #15100c, 1px 4px 5px #0005;
 }
 .courier-console :where(.topbar, #shell) .primary:hover:not(:disabled) {
-  background: linear-gradient(125deg, #68462a, #473221);
+  background: var(--amber);
 }
 .courier-console :where(.topbar, #shell) button:focus-visible {
   outline: 2px solid var(--cyan);
@@ -70,8 +71,8 @@
   border: 5px solid var(--console-edge);
   border-radius: 8px;
   color: var(--console-ink);
-  background: radial-gradient(ellipse at 3% 97%, #73472638, transparent 35%), linear-gradient(115deg, #29353b, var(--console-metal) 50%, #35434a);
-  box-shadow: inset 0 0 0 1px #d3e4eb35, inset 0 0 17px #03090bd9, 4px 5px #070b0d, 8px 14px 22px #0006;
+  background: radial-gradient(ellipse at 3% 97%, #d9a15c08, transparent 35%), linear-gradient(115deg, #111a15, var(--console-metal) 50%, #152019);
+  box-shadow: inset 0 0 0 1px #e7e2d81c, inset 0 0 17px #030705d9, 4px 5px var(--ink), 8px 14px 22px #0006;
 }
 .control-console::before {
   content: "";
@@ -87,10 +88,10 @@
   position: absolute;
   width: 10px;
   height: 10px;
-  border: 1px solid #070b0d;
+  border: 1px solid var(--ink);
   border-radius: 50%;
-  background: linear-gradient(42deg, #29353b, #a0b0b5 44%, #1b252b 49% 56%, #5c6e76 60%, #151d21);
-  box-shadow: 1px 2px 3px #0008, 0 1px #c4d5dc44;
+  background: linear-gradient(42deg, #111a15, #bab8a3 44%, #151a13 49% 56%, #706c55 60%, #090e0c);
+  box-shadow: 1px 2px 3px #0008, 0 1px #e7e2d828;
   pointer-events: none;
 }
 .screw-nw { top: 6px; left: 6px; }
@@ -108,8 +109,8 @@
 }
 .console-name { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 900; letter-spacing: 1.6px; line-height: 1.2; }
 .console-name small { display: block; margin-top: 4px; font: 7px var(--console-font); letter-spacing: 1px; }
-.console-mark { display: flex; align-items: center; gap: 3px; width: 30px; height: 28px; padding: 3px; border: 1px solid #99b1bc55; }
-.console-mark i { width: 5px; height: 17px; background: #86969c; transform: skewY(-25deg); }
+.console-mark { display: flex; align-items: center; gap: 3px; width: 30px; height: 28px; padding: 3px; border: 1px solid #d9a15c38; }
+.console-mark i { width: 5px; height: 17px; background: var(--muted); transform: skewY(-25deg); }
 .console-mark i:nth-child(2) { height: 11px; }
 .console-serial { font: 11px var(--console-digits); letter-spacing: 1px; line-height: 1.4; text-align: right; white-space: nowrap; }
 .console-serial small { display: block; font-family: var(--console-font); font-size: 7px; letter-spacing: .5px; }
@@ -122,10 +123,10 @@
   flex-direction: column;
   min-height: 180px;
   overflow: hidden;
-  border: 7px solid #0a1013;
+  border: 7px solid #070a09;
   border-radius: 12px;
-  background: radial-gradient(ellipse at 45% 45%, #142329, #060c0f 90%);
-  box-shadow: inset 0 2px 16px #000c, 0 1px 1px #d3e4eb35, 0 -1px 1px #070b0d;
+  background: radial-gradient(ellipse at 45% 45%, #0d1513, #070a09 90%);
+  box-shadow: inset 0 2px 16px #000c, 0 1px 1px #e7e2d81c, 0 -1px 1px var(--ink);
   color: var(--paper);
 }
 .map-screen::after {
@@ -135,7 +136,7 @@
   z-index: 1;
   border-radius: 5px;
   pointer-events: none;
-  background: linear-gradient(135deg, #c7eaf00a, transparent 45%), repeating-linear-gradient(0deg, transparent 0 3px, #02080c18 4px);
+  background: linear-gradient(135deg, #e7e2d808, transparent 45%), repeating-linear-gradient(0deg, transparent 0 3px, #02060418 4px);
   box-shadow: inset 0 0 20px #0004;
 }
 .control-console .panel-head {
@@ -145,12 +146,12 @@
   gap: 12px;
   align-items: center;
   border-bottom: 1px solid #75d3d720;
-  background: #060d1199;
+  background: #090e0cc9;
 }
 .control-console .panel-head .eyebrow { margin: 0 0 4px; font: 8px var(--console-font); letter-spacing: 1.5px; color: var(--cyan); }
 .control-console .panel-head h1 { color: var(--paper); font-size: clamp(19px,2vw,28px); line-height: 1.12; letter-spacing: -.3px; margin: 0; font-weight: 800; }
 .screen-signal { display: flex; align-items: center; gap: 6px; flex-shrink: 0; font: 7px var(--console-font); letter-spacing: 1px; color: var(--cyan); }
-.screen-signal i { width: 6px; height: 6px; border: 1px solid #48767c; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px #75d3d780; }
+.screen-signal i { width: 6px; height: 6px; border: 1px solid #3b7475; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px #75d3d780; }
 .control-console #mapViewport {
   min-height: 0;
   background: radial-gradient(ellipse at center, #75d3d710, transparent 70%), repeating-linear-gradient(0deg, transparent 0 31px, #75d3d709 32px), repeating-linear-gradient(90deg, transparent 0 31px, #75d3d709 32px);
@@ -158,13 +159,13 @@
 .control-console #map { height: 100%; }
 .control-console #map svg { width: 100%; height: 100%; min-height: 0; }
 .control-console #map svg .route-station-label { fill: var(--paper); font-family: "Arial Narrow","Roboto Condensed",Arial,sans-serif; }
-.control-console #map svg .back { stroke: #071012; stroke-width: 4px; }
-.control-console #map .route-known { stroke: #688f97; opacity: .55; }
+.control-console #map svg .back { stroke: #0d1513; stroke-width: 4px; }
+.control-console #map .route-known { stroke: #6b8172; opacity: .55; }
 .control-console #map .route-selected { stroke: var(--amber2); opacity: .95; filter: drop-shadow(0 0 3px #d9a15c40); }
-.control-console #map .control-point { fill: var(--amber2); stroke: #070b0d; }
-.control-console #map .instance-point { fill: #071012; stroke: var(--cyan); }
+.control-console #map .control-point { fill: var(--amber2); stroke: var(--ink); }
+.control-console #map .instance-point { fill: #0d1513; stroke: var(--cyan); }
 .control-console #map .visited { stroke: var(--cyan); }
-.control-console #map .messenger { fill: #d9f4f3; stroke: var(--cyan); filter: drop-shadow(0 0 7px #75d3d79a); }
+.control-console #map .messenger { fill: var(--paper); stroke: var(--cyan); filter: drop-shadow(0 0 7px #75d3d79a); }
 .control-console #map [role=button]:focus-visible { stroke: var(--cyan); stroke-width: 5px; }
 .screen-readout {
   z-index: 2;
@@ -175,12 +176,12 @@
   flex: none;
   padding: 8px 15px;
   border-top: 1px solid #75d3d720;
-  background: #050d10cf;
+  background: #070a09cf;
   color: var(--console-muted);
   font: 8px var(--console-font);
   letter-spacing: .5px;
 }
-.screen-readout strong { color: #c2cbcc; font-size: 10px; font-weight: 400; margin-left: 7px; }
+.screen-readout strong { color: #c0c4bd; font-size: 10px; font-weight: 400; margin-left: 7px; }
 .screen-readout>span:first-child { flex-shrink: 0; }
 .screen-destination { display: flex; align-items: center; min-width: 0; }
 .screen-destination strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -195,18 +196,18 @@
 }
 .control-console .legend { grid-column: 1/-1; padding: 0 1px; margin: 0; border: 0; gap: 18px; color: var(--console-muted); font: 9px var(--console-font); }
 .control-console .legend span { gap: 6px; }
-.control-console .legend i { width: 6px; height: 6px; border-color: #48767c; background: #688f97; }
-.control-console .legend i.checkpoint { background: var(--amber2); border-color: #956b3e; }
-.control-console .legend i.current { background: var(--cyan); border-color: #48767c; box-shadow: 0 0 4px #75d3d780; }
+.control-console .legend i { width: 6px; height: 6px; border-color: #3b7475; background: #6b8172; }
+.control-console .legend i.checkpoint { background: var(--amber2); border-color: var(--amber); }
+.control-console .legend i.current { background: var(--cyan); border-color: #3b7475; box-shadow: 0 0 4px #75d3d780; }
 .control-console .map-controls { position: static; display: flex; align-items: center; gap: 7px; padding: 0; }
 .control-label { margin-right: 2px; color: var(--console-muted); font: 7px var(--console-font); letter-spacing: 1px; }
 .control-console .map-controls button { min-height: 39px; min-width: 39px; padding: 5px 8px; font-size: 9px; }
-.control-console :is(#zoomOut,#zoomIn) { width: 39px; height: 39px; padding: 0; border: 2px solid var(--console-edge); border-radius: 50%; font: 24px var(--console-font); background: radial-gradient(circle at 33% 25%, #34424a, #1d292f 72%, #29353b); box-shadow: 0 3px #070b0d, 1px 4px 5px #0005, inset 0 1px #c4d5dc44; }
-.control-console :is(#zoomOut,#zoomIn):hover:not(:disabled) { background: radial-gradient(circle at 33% 25%, #43565e, #293b43 72%, #35434a); }
-#mapZoomValue { min-width: 43px; padding: 5px 4px; border: 2px solid #0a1013; border-radius: 2px; color: #d9f4f3; background: #060c0f; box-shadow: inset 0 1px 3px #0007; text-align: center; font: 11px var(--console-digits); }
+.control-console :is(#zoomOut,#zoomIn) { width: 39px; height: 39px; padding: 0; border: 2px solid var(--console-edge); border-radius: 50%; font: 24px var(--console-font); background: radial-gradient(circle at 33% 25%, #0d1513, #090e0c 72%, #111a15); box-shadow: 0 3px var(--ink), 1px 4px 5px #0005, inset 0 1px #e7e2d828; }
+.control-console :is(#zoomOut,#zoomIn):hover:not(:disabled) { background: radial-gradient(circle at 33% 25%, #1b2219, #151a12 72%, #152019); }
+#mapZoomValue { min-width: 43px; padding: 5px 4px; border: 2px solid #070a09; border-radius: 2px; color: var(--paper); background: #070a09; box-shadow: inset 0 1px 3px #0007; text-align: center; font: 11px var(--console-digits); }
 .control-console #resetMap { margin-left: 3px; padding-inline: 12px; }
-.control-console #routeButton { display: inline-flex; align-items: center; justify-content: center; gap: 8px; align-self: center; min-height: 40px; padding: 8px 12px; border: 1px solid #b07944; background: linear-gradient(125deg, #563d26, #30251d); color: var(--amber2); font-size: 9px; white-space: nowrap; }
-.control-console #routeButton:hover { background: linear-gradient(125deg, #68462a, #473221); }
+.control-console #routeButton { display: inline-flex; align-items: center; justify-content: center; gap: 8px; align-self: center; min-height: 40px; padding: 8px 12px; border: 1px solid var(--amber); background: var(--console-metal); color: var(--amber2); font-size: 9px; white-space: nowrap; }
+.control-console #routeButton:hover { background: #d9a15c15; }
 .control-console #routeButton svg { flex: none; }
 
 /* Route decisions remain in their existing slot, inside the lower module. */
@@ -215,55 +216,55 @@
   min-height: 0;
   max-height: 37%;
   padding: 12px 14px;
-  border: 2px solid #0a1013;
+  border: 2px solid #070a09;
   border-radius: 4px;
-  background: linear-gradient(115deg, #152126, #0d1519);
-  box-shadow: inset 0 2px 7px #0005, 0 1px #a0b7c22e;
+  background: linear-gradient(115deg, #0d1513, #090e0c);
+  box-shadow: inset 0 2px 7px #0005, 0 1px #d9a15c26;
   color: var(--paper);
   scrollbar-width: thin;
-  scrollbar-color: #5c6e76 #0d1519;
+  scrollbar-color: #706c55 #090e0c;
 }
-.control-console #travel .eyebrow { margin-bottom: 5px; color: var(--amber2); font: 8px var(--console-font); letter-spacing: .8px; }
-.control-console #travel p { font-size: 12px; line-height: 1.5; }
+.control-console #travel .eyebrow { margin-bottom: 5px; color: var(--cyan); font: 8px var(--console-font); letter-spacing: .8px; }
+.control-console #travel p { font-size: 12px; line-height: 1.5; color: #c0c4bd; }
 .control-console .travel-head { color: var(--console-muted); font: 10px var(--console-font); }
 .control-console .progress { background: #75d3d72b; }
 .control-console .progress span { background: var(--cyan); }
 .control-console .travel-actions button { font-size: 10px; min-height: 40px; padding: 8px 10px; }
 .control-console .travel-outcome { border-color: var(--cyan); background: #75d3d709; padding: 8px 10px; }
 .control-console .travel-outcome strong { color: var(--cyan); font-size: 12px; }
-.control-console .travel-outcome p { color: #c2cbcc; }
+.control-console .travel-outcome p { color: #c0c4bd; }
 
-/* Side modules use the same dark steel and campaign colors as the terminal. */
+/* Side modules share the assignment dialog palette. */
 .courier-console .mission-panel,
 .courier-console .cargo-panel {
   position: relative;
   border: 3px solid var(--console-edge);
   border-radius: 5px;
   padding: 13px;
-  box-shadow: inset 0 1px #afc2ca26, 2px 4px #070b0d, 6px 9px 15px #0004;
-  scrollbar-color: #5c6e76 #0d1519;
+  box-shadow: inset 0 1px #d9a15c18, 2px 4px var(--ink), 6px 9px 15px #0004;
+  scrollbar-color: #706c55 #090e0c;
 }
 .courier-console .mission-panel {
   color: var(--paper);
-  background: radial-gradient(ellipse at 5% 95%, #73472638, transparent 50%), linear-gradient(130deg, #253136, #151d21);
+  background: radial-gradient(ellipse at 5% 95%, #d9a15c08, transparent 50%), linear-gradient(130deg, #101713, #090e0c);
   border-color: var(--console-edge);
 }
 .courier-console .mission-panel>.eyebrow { color: var(--cyan); font: 9px var(--console-font); letter-spacing: 1px; padding-bottom: 10px; border-bottom: 1px solid #75d3d718; margin-bottom: 11px; }
-.courier-console .mission-portrait { height: clamp(100px,20dvh,185px); border: 4px solid #0a1013; border-radius: 3px; box-shadow: inset 0 0 8px #0008, 0 1px #d3e4eb35; background: #0a1013; }
+.courier-console .mission-portrait { height: clamp(100px,20dvh,185px); border: 4px solid #070a09; border-radius: 3px; box-shadow: inset 0 0 8px #0008, 0 1px #e7e2d81c; background: #070a09; }
 .courier-console .mission-portrait img { object-fit: contain; object-position: center; }
 .courier-console .mission-panel .chip { color: var(--cyan); border-color: #75d3d720; background: #75d3d709; font: 8px var(--console-font); padding: 4px 6px; }
-.courier-console .mission-panel h2 { color: var(--amber2); font-size: 19px; line-height: 1.18; margin: 5px 0 10px; }
-.courier-console .mission-panel p { color: #c2cbcc; font-size: 12px; line-height: 1.6; }
+.courier-console .mission-panel h2 { color: var(--paper); font-size: 19px; line-height: 1.18; margin: 5px 0 10px; }
+.courier-console .mission-panel p { color: #c0c4bd; font-size: 12px; line-height: 1.6; }
 .courier-console .mission-panel .primary { font-size: 10px; }
 .courier-console .mission-panel .text-button { color: var(--console-muted); background: transparent; border: 0; box-shadow: none; margin-top: 7px; }
-.courier-console .network-progress { margin: 16px 0 0; padding: 11px 10px; border: 2px solid var(--console-edge); border-radius: 3px; color: #c2cbcc; background: #071012; box-shadow: inset 0 1px 5px #0005, 0 1px #a0b7c22e; }
+.courier-console .network-progress { margin: 16px 0 0; padding: 11px 10px; border: 2px solid var(--console-edge); border-radius: 3px; color: #c0c4bd; background: #0d1513; box-shadow: inset 0 1px 5px #0005, 0 1px #d9a15c26; }
 .courier-console .network-progress .eyebrow { color: var(--cyan); font: 8px var(--console-font); letter-spacing: .9px; line-height: 1.6; }
 .courier-console .network-progress p { color: var(--console-muted); font-size: 10px; line-height: 1.6; margin: 7px 0 0; }
 .courier-console .network-progress p strong { color: var(--amber2); }
-.courier-console .cargo-panel { background: linear-gradient(120deg, #253136, #151d21 52%, #2e3b41); color: var(--paper); }
+.courier-console .cargo-panel { background: linear-gradient(120deg, #101713, #090e0c 52%, #121c17); color: var(--paper); }
 .courier-console .cargo-panel>.eyebrow { color: var(--cyan); font: 9px var(--console-font); letter-spacing: 1px; line-height: 1.5; padding-bottom: 10px; border-bottom: 1px solid #75d3d718; }
-.courier-console #status { padding: 10px; margin-bottom: 13px; border: 3px solid #0a1013; border-radius: 4px; background: linear-gradient(120deg, #152126, #071012); box-shadow: inset 0 2px 6px #0007, 0 1px #afc2ca26; }
-.courier-console #status>p { font-size: 11px; line-height: 1.6; color: #c2cbcc; }
+.courier-console #status { padding: 10px; margin-bottom: 13px; border: 3px solid #070a09; border-radius: 4px; background: linear-gradient(120deg, #0d1513, #0d1513); box-shadow: inset 0 2px 6px #0007, 0 1px #d9a15c18; }
+.courier-console #status>p { font-size: 11px; line-height: 1.6; color: #c0c4bd; }
 .courier-console #status>b { color: var(--amber2); font: 17px var(--console-font); }
 .courier-console .deadline { border-color: #75d3d720; background: #75d3d709; }
 .courier-console .deadline b { font-size: 11px; color: var(--amber2); }
@@ -276,20 +277,20 @@
 .courier-console .status-data div { color: var(--console-muted); border-color: #75d3d718; background: #75d3d709; font-size: 8px; }
 .courier-console .status-data b { color: var(--amber2); font: 15px var(--console-font); margin-top: 3px; }
 .courier-console .crew-mini { gap: 8px; margin: 12px 0; }
-.courier-console .crew-mini button { padding: 5px; background: linear-gradient(125deg, #34424a, #1d292f); border-color: var(--console-edge); color: var(--paper); }
-.courier-console .crew-mini button:hover:not(:disabled) { background: #43565e; }
+.courier-console .crew-mini button { padding: 5px; background: linear-gradient(125deg, #0d1513, #090e0c); border-color: var(--console-edge); color: var(--paper); }
+.courier-console .crew-mini button:hover:not(:disabled) { background: #1b2219; }
 .courier-console .crew-mini img { width: 33px; height: 46px; border: 2px solid var(--console-edge); border-radius: 2px; }
-.courier-console .crew-mini small { color: #c2cbcc; font-size: 9px; }
+.courier-console .crew-mini small { color: #c0c4bd; font-size: 9px; }
 .courier-console .cargo-summary { padding-top: 11px; border-top-color: #75d3d718; }
 .courier-console .cargo-summary p { color: var(--console-muted); font: 9px var(--console-font); line-height: 1.6; }
 .courier-console .cargo-summary button { font-size: 9px; }
-.courier-console .journal { border: 2px solid var(--console-edge); border-radius: 4px; background: linear-gradient(110deg, #253136, #151d21); padding: 8px 14px; box-shadow: inset 0 1px #afc2ca26, 0 3px #070b0d; }
+.courier-console .journal { border: 2px solid var(--console-edge); border-radius: 4px; background: linear-gradient(110deg, #101713, #090e0c); padding: 8px 14px; box-shadow: inset 0 1px #d9a15c18, 0 3px var(--ink); }
 .courier-console .journal .eyebrow { color: var(--cyan); font: 8px var(--console-font); letter-spacing: 1px; }
 .courier-console #saveStatus { color: var(--console-muted); font-size: 9px; }
-.courier-console #journal { font-size: 11px; color: #c2cbcc; }
+.courier-console #journal { font-size: 11px; color: #c0c4bd; }
 .courier-console #journal p:last-child { color: var(--paper); }
 .courier-console .footer { padding-inline: 14px; color: var(--console-muted); font: 8px var(--console-font); }
-.courier-console .footer .text-button { color: #c2cbcc; font-size: 8px; letter-spacing: .02em; }
+.courier-console .footer .text-button { color: #c0c4bd; font-size: 8px; letter-spacing: .02em; }
 
 /* Match campaign labels; monospace is reserved for instrument readouts. */
 .courier-console :where(.topbar,#shell) :is(.brand small,.console-name small,.eyebrow,.screen-signal,.screen-readout,.legend,.control-label,.chip,.meter-label) { font-weight: 700; }
@@ -431,5 +432,5 @@
 @media (prefers-contrast:more) {
   .map-screen::after { display: none; }
   .control-console #map svg .route-station-label { fill: #fff6e5; }
-  .screen-readout { color: #d9f4f3; }
+  .screen-readout { color: var(--paper); }
 }
