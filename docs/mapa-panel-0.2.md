@@ -8,7 +8,7 @@ El mapa de Los Mensajeros se aloja en una carcasa de acero oscuro con tornillos,
 
 Los módulos de encargo, grupo y suministros, y registro de viaje comparten el negro de matiz verde, el marfil y los acentos cian y ámbar del modal de encargos. Los retratos mantienen `object-fit: contain`. La presentación se adapta a las distribuciones existentes de escritorio, tableta y teléfono; el espacio de decisiones conserva desplazamiento propio cuando su contenido supera la altura disponible. En escritorios de hasta 730 píxeles de altura, el registro se consulta desde su botón del pie y la cabecera se compacta para dejar más altura útil al mapa.
 
-El acabado se genera con HTML, CSS y el mapa SVG existente: no necesita fondos nuevos ni descarga imágenes del laboratorio. El cristal decorativo no intercepta pulsaciones. Los controles y las estaciones conservan sus nombres accesibles y navegación por teclado.
+El acabado combina HTML, CSS, el mapa SVG existente y una textura WebP propia de metal oxidado. No descarga imágenes del laboratorio. El cristal decorativo no intercepta pulsaciones. Los controles y las estaciones conservan sus nombres accesibles y navegación por teclado.
 
 ## Revisión de color y tipografía
 
@@ -30,6 +30,14 @@ Las acciones principales usan relleno ámbar claro y texto negro, como «Retomar
 Los textos, rótulos y botones usan `Arial Narrow`, `Roboto Condensed`, `Arial`, sans-serif, igual que el juego principal. Se elimina Courier New. La familia monoespaciada del reloj de la campaña se reserva para la escala, el contador de red y el identificador del terminal. No se añaden descargas de fuentes.
 
 La revisión conserva los tamaños, bordes, posiciones y reglas adaptables del panel existente. El alcance es la pantalla de Mensajeros; aplicar este acabado a la web completa queda pendiente de revisión del usuario. El laboratorio conserva su presentación independiente.
+
+## Textura de metal oxidado
+
+A petición del usuario, la carcasa central incorpora `extensions/mensajeros/assets/textures/metal-oxidado.webp`: pintura negra verdosa descascarada, picaduras y óxido marrón con depósitos cobrizos discretos. Se generó con la herramienta integrada de imágenes y se convirtió a WebP (1254 × 1254, aproximadamente 334 KiB), sin alterar su composición. El recurso se descarga una vez y se reutiliza como fondo estático.
+
+La capa decorativa está detrás del contenido, no recibe pulsaciones y usa máscaras CSS para concentrar el desgaste en los bordes y las uniones. Los tornillos llevan un halo de corrosión. La pantalla, los textos narrativos, los botones y los retratos mantienen sus superficies legibles. Se conserva la paleta aprobada, la geometría adaptable y el aislamiento del laboratorio. Si la imagen no carga, permanece el metal oscuro anterior como fondo.
+
+Prompt de generación (herramienta integrada, no CLI): «Flat straight-on seamless square material texture for the physical metal frame of NeoSantiago 2130. Dark nearly black green-painted industrial steel (#090e0c, #111a15), eroded black paint, fine pitting, layered flaky dark brown oxidation and scattered muted copper rust deposits, fine worn scratches exposing charcoal iron. Approximately 30 percent rust coverage. Even diffuse lighting, no vignette. No text, markings, magenta lines, seams, frame, screws, buttons, screen, symbols or watermark.»
 
 ## Alcance y aislamiento
 
