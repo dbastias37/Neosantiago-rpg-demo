@@ -1,12 +1,26 @@
 <!doctype html>
 <html lang="es">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#070a09"><title>Neo Santiago 2130 · Los Mensajeros</title><link rel="icon" href="data:,"><link rel="stylesheet" href="ui.css?v=2-travel"><link rel="stylesheet" href="play.css?v=16-beatriz-credits"></head>
-<body>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#111b15"><title>Neo Santiago 2130 · Los Mensajeros</title><link rel="icon" href="data:,"><link rel="stylesheet" href="ui.css?v=2-travel"><link rel="stylesheet" href="play.css?v=16-beatriz-credits"><link rel="stylesheet" href="map-console.css?v=1"></head>
+<body class="courier-console">
 <header class="topbar"><div class="brand">NEO SANTIAGO <span>2130</span><small>LOS MENSAJEROS / RED DE ENCARGOS</small></div><nav aria-label="Central de encargos"><button id="catalogButton">Encargos</button><button id="contactsButton">Refugios</button><button id="crewButton">Equipo</button><button id="heroesButton">Los Héroes</button><button id="helpButton">Ayuda</button></nav></header>
 <div id="bootStatus" role="status">Cargando la red de refugios…</div>
 <main id="shell">
 <section class="mission-panel panel"><div class="eyebrow">OPERACIÓN ACTUAL</div><div id="brief"></div><div id="networkProgress"></div></section>
-<section class="map-panel panel"><div class="panel-head"><div><div class="eyebrow">RED SUBTERRÁNEA</div><h1 id="location">Elige un encargo</h1></div><button id="routeButton" class="small">Ver recorrido</button></div><div id="mapViewport"><div id="map"></div><div class="map-controls"><button id="zoomOut" aria-label="Alejar mapa">−</button><button id="zoomIn" aria-label="Acercar mapa">+</button><button id="resetMap">Centrar</button></div></div><div class="legend"><span><i class="checkpoint"></i>Punto de control</span><span><i></i>Ruta abierta</span><span><i class="current"></i>Mensajeros</span></div><div id="travel"></div></section>
+<section class="map-panel panel control-console" aria-label="Panel de navegación de Los Mensajeros">
+  <i class="console-screw screw-nw" aria-hidden="true"></i><i class="console-screw screw-ne" aria-hidden="true"></i><i class="console-screw screw-sw" aria-hidden="true"></i><i class="console-screw screw-se" aria-hidden="true"></i>
+  <div class="console-header"><div class="console-name"><span class="console-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>TRÁNSITO INTERIOR<small>RED DE REFUGIOS · NEO SANTIAGO</small></span></div><span class="console-serial">RT–2130<small>TERMINAL DE RUTA</small></span></div>
+  <div class="map-screen">
+    <div class="panel-head"><div><div class="eyebrow">POSICIÓN DEL EQUIPO</div><h1 id="location">Elige un encargo</h1></div><span class="screen-signal"><i aria-hidden="true"></i>RED LOCAL</span></div>
+    <div id="mapViewport"><div id="map"></div></div>
+    <div class="screen-readout"><span>RED CONOCIDA <strong id="mapNetworkCount">—</strong></span><span class="screen-destination">DESTINO <strong id="mapDestination">—</strong></span></div>
+  </div>
+  <div class="console-deck">
+    <div class="legend"><span><i class="checkpoint"></i>Punto de control</span><span><i></i>Ruta abierta</span><span><i class="current"></i>Mensajeros</span></div>
+    <div class="map-controls" role="group" aria-label="Controles de la pantalla"><span class="control-label">ESCALA</span><button id="zoomOut" aria-label="Alejar mapa">−</button><output id="mapZoomValue" aria-label="Escala del mapa">100%</output><button id="zoomIn" aria-label="Acercar mapa">+</button><button id="resetMap">Centrar</button></div>
+    <button id="routeButton" class="small console-route"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path d="M5 5h10a4 4 0 0 1 0 8H9a3 3 0 0 0 0 6h10" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="5" cy="5" r="2" fill="currentColor"/><circle cx="19" cy="19" r="2" fill="currentColor"/></svg>Ver recorrido</button>
+  </div>
+  <div id="travel"></div>
+</section>
 <aside class="cargo-panel panel"><div class="eyebrow">GRUPO Y SUMINISTROS</div><div id="status"></div><div id="crewSummary"></div><div class="cargo-summary"><p id="cargoSummary"></p><button id="cargoButton" aria-haspopup="dialog">Carga y suministros</button></div></aside>
 <section class="journal panel"><div class="journal-head"><span class="eyebrow">REGISTRO DE VIAJE</span><span id="saveStatus">Guardado local</span></div><div id="journal" role="log" aria-live="polite"></div></section>
 </main>
@@ -15,5 +29,5 @@
 <iframe id="battleLayer" class="courier-combat-frame hidden" title="Combate de Los Mensajeros" allow="autoplay" src="about:blank"></iframe>
 <dialog id="dialog" aria-labelledby="dialogTitle"><div class="dialog-head"><span id="dialogKicker" class="eyebrow"></span><button class="close" data-close="dialog" aria-label="Cerrar ventana">×</button></div><div id="dialogBody"></div></dialog>
 <dialog id="itemDialog" aria-labelledby="itemTitle"><div class="dialog-head"><span class="eyebrow">INVENTARIO / INSPECCIÓN</span><button class="close" data-close="itemDialog" aria-label="Cerrar objeto">×</button></div><div id="itemBody"></div><div class="dialog-actions"><button data-close="itemDialog" class="primary">Volver</button></div></dialog>
-<script type="module">import("./play.mjs?v=16-beatriz-credits").catch(()=>{document.getElementById("bootStatus").innerHTML='No se pudo cargar la central. <button onclick="location.reload()">Reintentar</button>';});</script>
+<script type="module">import("./play.mjs?v=17-map-console").catch(()=>{document.getElementById("bootStatus").innerHTML='No se pudo cargar la central. <button onclick="location.reload()">Reintentar</button>';});</script>
 </body></html>

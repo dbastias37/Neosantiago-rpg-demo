@@ -1,0 +1,425 @@
+/* Route terminal. This presentation is independent from labs/compuertas. */
+.courier-console {
+  --console-ink: #263529;
+  --console-metal: #73816b;
+  --console-paper: #d0c2a2;
+  --console-light: #dce5c5;
+  --console-mono: "Courier New", monospace;
+  background: linear-gradient(180deg, #06100980, #061009c9), url('../../backgrounds/station-ruins.webp') center/cover fixed;
+}
+
+.courier-console .topbar {
+  padding: 12px 20px;
+  min-height: 66px;
+  border-bottom: 3px solid #1b281e;
+  background: linear-gradient(105deg, #374b3c, #25372c 58%, #3e4c39);
+  box-shadow: inset 0 1px #c1c9a63d, 0 3px #9bad7940, 0 8px 20px #0006;
+}
+.courier-console .brand { color: #d9dfc3; font-size: 22px; letter-spacing: .08em; }
+.courier-console .brand span { color: #e4be80; }
+.courier-console .brand small { color: #b1bda1; font-family: var(--console-mono); font-size: 8px; letter-spacing: .12em; }
+
+/* Raised controls sit on the case; the map itself remains a clear display. */
+.courier-console :where(.topbar, #shell) button {
+  border: 1px solid #374332;
+  border-radius: 3px;
+  color: #213323;
+  background: linear-gradient(135deg, #bdc5a7, #929f7f);
+  box-shadow: inset 0 1px #edf0d498, 0 3px #18271d, 1px 4px 5px #0005;
+  text-shadow: 0 1px #e3e7c53b;
+  transition: background .16s, box-shadow .12s, transform .12s;
+}
+.courier-console :where(.topbar, #shell) button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #d5dabe, #a9b38e);
+  transform: none;
+}
+.courier-console :where(.topbar, #shell) button:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: inset 0 1px 3px #24351f55, 0 1px #18271d;
+}
+.courier-console :where(.topbar, #shell) .primary {
+  border-color: #715e39;
+  color: #263222;
+  background: linear-gradient(125deg, #e7c38c, #c4a16a);
+  box-shadow: inset 0 1px #f9e2b7, 0 3px #534429, 1px 4px 5px #0005;
+}
+.courier-console :where(.topbar, #shell) .primary:hover:not(:disabled) {
+  background: linear-gradient(125deg, #f1d4a3, #d2b17b);
+}
+.courier-console :where(.topbar, #shell) button:focus-visible {
+  outline: 2px solid #f2d59f;
+  outline-offset: 3px;
+}
+.courier-console .topbar nav { gap: 8px; }
+.courier-console .topbar nav button { min-height: 40px; padding: 8px 15px; font-size: 10px; }
+
+@media (min-width:1001px) {
+  .courier-console #shell { grid-template-rows: minmax(0,1fr) 74px; gap: 12px; padding: 14px 12px 10px; }
+}
+
+/* The cabinet carries a subtle fixed metal texture, never animated noise. */
+.control-console {
+  --ink: #132318;
+  --paper: #dae5c7;
+  --muted: #a5b399;
+  --cyan: #a2cfb0;
+  --amber: #d6b878;
+  --amber2: #e7c48b;
+  position: relative;
+  isolation: isolate;
+  min-width: 0;
+  min-height: 0;
+  padding: 16px 19px 18px;
+  border: 5px solid #384738;
+  border-radius: 8px;
+  color: var(--console-ink);
+  background: radial-gradient(ellipse at 3% 97%, #67482e65, transparent 35%), linear-gradient(115deg, #88927a, #606f59 50%, #91977e);
+  box-shadow: inset 0 0 0 1px #c5ccaa80, inset 0 0 17px #1a2a1a90, 4px 5px #18281d, 8px 14px 22px #0006;
+}
+.control-console::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .23;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath filter='url(%23n)' opacity='.7' d='M0 0h240v240H0z'/%3E%3C/svg%3E");
+}
+.console-screw {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border: 1px solid #293325;
+  border-radius: 50%;
+  background: linear-gradient(42deg, #46513e, #c4c5a4 44%, #354031 49% 56%, #9da383 60%, #4a5440);
+  box-shadow: 1px 2px 3px #0008, 0 1px #e0dcb766;
+  pointer-events: none;
+}
+.screw-nw { top: 6px; left: 6px; }
+.screw-ne { top: 6px; right: 6px; }
+.screw-sw { bottom: 6px; left: 6px; }
+.screw-se { bottom: 6px; right: 6px; }
+.console-header {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 2px 12px;
+  color: #203025;
+}
+.console-name { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 900; letter-spacing: 1.6px; line-height: 1.2; }
+.console-name small { display: block; margin-top: 4px; font: 7px var(--console-mono); letter-spacing: 1px; }
+.console-mark { display: flex; align-items: center; gap: 3px; width: 30px; height: 28px; padding: 3px; border: 1px solid #2e402ba1; }
+.console-mark i { width: 5px; height: 17px; background: #30432e; transform: skewY(-25deg); }
+.console-mark i:nth-child(2) { height: 11px; }
+.console-serial { font: 11px var(--console-mono); letter-spacing: 1px; line-height: 1.4; text-align: right; white-space: nowrap; }
+.console-serial small { display: block; font-size: 7px; letter-spacing: .5px; }
+
+/* Bezel, glass and display are separate from the physical controls. */
+.map-screen {
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  min-height: 180px;
+  overflow: hidden;
+  border: 7px solid #243629;
+  border-radius: 12px;
+  background: radial-gradient(ellipse at 45% 45%, #233e2b, #101e15 90%);
+  box-shadow: inset 0 2px 16px #000c, 0 1px 1px #d3d5b290, 0 -1px 1px #17291d;
+  color: #d9e7c0;
+}
+.map-screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: 5px;
+  pointer-events: none;
+  background: linear-gradient(135deg, #d8edc00b, transparent 45%), repeating-linear-gradient(0deg, transparent 0 3px, #010a0310 4px);
+  box-shadow: inset 0 0 20px #0004;
+}
+.control-console .panel-head {
+  z-index: 2;
+  position: relative;
+  padding: 13px 17px 9px;
+  gap: 12px;
+  align-items: center;
+  border-bottom: 1px solid #adce9322;
+  background: #13261a66;
+}
+.control-console .panel-head .eyebrow { margin: 0 0 4px; font: 8px var(--console-mono); letter-spacing: 1.5px; color: #a4bf91; }
+.control-console .panel-head h1 { color: #d8e7bd; font-size: clamp(19px,2vw,28px); line-height: 1.12; letter-spacing: -.3px; margin: 0; font-weight: 500; }
+.screen-signal { display: flex; align-items: center; gap: 6px; flex-shrink: 0; font: 7px var(--console-mono); letter-spacing: 1px; color: #aacb93; }
+.screen-signal i { width: 6px; height: 6px; border: 1px solid #477043; border-radius: 50%; background: #afdb86; box-shadow: 0 0 8px #bad98e80; }
+.control-console #mapViewport {
+  min-height: 0;
+  background: radial-gradient(ellipse at center, #52724b10, transparent 70%), repeating-linear-gradient(0deg, transparent 0 31px, #afcf8f0a 32px), repeating-linear-gradient(90deg, transparent 0 31px, #afcf8f0a 32px);
+}
+.control-console #map { height: 100%; }
+.control-console #map svg { width: 100%; height: 100%; min-height: 0; }
+.control-console #map svg .route-station-label { fill: #d5e0bf; font-family: "Arial Narrow","Roboto Condensed",Arial,sans-serif; }
+.control-console #map svg .back { stroke: #1b3020; stroke-width: 4px; }
+.control-console #map .route-known { stroke: #94ad89; opacity: .55; }
+.control-console #map .route-selected { stroke: #e3c78a; opacity: .95; filter: drop-shadow(0 0 3px #c9b87540); }
+.control-console #map .control-point { fill: #d6c48f; stroke: #182c1d; }
+.control-console #map .instance-point { fill: #203724; stroke: #a2c795; }
+.control-console #map .visited { stroke: #badaaa; }
+.control-console #map .messenger { fill: #f0e6b9; stroke: #a2cfb0; filter: drop-shadow(0 0 7px #b3de91a0); }
+.control-console #map [role=button]:focus-visible { stroke: #fff2c6; stroke-width: 5px; }
+.screen-readout {
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  flex: none;
+  padding: 8px 15px;
+  border-top: 1px solid #c7d5ac1f;
+  background: #122117b3;
+  color: #93ac82;
+  font: 8px var(--console-mono);
+  letter-spacing: .5px;
+}
+.screen-readout strong { color: #d2dcaf; font-size: 10px; font-weight: 400; margin-left: 7px; }
+.screen-readout>span:first-child { flex-shrink: 0; }
+.screen-destination { display: flex; align-items: center; min-width: 0; }
+.screen-destination strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.console-deck {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto;
+  align-items: center;
+  gap: 7px 12px;
+  flex: none;
+  padding: 10px 2px 13px;
+}
+.control-console .legend { grid-column: 1/-1; padding: 0 1px; margin: 0; border: 0; gap: 18px; color: #273a28; font: 9px var(--console-mono); }
+.control-console .legend span { gap: 6px; }
+.control-console .legend i { width: 6px; height: 6px; border-color: #31492e; background: #bac3a0; }
+.control-console .legend i.checkpoint { background: #cab177; border-color: #79663c; }
+.control-console .legend i.current { background: #d6e8aa; border-color: #43623a; box-shadow: 0 0 4px #d4eaaa; }
+.control-console .map-controls { position: static; display: flex; align-items: center; gap: 7px; padding: 0; }
+.control-label { margin-right: 2px; color: #2b3b2b; font: 7px var(--console-mono); letter-spacing: 1px; }
+.control-console .map-controls button { min-height: 39px; min-width: 39px; padding: 5px 8px; font-size: 9px; }
+.control-console :is(#zoomOut,#zoomIn) { width: 39px; height: 39px; padding: 0; border: 2px solid #5b694a; border-radius: 50%; font: 24px var(--console-mono); background: radial-gradient(circle at 33% 25%, #e0d8b6, #b7b794 72%, #7d8665); box-shadow: 0 3px #31402c, 1px 4px 5px #0005, inset 0 1px #f2eccb; }
+.control-console :is(#zoomOut,#zoomIn):hover:not(:disabled) { background: radial-gradient(circle at 33% 25%, #f2e9cb, #c9c8a4 72%, #8c9875); }
+#mapZoomValue { min-width: 43px; padding: 5px 4px; border: 2px solid #34482f; border-radius: 2px; color: #d5e4b3; background: #293f2c; box-shadow: inset 0 1px 3px #0007; text-align: center; font: 11px var(--console-mono); }
+.control-console #resetMap { margin-left: 3px; padding-inline: 12px; }
+.control-console #routeButton { display: inline-flex; align-items: center; justify-content: center; gap: 8px; align-self: center; min-height: 40px; padding: 8px 12px; border: 1px solid #665a39; background: linear-gradient(125deg, #d9c295, #b8a478); color: #273323; font-size: 9px; white-space: nowrap; }
+.control-console #routeButton:hover { background: linear-gradient(125deg, #ecd6ab, #cabb8e); }
+.control-console #routeButton svg { flex: none; }
+
+/* Route decisions remain in their existing slot, inside the lower module. */
+.control-console #travel {
+  flex: 0 1 auto;
+  min-height: 0;
+  max-height: 37%;
+  padding: 12px 14px;
+  border: 2px solid #344330;
+  border-radius: 4px;
+  background: linear-gradient(115deg, #283a29, #1c2e22);
+  box-shadow: inset 0 2px 7px #0005, 0 1px #c3c9a555;
+  color: #d3ddc0;
+  scrollbar-width: thin;
+  scrollbar-color: #8ea273 #1c2e22;
+}
+.control-console #travel .eyebrow { margin-bottom: 5px; color: #c9c29a; font: 8px var(--console-mono); letter-spacing: .8px; }
+.control-console #travel p { font-size: 12px; line-height: 1.5; }
+.control-console .travel-head { color: #bac9ab; font: 10px var(--console-mono); }
+.control-console .progress { background: #8da36b30; }
+.control-console .progress span { background: #b7c58f; }
+.control-console .travel-actions button { font-size: 10px; min-height: 40px; padding: 8px 10px; }
+.control-console .travel-outcome { border-color: #a2be8a; background: #a9c2920b; padding: 8px 10px; }
+.control-console .travel-outcome strong { color: #c3d8ae; font-size: 12px; }
+.control-console .travel-outcome p { color: #bacbb0; }
+
+/* Side modules echo the archive's paper and the diagnostic cabinet's displays. */
+.courier-console .mission-panel,
+.courier-console .cargo-panel {
+  position: relative;
+  border: 3px solid #3b4935;
+  border-radius: 5px;
+  padding: 13px;
+  box-shadow: inset 0 1px #d2d7b579, 2px 4px #18251b, 6px 9px 15px #0004;
+  scrollbar-color: #728162 #283a2a;
+}
+.courier-console .mission-panel {
+  color: #273629;
+  background: radial-gradient(ellipse at 5% 95%, #80624240, transparent 50%), linear-gradient(130deg, #cabea2, #a6a488);
+  border-color: #696b50;
+}
+.courier-console .mission-panel>.eyebrow { color: #43513a; font: 9px var(--console-mono); letter-spacing: 1px; padding-bottom: 10px; border-bottom: 1px solid #5c66484d; margin-bottom: 11px; }
+.courier-console .mission-portrait { height: clamp(100px,20dvh,185px); border: 4px solid #40503a; border-radius: 3px; box-shadow: inset 0 0 8px #0008, 0 1px #efdfbd6b; background: #142017; }
+.courier-console .mission-portrait img { object-fit: contain; object-position: center; }
+.courier-console .mission-panel .chip { color: #354d34; border-color: #6b74544d; background: #dfe0b853; font: 8px var(--console-mono); padding: 4px 6px; }
+.courier-console .mission-panel h2 { color: #243527; font-size: 19px; line-height: 1.18; margin: 5px 0 10px; }
+.courier-console .mission-panel p { color: #3f4b39; font-size: 12px; line-height: 1.6; }
+.courier-console .mission-panel .primary { font-size: 10px; }
+.courier-console .mission-panel .text-button { color: #394a34; background: transparent; border: 0; box-shadow: none; margin-top: 7px; }
+.courier-console .network-progress { margin: 16px 0 0; padding: 11px 10px; border: 2px solid #566547; border-radius: 3px; color: #c2d0b0; background: #263b2b; box-shadow: inset 0 1px 5px #0005, 0 1px #e0dbb755; }
+.courier-console .network-progress .eyebrow { color: #d4c598; font: 8px var(--console-mono); letter-spacing: .9px; line-height: 1.6; }
+.courier-console .network-progress p { color: #b8c5a6; font-size: 10px; line-height: 1.6; margin: 7px 0 0; }
+.courier-console .network-progress p strong { color: #e1d8ab; }
+.courier-console .cargo-panel { background: linear-gradient(120deg, #6b7d62, #4f6552 52%, #788569); color: #d0ddc0; }
+.courier-console .cargo-panel>.eyebrow { color: #243a27; font: 9px var(--console-mono); letter-spacing: 1px; line-height: 1.5; padding-bottom: 10px; border-bottom: 1px solid #283f2c55; }
+.courier-console #status { padding: 10px; margin-bottom: 13px; border: 3px solid #314930; border-radius: 4px; background: linear-gradient(120deg, #253e2c, #1c3022); box-shadow: inset 0 2px 6px #0007, 0 1px #bbcda361; }
+.courier-console #status>p { font-size: 11px; line-height: 1.6; color: #c0d0ab; }
+.courier-console #status>b { color: #e2d39f; font: 17px var(--console-mono); }
+.courier-console .deadline { border-color: #9fb58645; background: #adc49607; }
+.courier-console .deadline b { font-size: 11px; color: #e6cc96; }
+.courier-console .deadline small { font-size: 9px; color: #acc39c; }
+.courier-console .deadline.late small { color: #f2b39a; }
+.courier-console .meter-label { color: #d1dabe; font: 9px var(--console-mono); }
+.courier-console .meter-label b { color: #e7d3a0; }
+.courier-console .cargo-panel .progress { background: #536d454d; }
+.courier-console .cargo-panel .progress span { background: #afc593; }
+.courier-console .status-data div { color: #bbcaaa; border-color: #9aae7926; background: #a7bf8709; font-size: 8px; }
+.courier-console .status-data b { color: #e4d7a8; font: 15px var(--console-mono); margin-top: 3px; }
+.courier-console .crew-mini { gap: 8px; margin: 12px 0; }
+.courier-console .crew-mini button { padding: 5px; background: linear-gradient(125deg, #a1b092, #7e9477); border-color: #3c563a; color: #213b27; }
+.courier-console .crew-mini button:hover:not(:disabled) { background: #b4c2a4; }
+.courier-console .crew-mini img { width: 33px; height: 46px; border: 2px solid #3e573b; border-radius: 2px; }
+.courier-console .crew-mini small { color: #2c472e; font-size: 9px; }
+.courier-console .cargo-summary { padding-top: 11px; border-top-color: #2b442a66; }
+.courier-console .cargo-summary p { color: #213a25; font: 9px var(--console-mono); line-height: 1.6; }
+.courier-console .cargo-summary button { font-size: 9px; }
+.courier-console .journal { border: 2px solid #526147; border-radius: 4px; background: linear-gradient(110deg, #354b35, #23372a); padding: 8px 14px; box-shadow: inset 0 1px #bccc9a36, 0 3px #17281b; }
+.courier-console .journal .eyebrow { color: #d4c398; font: 8px var(--console-mono); letter-spacing: 1px; }
+.courier-console #saveStatus { color: #b6c4a4; font-size: 9px; }
+.courier-console #journal { font-size: 11px; color: #b7c3a7; }
+.courier-console #journal p:last-child { color: #dce4c7; }
+.courier-console .footer { padding-inline: 14px; color: #adb89e; font: 8px var(--console-mono); }
+.courier-console .footer .text-button { color: #c3c8ad; font-size: 8px; letter-spacing: .02em; }
+
+@media (max-width:1100px) and (min-width:1001px) {
+  .control-console { padding-inline: 13px; }
+  .control-label { display: none; }
+  .control-console .legend { gap: 10px; font-size: 8px; }
+  .control-console .map-controls { gap: 5px; }
+  .control-console #routeButton { padding-inline: 8px; gap: 5px; font-size: 8px; }
+}
+@media (max-width:1000px) {
+  .courier-console .topbar { min-height: 60px; padding: 10px 12px; }
+  .courier-console .topbar nav button { padding-inline: 10px; }
+  .courier-console .mission-panel { padding: 8px 10px; border-width: 2px; }
+  .courier-console .mission-portrait { height: 56px; width: 45px; border-width: 2px; margin: 0; }
+  .courier-console #brief h2 { font-size: 15px; margin: 3px 0; }
+  .courier-console #brief .chip { padding: 2px 4px; }
+  .courier-console #brief .primary { font-size: 9px; }
+  .courier-console #brief .text-button { margin: 0; }
+  .courier-console #networkProgress { display: none; }
+  .control-console { padding: 13px 14px 14px; border-width: 4px; }
+  .console-header { padding-bottom: 9px; }
+  .console-name { font-size: 11px; gap: 7px; letter-spacing: 1.1px; }
+  .console-serial { font-size: 9px; }
+  .console-serial small { font-size: 6px; }
+  .control-label { display: none; }
+  .control-console .panel-head { padding: 10px 12px 8px; }
+  .console-deck { gap: 7px; padding-bottom: 10px; }
+  .control-console .legend { gap: 12px; font-size: 8px; }
+  .control-console .map-controls { gap: 5px; }
+  .control-console #routeButton { padding-inline: 9px; font-size: 8px; gap: 6px; }
+  .control-console #travel { padding: 10px; }
+}
+@media (max-width:700px) {
+  .courier-console .topbar { min-height: 0; padding: 8px 10px; gap: 7px; border-bottom-width: 2px; }
+  .courier-console .topbar .brand { font-size: 16px; letter-spacing: .05em; }
+  .courier-console .brand small { font-size: 6px; letter-spacing: .05em; }
+  .courier-console .topbar nav { gap: 5px; }
+  .courier-console .topbar nav button { padding: 5px 2px; min-height: 38px; font-size: 9px; }
+  .courier-console #shell { gap: 7px; padding: 8px 7px; }
+  .courier-console .mission-panel { padding: 6px 8px; }
+  .courier-console .mission-portrait { width: 43px; height: 48px; }
+  .courier-console #brief { grid-template-columns: 43px minmax(0,1fr) auto; column-gap: 8px; }
+  .courier-console #brief h2 { font-size: 12px; }
+  .courier-console #brief .chip { font-size: 7px; }
+  .courier-console #brief .primary { padding-inline: 6px; font-size: 8px; }
+  .control-console { padding: 10px 10px 12px; border-width: 3px; border-radius: 6px; }
+  .console-screw { width: 7px; height: 7px; }
+  .screw-nw,.screw-ne { top: 4px; }.screw-sw,.screw-se { bottom: 4px; }
+  .screw-nw,.screw-sw { left: 4px; }.screw-ne,.screw-se { right: 4px; }
+  .console-header { padding: 0 2px 8px; min-height: 24px; }
+  .console-name { font-size: 9px; letter-spacing: 1px; }
+  .console-name small,.console-serial small { display: none; }
+  .console-mark { width: 21px; height: 19px; padding: 2px; gap: 2px; }
+  .console-mark i { width: 3px; height: 11px; }.console-mark i:nth-child(2) { height: 7px; }
+  .console-serial { font-size: 8px; }
+  .map-screen { border-width: 5px; border-radius: 8px; min-height: 150px; }
+  .control-console .panel-head { padding: 9px 10px 7px; }
+  .control-console .panel-head h1 { font-size: 17px; }
+  .screen-signal { font-size: 6px; letter-spacing: .4px; gap: 4px; }
+  .screen-signal i { width: 5px; height: 5px; }
+  .screen-readout { padding: 6px 8px; font-size: 6px; gap: 9px; letter-spacing: 0; }
+  .screen-readout strong { font-size: 8px; margin-left: 4px; }
+  .console-deck { padding: 8px 0 10px; gap: 7px 5px; }
+  .control-console .legend { justify-content: space-between; font-size: 6px; gap: 5px; padding: 0; }
+  .control-console .legend span { gap: 4px; }
+  .control-console .map-controls { gap: 4px; }
+  .control-console .map-controls button { min-width: 36px; min-height: 40px; font-size: 8px; padding: 5px; }
+  .control-console :is(#zoomOut,#zoomIn) { width: 40px; height: 40px; min-width: 40px; font-size: 22px; }
+  #mapZoomValue { min-width: 35px; padding-inline: 2px; font-size: 9px; }
+  .control-console #resetMap { padding-inline: 7px; margin-left: 2px; }
+  .control-console #routeButton { min-height: 40px; padding: 7px; gap: 5px; font-size: 8px; }
+  .control-console #routeButton svg { width: 13px; height: 13px; }
+  .control-console #travel { padding: 9px; max-height: 34%; }
+  .control-console #travel p { font-size: 11px; line-height: 1.4; margin-bottom: 7px; }
+  .control-console #travel>.primary { min-height: 40px; padding: 7px 10px; font-size: 9px; }
+  .control-console .travel-head { font-size: 9px; }
+  .control-console .travel-actions { gap: 6px; }
+  .control-console .travel-actions button { min-height: 40px; font-size: 9px; padding: 7px 8px; }
+  .control-console .travel-outcome strong { font-size: 11px; }
+  .courier-console .cargo-panel { padding: 5px 7px; gap: 6px; border-width: 2px; }
+  .courier-console #status { min-width: 0; padding: 5px 7px; margin: 0; border-width: 2px; font-size: 10px; }
+  .courier-console #status>p { font-size: 9px; line-height: 1.35; }
+  .courier-console #status>b { font-size: 12px; white-space: nowrap; }
+  .courier-console .meter-label { font-size: 8px; }
+  .courier-console .deadline { font-size: 9px; }
+  .courier-console .deadline b { font-size: 9px; }.courier-console .deadline small { font-size: 8px; }
+  .courier-console .status-data div { font-size: 8px; }.courier-console .status-data b { font-size: 9px; margin: 0 0 0 3px; }
+  .courier-console .cargo-summary { padding: 0; border: 0; max-width: 92px; }
+  .courier-console .cargo-summary button { min-height: 42px; padding: 5px 7px; font-size: 8px; }
+  .courier-console .footer { padding-inline: 8px; }.courier-console .footer .text-button { min-height: 30px; font-size: 8px; }
+}
+@media (max-width:380px) {
+  .control-console { padding-inline: 8px; }
+  .control-console #routeButton { font-size: 7px; padding-inline: 6px; gap: 4px; }
+  .control-console #routeButton svg { display: none; }
+  .control-console #resetMap { font-size: 7px; padding-inline: 6px; }
+  .control-console .map-controls { gap: 3px; }
+}
+@media (max-height:730px) and (min-width:701px) {
+  .control-console { padding-top: 12px; padding-bottom: 12px; }
+  .console-header { padding-bottom: 8px; }
+  .console-name small,.console-serial small { display: none; }
+  .console-mark { height: 23px; }
+  .control-console .panel-head { padding-block: 8px; }
+  .control-console .panel-head h1 { font-size: 22px; }
+  .map-screen { min-height: 150px; }
+  .console-deck { padding-block: 8px; }
+  .control-console #travel { padding: 8px 10px; }
+}
+@media (max-height:700px) and (max-width:700px) {
+  .courier-console .topbar { padding-block: 5px; gap: 5px; }
+  .courier-console .topbar nav button { min-height: 35px; }
+  .courier-console #shell { gap: 5px; padding-block: 5px; }
+  .courier-console .mission-panel { padding-block: 4px; }
+  .courier-console .mission-portrait { height: 42px; }
+  .control-console { padding-block: 8px; }
+  .console-header { padding-bottom: 5px; min-height: 20px; }
+  .console-mark { display: none; }
+  .control-console .panel-head { padding-block: 6px; }
+  .control-console .panel-head h1 { font-size: 15px; }
+  .screen-readout { padding-block: 4px; }
+  .map-screen { min-height: 130px; }
+  .console-deck { padding-block: 6px; gap: 5px; }
+  .control-console #travel { padding: 7px; max-height: 30%; }
+  .control-console #travel p { font-size: 10px; }
+}
+@media (prefers-contrast:more) {
+  .map-screen::after { display: none; }
+  .control-console #map svg .route-station-label { fill: #f5f4d3; }
+  .screen-readout { color: #c3d5ad; }
+}

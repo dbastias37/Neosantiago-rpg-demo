@@ -27,7 +27,7 @@ function resetActivityProgress(){
 function openCourierActivity(){
  setSceneAmbience(null);courierAudioVisible(true);
  state.activity='couriers';save();$("activityMenu").classList.add("hidden");$("courierScreen").classList.remove("hidden");
- var frame=$("courierFrame");if(!frame.getAttribute('src'))frame.setAttribute('src','extensions/mensajeros/play.html?v=16-beatriz-credits');
+ var frame=$("courierFrame");if(!frame.getAttribute('src'))frame.setAttribute('src','extensions/mensajeros/play.html?v=17-map-console');
  $("courierReturn").focus({preventScroll:true});
 }
 function returnToActivities(){courierAudioVisible(false);setSceneAmbience('ambience-title',AUDIO_CROSSFADE_MS);state.activity='hub';openActivityMenu()}

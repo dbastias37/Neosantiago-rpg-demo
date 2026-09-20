@@ -137,9 +137,14 @@ function fitMap(){
  const width=Math.max(420,Math.max(...xs)-Math.min(...xs)+180)/zoom,height=Math.max(240,Math.max(...ys)-Math.min(...ys)+150)/zoom;
  const current=data.nodes[world.location]||data.nodes.heroes,cx=zoom>1?current.x:(Math.min(...xs)+Math.max(...xs))/2,cy=zoom>1?current.y:(Math.min(...ys)+Math.max(...ys))/2;
  svg.setAttribute('viewBox',`${cx-width/2} ${cy-height/2} ${width} ${height}`);
+ $('mapZoomValue').textContent=Math.round(zoom*100)+'%';
+ $('zoomOut').disabled=zoom<=1;$('zoomIn').disabled=zoom>=2.5;
 }
 function mapRender(){
  const m=world.run?E.mission(data,world):data.missions[selected],rt=data.routes[m.route];layer.replaceChildren();
+ $('mapNetworkCount').textContent=String(E.knownNodes(data,world).length).padStart(2,'0')+' puntos';
+ $('mapDestination').textContent=data.nodes[rt.nodes.at(-1)].name;
+ $('mapDestination').title=data.nodes[rt.nodes.at(-1)].name;
  const drawn=new Set();for(const mission of E.knownMissions(data,world))for(const e of data.routes[mission.route].edges){const key=[e.from,e.to].sort().join(':');if(drawn.has(key))continue;drawn.add(key);layer.append(svgEl('path',{d:pathFor(e),class:'route-known',fill:'none'}));}
  rt.edges.forEach((e,i)=>{if(i>=(world.run?.startIndex||0))layer.append(svgEl('path',{d:pathFor(e),class:'route-selected',fill:'none','data-edge':i}));});
  E.knownNodes(data,world).forEach(id=>{const n=data.nodes[id],visited=world.progression.visited.includes(id),el=svgEl(n.checkpoint?'rect':'circle',n.checkpoint?{x:n.x-7,y:n.y-7,width:14,height:14}:{cx:n.x,cy:n.y,r:5});el.setAttribute('class',(n.checkpoint?'control-point':'instance-point')+(visited?' visited':''));el.setAttribute('role','button');el.setAttribute('aria-label',n.name+(visited?' · visitado':' · recorrido abierto'));const title=svgEl('title',{});title.textContent=n.name;el.append(title);el.setAttribute('tabindex','0');el.addEventListener('click',()=>nodeInfo(id));el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();nodeInfo(id);}});layer.append(el);

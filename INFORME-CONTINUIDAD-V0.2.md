@@ -6,9 +6,13 @@
 
 Este es el punto de entrada para continuar en otro chat. Resume lo implementado, diferencia los antecedentes históricos del estado vigente y deja un alcance propuesto para el siguiente bloque. Cuando el código cambie después de esta revisión, actualizar este informe con la nueva evidencia.
 
-## Actualización vigente — entrega 13 (20 de septiembre de 2026)
+## Actualización vigente — interfaz de mapa (20 de septiembre de 2026)
 
-**Laboratorio posterior a esta entrega:** se añadieron [tres paneles de compuertas con quince acertijos](docs/laboratorio-compuertas-0.2.md), disponibles por URL directa en `labs/compuertas/`. Es una prueba independiente solicitada para evaluar narrativa, teclados y continuidad eléctrica. No se han integrado compuertas a viajes, combates o guardados de la campaña. La profundización de Guzmán y Jiménez continúa pendiente.
+El mapa de Mensajeros ahora se presenta como una [pantalla montada en un panel de navegación](docs/mapa-panel-0.2.md), con carcasa de metal verde, cristal oscuro, indicadores de destino y red conocida, escala visible y controles físicos. Encargo, suministros y registro acompañan ese acabado. Se conservan los retratos completos, las rutas, los pagos y la compatibilidad de los guardados. La suite vigente tiene **359 pruebas aprobadas**.
+
+**Laboratorio separado:** los [tres paneles de compuertas con quince acertijos](docs/laboratorio-compuertas-0.2.md) siguen disponibles por URL directa en `labs/compuertas/`. El usuario pidió conservarlos en el repositorio para una futura implementación. El mapa toma su lenguaje visual, sin importar su código ni integrar compuertas a viajes, combates o guardados de la campaña. La profundización de Guzmán y Jiménez continúa pendiente.
+
+### Narrativa y economía — entrega 13
 
 Se incorporan [Beatriz, economía y retratos completos](docs/beatriz-economia-0.2-entrega-13.md). Esta actualización sustituye como siguiente tarea la propuesta de Beatriz de las secciones 10, 11 y 14, conservadas abajo como historia de la revisión del 19 de septiembre.
 
