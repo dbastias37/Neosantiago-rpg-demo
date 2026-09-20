@@ -6,6 +6,18 @@
 
 Este es el punto de entrada para continuar en otro chat. Resume lo implementado, diferencia los antecedentes históricos del estado vigente y deja un alcance propuesto para el siguiente bloque. Cuando el código cambie después de esta revisión, actualizar este informe con la nueva evidencia.
 
+## Actualización vigente — entrega 13 (20 de septiembre de 2026)
+
+Se incorporan [Beatriz, economía y retratos completos](docs/beatriz-economia-0.2-entrega-13.md). Esta actualización sustituye como siguiente tarea la propuesta de Beatriz de las secciones 10, 11 y 14, conservadas abajo como historia de la revisión del 19 de septiembre.
+
+Beatriz responde a cómo protegieron la reserva y a la preparación de Luz, su aprendiz, con cuatro recepciones combinadas. La visita posterior a Libertadores se realiza por la red física y recuerda ese resultado, sin otro pago. Los encargos anteriores conservan su versión narrativa.
+
+La moneda ahora se llama Créditos en todo el juego. Los pagos máximos de los ocho encargos bajan de 296 a 134 (−54,7 %); las penalizaciones nuevas son de 1 Crédito por cada 5 minutos de demora, hasta el 50 %. Los saldos y los contratos ya aceptados se conservan. La tienda de Mensajeros aún no tiene stock limitado: este bloque reduce las recompensas, sin declarar resuelta toda la economía.
+
+Los retratos junto al mapa y de contactos se muestran completos y sin degradado superpuesto. La ayuda ya describe los tres tramos iniciales. La suite actual tiene 353 pruebas aprobadas. Detalles de compatibilidad, límites y revisión visual en el documento de entrega.
+
+**Próximo bloque:** profundizar Guzmán y Jiménez; recoger observaciones de partidas con los nuevos pagos. No volver a implementar Beatriz ni cambiar recompensas históricas. V0.2 sigue abierta.
+
 ## 1. Estado real del proyecto
 
 El repositorio contiene una experiencia jugable con expedición narrativa de tres días y una actividad de encargos con otro equipo. Hay decisiones, combate, recursos, equipo, progresión, guardado, retornos y desenlaces. La actualización hacia V0.2 ha trabajado especialmente las conexiones entre decisiones y consecuencias, la personalidad de los personajes, el descubrimiento de rutas y la presentación.

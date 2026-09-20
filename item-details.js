@@ -32,7 +32,7 @@ function itemPricesHtml(id){
   var d=gear(id),rows=[];
   [{name:"Mara",catalog:tradeCatalog},{name:"El Armero",catalog:armorerCatalog}].forEach(function(merchant){
     var offer=merchant.catalog[id];if(!offer||d.kind==="mission")return;
-    rows.push('<tr><th scope="row">'+merchant.name+'</th><td>'+(offer.buy?offer.buy+" fichas":"No vende")+'</td><td>'+(offer.sell?offer.sell+" fichas":"No compra")+'</td></tr>')
+    rows.push('<tr><th scope="row">'+merchant.name+'</th><td>'+(offer.buy?offer.buy+" créditos":"No vende")+'</td><td>'+(offer.sell?offer.sell+" créditos":"No compra")+'</td></tr>')
   });
   return rows.length?'<table><caption>Precios por unidad</caption><thead><tr><th scope="col">Puesto</th><th scope="col">Comprar<br><small>Pagas</small></th><th scope="col">Vender<br><small>Recibes</small></th></tr></thead><tbody>'+rows.join("")+'</tbody></table><p class="item-detail-note">La compra depende del stock del puesto y del espacio disponible en las mochilas.</p>':'<p>Este objeto no se compra ni se vende en los puestos del refugio.</p>'
 }

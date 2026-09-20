@@ -1,3 +1,6 @@
+import {prepareEconomy,restoreTerms,terms} from './economy.mjs';
+import {prepareBeatriz,prepareBeatrizVisits,beatrizArrival,refreshBeatriz,beatrizMemory} from './beatriz.mjs';
+export {beatrizMemory} from './beatriz.mjs';
 import {prepareCorridors,restoreCorridors,scriptAt,rememberCorridor,arrivalAccount,communityMemory,assignment} from './corridors.mjs';
 export {communityMemory,currentPurpose,assignment} from './corridors.mjs';
 import {prepareEncounters,restoreEncounters,directEncounter,rememberEncounter} from './encounters.mjs';
@@ -53,7 +56,7 @@ export function prepare(data){
  const d=copy(data);for(const m of Object.values(d.missions))m.test_loadout=m.loadout;
  for(const e of Object.values(d.scripted))d.events.push({...e,scripted:true,category:'decision',regions:['centro','oriente','l6']});
  const legacy=prepareJourneys(copy(d));
- const prepared=prepareJourneys(prepareEncounters(prepareCorridors(d)));
+ const prepared=prepareBeatrizVisits(prepareJourneys(prepareEncounters(prepareEconomy(prepareBeatriz(prepareCorridors(d))))));
  prepared.legacyJourneys={};
  for(const [id,m]of Object.entries(legacy.journeys)){const route='legacy-'+m.route;prepared.legacyJourneys[id]={...m,route};prepared.routes[route]={...legacy.routes[m.route],id:route};}
  return prepared;
@@ -70,7 +73,7 @@ export function start(data,source,id){
  const entry=entryPoints(data,id).find(p=>p.node===source.location);
  need(entry,'Viaja a '+entryPoints(data,id).map(p=>data.nodes[p.node].name).join(' o ')+' antes de aceptar este encargo.');
  const w=Base.start(data,source,id),r=w.run,m=data.missions[id],issued=copy(r.supplies);
- restoreEncounters(w);r.corridorVersion=2;r.directorVersion=1;r.startIndex=entry.index;r.index=entry.index;
+ r.rewardTerms=terms(m);r.beatrizVersion=m.beatrizVersion||0;restoreEncounters(w);r.corridorVersion=2;r.directorVersion=1;r.startIndex=entry.index;r.index=entry.index;
  r.party=copy(w.crew).map(c=>memberBase(data,{...c,hp:Math.max(c.hp,Math.ceil(c.maxHp*.4))}));
  // Migrate any old shared reserve into individual bags before leaving the hub.
  for(const [key,n]of Object.entries(w.stock||{}))distribute(data,r.party,key,n);
@@ -83,13 +86,13 @@ export function start(data,source,id){
 }
 function updateCheckpoint(data,w){
  const r=w.run;if(r?.status!=='active'||r.pending)return;
- w.location=Base.here(data,w).id;refreshProgression(data,w);refreshAftermath(w);
+ w.location=Base.here(data,w).id;refreshProgression(data,w);refreshAftermath(w);refreshBeatriz(w);
  const echoes=communityMemory(w,w.location),memoryKey='community-'+r.index;
  if(echoes.length&&!r.used[memoryKey]){r.used[memoryKey]=true;r.log.push(...echoes);if(!r.lastEncounter)r.lastEncounter={title:'Lo que quedó en este puesto',text:echoes.join(' ')};}
  if(w.location==='plaza'&&w.effects.includes('guzman-01')&&!r.used['plaza-'+r.index]){r.used['plaza-'+r.index]=true;r.log.push('La torreta de Plaza sigue girando. El guardia reconoce al equipo y señala el banco que dejó Ana: hay agua y una ración para descansar sin gastar las propias.');}
  if(Base.mission(data,w).type==='travel'&&r.index===Base.route(data,w).edges.length){
   r.status='completed';r.jammerOn=false;w.crew=copy(r.party);if(w.location==='heroes')w.hubVisits=(w.hubVisits||0)+1;
-  r.log.push(Base.mission(data,w).purpose==='assignment'?'Llegada a '+Base.here(data,w).name+'. Revisa la propuesta de '+Base.mission(data,w).issuer+' antes de aceptar. Todavía no has recibido la carga.':'Llegada a Los Héroes. Mara y el Armero ya pueden atender al grupo.');return;
+  r.log.push(Base.mission(data,w).purpose==='visit'?'Llegada a los huertos. Beatriz y Luz pueden recibir al equipo; esta visita no tiene pago.':Base.mission(data,w).purpose==='assignment'?'Llegada a '+Base.here(data,w).name+'. Revisa la propuesta de '+Base.mission(data,w).issuer+' antes de aceptar. Todavía no has recibido la carga.':'Llegada a Los Héroes. Mara y el Armero ya pueden atender al grupo.');return;
  }
  if(Base.here(data,w).checkpoint){const {checkpoint,rolls,log,...snapshot}=r;r.checkpoint={node:Base.here(data,w).id,snapshot:copy(snapshot)};}
 }
@@ -174,14 +177,14 @@ export function choose(data,source,id){
  if(wasDelivery&&r.status==='completed'){
   const m=Base.mission(data,w),gross=r.receipt.amount,late=Math.max(0,r.minutes-(r.timeLimit??m.time_limit)),penalty=Math.min(Math.floor(gross*.5),Math.ceil(late/m.late_step_minutes)*m.late_penalty);w.credits-=penalty;r.receipt.amount-=penalty;r.receipt.gross=gross;r.receipt.timeLimit=r.timeLimit??m.time_limit;r.receipt.minutes=r.minutes;r.receipt.late=late;r.receipt.penalty=penalty;r.receipt.provisional=false;r.receipt.effect=m.effect;r.receipt.flags=copy(r.flags);r.receipt.startIndex=r.startIndex||0;
   r.receipt.narration=m.delivery_reaction||'';
-  r.receipt.corridorVersion=r.corridorVersion||1;
+  r.receipt.corridorVersion=r.corridorVersion||1;r.receipt.rewardTerms=copy(r.rewardTerms);r.receipt.beatrizVersion=r.beatrizVersion||0;
   if(r.mission==='relevo-01'&&r.corridorVersion!==2)r.receipt.narration=(r.flags.includes('relevo_confirmado')?'Rocío confirma que el hermano quedó ayudando en el depósito. Morales anota que el próximo grupo debe avisar antes de salir. ':'Bruno entrega la pregunta de la mujer. Morales pide al siguiente relevo que lleve la respuesta: el hermano se quedó ayudando en el depósito. ');
-  r.receipt.narration=arrivalAccount(r)??r.receipt.narration;
+  r.receipt.narration=beatrizArrival(r)??arrivalAccount(r)??r.receipt.narration;
   if(r.mission==='adasme-01')r.receipt.rescueOutcome=rescueOutcome(r);
   const previouslyOpen=[...w.progression.known];refreshProgression(data,w);r.receipt.opened=w.progression.known.filter(id=>!previouslyOpen.includes(id));w.completed[r.mission]=copy(r.receipt);w.effects.push(r.mission);
-  addCombatXp(r,35);w.crew=copy(ownedParty(data,r));w.location=Base.here(data,w).id;if(r.mission==='morales-01')w.regions.centro=Math.max(0,w.regions.centro-1);r.log[r.log.length-1]='Entrega completada · '+r.receipt.amount+' fichas'+(penalty?' tras descontar '+penalty+' por demora':' sin descuento por demora')+'. '+r.receipt.effect;
+  addCombatXp(r,35);w.crew=copy(ownedParty(data,r));w.location=Base.here(data,w).id;if(r.mission==='morales-01')w.regions.centro=Math.max(0,w.regions.centro-1);r.log[r.log.length-1]='Entrega completada · '+r.receipt.amount+' créditos'+(penalty?' tras descontar '+penalty+' por demora':' sin descuento por demora')+'. '+r.receipt.effect;
  }
- refreshProgression(data,w);refreshAftermath(w);updateCheckpoint(data,w);return w;
+ refreshProgression(data,w);refreshAftermath(w);refreshBeatriz(w);updateCheckpoint(data,w);return w;
 }
 export function lootRemaining(w){const c=w.run?.pending?.combat;return c?.phase==='loot'?c.enemies.reduce((n,e)=>n+e.loot.reduce((a,x)=>a+x.qty,0),0):0;}
 export function canLoot(data,w,memberId,itemId){const r=w.run,c=r?.pending?.combat,m=r?.party.find(x=>x.id===memberId);return !!(c?.phase==='loot'&&m?.hp>0&&data.items[itemId]&&bagUsed(m)<bagCapacity(data,m));}
@@ -241,6 +244,13 @@ export function travelToMission(data,source,id){
  const journey=approachJourney(data,source,id);need(journey,'No hay un trayecto disponible hasta ese punto de preparación.');
  return beginTravel(data,source,journey);
 }
+export function visitBeatriz(data,source){
+ need(beatrizMemory(source,'libertadores').length,'Primero entrega la reserva de Beatriz.');
+ need(!source.run||!['active','failed'].includes(source.run.status),'Termina o devuelve el encargo antes de visitar los huertos.');
+ need(source.location!=='libertadores','El equipo ya está en los huertos.');
+ const journey=data.journeys['visit-beatriz-'+source.location];need(journey,'No hay un recorrido disponible a los huertos.');
+ return beginTravel(data,source,journey);
+}
 export function travelHeroes(data,source){
  need(!source.run||!['active','failed'].includes(source.run.status),'Termina o devuelve el encargo antes de viajar a Los Héroes.');
  need(!atHeroes(data,source),'El grupo ya está en Los Héroes.');
@@ -252,12 +262,12 @@ export function salePrice(data,id){const item=data.shop.find(x=>x.id===id);retur
 export function canResupply(data,w){return atHeroes(data,w);}
 function activeParty(w){return w.run?.status==='active'?w.run.party:w.crew;}
 export function buy(data,source,id,memberId){
- const w=copy(source);need(atHeroes(data,w),'Viaja a Los Héroes para comerciar.');const offer=data.shop.find(x=>x.id===id);need(offer,'Suministro desconocido.');const party=activeParty(w),member=party.find(x=>x.id===(memberId||party[0].id)),cost=price(data,w,id);need(member,'Mensajero desconocido.');need(w.credits>=cost,'No tienes suficientes fichas.');need(bagUsed(member)+offer.qty<=bagCapacity(data,member),'Esa mochila no tiene espacio.');w.credits-=cost;addBag(data,member,id,offer.qty);if(w.run?.status==='active'){w.run.ownedStock[id]=(w.run.ownedStock[id]||0)+offer.qty;sync(w.run);updateCheckpoint(data,w);}return w;
+ const w=copy(source);need(atHeroes(data,w),'Viaja a Los Héroes para comerciar.');const offer=data.shop.find(x=>x.id===id);need(offer,'Suministro desconocido.');const party=activeParty(w),member=party.find(x=>x.id===(memberId||party[0].id)),cost=price(data,w,id);need(member,'Mensajero desconocido.');need(w.credits>=cost,'No tienes suficientes créditos.');need(bagUsed(member)+offer.qty<=bagCapacity(data,member),'Esa mochila no tiene espacio.');w.credits-=cost;addBag(data,member,id,offer.qty);if(w.run?.status==='active'){w.run.ownedStock[id]=(w.run.ownedStock[id]||0)+offer.qty;sync(w.run);updateCheckpoint(data,w);}return w;
 }
 export function sell(data,source,id,memberId){
  const w=copy(source);need(atHeroes(data,w),'Viaja a Los Héroes para comerciar.');const party=activeParty(w),member=party.find(x=>x.id===(memberId||party[0].id));need(member&&data.items[id]&&data.items[id].kind!=='cargo','Ese objeto no puede venderse.');need(bagCount(member,id)>0,'El objeto no está en esa mochila.');if(w.run?.status==='active')need((w.run.ownedStock[id]||0)>0,'Los suministros prestados no se venden.');removeBag(member,id,1);if(w.run?.status==='active'){w.run.ownedStock[id]--;sync(w.run);updateCheckpoint(data,w);}w.credits+=salePrice(data,id);return w;
 }
-export function recover(data,source){const w=copy(source);need(atHeroes(data,w),'Viaja a Los Héroes para recuperarte.');const party=activeParty(w);need(party.some(c=>c.hp<c.maxHp),'El equipo ya está recuperado.');need(w.credits>=8,'Necesitas 8 fichas.');w.credits-=8;party.forEach(c=>c.hp=c.maxHp);if(w.run?.status==='active')updateCheckpoint(data,w);return w;}
+export function recover(data,source){const w=copy(source);need(atHeroes(data,w),'Viaja a Los Héroes para recuperarte.');const party=activeParty(w);need(party.some(c=>c.hp<c.maxHp),'El equipo ya está recuperado.');need(w.credits>=8,'Necesitas 8 créditos.');w.credits-=8;party.forEach(c=>c.hp=c.maxHp);if(w.run?.status==='active')updateCheckpoint(data,w);return w;}
 export function heal(data,source,id){const w=copy(source),r=w.run;need(r?.status==='active'&&!r.pending,'Resuelve el encuentro antes de atender al equipo.');const c=r.party.find(c=>c.id===id);need(c&&c.hp<c.maxHp,'Ese Mensajero no necesita un botiquín.');spend(r,{medkit:1});c.hp=Math.min(c.maxHp,c.hp+24);updateCheckpoint(data,w);return w;}
 export function useItem(data,source,memberId,id){const w=copy(source),party=activeParty(w),m=party.find(x=>x.id===memberId),item=data.items[id];need(!w.run?.pending?.combat,'Usa el inventario de combate durante una batalla.');need(m&&(item?.kind==='medical'||id==='medkit'),'Ese objeto no puede usarse.');need(bagCount(m,id)>0&&m.hp<m.maxHp,'No puedes usarlo ahora.');removeBag(m,id,1);m.hp=Math.min(m.maxHp,m.hp+(item.heal||(id==='medkit'?24:14)));if(w.run?.status==='active'){w.run.ownedStock[id]=Math.max(0,(w.run.ownedStock[id]||0)-1);sync(w.run);updateCheckpoint(data,w);}return w;}
 export function transfer(data,source,fromId,toId,id,qty=1){
@@ -281,7 +291,7 @@ export function skillPoints(c){return c.level-(c.skills||[]).length;}
 export function learn(data,source,memberId,skillId){const w=copy(source);need(!w.run||w.run.status!=='active'||(!w.run.pending&&Base.here(data,w).checkpoint),'Aprende habilidades en un punto de control.');const party=activeParty(w),c=party.find(x=>x.id===memberId),skill=data.skillTrees[memberId]?.find(x=>x.id===skillId);need(c&&skill,'Habilidad desconocida.');need(!has(c,skillId)&&skillPoints(c)>0,'No hay puntos disponibles o ya aprendiste la habilidad.');need(!skill.requires||has(c,skill.requires),'Aprende primero la habilidad anterior.');c.skills=[...(c.skills||[]),skillId];if(w.run?.status==='active')updateCheckpoint(data,w);return w;}
 export function rewardForecast(data,w){const r=w.run,m=Base.mission(data,w);if(!r||!m||m.type==='travel')return null;if(r.status==='completed'&&r.receipt?.gross!==undefined){const p=r.receipt;return{gross:p.gross,amount:p.amount,late:p.late,penalty:p.penalty,limit:p.timeLimit,minutes:p.minutes};}const gross=m.reward.base+(r.combats===0?m.reward.stealth_bonus:0),late=Math.max(0,r.minutes-(r.timeLimit??m.time_limit)),penalty=Math.min(Math.floor(gross*.5),Math.ceil(late/m.late_step_minutes)*m.late_penalty);return{gross,amount:gross-penalty,late,penalty,limit:r.timeLimit??m.time_limit,minutes:r.minutes};}
 export function restore(data,text){
- const migrated=restoreCorridors(data,JSON.parse(migrateNetworkSave(data,text)));
+ const migrated=restoreTerms(data,restoreCorridors(data,JSON.parse(migrateNetworkSave(data,text))));
  const w=Base.restore(data,JSON.stringify(migrated));need(w.mode==='production'&&Array.isArray(w.crew)&&Array.isArray(w.effects)&&w.stock,'Guardado de encargos inválido.');w.location??=(w.run&&Base.here(data,w)?.id)||'heroes';w.hubVisits??=0;
  for(const c of w.crew)memberBase(data,c);
  if(w.run){const r=w.run;
@@ -294,7 +304,7 @@ export function restore(data,text){
  for(const party of [w.crew,w.run?.party,w.run?.checkpoint?.snapshot?.party].filter(Boolean)){
   need(Array.isArray(party)&&party.length===3&&new Set(party.map(x=>x.id)).size===3,'Equipo inválido.');for(const c of party){need(data.crew.some(x=>x.id===c.id)&&Number.isInteger(c.hp)&&c.hp>=0&&c.hp<=c.maxHp&&Number.isInteger(c.level)&&c.level>0&&Number.isInteger(c.xp)&&c.xp>=0,'Estado de Mensajero inválido.');need(Array.isArray(c.bag)&&bagUsed(c)<=bagCapacity(data,c)&&c.bag.every(x=>data.items[x.id]&&Number.isInteger(x.qty)&&x.qty>0),'Mochila inválida.');need(Array.isArray(c.skills)&&new Set(c.skills).size===c.skills.length&&c.skills.length<=c.level&&c.skills.every(id=>{const s=data.skillTrees[c.id]?.find(s=>s.id===id);return s&&(!s.requires||c.skills.includes(s.requires));}),'Habilidades inválidas.');}
  }
- return refreshAftermath(restoreProgression(data,restoreEncounters(w)));
+ return refreshBeatriz(refreshAftermath(restoreProgression(data,restoreEncounters(w))));
 }
 export function craft(){throw Error('Los Mensajeros no pueden fabricar. Compra suministros en Los Héroes.');}
 

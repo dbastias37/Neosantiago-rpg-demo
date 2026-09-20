@@ -1330,7 +1330,7 @@
       "dialogues": {
         "success": "La reserva está completa. Ahora podremos atender a quienes lleguen esta noche."
       },
-      "effect": "República reduce a 6 fichas el precio de los botiquines.",
+      "effect": "República reduce a 6 créditos el precio de los botiquines.",
       "delivery_text": "Dr. Romero · República espera el informe y la carga. La entrega cierra el encargo.",
       "pickup": {
         "node": "heroes",
@@ -1376,7 +1376,7 @@
       "dialogues": {
         "success": "Con esto mantenemos los cultivos. Separaré raciones para sus próximas salidas."
       },
-      "effect": "Las raciones bajan a 3 fichas en la red de abastecimiento.",
+      "effect": "Las raciones bajan a 3 créditos en la red de abastecimiento.",
       "delivery_text": "Beatriz · Los Libertadores espera el informe y la carga. La entrega cierra el encargo.",
       "pickup": {
         "node": "uchile",

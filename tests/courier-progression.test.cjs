@@ -24,7 +24,7 @@ test('fresh team sees only the three-post corridor, with distant missions enforc
 });
 test('both first choices pay once, remember the response and introduce the same nearby jobs without creating their receipts',async()=>{
  const {E,d}=await setup();for(const choice of ['confirm','return-message']){
-  const w=deliver(E,d,E.createWorld(d,{seed:1}),'relevo-01',choice);assert.equal(w.run.combats,0);assert.equal(w.location,'plaza');assert.equal(w.credits,18);assert.deepEqual(new Set(w.run.receipt.opened),new Set(['romero-01','morales-01']));assert.deepEqual(Object.keys(w.completed),['relevo-01']);assert.ok(w.run.receipt.narration.includes(choice==='confirm'?'Elena recibió':'respuesta pendiente'));assert.throws(()=>E.start(d,w,'relevo-01'),/entregado/);assert.deepEqual(new Set(w.progression.visited),new Set(['heroes','moneda','uchile','plaza']));assert.equal(w.run.minutes,choice==='confirm'?25:22);
+  const w=deliver(E,d,E.createWorld(d,{seed:1}),'relevo-01',choice);assert.equal(w.run.combats,0);assert.equal(w.location,'plaza');assert.equal(w.credits,8);assert.deepEqual(new Set(w.run.receipt.opened),new Set(['romero-01','morales-01']));assert.deepEqual(Object.keys(w.completed),['relevo-01']);assert.ok(w.run.receipt.narration.includes(choice==='confirm'?'Elena recibió':'respuesta pendiente'));assert.throws(()=>E.start(d,w,'relevo-01'),/entregado/);assert.deepEqual(new Set(w.progression.visited),new Set(['heroes','moneda','uchile','plaza']));assert.equal(w.run.minutes,choice==='confirm'?25:22);
  }
 });
 test('accepting, abandoning or retrying the first job never opens contacts',async()=>{

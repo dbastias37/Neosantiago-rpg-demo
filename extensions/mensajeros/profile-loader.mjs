@@ -11,7 +11,7 @@ try {
     if (!node) throw Error('La ficha de Exploración está incompleta.');
     document.body.append(node.cloneNode(true));
   }
-  await import('./profile-adapter.mjs?v=1');
+  await import('./profile-adapter.mjs?v=16-credits');
   document.getElementById('profileBoot').remove();
   document.getElementById('bootBack').remove();
 } catch (error) {

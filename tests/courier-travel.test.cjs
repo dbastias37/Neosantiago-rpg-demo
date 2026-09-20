@@ -168,3 +168,25 @@ test('Tobalaba acceptance shows only the actual extraction legs, deadline and ze
  a.click('#catalogButton');a.click('[data-offer="adasme-01"]');a.click('[data-accept]');assert.match(d.querySelector('#travel').textContent,/0\/16/);assert.match(d.querySelector('#status').textContent,/0 \/ 116 min/);assert.equal(d.querySelectorAll('#missionLayer path.route-selected').length,16);
  const b=await session({saved:a.world()});assert.match(b.document.querySelector('#travel').textContent,/0\/16/);assert.equal(b.world().run.index,12);assert.ok(!b.world().progression.visited.includes('macul'));
 });
+
+test('Beatriz contact exposes a physical revisit and the arrival opens the remembered conversation',async()=>{
+ const {setup,finish}=require('./courier-return-fixtures.cjs'),{E,d}=await setup();
+ let w=finish(E,d,E.start(d,atOrigin(d,connectedWorld(E,d,{seed:1}),'beatriz-01'),'beatriz-01'));
+ w=finish(E,d,E.travelHeroes(d,w));const a=await session({saved:w}),doc=a.document;
+ a.click('#contactsButton');a.click('[data-contact="beatriz"]');
+ assert.match(doc.getElementById('dialogBody').textContent,/Registro de la última visita/);
+ a.click('[data-beatriz-visit]');assert.equal(E.mission(d,a.world()).purpose,'visit');assert.equal(doc.getElementById('dialog').open,false);
+ const returned=finish(E,d,a.world()),b=await session({saved:returned});
+ assert.match(b.document.getElementById('travel').textContent,/Hablar con Beatriz/);
+ b.click('#travel [data-contact="beatriz"]');assert.match(b.document.getElementById('dialogBody').textContent,/Al volver/);
+ assert.equal(b.document.querySelectorAll('[data-beatriz-visit]').length,0);
+ assert.equal(b.world().credits,w.credits);
+});
+
+test('the first offer and help expose the reduced credits and current three-leg route',async()=>{
+ const {setup}=require('./courier-return-fixtures.cjs'),{E,d}=await setup(),w=E.createWorld(d,{seed:1});
+ const a=await session({saved:w});a.click('#catalogButton');a.click('[data-offer="relevo-01"]');
+ assert.match(a.document.getElementById('dialogBody').textContent,/8 créditos/);
+ assert.doesNotMatch(a.document.getElementById('dialogBody').textContent,/fichas/);
+ a.click('[data-close="dialog"]');a.click('#helpButton');assert.match(a.document.getElementById('dialogBody').textContent,/tres tramos/);
+});

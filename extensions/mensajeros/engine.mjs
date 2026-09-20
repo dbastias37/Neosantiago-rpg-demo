@@ -119,7 +119,7 @@ function complete(data,world) {
   const dialogue=m.type==='delivery'?m.dialogues.success:m.dialogues[run.combats?'combat':'stealth'];
   run.receipt={amount:m.reward.base+bonus,bonus,recipient:m.recipient,dialogue:dialogue+(run.rescued?.mode==='carry'?' '+m.dialogues.carried:''),combats:run.combats,evaded:run.evaded,provisional:true};
   world.credits+=run.receipt.amount;world.paid.push(m.id);world.completed[m.id]=copy(run.receipt);
-  run.index=route(data,world).nodes.length-1;run.pending=null;run.status='completed';run.jammerOn=false;log(run,'Entrega completada. Recompensa de prueba: '+run.receipt.amount+' fichas.');
+  run.index=route(data,world).nodes.length-1;run.pending=null;run.status='completed';run.jammerOn=false;log(run,'Entrega completada. Recompensa de prueba: '+run.receipt.amount+' créditos.');
 }
 export function choose(data,source,id) {
   const world=copy(source);active(world);const run=world.run,p=run.pending;

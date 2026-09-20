@@ -89,7 +89,7 @@ await script('item-details.js?v=2');
 Object.assign(window, {
   itemPurpose:id=>gear(id).desc,
   itemFacts(id){const d=gear(id),facts=[];if(d.damage)facts.push(['Daño adicional','+'+d.damage]);if(d.ammo)facts.push(['Munición',gear(d.ammo).name]);if(d.defense)facts.push(['Defensa','+'+d.defense]);if(d.capacity)facts.push(['Capacidad',d.capacity+' espacios']);return facts.map(([k,v])=>`<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('');},
-  itemPricesHtml(id){const offer=data.shop.find(o=>o.id===id);if(!offer)return '<p>Este objeto no se vende en los puestos del refugio.</p>';return `<table><caption>Precios del refugio</caption><thead><tr><th>Puesto</th><th>Comprar</th><th>Vender</th></tr></thead><tbody><tr><th>${offer.vendor==='mara'?'Mara':'El Armero'}</th><td>${E.price(data,current(),id)} fichas / ${offer.qty} ud.</td><td>${E.salePrice(data,id)} fichas / ud.</td></tr></tbody></table>`;},
+  itemPricesHtml(id){const offer=data.shop.find(o=>o.id===id);if(!offer)return '<p>Este objeto no se vende en los puestos del refugio.</p>';return `<table><caption>Precios del refugio</caption><thead><tr><th>Puesto</th><th>Comprar</th><th>Vender</th></tr></thead><tbody><tr><th>${offer.vendor==='mara'?'Mara':'El Armero'}</th><td>${E.price(data,current(),id)} créditos / ${offer.qty} ud.</td><td>${E.salePrice(data,id)} créditos / ud.</td></tr></tbody></table>`;},
   itemDisassemblyHtml:()=>'<p>Los Mensajeros no tienen una habilidad de desarme.</p>',
 });
 const sharedRender=window.renderProfile;

@@ -12,7 +12,7 @@ try {
   document.body.append(node.cloneNode(true));
  }
  document.querySelectorAll('[onerror]').forEach(node => node.removeAttribute('onerror'));
- await import('./refuge-adapter.mjs?v=2-world-continuity');
+ await import('./refuge-adapter.mjs?v=16-credits');
  document.getElementById('refugeBoot').remove();document.getElementById('bootBack').remove();
 } catch(error) {
  document.getElementById('refugeBoot').textContent = error.message;
