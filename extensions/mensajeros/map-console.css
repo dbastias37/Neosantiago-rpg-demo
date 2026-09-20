@@ -399,7 +399,7 @@
   .control-console .panel-head { padding-block: 8px; }
   .control-console .panel-head .eyebrow { display: none; }
   .control-console .panel-head h1 { font-size: 22px; }
-  .map-screen { min-height: 150px; }
+  .map-screen { min-height: min(240px,40dvh); }
   .console-deck { padding-block: 8px; }
   .control-console #travel { padding: 8px 10px; }
 }
