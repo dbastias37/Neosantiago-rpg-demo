@@ -8,6 +8,8 @@ Este es el punto de entrada para continuar en otro chat. Resume lo implementado,
 
 ## Actualización vigente — entrega 13 (20 de septiembre de 2026)
 
+**Laboratorio posterior a esta entrega:** se añadieron [tres paneles de compuertas con quince acertijos](docs/laboratorio-compuertas-0.2.md), disponibles por URL directa en `labs/compuertas/`. Es una prueba independiente solicitada para evaluar narrativa, teclados y continuidad eléctrica. No se han integrado compuertas a viajes, combates o guardados de la campaña. La profundización de Guzmán y Jiménez continúa pendiente.
+
 Se incorporan [Beatriz, economía y retratos completos](docs/beatriz-economia-0.2-entrega-13.md). Esta actualización sustituye como siguiente tarea la propuesta de Beatriz de las secciones 10, 11 y 14, conservadas abajo como historia de la revisión del 19 de septiembre.
 
 Beatriz responde a cómo protegieron la reserva y a la preparación de Luz, su aprendiz, con cuatro recepciones combinadas. La visita posterior a Libertadores se realiza por la red física y recuerda ese resultado, sin otro pago. Los encargos anteriores conservan su versión narrativa.

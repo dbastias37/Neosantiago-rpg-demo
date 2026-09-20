@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0c1110">
+  <meta name="description" content="Laboratorio jugable de compuertas de Neo Santiago 2130: diez relatos con claves y cinco diagnósticos de continuidad.">
+  <title>Compuertas · Laboratorio Neo Santiago 2130</title>
+  <link rel="stylesheet" href="styles.css?v=1">
+</head>
+<body>
+  <a class="skip-link" href="#workbench">Ir al panel</a>
+  <div class="ambient" aria-hidden="true"></div>
+  <main class="lab" id="lab">
+    <header class="masthead">
+      <div class="identity"><span class="mark" aria-hidden="true">N<span>2130</span></span><div><span class="eyebrow">NEO SANTIAGO 2130</span><span class="brand-sub">LABORATORIO DE ACCESOS</span></div></div>
+      <div class="tools"><button class="text-button" id="soundToggle" aria-pressed="false">Sonido apagado</button><button class="text-button" id="mobileToggle" aria-pressed="false">Vista móvil</button></div>
+    </header>
+    <section class="intro-header"><div><p class="eyebrow amber">RED INTERIOR / ACCESO DE PERSONAL</p><h1>Al otro lado de la compuerta.</h1><p class="lede">Lee lo que dejaron. Prueba lo que todavía funciona.</p></div><div class="progress-block"><span id="totalSolved">00 / 15</span><small>ACCESOS RESUELTOS</small></div></section>
+    <nav class="families" id="families" aria-label="Tipos de panel"></nav>
+    <section class="case-selector" aria-label="Seleccionar acertijo"><div class="case-label"><span class="eyebrow">CASO</span><span id="caseCount">01 / 05</span></div><select id="caseSelect" aria-label="Elegir acertijo"></select><span class="difficulty" id="difficulty"></span><button class="text-button" id="resetCase">Reiniciar caso</button></section>
+    <div class="mobile-switch" role="group" aria-label="Vista del caso"><button data-view="panel" aria-pressed="true">Panel</button><button data-view="evidence" aria-pressed="false">Relato y evidencias</button></div>
+    <section class="workgrid" id="workgrid" data-mobile-view="panel">
+      <aside class="dossier" aria-label="Relato y evidencias del caso"><div class="dossier-header"><span class="eyebrow">LO QUE ENCONTRASTE</span><span class="file-number" id="fileNumber"></span></div><div id="story"></div><nav class="document-tabs" id="documentTabs" aria-label="Documentos del caso"></nav><article class="document" id="documentBody" aria-live="polite"></article><div class="hint-area" id="hintArea"></div></aside>
+      <section class="workbench" id="workbench" aria-label="Panel interactivo" tabindex="-1"><div class="scene-caption"><span id="location"></span><span class="live-state"><i></i><span id="phaseLabel">EN ESPERA</span></span></div><div id="stage"></div><div class="bench-footer"><span id="benchInstruction"></span><span class="attempts" id="attempts"></span></div></section>
+    </section>
+    <footer class="lab-footer"><span>PROTOTIPO JUGABLE · 15 CASOS ORIGINALES</span><span id="saveStatus">El progreso se guarda en este navegador. Leer y medir no consumen intentos.</span></footer>
+  </main>
+  <dialog id="resultDialog" aria-labelledby="resultTitle"><div id="resultBody"></div></dialog>
+  <div class="sr-only" id="announcer" aria-live="polite" aria-atomic="true"></div>
+  <noscript>Este laboratorio necesita JavaScript para operar los paneles.</noscript>
+  <script type="module" src="app.mjs?v=1"></script>
+</body>
+</html>

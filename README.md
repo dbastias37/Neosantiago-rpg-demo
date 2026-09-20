@@ -16,6 +16,10 @@ La [bibliografía narrativa](docs/BIBLIOGRAFIA-NARRATIVA.md) reúne las fuentes 
 
 El libro de referencia de la adaptación está en [Neo Santiago 2130](https://neo2130.onrender.com/).
 
+## Laboratorio de compuertas
+
+[Probar los tres paneles y sus quince acertijos](https://neosantiago-rpg-demo.onrender.com/labs/compuertas/). Incluye dos teclados numéricos y un gabinete de continuidad, con relatos, pistas, intentos y resultados de apertura. Es un laboratorio independiente de las partidas del juego. El [documento de diseño y continuidad](docs/laboratorio-compuertas-0.2.md) registra sus reglas, soluciones y límites.
+
 ## Verificación
 
 Instalar las dependencias de desarrollo con `npm install` y ejecutar `npm test`. La comprobación registrada el 19 de septiembre de 2026 sobre `9fe2327` aprobó 345 pruebas. Los límites de esas comprobaciones, incluida la evaluación humana pendiente, están detallados en el informe.
