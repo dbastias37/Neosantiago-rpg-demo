@@ -268,3 +268,8 @@ La [bibliografía narrativa ampliada](docs/BIBLIOGRAFIA-NARRATIVA.md), incorpora
 ## 14. Contexto listo para abrir otro chat
 
 > Continúa el desarrollo de Neo Santiago 2130 en `dbastias37/Neosantiago-rpg-demo`. Lee primero `INFORME-CONTINUIDAD-V0.2.md` y `docs/version-0.2.md`, verifica `main` y revisa los archivos correspondientes antes de editar. V0.2 está cerrada y la integración posterior de compuertas eleva la suite a 390 pruebas. El siguiente trabajo acordado es visual, por bloques, usando la paleta, tipografía, metal oscuro, óxido limitado y retratos completos ya aprobados. Beatriz, Guzmán, Jiménez, continuidad de red, Créditos, pagos y provisiones ya están implementados; no los planifiques como pendientes por leer documentos históricos. Los diez casos numéricos del laboratorio ya están conectados a desvíos; el panel de continuidad sigue separado. Mantén narrativa humana y concreta, rutas descubiertas progresivamente, efectos ligados a hechos comprobados y compatibilidad de guardados. Al terminar un nuevo bloque, registra cambios, pruebas y límites en este informe.
+
+
+## Favicon aprobado — N con 2130 debajo
+
+Se integra la primera variante elegida por el usuario: N dorada, año 2130 horizontal debajo y marco sobre fondo oscuro. `favicon-512.png` conserva la imagen maestra reducida para web; `favicon.ico` incluye 16, 32 y 48 px, con PNG equivalentes y `apple-touch-icon.png` de 180 px. Las entradas del juego, Mensajeros y laboratorios usan rutas relativas y versión `n2130-a1` para renovar la caché. Se verificaron las 50 referencias de los diez HTML y las dimensiones de los archivos. El cambio solo afecta metadatos e imágenes del icono; no modifica mecánicas ni guardados.
