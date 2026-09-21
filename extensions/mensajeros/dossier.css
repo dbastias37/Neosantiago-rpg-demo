@@ -30,18 +30,19 @@
  #dialog.assignment-dossier .contact-index>.conditions{margin-top:8px}
  #dialog.assignment-dossier .document-topline{padding:12px;font-size:8px;gap:8px}
  #dialog.assignment-dossier .document{padding:18px 12px}
- #dialog.assignment-dossier .hero{grid-template-columns:85px minmax(0,1fr);gap:14px}
- #dialog.assignment-dossier .hero img{width:85px;height:140px}
- #dialog.assignment-dossier .hero h2{font-size:23px}
- #dialog.assignment-dossier .hero .destination{font-size:11px}
+ #dialog.assignment-dossier .dossier-reading .hero{grid-template-columns:85px minmax(0,1fr);gap:14px}
+ #dialog.assignment-dossier .dossier-reading .hero img{width:85px;height:140px}
+ #dialog.assignment-dossier .dossier-reading .hero h2{font-size:23px}
+ #dialog.assignment-dossier .dossier-reading .hero .destination{font-size:11px}
  #dialog.assignment-dossier .file-number{font-size:8px;margin-top:11px}
  #dialog.assignment-dossier .statement{font-size:13px;line-height:1.8}
  #dialog.assignment-dossier .facts>div{padding:12px 6px}
  #dialog.assignment-dossier .facts dd{font-size:15px}
  #dialog.assignment-dossier .facts dt{font-size:8px}
  #dialog.assignment-dossier .facts dd small{font-size:10px}
- #dialog.assignment-dossier .document-actions{padding:10px;gap:6px}
+ #dialog.assignment-dossier .document-actions{padding:10px;gap:6px;flex-wrap:wrap}
  #dialog.assignment-dossier .document-actions button{flex:1;min-width:0;font-size:9px;padding-inline:7px}
+ #dialog.assignment-dossier .document-actions .primary{min-width:0}
  #dialog.assignment-dossier .document-actions .back{flex-basis:100%}
  #dialog.assignment-dossier .cargo{padding:12px}
 }
