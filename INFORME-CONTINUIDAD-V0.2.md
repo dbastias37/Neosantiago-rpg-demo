@@ -6,6 +6,10 @@
 
 Este es el punto de entrada para continuar en otro chat. Resume lo implementado, diferencia los antecedentes históricos del estado vigente y deja un alcance propuesto para el siguiente bloque. Cuando el código cambie después de esta revisión, actualizar este informe con la nueva evidencia.
 
+## Actualización visual — selección de combate en móvil portrait
+
+Se añaden flechas a los lados de las tarjetas del combate compartido por Exploración y Encargos. En portrait hasta 600 px se muestra una tarjeta frontal por grupo; las flechas cian eligen al aliado que saquea y las rojas recorren objetivos/cuerpos. Se omiten aliados caídos y enemigos muertos durante combate, se recorre circularmente y se bloquea la navegación mientras se resuelve una acción. Cambiar de cuerpo no inicia el saqueo; se pulsa la tarjeta seleccionada. En escritorio se conserva la disposición existente. Suite: **394 pruebas aprobadas**. La revisión en navegador cubre portrait 390 × 844 y 320 × 568, además de escritorio.
+
 ## Actualización visual — apertura cinematográfica
 
 Se agrega la [intro cinematográfica de Producciones Vérité](docs/intro-cinematica.md) al botón Iniciar: logo original, crédito de Diego Bastías y título blanco con fundidos y acercamientos suaves. La música comienza con el gesto inicial y continúa hasta el prólogo. Se preserva la elección de continuar si existe una partida. Suite: **392 pruebas aprobadas**.

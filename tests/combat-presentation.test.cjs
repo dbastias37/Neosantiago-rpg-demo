@@ -101,3 +101,22 @@ test('Enter advances enemy narration without duplicating enemy attacks',()=>{
  const e=new d.defaultView.Event('keydown',{bubbles:true,cancelable:true});Object.defineProperty(e,'key',{value:'Enter'});d.dispatchEvent(e);
  assert.equal(c.battleState.actor,actor);assert.equal(c.battleState.busy,false);
 });
+
+test('mobile selectors cycle living allies for loot and enemies without starting a search or spending a turn',()=>{
+ const a=session(),c=a.ctx,d=a.document;
+ c.matchMedia=()=>({matches:true});
+ c.startCombat({title:'Selección móvil',enemies:['merodeador','drone','merodeador'],canFlee:true},{label:'test',_decisionChanges:[]});
+ const prev=side=>d.querySelector('.stage-card-arrow--'+side+'.previous'),next=side=>d.querySelector('.stage-card-arrow--'+side+'.next');
+ const actor=c.battleState.actor,ammo=c.state.stats.shots;
+ c.battleState.enemies[1].hp=0;c.renderBattle();
+ a.click(next('enemy'));assert.equal(c.battleState.target,2);a.click(next('enemy'));assert.equal(c.battleState.target,0);
+ assert.equal(c.battleState.actor,actor);assert.equal(c.state.stats.shots,ammo);assert.equal(next('ally').disabled,true);
+ c.battleState.enemies.forEach(e=>e.hp=0);c.state.party[1].hp=0;c.beginLootPhase();
+ assert.equal(d.querySelectorAll('#allyUnits .stage-front').length,1);
+ a.click(next('ally'));assert.equal(c.battleState.looter,0);a.click(next('ally'));assert.equal(c.battleState.looter,2);a.click(next('ally'));assert.equal(c.battleState.looter,0);
+ a.click(prev('ally'));assert.equal(c.battleState.looter,2);a.click(prev('enemy'));assert.equal(c.battleState.lootTarget,2);
+ assert.equal(c.battleState.enemies.some(e=>e.searching||e.looted),false);
+ a.click(d.querySelector('#enemyUnits .stage-front .portrait'));assert.equal(c.battleState.enemies[2].searching,true);
+ assert.equal(next('ally').disabled,true);assert.equal(next('enemy').disabled,true);
+ c.stageCycleCard('ally',1);assert.equal(c.battleState.looter,2);
+});

@@ -12,6 +12,19 @@ function stageActivateCard(side,index){
  if(battleState.phase==='loot'){battleState.lootTarget=index;beginLoot(index)}
  else stageSelectTarget(index);
 }
+function stageCycleCandidates(side){
+ if(!battleState)return [];
+ return (side==='ally'?state.party:battleState.enemies).map(function(unit,i){return i}).filter(function(i){
+  return side==='ally'?state.party[i].hp>0:battleState.phase==='loot'||battleState.enemies[i].hp>0
+ });
+}
+function stageCycleCard(side,direction){
+ var b=battleState;if(!b||b.busy||(side==='ally'&&b.phase!=='loot'))return;
+ var indices=stageCycleCandidates(side);if(!indices.length)return;
+ var current=side==='ally'?b.looter:b.phase==='loot'?b.lootTarget:b.target,pos=indices.indexOf(current);
+ var next=indices[pos<0?(direction<0?indices.length-1:0):(pos+direction+indices.length)%indices.length];
+ if(side==='ally')selectLooter(next);else stageSelectTarget(next);
+}
 (function(){
 'use strict';
 var shell=document.querySelector('.battle-shell'),arena=document.querySelector('.arena'),consolePanel=document.querySelector('.combat-console');
@@ -29,6 +42,17 @@ function openItems(){clearTimeout(inventoryTimer);$('itemTray').classList.remove
 function closeItems(){if($('itemTray').classList.contains('hidden')||$('itemTray').classList.contains('inventory-closing'))return;clearTimeout(inventoryTimer);$('itemTray').classList.add('inventory-closing');closeInventory.disabled=true;$('itemsToggle').setAttribute('aria-expanded','false');inventoryTimer=setTimeout(function(){$('itemTray').classList.add('hidden');$('itemTray').classList.remove('inventory-closing');closeInventory.disabled=false;$('itemsToggle').focus()},window.matchMedia('(prefers-reduced-motion: reduce)').matches?0:320)}
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('itemTray').classList.contains('hidden')){e.preventDefault();closeItems()}},true);
 var selector=document.createElement('div');selector.id='stageTargets';selector.setAttribute('aria-label','Seleccionar objetivo');arena.parentNode.insertBefore(selector,consolePanel);
+var cardArrows=[];
+[['allyUnits','ally'],['enemyUnits','enemy']].forEach(function(pair){
+ [-1,1].forEach(function(direction){
+  var button=document.createElement('button');button.type='button';
+  button.className='stage-card-arrow stage-card-arrow--'+pair[1]+' '+(direction<0?'previous':'next');
+  button.setAttribute('aria-controls',pair[0]);button.setAttribute('aria-label',(pair[1]==='ally'?'Aliado':'Enemigo')+(direction<0?' anterior':' siguiente'));
+  button.innerHTML='<span aria-hidden="true">'+(direction<0?'‹':'›')+'</span>';
+  button.onclick=function(){stageCycleCard(pair[1],direction)};
+  $(pair[0]).parentNode.appendChild(button);cardArrows.push({node:button,side:pair[1]});
+ });
+});
 [['allyUnits','ally'],['enemyUnits','enemy']].forEach(function(pair){$(pair[0]).addEventListener('click',function(e){var card=e.target.closest('.unit');var group=$(pair[0]);if(!card||!group.contains(card))return;e.preventDefault();e.stopImmediatePropagation();stageActivateCard(pair[1],Array.from(group.children).indexOf(card))},true)});
 var rawRender=renderBattle,rawEnd=endPlayerTurn,rawRecord=recordHp;
 var endTurnTimer=null,pendingNarration=null,logExitTimers=[];
@@ -78,6 +102,7 @@ function advanceNarration(){
 advanceButton.onclick=advanceNarration;
 document.addEventListener('keydown',function(e){
  if(e.key!=='Enter'||!battleState||$('battle').classList.contains('hidden'))return;
+ if(e.target&&e.target.closest&&e.target.closest('.stage-card-arrow'))return;
  if(e.target&&(e.target.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)))return;
  if(document.querySelector('.overlay[aria-modal="true"]:not(.hidden)')||!$('itemTray').classList.contains('hidden')||(typeof fieldSkillTray!=='undefined'&&!fieldSkillTray.classList.contains('hidden')))return;
  // Consume Enter even at the next decision: never activate a focused attack button.
@@ -88,7 +113,10 @@ recordHp=function(side,index,from,to,max,sfx){if(battleState&&to!==from)lastDama
 function reconcile(container,previous){Array.from(container.children).forEach(function(node,i){var old=previous[i];if(!old||old.tagName!==node.tagName)return;Array.from(old.attributes).forEach(function(a){if(a.name!=='style')old.removeAttribute(a.name)});Array.from(node.attributes).forEach(function(a){old.setAttribute(a.name,a.value)});if(old.innerHTML!==node.innerHTML)old.innerHTML=node.innerHTML;node.replaceWith(old)})}
 function arrange(id,side,front){
  var container=$(id),nodes=Array.from(container.children),n=nodes.length,width=container.clientWidth,height=container.clientHeight;
+ var portrait=window.matchMedia('(max-width:600px) and (orientation:portrait)').matches;
+ if(portrait&&front===null)front=side==='ally'?Math.max(0,state.party.findIndex(function(p){return p.hp>0})):0;
  var cardHeight=Math.max(64,Math.min(280,height-12)),cardWidth=Math.max(74,Math.min(174,width*(width<240?.66:.47),cardHeight*.72));
+ if(portrait)cardWidth=Math.max(64,Math.min(cardWidth,width-64));
  container.style.setProperty('--card-width',cardWidth+'px');container.style.setProperty('--card-height',cardHeight+'px');
  var radius=Math.max(12,(width-cardWidth)/2-8);
  nodes.forEach(function(node,i){node.onclick=null;var relative=front===null?i:(i-front+n)%n,angle=n===1?0:relative*2*Math.PI/n,focused=i===front;
@@ -121,13 +149,17 @@ renderBattle=function(){
  var allyIndex=looting?b.looter:enemyTurn?null:b.actor,enemyIndex=enemyTurn?b.enemyActing:looting?b.lootTarget:b.target;
  shell.classList.toggle('stage-looting',looting);
  status.innerHTML=statusCard(state.party[allyIndex],looting?'Saqueador':'En turno',false,looting)+statusCard(b.enemies[enemyIndex],enemyTurn?'Atacando':looting?'Cuerpo seleccionado':'Objetivo',true,looting);
- if(looting&&allyIndex===null)status.insertAdjacentHTML('afterbegin','<section class="stage-status-card"><strong>Elige quién saquea</strong><span>Presiona una tarjeta aliada.</span></section>');
+ if(looting&&allyIndex===null)status.insertAdjacentHTML('afterbegin','<section class="stage-status-card"><strong>Elige quién saquea</strong><span>Usa las flechas o presiona una tarjeta aliada.</span></section>');
  $('turnLabel').textContent=enemyTurn?'Ataca '+b.enemies[enemyIndex].name:looting?(allyIndex===null?'Elige quién saquea':'Saquea '+state.party[allyIndex].name):'Turno de '+state.party[b.actor].name;
- if(looting)$('lootInstruction').textContent='Selecciona un cuerpo por su nombre. Presiona su tarjeta para saquear.';
+ if(looting)$('lootInstruction').textContent='Elige aliado y cuerpo con las flechas o sus tarjetas. Presiona el cuerpo seleccionado para saquear.';
  $('itemsToggle').setAttribute('aria-expanded',String(!$('itemTray').classList.contains('hidden')));
  selector.innerHTML=b.enemies.map(function(e,i){return '<button type="button" data-stage-target="'+i+'" '+((!looting&&e.hp<=0)||b.busy?'disabled':'')+' aria-pressed="'+(i===enemyIndex)+'">'+(i+1)+' · '+esc(e.name)+'</button>'}).join('');
  selector.querySelectorAll('button').forEach(function(button){button.onclick=function(){stageSelectTarget(Number(button.dataset.stageTarget))}});
  arrange('allyUnits','ally',allyIndex);arrange('enemyUnits','enemy',enemyIndex);
+ cardArrows.forEach(function(arrow){
+  var candidates=stageCycleCandidates(arrow.side),current=arrow.side==='ally'?b.looter:looting?b.lootTarget:b.target;
+  arrow.node.disabled=b.busy||(!looting&&arrow.side==='ally')||!candidates.length||(candidates.length===1&&candidates[0]===current);
+ });
  enqueueLog(b.log.slice(seenLogs));seenLogs=b.log.length;
 };
 endPlayerTurn=function(){if(!battleState)return;var current=battleState;current.busy=true;renderBattle();stageWaitForNarration(function(){if(battleState!==current)return;current.busy=false;rawEnd()})};

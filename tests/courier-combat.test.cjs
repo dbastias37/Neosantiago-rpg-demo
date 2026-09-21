@@ -61,3 +61,16 @@ test('full bags reject an atomic take-all without losing loot or charging time; 
  const before=JSON.stringify(w);assert.throws(()=>a.E.collectLoot(a.data,w,0,'rocio'),/cabe/);assert.equal(JSON.stringify(w),before);
  const b=await battle();b.click('[data-action="flee"]');assert.equal(b.ctx.battleState,null);assert.equal(b.world().run.pending,null);assert.equal(b.world().run.withdrawn,true);assert.deepEqual(b.errors,[]);
 });
+
+test('courier mobile arrows select looter and body through the shared presentation',async()=>{
+ const a=await battle();let turns=0;
+ while(a.ctx.battleState.phase==='combat'&&turns++<50){a.click('[data-action="attack"]');a.drain();}
+ assert.equal(a.ctx.battleState.phase,'loot');
+ a.click('.stage-card-arrow--ally.next');assert.equal(a.ctx.battleState.looter,0);
+ a.click('.stage-card-arrow--ally.next');assert.equal(a.ctx.battleState.looter,1);
+ const b=a.ctx.battleState,target=b.lootTarget;
+ a.click('.stage-card-arrow--enemy.next');assert.equal(b.lootTarget,(target+1)%b.enemies.length);
+ assert.equal(b.busy,false);assert.equal(b.enemies.some(e=>e.searching),false);
+ a.ctx.beginLoot(b.lootTarget);a.drain();assert.equal(a.document.querySelector('#lootModal').classList.contains('hidden'),false);
+ assert.deepEqual(a.errors,[]);
+});

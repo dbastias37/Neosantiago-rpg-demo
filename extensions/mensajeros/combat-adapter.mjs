@@ -67,7 +67,7 @@ Object.assign(window, {
   }
 });
 await script('combat-common.js?v=1');
-await script('combat-stage.js?v=4-device');
+await script('combat-stage.js?v=5-mobile-arrows');
 window.loadAudioRoutes();
 window.audioUnlocked=true;
 const tray=document.createElement('div');tray.id='fieldSkillTray';tray.className='hidden';tray.setAttribute('aria-label','Habilidades disponibles');document.querySelector('.combat-console').append(tray);window.fieldSkillTray=tray;

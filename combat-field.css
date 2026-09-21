@@ -111,3 +111,21 @@
  #battle .battle-head>div:first-child{min-width:0}
  #battle .battle-head h2{font-size:16px;line-height:1.2;overflow-wrap:anywhere}
 }
+
+/* Free room for the portrait card selectors, including short mobile viewports. */
+@media(max-width:600px) and (orientation:portrait){
+ #battle .loot-controls{height:auto;min-height:0;padding:8px;gap:8px}
+}
+@media(max-width:600px) and (max-height:700px) and (orientation:portrait){
+ #battle .battle-shell{grid-template-rows:auto 96px minmax(130px,1fr) auto;gap:5px}
+ #battle #stageTargets{display:none}
+ #battle #stageLog{grid-template-columns:minmax(0,1fr) 76px;grid-template-rows:minmax(0,1fr);padding:7px;gap:6px}
+ #battle #stageLog:after{display:none}
+ #battle #stageAdvance{grid-column:2;grid-row:1;align-self:center;min-width:0;min-height:38px;padding:7px 5px;font-size:10px}
+ #battle #stageAdvance:before{display:none}
+ #battle #stageLogLines{padding:4px;overflow-y:auto;align-items:start;scrollbar-width:thin;scrollbar-color:#75d3d755 #070d0a}
+ #battle .combat-console{padding:6px!important;gap:5px}
+ #battle #stageStatus{min-height:0}
+ #battle .loot-controls p{font-size:11px}
+ #battle .loot-controls button{min-height:34px;padding:5px;font-size:11px}
+}

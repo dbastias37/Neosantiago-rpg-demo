@@ -1,4 +1,5 @@
 /* Combat presentation is isolated from expedition, refuge and campaign dialogs. */
+#battle .stage-card-arrow{display:none}
 html:has(#battle:not(.hidden)),body:has(#battle:not(.hidden)){overflow:hidden!important}
 /* A viewport-bounded board. Only secondary inventory/loot panels can scroll. */
 #battle{height:100dvh;overflow:hidden!important;padding:0!important}
@@ -180,3 +181,19 @@ html:has(#battle:not(.hidden)),body:has(#battle:not(.hidden)){overflow:hidden!im
 /* Keep portrait and metadata inside narrow mobile cards. */
 #battle .units .unit,#battle .units .unit.loot-mode{grid-template-columns:minmax(0,1fr)!important}
 #battle .units .unit-info,#battle .units .portrait{min-width:0;width:100%;box-sizing:border-box}
+
+/* Mobile portrait: keep the selected card readable and navigation outside the stack. */
+@media(max-width:600px) and (orientation:portrait){
+ #battle .squad{position:relative}
+ #battle .units .stage-rear{visibility:hidden;pointer-events:none}
+ #battle .stage-card-arrow{position:absolute;z-index:35;top:calc(50% + 18px);transform:translateY(-50%);display:grid;place-items:center;width:32px;height:48px;padding:0;border:1px solid currentColor;border-radius:3px;background:linear-gradient(#15221d,#070d0a);color:var(--cyan);box-shadow:inset 0 1px #ffffff16,0 2px 5px #0009;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+ #battle .stage-card-arrow.previous{left:0}
+ #battle .stage-card-arrow.next{right:0}
+ #battle .stage-card-arrow span{font:32px/1 Arial,sans-serif;pointer-events:none}
+ #battle .stage-card-arrow--enemy{color:#ff8881;background:linear-gradient(#281b19,#100b0a)}
+ #battle .stage-card-arrow:focus-visible{outline-color:currentColor;outline-offset:-4px}
+ #battle .stage-card-arrow:active:not(:disabled){filter:brightness(1.3)}
+ #battle .stage-card-arrow:disabled{opacity:.3;cursor:default}
+ #battle .stage-card-arrow--ally{display:none}
+ #battle.stage-looting .stage-card-arrow--ally,#battle .stage-looting .stage-card-arrow--ally{display:grid}
+}
