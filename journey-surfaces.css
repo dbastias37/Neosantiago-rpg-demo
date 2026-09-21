@@ -72,7 +72,7 @@
  #gameHelpModal .game-help-reading,#refugeHelpModal .game-help-reading{font-size:16px}
 }
 @media(max-height:540px){
- #titleScreen{overflow:auto}#titleScreen .title-screen-copy{align-self:start;margin-top:24px;margin-bottom:55px}
+ #titleScreen{overflow-x:hidden;overflow-y:auto}#titleScreen .title-screen-copy{align-self:start;margin-top:24px;margin-bottom:55px}
  #titleScreen .title-lockup{font-size:50px}#titleScreen .title-tagline{font-size:13px;max-width:600px}
  #titleScreen .title-actions{margin-top:16px}#titleScreen .title-rule{margin:14px 0}
 }
