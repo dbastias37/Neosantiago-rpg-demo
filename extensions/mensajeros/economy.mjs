@@ -1,10 +1,14 @@
-// New contracts use scarce payouts. Existing contracts keep their agreed terms.
+// New contracts use scarce payouts and provisions. Existing runs keep what they received.
 const copy=x=>JSON.parse(JSON.stringify(x));
 export const terms=m=>({reward:copy(m.reward),late_step_minutes:m.late_step_minutes,late_penalty:m.late_penalty});
 export function prepareEconomy(d){
  d.previousTerms=Object.fromEntries(Object.entries(d.missions).map(([id,m])=>[id,terms(m)]));
+ d.previousProvisions=Object.fromEntries(Object.entries(d.missions).map(([id,m])=>[id,copy(m.test_loadout||m.loadout||{})]));
  const rewards={'relevo-01':8,'romero-01':12,'morales-01':14,'ana-01':10,'beatriz-01':14,'guzman-01':20,'jimenez-01':20,'adasme-01':24};
  for(const [id,base]of Object.entries(rewards)){d.missions[id].reward={base,stealth_bonus:id==='adasme-01'?12:0};d.missions[id].late_penalty=1;}
+ const fieldKit={food:1,water:1,ammo556:6};
+ const provisions={'guzman-01':fieldKit,'jimenez-01':fieldKit,'adasme-01':fieldKit};
+ for(const [id,m]of Object.entries(d.missions))m.loadout=m.test_loadout=copy(provisions[id]||{});
  return d;
 }
 export function restoreTerms(d,w){

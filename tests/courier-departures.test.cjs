@@ -20,7 +20,7 @@ test('approach preserves wounds and owned supplies, resolves arrival, and starts
  const pending=E.advance(d,journey),saved=E.restore(d,E.serialize(pending));assert.deepEqual(saved,pending);assert.equal(saved.location,'heroes');assert.notEqual(saved.run.pending.category,'delivery');
  w=finish(E,d,saved);assert.equal(w.location,'plaza');assert.equal(w.run.status,'completed');assert.ok(w.run.minutes>0);assert.deepEqual(w.paid,[]);assert.deepEqual(w.completed,{});assert.deepEqual(w.effects,[]);assert.deepEqual(w.progression.known,known);assert.equal(w.credits,0);assert.equal(w.hubVisits,0);assert.deepEqual(w.run.cargo,{});
  assert.equal(E.atMissionOrigin(d,w,'romero-01'),true);assert.deepEqual(E.restore(d,E.serialize(w)),w);
- const accepted=E.start(d,w,'romero-01');assert.equal(accepted.run.minutes,0);assert.equal(accepted.run.timeLimit,d.missions['romero-01'].time_limit);assert.equal(accepted.run.startIndex,0);assert.equal(accepted.location,'plaza');assert.deepEqual(accepted.run.cargo,{});assert.ok(Object.keys(accepted.run.borrowedStock).length>0);
+ const accepted=E.start(d,w,'romero-01');assert.equal(accepted.run.minutes,0);assert.equal(accepted.run.timeLimit,d.missions['romero-01'].time_limit);assert.equal(accepted.run.startIndex,0);assert.equal(accepted.location,'plaza');assert.deepEqual(accepted.run.cargo,{});assert.deepEqual(accepted.run.borrowedStock,{});
 });
 
 test('hostile final approach keeps contact inaccessible through combat and loot until the passage resolves',async()=>{

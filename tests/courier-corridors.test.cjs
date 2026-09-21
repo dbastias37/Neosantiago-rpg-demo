@@ -33,7 +33,8 @@ test('a proposal or abandoned agreement cannot become community memory or open l
 test('medical choices spend only team supplies and keep treatment, referral and handover distinct on arrival',async()=>{
  const {E,d}=await setup();
  for(const pickup of ['count','witness'])for(const aid of ['treat','signal'])for(const handover of ['copy','escort']){
-  let w=E.start(d,first(E,d),'romero-01');assert.deepEqual(w.run.cargo,{});
+  let ready=first(E,d);ready.crew.find(c=>c.id==='bruno').bag.push({id:'medkit',qty:1});
+  let w=E.start(d,ready,'romero-01');assert.deepEqual(w.run.cargo,{});assert.deepEqual(w.run.borrowedStock,{});
   w=step(E,d,w,pickup);assert.deepEqual(w.run.cargo,{'medical-case':1});const kits=w.run.supplies.medkit;
   w=step(E,d,w,aid);assert.equal(w.run.supplies.medkit||0,kits-(aid==='treat'?1:0));assert.deepEqual(w.run.cargo,{'medical-case':1});
   w=step(E,d,w,handover);w=step(E,d,w,'deliver');const r=w.run.receipt;

@@ -1,5 +1,5 @@
 export {completedContact} from './continuity.mjs';
-import * as E from './production.mjs?v=19-continuity';
+import * as E from './production.mjs?v=20-scarcity';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 // Approved community functions, not a list of new purchasable services.
 const places={heroes:['Preparación y salidas','Cazadores y Exploradores'],republica:['Puesto médico','Atención y suministros'],plaza:['Comunidad de paso','Relevos y acuerdos'],libertadores:['Huertos hidropónicos','Cultivo y abastecimiento'],leones:['Talleres','Electricidad y mantenimiento'],vicuna:['Operaciones','Defensa y extracción']};

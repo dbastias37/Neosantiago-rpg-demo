@@ -6,7 +6,11 @@
 
 Este es el punto de entrada para continuar en otro chat. Resume lo implementado, diferencia los antecedentes históricos del estado vigente y deja un alcance propuesto para el siguiente bloque. Cuando el código cambie después de esta revisión, actualizar este informe con la nueva evidencia.
 
-## Estado vigente — entrega 16: continuidad de la red
+## Estado vigente — entrega 17: escasez y ritmo
+
+Completado el tercer bloque propuesto de cierre: [escasez y ritmo de Los Mensajeros](docs/escasez-ritmo-0.2-entrega-17.md). Los cinco encargos cortos ya no entregan comida, agua, munición ni botiquines gratis. Guzmán, Jiménez y Adasme conservan un equipo mínimo de 1 ración, 1 agua y 6 municiones 5.56; las herramientas propias de la extracción de Adasme se mantienen. Los préstamos bajan de 131 a 24 unidades y de 337 a 48 Créditos de valor de reposición. Pagos, precios, desgaste, plazos y probabilidades no cambian. El expediente, el traslado y la ayuda explican la provisión antes de aceptar. Las partidas con contratos activos conservan exactamente lo que ya habían recibido. **383 pruebas aprobadas**. Resta **un bloque propuesto**: revisión final y cierre; después se retoma lo visual.
+
+## Entrega anterior — entrega 16: continuidad de la red
 
 Completado el segundo bloque propuesto de cierre: [continuidad de la red](docs/red-continuidad-0.2-entrega-16.md). Los contactos iniciales cerrados muestran hechos conservados, las consultas remotas se identifican como registros y el siguiente objetivo recuerda los informes por devolver físicamente a Guzmán o Jiménez. Se distingue Teresa (operaciones) de Inés (posta central). No se inventan resoluciones de necesidades pendientes. **381 pruebas aprobadas**. Restan **dos bloques propuestos**: escasez y ritmo; revisión final y cierre. Después se retoma lo visual. Los apartados inferiores son historial y sus contadores o próximos pasos pueden haber quedado superados. V0.2 sigue abierta; el laboratorio de compuertas permanece separado.
 

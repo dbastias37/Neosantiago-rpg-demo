@@ -86,7 +86,7 @@ export function start(data,source,id){
  r.supplies=partyTotals(r.party);w.stock={};w.location=Base.here(data,w).id;
  if(w.effects.includes('jimenez-01')&&!r.supplies.jammer){distribute(data,r.party,'jammer',1);r.borrowedStock.jammer=(r.borrowedStock.jammer||0)+1;r.supplies=partyTotals(r.party);r.battery=20;}
  if(m.pickup)r.cargo={};
- r.checkpoint={node:Base.here(data,w).id,snapshot:copy({...r,checkpoint:null})};r.log=['Preparación en '+Base.here(data,w).name+'. El equipo recibe el encargo y los suministros previstos.'];return refreshProgression(data,w);
+ r.checkpoint={node:Base.here(data,w).id,snapshot:copy({...r,checkpoint:null})};r.log=['Preparación en '+Base.here(data,w).name+'. '+(Object.keys(issued).length?'El equipo recibe la carga y los préstamos indicados en el expediente.':'El encargo no incluye provisiones prestadas; el equipo sale con sus propias mochilas.')];return refreshProgression(data,w);
 }
 function updateCheckpoint(data,w){
  const r=w.run;if(r?.status!=='active'||r.pending)return;

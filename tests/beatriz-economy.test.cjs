@@ -55,15 +55,26 @@ test('reduced contracts require choosing between supplies and equipment; no buy/
  assert.ok(credits>=E.price(d,first,'water'));first=E.buy(d,first,'water','tomas');assert.equal(first.credits,credits-4);
  assert.throws(()=>E.buy(d,first,'rifle556','rocio'),/créditos/);
 });
+test('only the three long routes lend a small field kit and short jobs consume owned supplies',async()=>{
+ const {E,d}=await setup(),kit={food:1,water:1,ammo556:6};
+ for(const id of ['guzman-01','jimenez-01','adasme-01'])assert.deepEqual(d.missions[id].test_loadout,kit,id);
+ for(const id of ['relevo-01','romero-01','morales-01','ana-01','beatriz-01'])assert.deepEqual(d.missions[id].test_loadout,{},id);
+ let w=connectedWorld(E,d,{seed:1}),romero=E.start(d,atOrigin(d,w,'romero-01'),'romero-01');
+ assert.deepEqual(romero.run.borrowedStock,{});assert.equal(romero.run.supplies.medkit||0,0);
+ const before=clone(w.crew),guzman=E.start(d,atOrigin(d,w,'guzman-01'),'guzman-01');
+ assert.deepEqual(guzman.run.borrowedStock,kit);assert.deepEqual(E.abandon(d,guzman).crew,before);
+});
 test('pre-update contracts keep their pending scenes, payment, penalties and checkpoints',async()=>{
  const {E,d}=await setup(),old=clone(d);
  for(const [id,t]of Object.entries(d.previousTerms))Object.assign(old.missions[id],clone(t));
+ for(const [id,p]of Object.entries(d.previousProvisions)){old.missions[id].loadout=clone(p);old.missions[id].test_loadout=clone(p);}
  old.missions['beatriz-01']=clone(d.beatrizLegacyMission);
  for(const id of ['relevo-01','beatriz-01','adasme-01']){
   let w=E.start(old,atOrigin(old,connectedWorld(E,old,{seed:1}),id),id);
   w=E.advance(old,w);
   const strip=r=>{if(!r)return;delete r.rewardTerms;delete r.beatrizVersion;strip(r.checkpoint?.snapshot);};strip(w.run);
   const loaded=E.restore(d,E.serialize(w));assert.deepEqual(loaded.run.pending,w.run.pending);
+  assert.deepEqual(loaded.run.borrowedStock,w.run.borrowedStock);
   assert.deepEqual(E.mission(d,loaded).reward,old.missions[id].reward);
   assert.equal(E.mission(d,loaded).late_penalty,2);assert.equal(loaded.run.minutes,w.run.minutes);
   assert.deepEqual(loaded.run.checkpoint.snapshot.rewardTerms.reward,old.missions[id].reward);
