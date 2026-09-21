@@ -12,4 +12,4 @@ Se reutilizan la textura WebP del mapa y los retratos y objetos del repositorio.
 
 No hay importaciones del motor en el navegador, acceso a localStorage, escrituras al guardado, llamadas de combate, viajes ni pagos. «Elegir este encargo» abre una confirmación que explica el carácter de prueba. No hay acceso desde el menú del juego. El laboratorio de compuertas permanece independiente.
 
-Para revisar: comparar el mismo encargo en A y B, probar los filtros en A, abrir su recorrido, volver a la ficha y repetir con Vista móvil. El usuario eligió B (Expediente). Su integración al bloque 2 queda pendiente; esta revisión solo simplifica el prototipo.
+Para revisar: comparar el mismo encargo en A y B, probar los filtros en A, abrir su recorrido, volver a la ficha y repetir con Vista móvil. El usuario eligió B (Expediente). El usuario autorizó su integración: el catálogo de producción utiliza ahora este diseño en `extensions/mensajeros/dossier.mjs` y `dossier.css`, conectado a los datos y reglas de la partida. Este laboratorio se conserva como referencia independiente y no es importado por el juego.
