@@ -6,7 +6,11 @@
 
 Este es el punto de entrada para continuar en otro chat. Resume lo implementado, diferencia los antecedentes históricos del estado vigente y deja un alcance propuesto para el siguiente bloque. Cuando el código cambie después de esta revisión, actualizar este informe con la nueva evidencia.
 
-## Estado vigente — entrega 15: Jiménez
+## Estado vigente — entrega 16: continuidad de la red
+
+Completado el segundo bloque propuesto de cierre: [continuidad de la red](docs/red-continuidad-0.2-entrega-16.md). Los contactos iniciales cerrados muestran hechos conservados, las consultas remotas se identifican como registros y el siguiente objetivo recuerda los informes por devolver físicamente a Guzmán o Jiménez. Se distingue Teresa (operaciones) de Inés (posta central). No se inventan resoluciones de necesidades pendientes. **381 pruebas aprobadas**. Restan **dos bloques propuestos**: escasez y ritmo; revisión final y cierre. Después se retoma lo visual. Los apartados inferiores son historial y sus contadores o próximos pasos pueden haber quedado superados. V0.2 sigue abierta; el laboratorio de compuertas permanece separado.
+
+## Entrega anterior — entrega 15: Jiménez
 
 Se completa [Jiménez y Enlace de respaldo](docs/jimenez-0.2-entrega-15.md): decisiones sobre el registro del relevo y la prueba en Tobalaba, cuatro recepciones, y regreso físico a Vicuña con conversación condicionada por los resultados. Se distingue recepción de respuesta local y de conexión completa. Se preservan ruta, pago, beneficios y contratos históricos. Suite completa: **376 pruebas aprobadas**. Primer bloque de los cuatro propuestos para el cierre de V0.2 completado. Quedan **tres bloques propuestos**: continuidad de la red; escasez y ritmo en partidas normales; revisión final y cierre. La versión sigue abierta. Los apartados posteriores son historial y pueden contener pendientes ya resueltos: no volver a implementar Beatriz, Guzmán o Jiménez ni los siete bloques visuales. El laboratorio de compuertas sigue separado.
 

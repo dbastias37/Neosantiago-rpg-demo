@@ -215,3 +215,15 @@ test('the first offer and help expose the reduced credits and current three-leg 
  b.click('#travel [data-contact="jimenez"]');assert.match(b.document.getElementById('dialogBody').textContent,/reconoce las dos anotaciones/);
  assert.equal(b.document.querySelectorAll('[data-jimenez-visit]').length,0);assert.equal(b.world().credits,w.credits);
  });
+
+test('Romero shows the delivery account after completion and remote reading never restarts or mutates it',async()=>{
+ const {setup,finish}=require('./courier-return-fixtures.cjs'),{E,d}=await setup();
+ let w=finish(E,d,E.start(d,atOrigin(d,connectedWorld(E,d,{seed:1}),'romero-01'),'romero-01'));
+ w=finish(E,d,E.travelHeroes(d,w));
+ const a=await session({saved:w}),before=JSON.stringify(a.world());
+ a.click('#contactsButton');a.click('[data-contact="dr-romero"]');
+ const text=a.document.getElementById('dialogBody').textContent;
+ assert.match(text,/Después de la entrega/);assert.match(text,/Registro del equipo/);assert.match(text,/Julián/);
+ assert.equal(a.document.querySelectorAll('[data-offer="romero-01"]').length,0);
+ a.click('[data-receipt="romero-01"]');assert.equal(JSON.stringify(a.world()),before);
+});
