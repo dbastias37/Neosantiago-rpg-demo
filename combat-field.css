@@ -3,7 +3,6 @@
 #battle .battle-head{border-bottom:1px solid #d9a15c55;background:#090e0ce8}
 #battle .battle-head h2{color:var(--paper);text-shadow:none;letter-spacing:.02em}
 #battle .round{color:var(--amber2);font-family:monospace}
-#battle #stageLog{background:#090e0cf5;border-color:#75d3d747;border-radius:0;box-shadow:inset 3px 0 #75d3d7}
 #battle .squad-title{color:var(--cyan)}
 #battle .squad:has(.enemies) .squad-title{color:#e6a296}
 #battle .units .unit-info{background:#0d1513;border-top:1px solid #d9a15c44}
@@ -23,6 +22,53 @@
 #battle .combat-console .item-tray{background:#0d1513;border-color:#d9a15c77}
 #battle .combat-console .item-action{background:#090e0c;color:var(--paper);border-color:#75d3d744}
 #battle button:focus-visible,#lootModal button:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+/* Dark field equipment: the existing material is shaded, never laid over text or cards. */
+#battle{--combat-metal:linear-gradient(110deg,#0c1311d9,#050908eb 65%,#19201ce0),url("extensions/mensajeros/assets/textures/metal-oxidado.webp") center/430px;--combat-rim:#63695c;--combat-inset:inset 0 1px #d9d9c226,inset 0 -2px #020403,0 0 0 1px #030504,0 4px 10px #0009}
+#battle :is(.battle-head,#stageLog,.combat-console,#stageTargets){position:relative;background:var(--combat-metal);border:1px solid var(--combat-rim);border-bottom-color:#2c322b;border-radius:4px;box-shadow:var(--combat-inset)}
+#battle .battle-head{box-sizing:border-box;padding:0 14px}
+#battle .round{font-size:11px;letter-spacing:.1em;color:#dbb17b}
+#battle .squad-title{background:linear-gradient(90deg,transparent,#101815e6 20% 80%,transparent);border-bottom:1px solid #67705c40}
+/* Glass at left; the raised advance key sits in the same device's right-hand rim. */
+#battle #stageLog{grid-template-columns:minmax(0,1fr) 110px;grid-template-rows:minmax(0,1fr);gap:14px;padding:12px 16px;overflow:hidden;backdrop-filter:none}
+#battle #stageLog:before,#battle .combat-console:before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:radial-gradient(circle at 6px 6px,#101410 0 1px,#7b807066 1.5px 2.5px,#0009 3px,transparent 4px),radial-gradient(circle at calc(100% - 6px) 6px,#101410 0 1px,#7b807066 1.5px 2.5px,#0009 3px,transparent 4px),radial-gradient(circle at 6px calc(100% - 6px),#101410 0 1px,#7b807066 1.5px 2.5px,#0009 3px,transparent 4px),radial-gradient(circle at calc(100% - 6px) calc(100% - 6px),#101410 0 1px,#7b807066 1.5px 2.5px,#0009 3px,transparent 4px)}
+#battle #stageLog:after{content:"";position:absolute;right:27px;top:20px;width:88px;height:9px;background:repeating-linear-gradient(0deg,#000b 0 2px,#92988420 2px 3px);border:1px solid #080b09;border-radius:2px;pointer-events:none}
+#battle #stageLogLines{box-sizing:border-box;grid-column:1;grid-row:1;align-self:stretch;width:100%;padding:9px 14px;min-width:0;overflow:hidden;isolation:isolate;border:4px solid #030706;border-radius:8px;background:radial-gradient(ellipse at 45% 15%,#19302a,#081310 72%);box-shadow:inset 0 0 15px #000b,0 1px #a3b9a548,0 -1px 2px #000}
+#battle #stageLogLines:before{content:"";position:absolute;inset:0;z-index:-1;border-radius:4px;pointer-events:none;background:linear-gradient(115deg,#b9e6d70d,transparent 48%),repeating-linear-gradient(0deg,transparent 0 3px,#00000024 3px 4px);box-shadow:inset 0 0 18px #0008}
+#battle #stageLog p{color:#dfebe0;text-shadow:0 0 7px #75d3d71c}
+#battle #stageAdvance{position:relative;grid-column:2;grid-row:1;align-self:end;justify-self:stretch;min-height:40px;margin:0 0 3px;padding:8px 10px 8px 20px;font:700 12px "Arial Narrow","Roboto Condensed",Arial,sans-serif;letter-spacing:.05em;color:#f2bd73;border:1px solid #9a845c;border-bottom-color:#413823;border-radius:3px;background:linear-gradient(#30362b,#151c16);box-shadow:inset 0 1px #d9d3b544,0 3px #020403,0 4px 0 1px #444837,0 5px 8px #000c;text-shadow:0 1px #000}
+#battle #stageAdvance:before{content:"";position:absolute;left:9px;top:calc(50% - 2px);width:4px;height:4px;border-radius:50%;background:var(--amber2);box-shadow:0 0 5px #f2bd7366}
+#battle #stageAdvance:hover:not(:disabled){background:linear-gradient(#404535,#20291f);border-color:var(--amber2);color:#ffdcaa}
+#battle #stageAdvance:disabled{opacity:1;color:#a7a899;border-color:#505647;background:linear-gradient(#242c23,#121911);box-shadow:inset 0 1px #d9d3b51f,0 2px #020403,0 3px 0 1px #353c31;cursor:default}
+#battle #stageAdvance:disabled:before{background:#555f4b;box-shadow:none}
+#battle #stageTargets{box-sizing:border-box;width:min(850px,100%);padding:4px 12px;margin:0 auto;gap:7px}
+#battle #stageTargets button{background:#080e0c;border-radius:2px;box-shadow:inset 0 1px 3px #000c}
+#battle .combat-console{padding:12px 14px!important;gap:10px}
+#battle #stageStatus{padding:7px 8px;background:#060d0a;border:1px solid #4f5f4d80;border-radius:3px;box-shadow:inset 0 2px 8px #000b,0 1px #ced2b817}
+#battle .combat-console .actions{padding:0 1px 3px;gap:8px}
+#battle .combat-console .action,#battle .loot-controls button{border-radius:3px;border-top-color:#b2a079;background:linear-gradient(#252e23,#101811);box-shadow:inset 0 1px #e5ddbc20,0 3px #020403,0 4px 0 #4d513d}
+#battle .combat-console .action[data-action=attack]{background:linear-gradient(#f4c581,#dfaa60);border-color:#e2b171;color:#090e0c;box-shadow:inset 0 1px #fff4cc80,0 3px #030403,0 4px 0 #6b6042}
+#battle .combat-console .action.danger{background:linear-gradient(#2d2520,#181310);border-color:#866151;color:#e6a296}
+#battle .combat-console .action:active:not(:disabled),#battle #stageAdvance:active:not(:disabled),#battle .loot-controls button:active:not(:disabled){transform:translateY(2px);box-shadow:inset 0 1px 3px #0009,0 1px #020403}
+@media(max-width:600px){
+ #battle #stageLog{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) 34px;gap:8px;padding:9px 12px}
+ #battle #stageLogLines{padding:6px 9px;border-width:3px;border-radius:6px}
+ #battle #stageAdvance{grid-column:1;grid-row:2;justify-self:end;align-self:start;min-height:31px;margin:0;padding:6px 12px 6px 22px;min-width:112px;font-size:11px}
+ #battle #stageLog:after{top:auto;bottom:18px;left:24px;right:auto;width:70px;height:8px}
+ #battle .battle-head{padding:2px 10px}
+ #battle .combat-console{padding:8px 10px!important;gap:7px}
+ #battle #stageStatus{padding:4px}
+ #battle .combat-console .actions{gap:7px}
+ #battle #stageTargets{padding:4px 8px;gap:5px}
+}
+@media(max-height:500px) and (min-aspect-ratio:1/1){
+ #battle #stageLog{padding:6px 12px;gap:10px}
+ #battle #stageLogLines{padding:4px 10px;border-width:3px}
+ #battle #stageLog:after{top:11px}
+ #battle #stageAdvance{min-height:30px;padding-top:5px;padding-bottom:5px;font-size:11px}
+ #battle .combat-console{padding:6px 10px!important;gap:4px}
+ #battle #stageStatus{padding:2px 5px}
+ #battle #stageTargets{padding:2px 8px}
+}
 /* A recovery tray: quiet metal rim, individual compartments and an always reachable exit. */
 #lootModal{background:#030706d9;padding:12px}
 #lootModal .loot-modal{box-sizing:border-box;display:flex;flex-direction:column;gap:10px;width:min(880px,100%);height:auto;max-height:calc(100dvh - 24px);padding:22px;background:#090e0c;border:1px solid #d9a15c77;box-shadow:0 20px 70px #000b;overflow:hidden;position:relative;isolation:isolate}

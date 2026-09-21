@@ -35,9 +35,11 @@ var endTurnTimer=null,pendingNarration=null,logExitTimers=[];
 var visualBattle=null,seenLogs=0,lastDamage={ally:{},enemy:{}},notices={ally:{},enemy:{}},queue=[],logTimer=null,logUntil=0;
 function logDuration(text){return Math.max(2600,Math.min(6500,1800+String(text).length*23))}
 function fitLog(line){
- var log=stageLog,w=log.clientWidth||400,font=w<500?14:16;line.style.fontSize=font+'px';
- var needed=line.scrollHeight+54,base=Math.max(70,Math.min(112,innerHeight*.14));
- if(needed>innerHeight*.30){line.style.fontSize='12px';needed=line.scrollHeight+54}
+ // Measure the glass, not the case: the advance key occupies its own bezel.
+ var w=logLines.clientWidth||400,font=w<500?14:16;line.style.fontSize=font+'px';
+ var chrome=window.matchMedia('(max-width:600px)').matches?88:52;
+ var needed=line.scrollHeight+chrome,base=Math.max(70,Math.min(112,innerHeight*.14));
+ if(needed>innerHeight*.30){line.style.fontSize='12px';needed=line.scrollHeight+chrome}
  shell.style.setProperty('--log-height',Math.max(base,needed)+'px');
 }
 function showNextLog(){
