@@ -13,4 +13,4 @@ Seleccionar una decisión abre un diálogo nativo con sus condiciones y el detal
 
 El navegador solo descarga esta muestra y las imágenes existentes. No importa el motor ni accede al almacenamiento local o a partidas, créditos e inventario. Cambiar el diseño actualiza únicamente su parámetro en la URL. La tipografía, el metal oscuro, el marfil, el cian y el ámbar siguen la paleta aprobada. El relato tiene fondo sólido.
 
-Revisión manual: comparar la misma escena en A y B, abrir una decisión directa y una de prueba, desplegar ambos resultados, cerrar con Escape y repetir en Vista móvil. Verificar textos y botones completos. La elección e integración quedan pendientes de la revisión del usuario.
+Revisión manual: comparar la misma escena en A y B, abrir una decisión directa y una de prueba, desplegar ambos resultados, cerrar con Escape y repetir en Vista móvil. Verificar textos y botones completos. El usuario eligió A (Bitácora), integrada en la Expedición real mediante `expedition-journal.css`. El laboratorio conserva ambas muestras como referencia independiente; sus vistas previas de consecuencias no se incorporan a la campaña.

@@ -1,0 +1,106 @@
+/* Approved A / Bitácora. Presentation only: all values and actions use the campaign renderer. */
+.expedition-journal{--journal-metal:linear-gradient(110deg,#0c1311d9,#050908eb 65%,#19201ce0),url('extensions/mensajeros/assets/textures/metal-oxidado.webp') center/430px;min-height:0;font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif}
+.expedition-journal:after{display:none}
+.expedition-journal .hud{background:var(--journal-metal);border-bottom:1px solid #d9a15c55}
+.expedition-journal .brand{font-size:clamp(14px,1.6vw,22px);color:#e7e2d8;letter-spacing:.09em}
+.expedition-journal .stage{overflow-x:hidden;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#546459 #090e0c;scrollbar-gutter:stable}
+.expedition-journal .stage::-webkit-scrollbar{display:block;width:7px}
+.expedition-journal .stage::-webkit-scrollbar-thumb{background:#546459}
+.expedition-journal .stage:before{position:fixed;background:#040807de;pointer-events:none}
+.expedition-journal .stage:after{display:none}
+.expedition-journal .play{display:grid;grid-template-columns:260px minmax(0,1fr);grid-template-rows:auto 168px auto;align-items:stretch;gap:0;width:min(1240px,calc(100% - 40px));min-height:0;height:auto;margin:24px auto;padding:0;border:1px solid #6f6a5466;border-radius:3px;background:#090e0c;box-shadow:0 12px 40px #0008}
+.expedition-journal .journal-head{grid-column:1/-1;display:flex;justify-content:space-between;gap:16px;padding:15px 20px;border-bottom:1px solid #d9a15c55;background:var(--journal-metal);box-shadow:inset 0 1px #ced4b522;color:#75d3d7;font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+.expedition-journal .journal-head span:last-child{color:#9b9b92;font-size:10px;font-weight:400;letter-spacing:.06em}
+.expedition-journal .where{grid-column:1;grid-row:2;position:relative;inset:auto;display:flex;flex-direction:column;justify-content:flex-end;min-width:0;padding:18px;border-right:1px solid #75d3d725;background:linear-gradient(0deg,#050b08f2,transparent 95%),var(--journal-scene) 30% center/cover;text-shadow:0 2px 8px #000}
+.expedition-journal .where p{font-size:10px;line-height:1.5;letter-spacing:.1em}
+.expedition-journal .where h1{color:#e7e2d8;font-size:22px;line-height:1.1;letter-spacing:0}
+.expedition-journal .where small{font-size:10px;letter-spacing:.04em;color:#c0c4bd}
+.expedition-journal .card{grid-column:2;grid-row:2/4;order:0;align-self:stretch;justify-self:stretch;width:100%;min-width:0;padding:28px 32px;border:0;background:#090e0c;box-shadow:none;clip-path:none}
+.expedition-journal .card .type{margin:0 0 17px;color:#75d3d7;font-size:11px;letter-spacing:.12em}
+.expedition-journal .card .type:before{display:none}
+.expedition-journal .card h2{color:#e7e2d8;font-size:clamp(28px,3.2vw,40px);line-height:1.08;letter-spacing:-.02em;text-wrap:balance}
+.expedition-journal .card .story{max-width:74ch;margin:19px 0 22px;color:#e7e2d8;font-family:inherit;font-size:16px;line-height:1.75;white-space:pre-line}
+.expedition-journal .journal-decision-heading{margin:22px 0 13px;padding-top:18px;border-top:1px solid #d9a15c55;font-size:12px;letter-spacing:.07em;color:#75d3d7;text-transform:uppercase}
+.expedition-journal .choices{gap:10px}
+.expedition-journal .choice{grid-template-columns:32px minmax(0,1fr);gap:5px 13px;align-items:start;min-height:82px;padding:15px 16px;border:1px solid #6f755055;border-radius:2px;background:#0d1513;transform:none}
+.expedition-journal .choice:hover:not(:disabled){border-color:#f2bd73;background:#171e17;transform:none}
+.expedition-journal .choice:disabled{opacity:.65}
+.expedition-journal .choice .num{grid-row:1/3;width:30px;height:30px;color:#f2bd73;border-color:#d9a15c55;background:#151a12;font-size:12px}
+.expedition-journal .choice strong{font-size:15px;line-height:1.35;letter-spacing:0;text-transform:none}
+.expedition-journal .choice small{margin-top:5px;color:#c0c4bd;font-size:13px;line-height:1.5}
+.expedition-journal .choice .cost{grid-column:2;max-width:none;color:#f2bd73;font-size:12px;line-height:1.5;letter-spacing:0;font-weight:400;text-transform:none;white-space:normal}
+.expedition-journal .side{grid-column:1;grid-row:3;order:0;align-self:stretch;align-content:start;display:grid;grid-template-columns:1fr;gap:0;border-right:1px solid #75d3d725;background:#0c1411}
+.expedition-journal .side .box{padding:16px 18px;border:0;border-bottom:1px solid #75d3d720;background:transparent;backdrop-filter:none}
+.expedition-journal .side .journal-goal{background:#101a15}
+.expedition-journal .side h3{font-size:11px;letter-spacing:.08em;color:#75d3d7;margin-bottom:12px}
+.expedition-journal .mission-mini strong{font-size:14px;line-height:1.35;letter-spacing:0;text-transform:none;color:#e7e2d8}
+.expedition-journal .mission-mini p{font-size:12px;line-height:1.5;color:#c0c4bd}
+.expedition-journal .mission-mini small{font-size:10px}
+.expedition-journal .member{grid-template-columns:37px minmax(0,1fr);gap:4px 9px;padding:10px 0}
+.expedition-journal .member .avatar{grid-row:1/3;width:37px;height:62px;border-color:#68705440;background:#070c09}
+.expedition-journal .member .avatar img{object-fit:contain;object-position:center}
+.expedition-journal .member strong{font-size:13px;line-height:1.3}
+.expedition-journal .member small{display:block;margin-top:3px;font-size:11px;line-height:1.4}
+.expedition-journal .member em{grid-column:2;font-size:11px}
+.expedition-journal .member .skill-ready-copy{font-size:9px!important;line-height:1.4}
+.expedition-journal .member .ally-peek{right:auto;left:calc(100% + 12px);bottom:0}
+.expedition-journal .resources{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.expedition-journal .resource{align-items:center;font-size:10px;letter-spacing:0;text-transform:none;padding:7px;background:#070e0a}
+.expedition-journal .resource b{font-size:14px;color:#f2bd73}
+.expedition-journal .context-archives{padding:12px;background:#0d1513}
+.expedition-journal .context-archives header{font-size:10px;letter-spacing:.06em}
+.expedition-journal .context-archive b{font-size:11px;line-height:1.4;letter-spacing:.03em}
+.expedition-journal .context-archive small{font-size:10px;line-height:1.4}
+.expedition-journal .context-archive em{font-size:9px}
+.expedition-journal #careDiscussion .secondary{font-size:12px;min-height:44px}
+.expedition-journal #careDiscussionNote{font-size:12px;line-height:1.5}
+.expedition-journal .nav{grid-template-columns:repeat(5,minmax(0,1fr));min-height:calc(56px + var(--safe-b));background:var(--journal-metal)}
+.expedition-journal .nav:has(#fieldCollection:not(.hidden)){grid-template-columns:repeat(6,minmax(0,1fr))}
+.expedition-journal .nav button{min-height:44px;font-size:10px;letter-spacing:.06em;padding:8px}
+/* Keep the live scene mapping used by the engine, including daylight locations. */
+.expedition-journal [data-scene="station"]{--journal-scene:url('backgrounds/station-ruins.webp')}
+.expedition-journal [data-scene="flood"]{--journal-scene:url('backgrounds/flooded-gallery.webp')}
+.expedition-journal [data-scene="drone"]{--journal-scene:url('backgrounds/drone-rooftop.webp')}
+.expedition-journal [data-scene="uno"]{--journal-scene:url('backgrounds/uno-corridor.webp')}
+.expedition-journal [data-scene="antenna"]{--journal-scene:url('backgrounds/antenna-core-room.webp')}
+.expedition-journal [data-scene="day-alameda"]{--journal-scene:url('backgrounds/day-alameda.webp')}
+.expedition-journal [data-scene="day-station"]{--journal-scene:url('backgrounds/day-station-entrance.webp')}
+.expedition-journal [data-scene="day-hunters"]{--journal-scene:url('backgrounds/day-hunter-house.webp')}
+.expedition-journal [data-scene="day-market"]{--journal-scene:url('backgrounds/day-market.webp')}
+.expedition-journal [data-scene="day-valley"]{--journal-scene:url('backgrounds/day-valley-perimeter.webp')}
+@media(max-width:760px){
+ .expedition-journal .play{display:flex;flex-direction:column;width:calc(100% - 20px);margin:12px auto}
+ .expedition-journal .journal-head{padding:12px 16px;font-size:10px}
+ .expedition-journal .journal-head span:last-child{font-size:9px}
+ .expedition-journal .where{min-height:155px;border-right:0;padding:16px 18px;background-position:center,30% 46%}
+ .expedition-journal .card{padding:23px 18px 22px}
+ .expedition-journal .card h2{font-size:29px}
+ .expedition-journal .card .story{font-size:15px;line-height:1.7;margin:16px 0 20px}
+ .expedition-journal .choice{grid-template-columns:27px minmax(0,1fr);padding:13px 10px;gap:5px 10px}
+ .expedition-journal .choice .num{width:26px;height:26px;font-size:11px}
+ .expedition-journal .choice strong{font-size:14px}
+ .expedition-journal .choice small{font-size:12px}
+ .expedition-journal .choice .cost{font-size:11px}
+ .expedition-journal .side{border-right:0;border-top:1px solid #75d3d725}
+ .expedition-journal #groupMini{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+ .expedition-journal .member{display:flex;flex-direction:column;align-items:stretch;gap:5px;min-width:0;border:0}
+ .expedition-journal .member .avatar{width:100%;height:82px;margin-bottom:3px}
+ .expedition-journal .member .ally-peek{display:none}
+ .expedition-journal .resources{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .expedition-journal .nav,.expedition-journal .nav:has(#fieldCollection:not(.hidden)){grid-template-columns:repeat(3,minmax(0,1fr));min-height:0}
+ .expedition-journal .nav button{font-size:9px;padding:7px 4px;line-height:1.4}
+}
+@media(max-width:480px){
+ .expedition-journal .hud{grid-template-columns:minmax(0,1fr) auto;gap:7px 12px;min-height:0;padding:calc(9px + var(--safe-t)) 12px 9px}
+ .expedition-journal .brand{font-size:14px;letter-spacing:.06em}
+ .expedition-journal .clock{display:block;grid-column:1;grid-row:2;font-size:9px;text-align:left;letter-spacing:.04em}
+ .expedition-journal .signal-clock{grid-column:2;grid-row:1;min-width:105px;gap:2px 7px;padding:6px}
+ .expedition-journal .signal-clock strong{font-size:15px}
+ .expedition-journal .signal-clock em{display:none}
+ .expedition-journal .threat{grid-column:2;grid-row:2;display:flex;gap:6px;min-width:0;font-size:8px}
+ .expedition-journal .threat .meter{width:32px}
+ .expedition-journal .context-archive-list{grid-template-columns:1fr}
+ .expedition-journal .context-archives header{flex-wrap:wrap}
+ .expedition-journal .resources{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(prefers-reduced-motion:reduce){.expedition-journal .member{animation:none}.expedition-journal .choice{transition:none}}

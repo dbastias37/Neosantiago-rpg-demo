@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="es">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NeoSantiago · revisión aislada de Bitácora</title>
+<style>body{margin:0;background:#171b1a;color:#e7e2d8;font:14px Arial}header{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:8px}button,select{padding:6px}p{margin:0}iframe{display:block;width:1280px;height:800px;border:1px solid #75d3d7;margin:auto}</style>
+<header><label>Situación <select id="scene"><option value="0">La señal imposible</option><option value="7">El guardián reconstruido</option><option value="14">Tres identidades autorizadas</option></select></label><button id="restart">Restablecer muestra</button><label>Tamaño <select id="size"><option value="1280,800">1280 × 800</option><option value="390,844">390 × 844</option><option value="360,640">360 × 640</option><option value="844,390">844 × 390</option></select></label><p id="status">Prueba aislada: no usa ni modifica tu partida.</p></header>
+<!-- No same-origin permission: the player's save is inaccessible even if fixture setup fails. -->
+<iframe id="preview" sandbox="allow-scripts" title="Expedición aislada de prueba"></iframe>
+<script>
+const frame=document.getElementById('preview');let source='';
+document.getElementById('size').onchange=e=>{const [w,h]=e.target.value.split(',');frame.style.width=w+'px';frame.style.height=h+'px'};
+function show(){
+ if(!source)return;
+ const index=Number(document.getElementById('scene').value);
+ const isolation='<script>Object.defineProperty(window,"localStorage",{value:(()=>{const m=new Map();return {getItem:k=>m.get(k)||null,setItem:(k,v)=>m.set(k,String(v)),removeItem:k=>m.delete(k),clear:()=>m.clear()}})()});<\/script>';
+ const setup='<script>gameSessionActive=true;state.introCompleted=true;state.storyPreludeSeen=true;state.starterKitGiven=true;state.activity="story";state.refuge.active=false;state.index='+index+';document.querySelectorAll(".overlay,.title-screen").forEach(n=>n.classList.add("hidden"));hideActivities();render();<\/script>';
+ const base='<base href="'+new URL('../',location.href).href+'">';
+ frame.srcdoc=source.replace(/<head>/i,'<head>'+base+isolation).replace(/<\/body>/i,setup+'</body>');
+}
+document.getElementById('scene').onchange=show;
+document.getElementById('restart').onclick=show;
+fetch('../neosantiago-demo.html').then(r=>{if(!r.ok)throw Error(r.status);return r.text()}).then(s=>{source=s;show()}).catch(()=>document.getElementById('status').textContent='No se pudo cargar la prueba. Recarga esta página.');
+</script>
+</html>
