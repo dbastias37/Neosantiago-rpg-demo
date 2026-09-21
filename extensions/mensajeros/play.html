@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#090e0c"><title>Neo Santiago 2130 · Los Mensajeros</title><link rel="icon" href="data:,"><link rel="stylesheet" href="ui.css?v=2-travel"><link rel="stylesheet" href="play.css?v=16-beatriz-credits"><link rel="stylesheet" href="map-console.css?v=7-encargos-metal"><link rel="stylesheet" href="dossier.css?v=3"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#090e0c"><title>Neo Santiago 2130 · Los Mensajeros</title><link rel="icon" href="data:,"><link rel="stylesheet" href="ui.css?v=2-travel"><link rel="stylesheet" href="play.css?v=16-beatriz-credits"><link rel="stylesheet" href="map-console.css?v=7-encargos-metal"><link rel="stylesheet" href="dossier.css?v=3"><link rel="stylesheet" href="community.css?v=1"></head>
 <body class="courier-console">
 <header class="topbar"><div class="brand">NEO SANTIAGO <span>2130</span><small>LOS MENSAJEROS / RED DE ENCARGOS</small></div><nav aria-label="Central de encargos"><button id="catalogButton">Encargos</button><button id="contactsButton">Refugios</button><button id="crewButton">Equipo</button><button id="heroesButton">Los Héroes</button><button id="helpButton">Ayuda</button></nav></header>
 <div id="bootStatus" role="status">Cargando la red de refugios…</div>
@@ -29,5 +29,5 @@
 <iframe id="battleLayer" class="courier-combat-frame hidden" title="Combate de Los Mensajeros" allow="autoplay" src="about:blank"></iframe>
 <dialog id="dialog" aria-labelledby="dialogTitle"><div class="dialog-head"><span id="dialogKicker" class="eyebrow"></span><button class="close" data-close="dialog" aria-label="Cerrar ventana">×</button></div><div id="dialogBody"></div></dialog>
 <dialog id="itemDialog" aria-labelledby="itemTitle"><div class="dialog-head"><span class="eyebrow">INVENTARIO / INSPECCIÓN</span><button class="close" data-close="itemDialog" aria-label="Cerrar objeto">×</button></div><div id="itemBody"></div><div class="dialog-actions"><button data-close="itemDialog" class="primary">Volver</button></div></dialog>
-<script type="module">import("./play.mjs?v=18-expediente").catch(()=>{document.getElementById("bootStatus").innerHTML='No se pudo cargar la central. <button onclick="location.reload()">Reintentar</button>';});</script>
+<script type="module">import("./play.mjs?v=19-comunidades").catch(()=>{document.getElementById("bootStatus").innerHTML='No se pudo cargar la central. <button onclick="location.reload()">Reintentar</button>';});</script>
 </body></html>

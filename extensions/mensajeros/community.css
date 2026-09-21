@@ -1,0 +1,67 @@
+/* Communities use grouped contacts and a conversation surface, not dossiers. */
+#dialog.community-view{width:min(1020px,calc(100% - 28px));max-height:calc(100dvh - 28px);border:2px solid #d9a15c59;border-radius:6px;background:#090e0c;color:#e7e2d8}
+#dialog.community-view>.dialog-head{padding:14px 20px;border-bottom:1px solid #d9a15c40;background:linear-gradient(90deg,#090e0cbb,#090e0cf5 75%),var(--console-texture) center/560px repeat}
+#dialog.community-view .community-body{padding:26px}
+#dialog.community-view .community-intro{max-width:690px;margin-bottom:26px}
+#dialog.community-view h2{font-size:30px;line-height:1.15;overflow-wrap:anywhere;margin:8px 0 14px}
+#dialog.community-view p{color:#c0c4bd;font-size:14px;line-height:1.75}
+#dialog.community-view .community-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:18px}
+#dialog.community-view .community-place{border:1px solid #d9a15c40;border-radius:4px;background:#0d1513;overflow:clip}
+#dialog.community-view .community-heading{display:flex;align-items:start;justify-content:space-between;gap:14px;padding:20px;border-bottom:1px solid #75d3d724;background:linear-gradient(110deg,#111b16,#090e0c)}
+#dialog.community-view .community-heading h3{font-size:23px;line-height:1.2;margin:6px 0 8px}
+#dialog.community-view .community-heading p{font-size:12px;margin:0;color:#9b9b92}
+#dialog.community-view .community-heading .eyebrow{font-size:9px;margin:0}
+#dialog.community-view .community-location{font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:#f2bd73;flex:none;max-width:90px;text-align:right;padding-top:2px}
+#dialog.community-view .community-people{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:12px;padding:16px}
+#dialog.community-view .community-contact{display:grid;grid-template-columns:80px minmax(0,1fr);align-items:center;gap:18px;min-width:0;text-align:left;padding:10px;border:1px solid #75d3d728;border-radius:3px;background:#090e0c;letter-spacing:0;text-transform:none;color:#e7e2d8}
+#dialog.community-view .community-contact:hover{background:#142019;border-color:#d9a15c;transform:none}
+#dialog.community-view .community-contact img{display:block;width:80px;height:126px;object-fit:contain;background:#070a09}
+#dialog.community-view .community-contact strong{display:block;font-size:19px;line-height:1.2}
+#dialog.community-view .community-contact small{display:block;margin-top:8px;color:#9b9b92;font-weight:400;font-size:12px}
+#dialog.community-view .community-contact em{display:block;color:#f2bd73;font-style:normal;font-weight:600;font-size:10px;margin-top:20px}
+#dialog.community-view .community-contact em span{margin-left:8px}
+#dialog.community-view .community-place-link{width:100%;border:0;border-top:1px solid #75d3d724;text-align:left;padding:12px 20px;font-size:10px;color:#75d3d7}
+#dialog.community-view .community-conversation{display:grid;grid-template-columns:minmax(160px,230px) minmax(0,1fr);gap:32px;align-items:start}
+#dialog.community-view .community-portrait{margin:0;padding:9px;border:1px solid #d9a15c4d;background:#0d1513;box-shadow:0 4px 14px #0005}
+#dialog.community-view .community-portrait img{display:block;width:100%;height:340px;object-fit:contain;background:#070a09}
+#dialog.community-view .community-portrait figcaption{padding:14px 4px 5px;line-height:1.5}
+#dialog.community-view .community-portrait strong{display:block;font-size:13px}
+#dialog.community-view .community-portrait span{display:block;font-size:10px;color:#9b9b92;margin-top:4px}
+#dialog.community-view .community-talk{min-width:0;padding-top:9px}
+#dialog.community-view .community-talk h2{margin-bottom:22px}
+#dialog.community-view .community-voice{border-left:2px solid #d9a15c70;padding-left:18px}
+#dialog.community-view .community-voice p{margin:0 0 18px;font-size:15px;line-height:1.85;color:#e7e2d8}
+#dialog.community-view .community-note{margin:24px 0 0;padding-top:16px;border-top:1px solid #75d3d726;font-size:12px;color:#9b9b92}
+#dialog.community-view .community-situation{padding:20px;background:#0d1513;border:1px solid #75d3d726;margin:20px 0}
+#dialog.community-view .community-situation p:last-child{margin-bottom:0}
+#dialog.community-view .community-situation .good{color:#75d3d7}
+#dialog.community-view .community-section-title{font-size:11px;color:#75d3d7;letter-spacing:.1em;margin:24px 0 0}
+#dialog.community-view .dialog-actions{padding:14px 20px;gap:9px;background:#090e0c;border-top:1px solid #d9a15c59}
+#dialog.community-view .dialog-actions button{flex:0 1 auto;min-width:130px}
+#dialog.community-view .dialog-actions .primary{margin-left:auto}
+@media(max-width:700px){
+ #dialog.community-view{width:calc(100% - 12px);max-height:calc(100dvh - 12px)}
+ #dialog.community-view>.dialog-head{padding:10px 12px}
+ #dialog.community-view .community-body{padding:16px}
+ #dialog.community-view h2{font-size:25px}
+ #dialog.community-view .community-grid{grid-template-columns:minmax(0,1fr);gap:14px}
+ #dialog.community-view .community-heading{padding:15px;gap:10px}
+ #dialog.community-view .community-heading h3{font-size:21px}
+ #dialog.community-view .community-people{padding:12px;grid-template-columns:minmax(0,1fr)}
+ #dialog.community-view .community-contact{grid-template-columns:68px minmax(0,1fr);gap:14px}
+ #dialog.community-view .community-contact img{width:68px;height:108px}
+ #dialog.community-view .community-contact strong{font-size:18px}
+ #dialog.community-view .community-contact em{margin-top:14px}
+ #dialog.community-view .community-conversation{grid-template-columns:minmax(0,1fr);gap:18px}
+ #dialog.community-view .community-portrait{display:grid;grid-template-columns:88px minmax(0,1fr);align-items:center;gap:16px}
+ #dialog.community-view .community-portrait img{width:88px;height:142px}
+ #dialog.community-view .community-portrait figcaption{padding:0}
+ #dialog.community-view .community-portrait strong{font-size:17px}
+ #dialog.community-view .community-talk{padding:0}
+ #dialog.community-view .community-talk h2{margin-bottom:18px}
+ #dialog.community-view .community-voice{padding-left:12px}
+ #dialog.community-view .community-voice p{font-size:14px;line-height:1.8}
+ #dialog.community-view .community-situation{padding:15px}
+ #dialog.community-view .dialog-actions{padding:10px;gap:6px}
+ #dialog.community-view .dialog-actions button{flex:1;min-width:110px;font-size:10px;padding:9px}
+}
