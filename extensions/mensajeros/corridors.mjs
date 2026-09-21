@@ -1,3 +1,4 @@
+import {guzmanMemory} from './guzman.mjs';
 import {beatrizMemory} from './beatriz.mjs';
 // Early assignments are authored journeys. Keep the previous definitions for
 // a team already on the road: an update must never move its cargo or checkpoint.
@@ -6,12 +7,12 @@ const copy=x=>JSON.parse(JSON.stringify(x));
 const choice=(id,label,result,extra={})=>({id,label,result,...extra});
 export function assignment(data,w,id){
  const record=w.run?.mission===id&&w.run.status!=='abandoned'?w.run:w.completed?.[id];
- const m=record?.corridorVersion===1&&(data.legacyMissions?.[id]||data.legacyJourneys?.[id])||id==='beatriz-01'&&record&&record.beatrizVersion!==1&&data.beatrizLegacyMission||data.missions[id]||data.journeys?.[id];
+ const m=record?.corridorVersion===1&&(data.legacyMissions?.[id]||data.legacyJourneys?.[id])||id==='guzman-01'&&record&&record.guzmanVersion!==1&&data.guzmanLegacyMission||id==='beatriz-01'&&record&&record.beatrizVersion!==1&&data.beatrizLegacyMission||data.missions[id]||data.journeys?.[id];
  const payment=record?.rewardTerms||(record&&data.previousTerms?.[id]&&(record.corridorVersion===1&&data.legacyMissions[id]?data.legacyMissions[id]:data.previousTerms[id]));
  return payment?{...m,reward:payment.reward,late_step_minutes:payment.late_step_minutes,late_penalty:payment.late_penalty}:m;
 }
 export function runAssignment(data,w){const r=w.run;if(r?.corridorVersion===1){const m=data.legacyMissions?.[r.mission]||data.legacyJourneys?.[r.mission];if(m)return r.rewardTerms?{...m,...r.rewardTerms}:m;}return assignment(data,w,r?.mission);}
-export function scriptAt(data,r,index){if(r.beatrizVersion===1&&data.beatrizScripted?.[r.mission+':'+index])return data.beatrizScripted[r.mission+':'+index];return (r.corridorVersion===2?data.corridorScripted:data.scripted)?.[r.mission+':'+index]||null;}
+export function scriptAt(data,r,index){if(r.guzmanVersion===1&&data.guzmanScripted?.[r.mission+':'+index])return data.guzmanScripted[r.mission+':'+index];if(r.beatrizVersion===1&&data.beatrizScripted?.[r.mission+':'+index])return data.beatrizScripted[r.mission+':'+index];return (r.corridorVersion===2?data.corridorScripted:data.scripted)?.[r.mission+':'+index]||null;}
 export function prepareCorridors(d){
  d.legacyMissions={};d.corridorScripted=copy(d.scripted);
  for(const id of ['relevo-01','romero-01','morales-01','ana-01']){
@@ -169,7 +170,7 @@ export function arrivalAccount(r){
 // or abandoning a job cannot make its intended outcome true elsewhere.
 export function communityMemory(w,node){
  const read=id=>w.paid.includes(id)&&w.completed[id]?.provisional===false&&w.completed[id]?.corridorVersion===2?w.completed[id].flags||[]:null;
- const relay=read('relevo-01'),medical=read('romero-01'),survey=read('morales-01'),families=read('ana-01'),lines=beatrizMemory(w,node);
+ const relay=read('relevo-01'),medical=read('romero-01'),survey=read('morales-01'),families=read('ana-01'),lines=[...beatrizMemory(w,node),...guzmanMemory(w,node)];
  if(relay&&['plaza','uchile'].includes(node))lines.push(relay.includes('paso_turnos')?'El puesto sigue usando las ventanas que acordaron: una para carga y otra para familias. La siguiente salida está escrita junto a la lista.':'En la lista del puesto figuran los acompañantes del paso compartido. Ana tiene que cubrir sus tareas cada vez que salen con una familia.');
  if(medical&&node==='republica')lines.push(medical.includes('vigia_asistido')?'En la hoja de Julián figura el vendaje que cambió Bruno. La revisión sigue pendiente; el registro no lo da de alta.':'La petición de Julián sigue en la hoja de visitas pendientes. La auxiliar busca quién puede ir; recibir la reserva no resolvió por sí solo esa atención.');
  if(survey&&['toesca','heroes'].includes(node))lines.push(survey.includes('paso_carro')?'La hoja de Toesca pide dos personas para el carro y conserva la advertencia sobre el peso. Los cargadores consultan esa medida antes de salir.':'La hoja de Toesca señala carga a mano. Han apartado el carro hasta comprobar el paso de ruedas; las mochilas llevan etiquetas separadas.');
@@ -179,6 +180,7 @@ export function communityMemory(w,node){
 export function currentPurpose(data,w){
  const r=w.run;if(!r||r.status!=='active'||r.corridorVersion!==2)return '';
  const i=r.pending?.edgeIndex??r.index;
+ if(r.mission==='guzman-01'&&r.guzmanVersion===1)return i===0?'Conservar la identificación del rotor reparado':i<6?'Transportar las piezas por L6 hasta el enlace de Franklin':i<11?'Llegar a la posta con las indicaciones de montaje':i===11?'Revisar la sujeción del sensor antes de entrar a Plaza':'Entregar las piezas y registrar qué se probó en Plaza';
  if(r.mission==='beatriz-01'&&r.beatrizVersion===1)return ['Llegar a la posta sin confundir la cuenta de los cajones con los nutrientes','Recoger el envase y registrar lo que se pudo comprobar','Volver con Luz y preparar la recepción del siguiente turno','Entregar la reserva a Beatriz con las comprobaciones y dudas'][i]||'';
  if(r.mission==='relevo-01')return ['Escuchar al relevo de La Moneda','Acordar el paso en la posta','Entregar a Ana un acuerdo que pueda cumplir'][i]||'';
  if(r.mission==='romero-01')return ['Recoger y registrar el estuche sellado','Resolver qué ayuda recibirá Julián','Preparar la continuidad de su atención','Entregar reserva y nota de atención a Romero'][i]||'';

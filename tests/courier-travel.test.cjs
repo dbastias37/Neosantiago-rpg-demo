@@ -13,7 +13,8 @@ async function session({saved,reduced=false}={}){
  const sampled=[];window.Element.prototype.getTotalLength=()=>600;
  window.Element.prototype.getPointAtLength=n=>{sampled.push(n);return{x:945+(977-945)*n/600,y:519+(487-519)*n/600}};
  let clock=0;const frames=[];
- const ctx={E,URL,document,console,crypto:{getRandomValues:a=>a},localStorage:{getItem:k=>storage.get(k),setItem:(k,v)=>storage.set(k,v)},matchMedia:()=>({matches:reduced}),setTimeout,clearTimeout,performance:{now:()=>clock},requestAnimationFrame:fn=>frames.push(fn),fetch:async url=>({ok:true,json:async()=>raw,text:async()=>fs.readFileSync(root+'/extensions/mensajeros/map.svg','utf8')})};ctx.window=ctx;
+ const views={...await import('../extensions/mensajeros/dossier.mjs'),...await import('../extensions/mensajeros/community.mjs')};
+ const ctx={...views,E,URL,document,console,crypto:{getRandomValues:a=>a},localStorage:{getItem:k=>storage.get(k),setItem:(k,v)=>storage.set(k,v)},matchMedia:()=>({matches:reduced}),setTimeout,clearTimeout,performance:{now:()=>clock},requestAnimationFrame:fn=>frames.push(fn),fetch:async url=>({ok:true,json:async()=>raw,text:async()=>fs.readFileSync(root+'/extensions/mensajeros/map.svg','utf8')})};ctx.window=ctx;
  ctx.animateRoute=args=>animateRoute({...args,requestFrame:fn=>frames.push(fn),now:()=>clock});vm.createContext(ctx);
  const code=fs.readFileSync(root+'/extensions/mensajeros/play.mjs','utf8').replace(/^import .*;\n/gm,'').replaceAll('import.meta.url',JSON.stringify('https://game.test/extensions/mensajeros/play.mjs'));
  await vm.runInContext('(async()=>{'+code+'})()',ctx);
@@ -136,7 +137,7 @@ test('first delivery reveals its two successors in the receipt and map, survives
  a.click('[data-offer="relevo-01"]');a.click('[data-accept]');a.click();await a.frame(0);await a.frame(1000);a.click('[data-choice="confirm"]');a.click();await a.frame(1001);await a.frame(2001);a.click('[data-choice="windows"]');a.click();await a.frame(2002);await a.frame(3002);a.click('[data-choice="deliver"]');
  assert.equal(a.world().paid.length,1);assert.match(d.querySelector('#dialogBody').textContent,/Elena recibió/);assert.ok(!d.querySelector('#dialogBody').textContent.includes('«Ana lee'));assert.match(d.querySelector('#dialogBody').textContent,/«Voy a trabajar/);assert.match(d.querySelector('#dialogBody').textContent,/La entrega abrió nuevos trabajos/);assert.match(d.querySelector('#dialogBody').textContent,/Una reserva, tres puestos/);assert.ok(d.querySelector('#map').textContent.includes('República'));assert.ok(!d.querySelector('#map').textContent.includes('Vicuña'));
  const restored=await session({saved:a.world(),reduced:true});restored.click('#catalogButton');assert.equal(restored.document.querySelectorAll('#dialogBody [data-offer]').length,3);
- a.click('[data-catalog]');a.click('[data-filter="available"]');assert.equal(d.querySelectorAll('#dialogBody [data-offer]').length,2);
+ a.click('[data-catalog]');assert.equal(d.querySelectorAll('[data-filter]').length,0);assert.equal(d.querySelectorAll('#dialogBody [data-offer]').length,3);
  a.click('#resetCouriers');a.click('[data-reset-confirm]');assert.equal(d.querySelectorAll('#dialogBody [data-offer]').length,1);assert.equal(d.querySelectorAll('#missionLayer [role="button"]').length,4);assert.equal(a.world().paid.length,0);
 });
 
@@ -164,7 +165,7 @@ test('remote offer previews the approach without moving; arrival exposes accepta
 });
 test('Tobalaba acceptance shows only the actual extraction legs, deadline and zero progress after reload',async()=>{
  const {setup}=require('./courier-return-fixtures.cjs'),{E,d:data}=await setup();let saved=connectedWorld(E,data,{seed:1});saved.location='tobalaba';
- const a=await session({saved}),d=a.document;a.click('[data-offer="adasme-01"]');assert.match(d.querySelector('#dialogBody').textContent,/116 minutos/);a.click('[data-preview-route]');assert.equal(d.querySelectorAll('.route-list li').length,17);assert.equal(d.querySelector('.route-list li').textContent.includes('Tobalaba'),true);
+ const a=await session({saved}),d=a.document;a.click('[data-offer="adasme-01"]');assert.match(d.querySelector('#dialogBody').textContent,/116 min/);a.click('[data-preview-route]');assert.equal(d.querySelectorAll('.route-list li').length,17);assert.equal(d.querySelector('.route-list li').textContent.includes('Tobalaba'),true);
  a.click('#catalogButton');a.click('[data-offer="adasme-01"]');a.click('[data-accept]');assert.match(d.querySelector('#travel').textContent,/0\/16/);assert.match(d.querySelector('#status').textContent,/0 \/ 116 min/);assert.equal(d.querySelectorAll('#missionLayer path.route-selected').length,16);
  const b=await session({saved:a.world()});assert.match(b.document.querySelector('#travel').textContent,/0\/16/);assert.equal(b.world().run.index,12);assert.ok(!b.world().progression.visited.includes('macul'));
 });
@@ -186,7 +187,19 @@ test('Beatriz contact exposes a physical revisit and the arrival opens the remem
 test('the first offer and help expose the reduced credits and current three-leg route',async()=>{
  const {setup}=require('./courier-return-fixtures.cjs'),{E,d}=await setup(),w=E.createWorld(d,{seed:1});
  const a=await session({saved:w});a.click('#catalogButton');a.click('[data-offer="relevo-01"]');
- assert.match(a.document.getElementById('dialogBody').textContent,/8 créditos/);
+ assert.match(a.document.getElementById('dialogBody').textContent,/8 créditos/i);
  assert.doesNotMatch(a.document.getElementById('dialogBody').textContent,/fichas/);
  a.click('[data-close="dialog"]');a.click('#helpButton');assert.match(a.document.getElementById('dialogBody').textContent,/tres tramos/);
 });
+
+ test('Guzman contact carries the confirmed receipt through a physical visit and opens his reply',async()=>{
+ const {setup,finish}=require('./courier-return-fixtures.cjs'),{E,d}=await setup();
+ const w=finish(E,d,E.start(d,atOrigin(d,connectedWorld(E,d,{seed:1}),'guzman-01'),'guzman-01'));
+ const a=await session({saved:w});a.click('#contactsButton');a.click('[data-contact="guzman"]');
+ assert.match(a.document.getElementById('dialogBody').textContent,/todavía no ha escuchado/);
+ a.click('[data-guzman-visit]');assert.equal(E.mission(d,a.world()).visitContact,'guzman');
+ const returned=finish(E,d,a.world()),b=await session({saved:returned});
+ assert.match(b.document.getElementById('travel').textContent,/Hablar con Guzmán/);
+ b.click('#travel [data-contact="guzman"]');assert.match(b.document.getElementById('dialogBody').textContent,/soldador/);
+ assert.equal(b.document.querySelectorAll('[data-guzman-visit]').length,0);assert.equal(b.world().credits,w.credits);
+ });

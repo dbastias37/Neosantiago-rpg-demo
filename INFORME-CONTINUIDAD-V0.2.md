@@ -30,7 +30,7 @@ El mapa de Mensajeros ahora se presenta como una [pantalla montada en un panel d
 
 **Bloque 6 — Bitácora de Expedición (21 de septiembre):** se integra la opción A con `expedition-journal.css`, manteniendo la paleta, fuente y textura aprobadas. Ubicación, objetivo, equipo y recursos acompañan al relato y las decisiones; en móvil la lectura y sus opciones preceden al estado del grupo. Los retratos se muestran completos. Los valores, documentos contextuales, condiciones, costes, fichas e inhibidor siguen usando el renderizador de campaña. Cada nueva situación comienza arriba; consultar inventario conserva la posición de lectura. No se importan datos estáticos ni vistas previas del laboratorio, ni se cambian reglas, narrativa o guardados. `tests/expedition-preview.html` permite revisar tres escenas reales con almacenamiento en memoria y un iframe aislado sin acceso a partidas. 40 pruebas dirigidas aprobadas de decisiones, actividades y estabilidad. La prueba A/B y el laboratorio de compuertas se conservan separados. Próximo bloque visual propuesto: inicio, actividades, ayuda y desenlaces, sujeto a revisión del usuario.
 
-**Laboratorio separado:** los [tres paneles de compuertas con quince acertijos](docs/laboratorio-compuertas-0.2.md) siguen disponibles por URL directa en `labs/compuertas/`. El usuario pidió conservarlos en el repositorio para una futura implementación. El mapa toma su lenguaje visual, sin importar su código ni integrar compuertas a viajes, combates o guardados de la campaña. La profundización de Guzmán y Jiménez continúa pendiente.
+**Laboratorio separado:** los [tres paneles de compuertas con quince acertijos](docs/laboratorio-compuertas-0.2.md) siguen disponibles por URL directa en `labs/compuertas/`. El usuario pidió conservarlos en el repositorio para una futura implementación. El mapa toma su lenguaje visual, sin importar su código ni integrar compuertas a viajes, combates o guardados de la campaña. Guzmán se profundiza en la entrega 14; Jiménez sigue pendiente.
 
 ### Narrativa y economía — entrega 13
 
@@ -42,7 +42,13 @@ La moneda ahora se llama Créditos en todo el juego. Los pagos máximos de los o
 
 Los retratos junto al mapa y de contactos se muestran completos y sin degradado superpuesto. La ayuda ya describe los tres tramos iniciales. La suite actual tiene 353 pruebas aprobadas. Detalles de compatibilidad, límites y revisión visual en el documento de entrega.
 
-**Próximo bloque:** profundizar Guzmán y Jiménez; recoger observaciones de partidas con los nuevos pagos. No volver a implementar Beatriz ni cambiar recompensas históricas. V0.2 sigue abierta.
+**Continuación de la entrega 13:** Guzmán se completa en el bloque descrito a continuación. Jiménez y la evaluación humana del balance siguen pendientes. No volver a implementar Beatriz ni cambiar recompensas históricas. V0.2 sigue abierta.
+
+### Narrativa — entrega 14: Guzmán
+
+Se integra [Guzmán y la recepción de Plaza](docs/guzman-0.2-entrega-14.md). Dos decisiones sobre identificación del rotor reparado y sujeción del cable del sensor producen cuatro recepciones. Los técnicos distinguen lo probado en el banco de lo comprobado al montar las piezas. Tras entregar, el equipo puede llevar físicamente el comprobante a Los Leones: Guzmán responde al recorrido y conserva como pendiente la revisión que nadie ha observado todavía. Se mantienen ruta, carga, pagos y descanso abastecido en Plaza. Los contratos previos conservan su contenido; no se inventa continuidad retroactiva. La suite completa tiene **371 pruebas aprobadas**, incluido el flujo DOM de visita. No se modificó el diseño de las pantallas.
+
+**Siguiente paso acordado:** retomar lo visual después de este bloque. El próximo pendiente narrativo es Jiménez; los apartados históricos que todavía proponen Beatriz o Guzmán no describen el estado vigente.
 
 ## 1. Estado real del proyecto
 

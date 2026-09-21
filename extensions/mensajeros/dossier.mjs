@@ -1,4 +1,4 @@
-import * as E from './production.mjs?v=16-beatriz-credits';
+import * as E from './production.mjs?v=17-guzman';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 // Presentation only: use live assignments and their accepted departure plans.
 export function dossier(data,world,preferred,{image,itemRows,progressHTML}){
