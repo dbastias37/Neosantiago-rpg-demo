@@ -6,6 +6,10 @@
 
 Este es el punto de entrada para continuar en otro chat. Resume lo implementado, diferencia los antecedentes históricos del estado vigente y deja un alcance propuesto para el siguiente bloque. Cuando el código cambie después de esta revisión, actualizar este informe con la nueva evidencia.
 
+## Actualización visual — apertura cinematográfica
+
+Se agrega la [intro cinematográfica de Producciones Vérité](docs/intro-cinematica.md) al botón Iniciar: logo original, crédito de Diego Bastías y título blanco con fundidos y acercamientos suaves. La música comienza con el gesto inicial y continúa hasta el prólogo. Se preserva la elección de continuar si existe una partida. Suite: **392 pruebas aprobadas**.
+
 ## Estado vigente — entrega 18: cierre de V0.2
 
 V0.2 queda cerrada con [notas de versión, alcance y límites](docs/version-0.2.md). La portada, la entrada de Los Mensajeros y sus metadatos identifican la versión sin cambiar el esquema de guardado. La revisión final confirma moneda en Créditos, Varela definitivo, ocho encargos, rutas y contactos graduales, continuidad de entregas y provisiones reducidas. Una actualización posterior integra [las compuertas numéricas en los desvíos de Encargos](docs/compuertas-encargos-0.2.md): diez casos, cuatro intentos, pistas y estado persistente; continuidad sigue en laboratorio. La documentación deja de presentar Beatriz, Guzmán, Jiménez, la ayuda de tres tramos o el cierre de versión como tareas pendientes. **390 pruebas aprobadas**. El siguiente trabajo acordado vuelve a ser visual y debe partir de las superficies ya aprobadas.

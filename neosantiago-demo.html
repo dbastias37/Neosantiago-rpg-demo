@@ -908,6 +908,8 @@
   <link rel="stylesheet" href="combat-field.css?v=2-device">
 <link rel="stylesheet" href="expedition-journal.css?v=1">
 <link rel="stylesheet" href="journey-surfaces.css?v=1">
+<link rel="stylesheet" href="cinematic-intro.css?v=1">
+<link rel="preload" href="assets/branding/producciones-verite.png" as="image">
 <style>
     #night .night-modal{display:flex;flex-direction:column;width:min(860px,calc(100% - 24px));max-height:calc(100dvh - 24px);overflow:hidden;padding:24px}
     .night-reading{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding-right:8px}
@@ -989,6 +991,15 @@
         <div class="combat-log" id="combatLog" aria-live="polite"></div>
       </footer>
     </div>
+  </section>
+
+  <section id="cinematicIntro" tabindex="-1" class="cinematic-intro hidden" role="dialog" aria-modal="true" aria-label="Presentación de NeoSantiago 2130">
+    <div id="cinematicLogo" class="cinematic-card cinematic-logo" aria-hidden="true">
+      <svg viewBox="75 440 1330 355" role="img" aria-label="Producciones Vérité"><image href="assets/branding/producciones-verite.png" width="1500" height="1500" /></svg>
+    </div>
+    <div id="cinematicCredit" class="cinematic-card cinematic-credit" aria-hidden="true"><p>Un juego basado en la obra digital de Diego Bastías</p></div>
+    <div id="cinematicTitle" class="cinematic-card cinematic-title" aria-hidden="true"><h1>NEOSANTIAGO 2130</h1></div>
+    <button id="cinematicSkip" class="cinematic-skip" aria-label="Omitir presentación">Omitir intro</button>
   </section>
 
   <section class="title-screen" id="titleScreen" aria-labelledby="titleScreenHeading">
@@ -1988,7 +1999,8 @@
   <script src="item-details.js?v=16-credits"></script>
   <script src="combat-common.js?v=1"></script>
   <script src="profile-common.js?v=1"></script>
-  <script src="game-v2.js?v=18-varela"></script>
+  <script src="cinematic-intro.js?v=1"></script>
+  <script src="game-v2.js?v=19-cinematic"></script>
   <script src="companion-nights.js?v=4-evidence"></script>
   <script src="expedition-rest.js?v=3-vera"></script>
   <script src="companion-commitments.js?v=4"></script>
@@ -2031,6 +2043,6 @@
 </section>
 <script src="world-continuity.js?v=1"></script>
 <script src="activities.js?v=8-expediente"></script>
-<script src="mobile-back.js?v=5-world-continuity"></script>
+<script src="mobile-back.js?v=6-cinematic"></script>
 </body>
 </html>
