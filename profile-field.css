@@ -43,7 +43,7 @@
 #profileModal .equip-btn{border-color:#d9a15c80;color:#f2bd73}
 #profileModal .transfer-open-btn,#profileModal .profile-use-btn{color:#75d3d7;border-color:#75d3d766;background:#75d3d707}
 #profileModal .discard-open-btn{color:#e18c7b;border-color:#a85d514d;background:transparent}
-#profileModal .vital-row{font-size:9px;background:#090e0cf5;border-color:#75d3d728}
+#profileModal .vital-row{grid-template-columns:78px minmax(0,1fr) 48px;font-size:9px;background:#090e0cf5;border-color:#75d3d728}
 #profileModal .vital-row b{font-size:10px}
 #profileModal .person-stat{font-size:8px;background:#090e0cf5;border-color:#d9a15c30}
 #profileModal .person-stat b{font-size:11px}
