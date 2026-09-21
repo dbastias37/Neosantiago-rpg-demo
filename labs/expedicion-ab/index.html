@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es">
+<head>
+ <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+ <meta name="theme-color" content="#090e0c"><link rel="icon" href="data:,">
+ <title>Expedición A/B · Neo Santiago 2130</title>
+ <link rel="stylesheet" href="styles.css?v=1">
+</head>
+<body data-variant="a">
+ <a class="skip" href="#preview">Ir a la interfaz</a>
+ <header class="lab-toolbar">
+  <div class="lab-title"><span class="eyebrow">NEO SANTIAGO 2130 / DISEÑO</span><strong>Expedición · prueba A/B</strong></div>
+  <nav aria-label="Elegir diseño"><button data-variant="a" aria-pressed="true">A · Bitácora</button><button data-variant="b" aria-pressed="false">B · Escena</button></nav>
+  <button id="device" aria-pressed="false">Vista móvil</button>
+ </header>
+ <div class="lab-controls"><label for="scenario">Situación de muestra</label><select id="scenario" disabled><option>Cargando…</option></select><span>Prueba independiente · no modifica tu partida</span></div>
+ <p id="description" class="lab-description">A · Relato y decisiones en una bitácora, con el equipo al costado.</p>
+ <main id="preview" tabindex="-1"><p role="status">Preparando los bocetos…</p></main>
+ <p class="lab-foot">Compara la misma situación en A y B. Selecciona una decisión para revisar su detalle. Los recursos son una muestra fija; no representan una partida en curso.</p>
+ <dialog id="decision" aria-labelledby="decisionTitle"><header class="dialog-head"><span class="eyebrow">EXPEDICIÓN / DECISIÓN DE MUESTRA</span><button id="closeDecision" aria-label="Cerrar detalle">×</button></header><div id="decisionContent"></div><footer class="dialog-foot"><button id="returnDecision" class="primary">Volver a la escena</button></footer></dialog>
+ <script type="module" src="app.mjs?v=1"></script>
+</body>
+</html>

@@ -1,0 +1,219 @@
+{
+  "source": "d61f755",
+  "total": 27,
+  "goal": {
+    "title": "Encontrar el origen de la señal",
+    "text": "Traza una ruta segura desde la Línea 1 hasta la superficie."
+  },
+  "group": [
+    {
+      "name": "Sara",
+      "role": "Médico",
+      "hp": 44,
+      "maxHp": 44,
+      "energy": 82,
+      "image": "characters/sara-loadout.webp"
+    },
+    {
+      "name": "Elías",
+      "role": "Ingeniero",
+      "hp": 40,
+      "maxHp": 40,
+      "energy": 76,
+      "image": "characters/elias-loadout.webp"
+    },
+    {
+      "name": "Noa",
+      "role": "Cazadora",
+      "hp": 38,
+      "maxHp": 38,
+      "energy": 88,
+      "image": "characters/noa-loadout.webp"
+    }
+  ],
+  "supplies": [
+    {
+      "name": "Alimento",
+      "value": 4
+    },
+    {
+      "name": "Agua",
+      "value": 4
+    },
+    {
+      "name": "Medicina",
+      "value": 1
+    },
+    {
+      "name": "Batería",
+      "value": 1
+    }
+  ],
+  "threat": 18,
+  "morale": 64,
+  "scenarios": [
+    {
+      "index": 0,
+      "day": 1,
+      "time": "06:40",
+      "chapter": "Día 1 · La señal",
+      "location": "Refugio Línea 1",
+      "type": "Preparación",
+      "title": "La señal imposible",
+      "text": "Mara alcanza al grupo junto al acceso. Trae una celda y un botiquín sellado, una reserva aparte de las provisiones que ya recogieron. «Puedo entregarles una de estas dos cosas. Lo demás se queda en el puesto». Sara mira el botiquín; Elías comprueba los contactos de la celda. Noa espera con la mochila puesta. Detrás de Mara, una mujer pregunta cuándo volverá a abrir la atención.",
+      "image": "backgrounds/station-ruins.webp",
+      "choices": [
+        {
+          "label": "Reservar una celda de energía",
+          "hint": "Elías podrá alimentar puertas, terminales o una descarga de emergencia.",
+          "cost": "Batería +1",
+          "requirements": [],
+          "result": {
+            "title": "Energía bajo custodia",
+            "text": "Elías envuelve la celda para que los contactos no rocen las herramientas. «Si no hace falta, la traemos de vuelta». Mara anota la entrega. Sara devuelve el botiquín al lado de la mesa que corresponde al refugio y comprueba las vendas que ya lleva."
+          },
+          "combat": null,
+          "outcomes": null
+        },
+        {
+          "label": "Solicitar el botiquín sellado",
+          "hint": "Añade medicina y un botiquín si hay espacio; baja un punto la moral del grupo.",
+          "cost": "Medicina +1 · Botiquín · Moral −1",
+          "requirements": [],
+          "result": {
+            "title": "Una deuda médica",
+            "text": "Sara señala el botiquín. Mara tacha una línea de su inventario. «Avísenme qué usaron cuando vuelvan». Elías deja la celda sobre la mesa. Hubiera preferido llevarla; Sara no le pide que esté de acuerdo."
+          },
+          "combat": null,
+          "outcomes": null
+        },
+        {
+          "label": "Salir con las reservas propias",
+          "hint": "No añade suministros: el grupo conserva lo que ya preparó y gana moral.",
+          "cost": "Moral +4",
+          "requirements": [],
+          "result": {
+            "title": "Viajar ligero",
+            "text": "Noa pregunta si con lo que llevan pueden seguir. Sara revisa las vendas; Elías, sus herramientas. Los dos asienten. Mara guarda la reserva y vuelve al puesto. Antes de alejarse, les pide que revisen bien la carga. «Después no voy a poder alcanzarlos»."
+          },
+          "combat": null,
+          "outcomes": null
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "day": 1,
+      "time": "16:05",
+      "chapter": "Día 1 · La señal",
+      "location": "Casa de bombas",
+      "type": "Combate",
+      "title": "El guardián reconstruido",
+      "text": "La bomba que mantiene seco el acceso a la superficie todavía funciona. Frente al tablero espera un merodeador enorme unido a placas industriales; dos exploradores se mueven detrás de él. Si la máquina se detiene, el regreso quedará bajo agua.",
+      "image": "backgrounds/flooded-gallery.webp",
+      "choices": [
+        {
+          "label": "Recuperar la casa de bombas",
+          "hint": "Combate exigente contra una formación aleatoria de hasta tres merodeadores.",
+          "cost": "Combate difícil",
+          "requirements": [],
+          "result": null,
+          "combat": {
+            "title": "Guardianes de la bomba",
+            "text": "El reconstruido absorbe el primer avance mientras sus compañeros buscan los flancos."
+          },
+          "outcomes": null
+        },
+        {
+          "label": "Reactivar el señuelo térmico",
+          "hint": "Elías puede atraerlos a un corredor y cerrar la compuerta.",
+          "cost": "Batería −1 · Favorable 60%",
+          "requirements": [
+            "Batería ×1"
+          ],
+          "result": null,
+          "combat": null,
+          "outcomes": {
+            "success": {
+              "title": "Calor sin pulso",
+              "text": "Los sensores improvisados siguen el señuelo. El grupo sella a los merodeadores tras una puerta de presión y conserva la bomba sin disparar."
+            },
+            "fail": {
+              "title": "El señuelo se rompe",
+              "text": "La luz térmica estalla antes de cruzar el corredor. El grupo escapa, pero la bomba queda bajo control de los merodeadores."
+            }
+          }
+        },
+        {
+          "label": "Marcar la posición y continuar",
+          "hint": "Evita una batalla difícil, a costa de abandonar una infraestructura crítica.",
+          "cost": "Moral −5",
+          "requirements": [],
+          "result": {
+            "title": "Una pérdida calculada",
+            "text": "Noa marca la pared para una futura patrulla. Detrás, el ritmo de la bomba cambia y todos entienden que quizá no haya una segunda oportunidad."
+          },
+          "combat": null,
+          "outcomes": null
+        }
+      ]
+    },
+    {
+      "index": 14,
+      "day": 2,
+      "time": "14:05",
+      "chapter": "Día 2 · El pulso",
+      "location": "Cruce Dieciocho",
+      "type": "Patrulla",
+      "title": "Tres identidades autorizadas",
+      "text": "Un rastreador de la Red UNO compara el pulso del grupo con identidades archivadas mientras un tirador cubre la calle. Un dron flota entre ambos y bloquea el regreso. La patrulla todavía no sabe que son Rotos; solo sabe que no deberían estar allí.",
+      "image": "backgrounds/day-alameda.webp",
+      "choices": [
+        {
+          "label": "Atacar antes de la identificación",
+          "hint": "Combate contra una formación aleatoria de agentes y drones.",
+          "cost": "Combate difícil",
+          "requirements": [],
+          "result": null,
+          "combat": {
+            "title": "Control de identidad",
+            "text": "El rastreador abre el canal SONAR mientras la escolta busca una línea de tiro."
+          },
+          "outcomes": null
+        },
+        {
+          "label": "Presentar la credencial de la Red UNO",
+          "hint": "Puede sostener la mentira durante el control de identidad.",
+          "cost": "Favorable 45%",
+          "requirements": [
+            "Credencial de la Red UNO"
+          ],
+          "result": null,
+          "combat": null,
+          "outcomes": {
+            "success": {
+              "title": "Técnicos de continuidad",
+              "text": "La patrulla acepta la orden antigua y despeja el cruce. Antes de irse, el rastreador menciona refuerzos de cascos morados cerca de la torre."
+            },
+            "fail": {
+              "title": "Credencial revocada",
+              "text": "El lector detecta la fecha imposible. El grupo rompe contacto entre disparos y pierde la credencial durante la huida."
+            }
+          }
+        },
+        {
+          "label": "Esperar dentro de un edificio",
+          "hint": "Evita el combate, pero sacrifica tiempo y permite que la Red UNO cierre otras rutas.",
+          "cost": "Moral −3",
+          "requirements": [],
+          "result": {
+            "title": "Una ciudad que escucha",
+            "text": "Permanecen inmóviles mientras el rastreador consulta cada piso. La patrulla se retira, pero deja un sensor en la intersección."
+          },
+          "combat": null,
+          "outcomes": null
+        }
+      ]
+    }
+  ]
+}
