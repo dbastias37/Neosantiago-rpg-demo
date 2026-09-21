@@ -58,3 +58,10 @@
  #lootModal .buttons button{padding:9px 8px}
 }
 @media(max-height:500px){#lootModal .loot-modal{padding:12px;gap:5px}#lootModal h2{font-size:22px}#lootModal .loot-capacity{padding:6px 10px}}
+/* Long encounter titles need a flexible heading row on portrait phones. */
+@media(max-width:600px) and (min-height:501px){
+ #battle .battle-shell{grid-template-rows:auto var(--log-height,118px) minmax(0,1fr) auto auto}
+ #battle .battle-head{height:auto;min-height:24px;gap:8px}
+ #battle .battle-head>div:first-child{min-width:0}
+ #battle .battle-head h2{font-size:16px;line-height:1.2;overflow-wrap:anywhere}
+}
