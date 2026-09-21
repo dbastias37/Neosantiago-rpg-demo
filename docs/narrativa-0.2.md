@@ -44,7 +44,7 @@ Las voces se distinguen por atención, prioridades y límites. Esta matriz es un
 | Elías | Entender antes de depender de un aparato. | Precisa lo que sabe y lo que falta; explica un mecanismo cuando afecta la decisión. | La información que necesita puede exigir una conexión peligrosa. No es una terminal que entrega respuestas perfectas. |
 | Noa | Conservar una ruta de regreso y saber a qué expone al grupo. | Pregunta por accesos, tiempos y cosas que no les han contado. | Proteger al equipo puede enfrentarla a quien necesita un desvío. No tiene que oponerse siempre a ayudar. |
 | Mara | Repartir reservas y seguir atendiendo cuando el grupo se vaya. | Cantidades, límites, encargos concretos. | Puede apoyar la expedición y molestarse por lo que consume. No vive únicamente para venderle al jugador. |
-| Varela | Sostener la comunidad y responder por lo que ocultó. | Reconoce límites y, cuando la presionan, identifica decisiones concretas. | Tener motivos comprensibles no elimina su responsabilidad. No debe funcionar como portavoz omnisciente del autor. |
+| Varela | Sostener la comunidad y responder por lo que ocultó. | Reconoce límites y, cuando lo presionan, identifica decisiones concretas. | Tener motivos comprensibles no elimina su responsabilidad. No debe funcionar como portavoz omnisciente del autor. |
 
 Las opciones deben expresar qué pretende hacer el grupo. Los costos y probabilidades tienen un lugar visible propio. La narración de resultados describe lo ocurrido, mientras la interfaz informa lo que cambió. Si un gesto no produce una relación persistente, no se promete que transformará el destino de otro personaje. Las expresiones del jugador pueden ser valiosas sin crear otra rama, siempre que su alcance sea honesto.
 
