@@ -15,7 +15,7 @@ test('Line 4 visits all eleven real intermediate stations in both directions and
  const r=d.routes['adasme-oriente'];assert.deepEqual(r.nodes.slice(0,13).map(id=>d.nodes[id].name),names);assert.deepEqual(r.nodes.slice(16).map(id=>d.nodes[id].name),names.toReversed());
  assert.ok(r.edges.filter(e=>e.line==='L4').every(e=>e.kind==='adjacent_station'));assert.equal(r.edges.length,28);
  let w=E.start(d,atOrigin(d,connectedWorld(E,d,{seed:1}),'jimenez-01'),'jimenez-01');w.run.index=11;w.location='colon';w=E.advance(d,w);
- assert.equal(w.run.pending.to,'tobalaba');assert.equal(w.run.pending.id,'jimenez-frecuencia');assert.ok(E.options(d,w).some(o=>o.id==='passive'));
+ assert.equal(w.run.pending.to,'tobalaba');assert.equal(w.run.pending.id,'jimenez-prueba');assert.ok(E.options(d,w).some(o=>o.id==='passive'));
 });
 test('market travel follows existing connections from every station and respects the Baquedano closure',async()=>{
  const {E,d}=await setup();
@@ -58,7 +58,7 @@ function legacy(E){
  const direct={from:'vicuna',to:'tobalaba',risk:'medium',line:'L4 · tramo agrupado',minutes:8,kind:'grouped_corridor',region:'oriente'};
  const r=old.routes['adasme-oriente'];r.edges=[direct,...r.edges.slice(12,16),{...direct,from:'tobalaba',to:'vicuna'}];r.nodes=['vicuna','tobalaba','escotilla','provisorio','escotilla','tobalaba','vicuna'];
  old.routes['jimenez-enlace'].edges=[direct,old.routes['jimenez-enlace'].edges.at(-1)];old.routes['jimenez-enlace'].nodes=['vicuna','tobalaba','leones'];
- old.scripted['jimenez-01:0']=old.scripted['jimenez-01:11'];delete old.scripted['jimenez-01:11'];return E.prepare(old);
+ old.scripted['jimenez-01:0']=old.scripted['jimenez-01:11'];delete old.scripted['jimenez-01:11'];const prepared=E.prepare(old);prepared.missions['jimenez-01']=prepared.jimenezLegacyMission;return prepared;
 }
 test('old pending battles, loot and checkpoint saves migrate without rerolling, resetting HP or charging another leg',async()=>{
  const {E,d}=await setup(),old=legacy(E);let w;

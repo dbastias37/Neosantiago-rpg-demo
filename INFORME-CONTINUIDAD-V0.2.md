@@ -6,6 +6,10 @@
 
 Este es el punto de entrada para continuar en otro chat. Resume lo implementado, diferencia los antecedentes históricos del estado vigente y deja un alcance propuesto para el siguiente bloque. Cuando el código cambie después de esta revisión, actualizar este informe con la nueva evidencia.
 
+## Estado vigente — entrega 15: Jiménez
+
+Se completa [Jiménez y Enlace de respaldo](docs/jimenez-0.2-entrega-15.md): decisiones sobre el registro del relevo y la prueba en Tobalaba, cuatro recepciones, y regreso físico a Vicuña con conversación condicionada por los resultados. Se distingue recepción de respuesta local y de conexión completa. Se preservan ruta, pago, beneficios y contratos históricos. Suite completa: **376 pruebas aprobadas**. Primer bloque de los cuatro propuestos para el cierre de V0.2 completado. Quedan **tres bloques propuestos**: continuidad de la red; escasez y ritmo en partidas normales; revisión final y cierre. La versión sigue abierta. Los apartados posteriores son historial y pueden contener pendientes ya resueltos: no volver a implementar Beatriz, Guzmán o Jiménez ni los siete bloques visuales. El laboratorio de compuertas sigue separado.
+
 ## Retrato definitivo de Varela (21 de septiembre)
 
 El usuario eligió al abuelo con sombrero y manta de lana, sentado con su cuaderno en el archivo. Se reemplaza el recurso compartido `portraits/npc-varela.webp` por la imagen aprobada, conservando el encuadre completo en el archivo. Introducción y diálogos usan la misma versión con URL renovada. Varela se describe como anciano del consejo; las referencias personales se ajustan al masculino. Se conservan nombre, papel narrativo, decisiones e identificadores de guardado. Las variantes con abrigo tecnológico no son la elección final.

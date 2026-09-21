@@ -203,3 +203,15 @@ test('the first offer and help expose the reduced credits and current three-leg 
  b.click('#travel [data-contact="guzman"]');assert.match(b.document.getElementById('dialogBody').textContent,/soldador/);
  assert.equal(b.document.querySelectorAll('[data-guzman-visit]').length,0);assert.equal(b.world().credits,w.credits);
  });
+
+ test('Jimenez contact carries the confirmed receipt through a physical visit and opens his reply',async()=>{
+ const {setup,finish}=require('./courier-return-fixtures.cjs'),{E,d}=await setup();
+ const w=finish(E,d,E.start(d,atOrigin(d,connectedWorld(E,d,{seed:1}),'jimenez-01'),'jimenez-01'));
+ const a=await session({saved:w});a.click('#contactsButton');a.click('[data-contact="jimenez"]');
+ assert.match(a.document.getElementById('dialogBody').textContent,/aún no lo ha recibido/);
+ a.click('[data-jimenez-visit]');assert.equal(E.mission(d,a.world()).visitContact,'jimenez');
+ const returned=finish(E,d,a.world()),b=await session({saved:returned});
+ assert.match(b.document.getElementById('travel').textContent,/Hablar con Jiménez/);
+ b.click('#travel [data-contact="jimenez"]');assert.match(b.document.getElementById('dialogBody').textContent,/reconoce las dos anotaciones/);
+ assert.equal(b.document.querySelectorAll('[data-jimenez-visit]').length,0);assert.equal(b.world().credits,w.credits);
+ });
