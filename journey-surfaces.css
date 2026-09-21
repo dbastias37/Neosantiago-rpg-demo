@@ -1,0 +1,79 @@
+/* Entry / dispatch desk / field guide / closing report: shared palette, distinct compositions. */
+:root{--journey-metal:linear-gradient(110deg,#0c1311da,#050908ed 65%,#19201ce3),url('extensions/mensajeros/assets/textures/metal-oxidado.webp') center/430px}
+#titleScreen .title-screen-copy{border-left:2px solid #d9a15c88;padding-left:24px}
+#titleScreen .title-tagline{font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;font-size:16px;line-height:1.7;color:#c0c4bd}
+#titleScreen .title-enter{border-radius:2px;box-shadow:inset 0 1px #fff4,0 8px 22px #0009}
+#titleScreen .title-hint{animation:none;color:#b9bdb4}
+#start .modal{clip-path:none;border:1px solid #6f6a5488;border-top:12px solid #242b22;background:linear-gradient(#090e0cf5,#090e0cf5),url('extensions/mensajeros/assets/textures/metal-oxidado.webp') center/430px;overflow:auto;max-height:calc(100dvh - 32px);box-shadow:0 24px 80px #000b}
+#start h1{color:#e7e2d8}#start .modal-copy{font-family:inherit;font-size:16px;line-height:1.7;color:#c0c4bd}#start .note{font-size:12px;line-height:1.6}
+#activityMenu{background:linear-gradient(120deg,#050907e8,#050907e0),url('backgrounds/station-ruins.webp') center/cover;align-items:start;padding:28px 24px}
+#activityMenu .activity-panel{border:1px solid #6f6a5477;background:#090e0c;box-shadow:0 18px 70px #0009;padding:0 28px 26px}
+#activityMenu .activity-kicker{margin:0 -28px 25px;padding:18px 28px;background:var(--journey-metal);border-bottom:1px solid #d9a15c55;font-size:11px}
+#activityMenu .activity-panel h1{font-size:clamp(30px,4vw,46px);color:#e7e2d8;letter-spacing:-.02em}
+#activityMenu .activity-intro{color:#c0c4bd}
+#activityMenu .activity-grid{gap:18px;margin:25px 0 20px}
+#activityMenu .activity-card{position:relative;isolation:isolate;overflow:hidden;padding:25px;border:1px solid #d9a15c55;background:#0d1513;min-height:360px;border-top:3px solid #d9a15c}
+#activityMenu .activity-card:before{content:"";position:absolute;inset:0 0 auto;height:150px;z-index:-1;pointer-events:none;background:linear-gradient(0deg,#0d1513,transparent),linear-gradient(#07100b66,#07100b66),url('backgrounds/day-alameda.webp') center/cover;opacity:.65}
+#activityMenu .courier-card{border-color:#75d3d744;border-top-color:#75d3d7}
+#activityMenu .courier-card:before{background-image:linear-gradient(0deg,#0d1513,transparent),linear-gradient(#07100b66,#07100b66),url('backgrounds/station-ruins.webp')}
+#activityMenu .activity-card h2{margin:20px 0;font-size:32px;letter-spacing:0;color:#e7e2d8}
+#activityMenu .activity-card p{color:#c0c4bd;line-height:1.65}
+#activityMenu .activity-card small{padding:12px 0;border-top:1px solid #75d3d725;color:#bdc4bb;font-size:12px;line-height:1.5}
+#activityMenu .courier-card .primary{background:#10201d;color:#75d3d7;border-color:#75d3d788}
+#activityMenu .courier-card .primary:hover{background:#19322c;border-color:#75d3d7}
+#activityMenu .activity-note{padding-top:16px;border-top:1px solid #d9a15c44;color:#b9bdb4}
+#activityMenu #activityHelp{margin-top:8px;font-size:11px}
+#activityMenu #activityHelpText{background:#0d1513;color:#c0c4bd}
+#gameIntro .welcome-modal,#storyPrelude .story-prelude-card{clip-path:none;border:1px solid #6f6a5477;background:#090e0c;box-shadow:0 18px 70px #0009}
+#gameIntro .welcome-head{background:var(--journey-metal);border-bottom:1px solid #d9a15c55}
+#gameIntro .welcome-text,#storyPrelude .story-prelude-card p{font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;color:#c0c4bd;line-height:1.75}
+#gameIntro .welcome-footer{background:#0d1513;border-top:1px solid #d9a15c55}
+#gameHelpModal .game-help-modal,#refugeHelpModal .game-help-modal{clip-path:none;border:1px solid #6f6a5477;background:#090e0c;box-shadow:0 18px 70px #0009}
+#gameHelpModal .game-help-head,#refugeHelpModal .game-help-head{background:var(--journey-metal);border-bottom:1px solid #d9a15c55}
+#gameHelpModal .game-help-head h2,#refugeHelpModal .game-help-head h2{color:#e7e2d8}
+#gameHelpModal .game-help-reading,#refugeHelpModal .game-help-reading{font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;font-size:17px;line-height:1.75;color:#c0c4bd;border-left:4px solid #75d3d755;background:#0b1310;scrollbar-width:thin}
+#gameHelpModal .game-help-tip,#refugeHelpModal .game-help-tip{background:#111e18;color:#d6ddd2;border-color:#d9a15c}
+#gameHelpModal .game-help-actions,#refugeHelpModal .game-help-actions{background:#0d1513}
+#worldLoreModal .world-lore-modal{clip-path:none;background:#090e0c;border:1px solid #6f6a5477}
+#worldLoreModal .world-lore-head{background:var(--journey-metal)}
+#worldLoreModal .world-lore-scroll{background:#090e0c;color:#c0c4bd}
+#final .final-modal,#summary .summary-modal{display:block;height:auto;max-height:calc(100dvh - 30px);overflow:auto;clip-path:none;padding:0 26px 24px;background:#090e0c;border:1px solid #6f6a5477;scrollbar-width:thin;scrollbar-color:#546459 #090e0c}
+#final .final-head,#summary .summary-head{margin:0 -26px 24px;padding:22px 26px;background:var(--journey-metal);border-bottom:1px solid #d9a15c55}
+#final h2,#summary h2{color:#e7e2d8;font-size:clamp(28px,3.4vw,42px);line-height:1.15}
+#final .final-score{background:#0c1512;border-color:#75d3d744}
+#final .ending-story-grid{overflow:visible;gap:15px;margin:24px 0}
+#final .ending-story{padding:18px;border:0;border-top:2px solid #75d3d766;background:#0d1513}
+#final .ending-story h3{font-size:11px;letter-spacing:.1em}
+#final .ending-story p,#final .modal-copy{font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;font-size:15px;line-height:1.75;color:#c0c4bd}
+#summary .summary-block{padding:16px;border-color:#75d3d725;background:#0d1513}
+#summary .summary-block h3{font-size:11px;line-height:1.5;color:#75d3d7;letter-spacing:.08em}
+#summary .summary-metrics div,#summary .summary-items span{font-size:12px;line-height:1.5;padding:8px}
+#summary .summary-metrics b,#summary .summary-items b{font-size:13px;color:#f2bd73}
+#summary .decision-summary{display:block;margin-top:18px}
+#summary .summary-decisions{height:auto;max-height:none;overflow:visible;gap:9px}
+#summary .summary-decisions article{padding:12px;background:#090e0c;border-color:#6f755055}
+#summary .summary-decisions strong,#summary .summary-decisions small{font-size:12px;line-height:1.5}
+#summary .summary-actions{display:block;margin-top:22px;padding-top:18px;border-top:1px solid #d9a15c55}
+#summary .summary-actions p{font-size:12px;line-height:1.6;color:#b9bdb4}
+#summary .summary-actions .buttons{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+#summary .summary-actions button,#final .buttons button{min-height:46px;font-size:11px;white-space:normal}
+@media(max-width:620px){
+ #titleScreen .title-screen-copy{padding-left:16px;margin-left:18px;width:calc(100% - 36px)}
+ #titleScreen .title-tagline{font-size:14px}
+ #start .modal{padding:24px}#start .buttons{display:grid}
+ #activityMenu{padding:14px 10px}#activityMenu .activity-panel{padding:0 18px 20px}
+ #activityMenu .activity-kicker{margin:0 -18px 20px;padding:16px 18px;font-size:9px}
+ #activityMenu .activity-grid{grid-template-columns:1fr;gap:14px}
+ #activityMenu .activity-card{min-height:0;padding:21px}#activityMenu .activity-card h2{font-size:28px}
+ #activityMenu .activity-intro{font-size:14px}#activityMenu .activity-card p{font-size:14px}
+ #final .final-modal,#summary .summary-modal{padding:0 18px 18px;max-height:calc(100dvh - 20px)}
+ #final .final-head,#summary .summary-head{margin:0 -18px 20px;padding:18px;grid-template-columns:1fr;gap:12px}
+ #final .ending-story-grid{grid-template-columns:1fr}#summary .summary-actions .buttons{display:grid}
+ #gameHelpModal .game-help-reading,#refugeHelpModal .game-help-reading{font-size:16px}
+}
+@media(max-height:540px){
+ #titleScreen{overflow:auto}#titleScreen .title-screen-copy{align-self:start;margin-top:24px;margin-bottom:55px}
+ #titleScreen .title-lockup{font-size:50px}#titleScreen .title-tagline{font-size:13px;max-width:600px}
+ #titleScreen .title-actions{margin-top:16px}#titleScreen .title-rule{margin:14px 0}
+}
+@media(prefers-reduced-motion:reduce){#titleScreen .title-screen-bg img{animation:none}#titleScreen:after{animation:none}}
