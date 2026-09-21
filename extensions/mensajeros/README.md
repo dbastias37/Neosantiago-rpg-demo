@@ -1,5 +1,7 @@
 > **Continuidad del proyecto:** [informe vigente de V0.2](../../INFORME-CONTINUIDAD-V0.2.md), con estado implementado, pendientes y contexto para otro chat.
 
+> **Producción V0.2, 21-sep-2026:** la red publicada incluye ocho encargos, progresión, retornos, continuidad, combate compartido y economía revisada. Los trabajos cortos usan las mochilas propias; Guzmán, Jiménez y Adasme prestan un equipo de campo mínimo. [Notas de versión y límites](../../docs/version-0.2.md). El contenido inferior conserva la historia del laboratorio original y no describe el estado actual de producción.
+
 > **Actualización 0.2, entrega 12:** los cuatro primeros encargos se preparan con `corridors.mjs`. `production.json` mantiene sus versiones históricas para restaurar guardados. [Diseño, compatibilidad y pruebas](../../docs/corredores-0.2-entrega-12.md).
 
 > **Producción activa, 18-sep-2026:** el juego carga `play.html`, `play.mjs`, `production.json` y `production.mjs` desde su menú de actividades. [Manual de integración](../../docs/metro-refugios/INTEGRACION-JUGABLE.md). El resto de este archivo conserva la documentación histórica del laboratorio aislado.

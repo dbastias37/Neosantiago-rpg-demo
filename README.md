@@ -2,6 +2,8 @@
 
 RPG narrativo web con una expedición coral y la red de encargos de Los Mensajeros.
 
+**Versión vigente: V0.2.** La actualización narrativa y de sistemas está cerrada; la siguiente etapa acordada vuelve al trabajo visual. El alcance, las pruebas y los límites están en las [notas de versión](docs/version-0.2.md).
+
 ## Continuar el desarrollo
 
 Leer primero [INFORME-CONTINUIDAD-V0.2.md](INFORME-CONTINUIDAD-V0.2.md). Reúne lo implementado, el estado de la actualización hacia V0.2, los pendientes, la arquitectura, los criterios narrativos, la compatibilidad de partidas y el contexto necesario para continuar en otro chat.
@@ -22,4 +24,4 @@ El libro de referencia de la adaptación está en [Neo Santiago 2130](https://ne
 
 ## Verificación
 
-Instalar las dependencias de desarrollo con `npm install` y ejecutar `npm test`. La comprobación registrada el 19 de septiembre de 2026 sobre `9fe2327` aprobó 345 pruebas. Los límites de esas comprobaciones, incluida la evaluación humana pendiente, están detallados en el informe.
+Instalar las dependencias de desarrollo con `npm install` y ejecutar `npm test`. La comprobación de cierre de V0.2 aprobó 385 pruebas. Los límites de esas comprobaciones, incluida la evaluación humana pendiente, están detallados en el informe.

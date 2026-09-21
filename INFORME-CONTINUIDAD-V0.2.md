@@ -1,12 +1,16 @@
 # Neo Santiago 2130 — informe de continuidad hacia V0.2
 
-**Fecha:** 19 de septiembre de 2026. **Repositorio:** `dbastias37/Neosantiago-rpg-demo`. **Rama de entrega:** `main`.
+**Fecha de cierre:** 21 de septiembre de 2026. **Repositorio:** `dbastias37/Neosantiago-rpg-demo`. **Rama de entrega:** `main`.
 
-**Código revisado:** `9fe232706c61334209f5a20941a4ed66bdebad3f`, posterior al rediseño de los primeros recorridos y al ajuste del catálogo. Este documento se incorpora en un commit posterior que contiene documentación; no cambia el juego.
+**Estado:** V0.2 cerrada como versión jugable del demo. La evaluación humana de ritmo y balance continúa siendo una comprobación posterior, no una condición oculta para identificar la versión.
 
 Este es el punto de entrada para continuar en otro chat. Resume lo implementado, diferencia los antecedentes históricos del estado vigente y deja un alcance propuesto para el siguiente bloque. Cuando el código cambie después de esta revisión, actualizar este informe con la nueva evidencia.
 
-## Estado vigente — entrega 17: escasez y ritmo
+## Estado vigente — entrega 18: cierre de V0.2
+
+V0.2 queda cerrada con [notas de versión, alcance y límites](docs/version-0.2.md). La portada, la entrada de Los Mensajeros y sus metadatos identifican la versión sin cambiar el esquema de guardado. La revisión final confirma moneda en Créditos, Varela definitivo, ocho encargos, rutas y contactos graduales, continuidad de entregas, provisiones reducidas y separación del laboratorio de compuertas. La documentación deja de presentar Beatriz, Guzmán, Jiménez, la ayuda de tres tramos o el cierre de versión como tareas pendientes. **385 pruebas aprobadas**. El siguiente trabajo acordado es visual y debe partir de las superficies ya aprobadas.
+
+## Entrega anterior — entrega 17: escasez y ritmo
 
 Completado el tercer bloque propuesto de cierre: [escasez y ritmo de Los Mensajeros](docs/escasez-ritmo-0.2-entrega-17.md). Los cinco encargos cortos ya no entregan comida, agua, munición ni botiquines gratis. Guzmán, Jiménez y Adasme conservan un equipo mínimo de 1 ración, 1 agua y 6 municiones 5.56; las herramientas propias de la extracción de Adasme se mantienen. Los préstamos bajan de 131 a 24 unidades y de 337 a 48 Créditos de valor de reposición. Pagos, precios, desgaste, plazos y probabilidades no cambian. El expediente, el traslado y la ayuda explican la provisión antes de aceptar. Las partidas con contratos activos conservan exactamente lo que ya habían recibido. **383 pruebas aprobadas**. Resta **un bloque propuesto**: revisión final y cierre; después se retoma lo visual.
 
@@ -74,7 +78,7 @@ Se integra [Guzmán y la recepción de Plaza](docs/guzman-0.2-entrega-14.md). Do
 
 El repositorio contiene una experiencia jugable con expedición narrativa de tres días y una actividad de encargos con otro equipo. Hay decisiones, combate, recursos, equipo, progresión, guardado, retornos y desenlaces. La actualización hacia V0.2 ha trabajado especialmente las conexiones entre decisiones y consecuencias, la personalidad de los personajes, el descubrimiento de rutas y la presentación.
 
-**V0.2 sigue en desarrollo. No se ha declarado terminada ni se ha demostrado una mejora de retención.** Que una partida pueda completarse y que sus estados sean consistentes no demuestra que el jugador disfrute cada tramo, comprenda todas las consecuencias o quiera seguir jugando.
+**V0.2 está cerrada como versión jugable del demo.** El cierre significa que su alcance narrativo, económico, visual y de compatibilidad está implementado y registrado. No demuestra una mejora de retención: que una partida pueda completarse y que sus estados sean consistentes no prueba que cada jugador disfrute el ritmo, comprenda todas las consecuencias o quiera seguir jugando.
 
 El problema central ha sido la sensación de vacío entre acciones: encargos que parecían trámites, viajes repetidos, NPC que recibían objetos sin reaccionar y diálogos que olvidaban lo sucedido. Ahora existen conexiones concretas que corrigen parte de eso. La cobertura sigue siendo desigual: el inicio de Mensajeros y algunos arcos de la expedición tienen más continuidad que las entregas largas y las segundas visitas.
 
@@ -213,41 +217,35 @@ Las acciones y pagos se resuelven una vez. La carga protegida no se convierte en
 
 Cambiar el texto de algunas acciones podía alterar la inferencia de efectos psicológicos por palabras. Las variantes recientes conservan referencias mecánicas o efectos explícitos para evitarlo. La eliminación general de esa dependencia textual sigue pendiente; no asumir que quedó resuelta en todo `game-v2.js`.
 
-## 10. Qué falta, con prioridad y evidencia
+## 10. Límites conocidos después del cierre
 
-| Prioridad | Pendiente | Estado conocido y resultado buscado |
+| Prioridad posterior | Límite | Evidencia y criterio |
 | --- | --- | --- |
-| Inmediata | Corregir ayuda desactualizada | `help()` de `play.mjs` todavía dice «Tu primer trabajo tiene dos tramos». El inicio vigente tiene tres y termina en Plaza. Es una discrepancia confirmada, no una propuesta narrativa. |
-| Alta | Evaluar el inicio jugando con lectura real | Ver si se entiende el propósito de cada trabajo, qué se recuerda de las personas y dónde vuelve a sentirse trámite. Hay pruebas del motor; falta esta evaluación después del bloque 12. |
-| Alta | Profundizar Beatriz, Guzmán y Jiménez | Tienen encargos y efectos existentes. Falta extender conflictos propios del sector y consecuencias posteriores condicionadas por el recorrido. Guzmán ya tiene recepción humana y descanso abastecido: no empezar desde cero. |
-| Alta | Dar evolución a segundas visitas | Las escenas resueltas dejan de repetirse, pero no todos los sectores tienen continuaciones suficientes. Incorporar cambios pequeños ligados a hechos, sin reaparecer obstáculos eliminados. |
-| Alta | Revisar balance en partidas normales | Tiempo, descansos, munición, heridas, dinero, recompensas y dificultad deben evaluarse juntos. Las rutas automáticas comprobadas no representan todas las estrategias ni preferencias de lectura. |
-| Media | Unificar efectos de decisiones de forma explícita | Ampliar el desacoplamiento entre prosa y efectos mecánicos. Es un trabajo técnico distinto de escribir más líneas de diálogo. |
-| Media | Ampliar continuidad entre actividades cuando aporte valor | Hoy existe una conexión explícita del informe de Morales. Cada puente nuevo necesita fuente, receptor, momento y consecuencia; no mezclar economías por defecto. |
-| Media | Revisión visual y de accesibilidad completa | Catálogo con muchos trabajos abiertos, móvil vertical, ventanas anidadas, foco, teclado, lectura larga, imágenes y transiciones. El último ajuste tiene revisión de escritorio y pruebas DOM, no certificación general. |
-| Media | Extender arcos corales | Sara, Noa y Elías tienen conexiones concretas, pero no toda la campaña responde con la misma profundidad. Revisar escenas menos conectadas antes de añadir contadores abstractos de relación. |
-| Posterior | Arte situado por sectores o estaciones | Los fondos actuales diferencian ambientes, pero se reutilizan. Desarrollar arte donde aporte orientación o identidad, respetando retratos y lenguaje visual existentes. |
-| Cierre de versión | Definir y comprobar el alcance final de V0.2 | Existe desarrollo por entregas; no una aceptación final registrada. Cerrar con evidencia jugable, pendientes identificados y un historial de versión claro. |
+| Alta | Partida humana completa | Observar comprensión, ritmo, compras, descansos, heridas y reservas. Las rutas automáticas demuestran que los estados son alcanzables; no representan todas las estrategias ni preferencias de lectura. |
+| Alta | Revisión visual siguiente | Continuar por secciones desde la interfaz aprobada, con comprobación real en escritorio y teléfono. No rehacer a la vez las superficies ya integradas. |
+| Media | Stock comunitario limitado | La tienda conserva existencias ilimitadas. V0.2 reduce pagos y préstamos, pero no simula una economía completa del refugio. |
+| Media | Efectos de decisión explícitos | Algunas zonas antiguas de `game-v2.js` todavía infieren efectos psicológicos desde palabras de la opción. Las entregas nuevas están protegidas, pero sustituir toda esa dependencia es un trabajo técnico posterior. |
+| Media | Más continuidad y arcos corales | Los contactos y protagonistas ya recuerdan hechos concretos, aunque el sistema no simula vidas autónomas indefinidas ni ofrece la misma profundidad en cada escena. Cada ampliación necesita fuente, momento y consecuencia. |
+| Posterior | Arte situado por estación | Se reutilizan fondos. El arte nuevo debe aportar orientación o identidad y respetar retratos, paleta y lenguaje visual vigentes. |
+| Posterior | Compuertas jugables | Los quince acertijos siguen en laboratorio. Integrarlos requiere diseño de rutas, frecuencia, recompensa, guardado y consecuencias; V0.2 no los conecta silenciosamente. |
 
-## 11. Siguiente bloque recomendado, todavía no implementado
+Estos límites no reabren V0.2. Una prueba humana puede justificar correcciones puntuales o una versión posterior, pero el alcance de las dieciocho entregas queda registrado como terminado.
 
-La continuación propuesta es **Beatriz y la recepción de nutrientes**, como primer tramo de la profundización de encargos largos. Conviene anunciar ese alcance antes de modificar código. No desarrollar simultáneamente toda la red.
+## 11. Siguiente trabajo acordado
 
-El encargo ya tiene reserva protegida, recogida en Universidad de Chile, decisión sobre el sello, retorno a Libertadores y descuento en raciones. La escena regional del cajón y su cuenta en Plaza también existe. Revisar esas piezas permite escribir un conflicto de hidroponía y recepción que nazca de trabajo real, en lugar de añadir otro recado de listas.
+El siguiente trabajo es **visual**. Debe usar lo ya aprobado: metal oscuro, marfil, cian, ámbar, óxido limitado a marcos, tipografía del juego, retratos completos y controles con apariencia de dispositivo. El avance continuará por bloques para evitar aplicar el mismo tratamiento indiscriminadamente a todas las secciones.
 
-El resultado buscado es una llegada donde Beatriz responda a cómo llegó la carga y a qué pudo comprobar el equipo; una necesidad personal o comunitaria concreta; y una continuación en otra visita que recuerde ese resultado. Si se añade un efecto mecánico, debe tener un coste o beneficio visible y no duplicar el descuento existente. El juego no debe afirmar que salvó una cosecha o a una familia sin un hecho que lo sostenga.
-
-Ese bloque debería incluir la corrección breve de la ayuda desactualizada y preservar las partidas antiguas. Después se podría abordar Guzmán o Jiménez según lo que se observe jugando. Esta es una dirección recomendada, no una descripción de contenido ya disponible.
+Beatriz, Guzmán, Jiménez, la continuidad de red, la economía y la ayuda de tres tramos ya están implementados. No deben reaparecer como próximos bloques por seguir mencionados en documentos históricos. El laboratorio de compuertas permanece disponible por URL directa y fuera de la campaña hasta que el usuario decida integrarlo.
 
 ## 12. Qué se comprobó y qué no
 
-Se ejecutó la suite completa sobre el código `9fe2327` al preparar este informe: **345 pruebas, 345 aprobadas, 0 fallos**, con `node --test --test-reporter=tap tests/*.test.cjs`. El ajuste del catálogo también pasó previamente los 18 casos de `tests/courier-travel.test.cjs`.
+Se ejecutó la suite completa al cerrar V0.2: **385 pruebas, 385 aprobadas, 0 fallos**, con `npm test`. La cobertura de cierre añade la tabla de provisiones, contratos anteriores, información del expediente y marcadores públicos de versión a la cobertura acumulada.
 
 La suite cubre, entre otros aspectos, inicio y guardado, progresión y bloqueos, itinerarios, costes, pagos únicos, carga, combate y saqueo, migración, derrota y reintento, recuerdos de personajes, negociación, descansos y controles de interfaz. La cadena de ocho encargos tiene recorridos automáticos en varias semillas. Las nuevas pruebas de corredores verifican combinaciones de decisiones, asistencia sin botiquín, pertenencias y compatibilidad.
 
 Las pruebas de continuidad de la expedición utilizan preparación controlada y, en recorridos integrales, reposición de salud/energía y resolución de combate para comprobar conexiones narrativas. No deben citarse como demostración del balance de supervivencia. Linkedom comprueba estructura e interacción DOM, pero no representa el dibujo real de CSS en cada dispositivo.
 
-La revisión de navegador del último modal confirmó retrato cargado, fila compacta, apertura del detalle y retorno con desplazamiento en cero. Los despliegues de los dos dominios devolvieron el marcador actualizado `v=15-compact-catalog`. No se hizo una nueva partida humana completa después del ajuste.
+Las revisiones visuales anteriores confirmaron las superficies detalladas en los bloques correspondientes. El cierre identifica V0.2 y corrige documentación; no afirma una nueva partida humana completa después del balance de provisiones.
 
 Para ejecutar las pruebas desde una copia nueva, instalar las dependencias de desarrollo de `package.json` con `npm install` y ejecutar `npm test`. La dependencia DOM declarada es `linkedom` 0.18.13. No se requieren las carpetas temporales ni las sesiones de herramientas del chat anterior.
 
@@ -261,4 +259,4 @@ La [bibliografía narrativa ampliada](docs/BIBLIOGRAFIA-NARRATIVA.md), incorpora
 
 ## 14. Contexto listo para abrir otro chat
 
-> Continúa el desarrollo de Neo Santiago 2130 en `dbastias37/Neosantiago-rpg-demo`. Lee primero `INFORME-CONTINUIDAD-V0.2.md`, verifica el estado actual de `main` y revisa los archivos correspondientes antes de editar. Están implementadas las entregas 1–12 y el catálogo compacto de encargos. V0.2 sigue abierta. El siguiente bloque recomendado es profundizar la llegada de nutrientes a Beatriz y su continuidad en una visita posterior; también está pendiente corregir la ayuda que aún habla de dos tramos iniciales. Anuncia el alcance antes de comenzar. Mantén narrativa humana y concreta, identidad visual compartida, rutas descubiertas progresivamente, efectos ligados a hechos comprobados y compatibilidad de guardados. No repitas las mejoras ya integradas ni alteres las definiciones históricas de misiones en curso. Las modificaciones para esta actualización y su integración a main están autorizadas. Al terminar, registra lo implementado, pruebas, limitaciones y siguiente pendiente en el informe.
+> Continúa el desarrollo de Neo Santiago 2130 en `dbastias37/Neosantiago-rpg-demo`. Lee primero `INFORME-CONTINUIDAD-V0.2.md` y `docs/version-0.2.md`, verifica `main` y revisa los archivos correspondientes antes de editar. V0.2 está cerrada con dieciocho entregas y 385 pruebas. El siguiente trabajo acordado es visual, por bloques, usando la paleta, tipografía, metal oscuro, óxido limitado y retratos completos ya aprobados. Beatriz, Guzmán, Jiménez, continuidad de red, Créditos, pagos y provisiones ya están implementados; no los planifiques como pendientes por leer documentos históricos. El laboratorio de compuertas sigue separado. Mantén narrativa humana y concreta, rutas descubiertas progresivamente, efectos ligados a hechos comprobados y compatibilidad de guardados. Al terminar un nuevo bloque, registra cambios, pruebas y límites en este informe.

@@ -1,9 +1,10 @@
 {
   "schema_version": 1,
   "content_version": "2026-09-18.production.2",
+  "release_version": "0.2",
   "runtime_enabled": true,
   "status": "playable",
-  "balance_status": "initial_release",
+  "balance_status": "v0.2_reviewed",
   "save_key": "neosantiago.mensajeros.production.v1",
   "weights": {
     "low": [
