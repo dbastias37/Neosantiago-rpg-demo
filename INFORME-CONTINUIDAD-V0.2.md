@@ -8,7 +8,7 @@ Este es el punto de entrada para continuar en otro chat. Resume lo implementado,
 
 ## Estado vigente — entrega 18: cierre de V0.2
 
-V0.2 queda cerrada con [notas de versión, alcance y límites](docs/version-0.2.md). La portada, la entrada de Los Mensajeros y sus metadatos identifican la versión sin cambiar el esquema de guardado. La revisión final confirma moneda en Créditos, Varela definitivo, ocho encargos, rutas y contactos graduales, continuidad de entregas, provisiones reducidas y separación del laboratorio de compuertas. La documentación deja de presentar Beatriz, Guzmán, Jiménez, la ayuda de tres tramos o el cierre de versión como tareas pendientes. **385 pruebas aprobadas**. El siguiente trabajo acordado es visual y debe partir de las superficies ya aprobadas.
+V0.2 queda cerrada con [notas de versión, alcance y límites](docs/version-0.2.md). La portada, la entrada de Los Mensajeros y sus metadatos identifican la versión sin cambiar el esquema de guardado. La revisión final confirma moneda en Créditos, Varela definitivo, ocho encargos, rutas y contactos graduales, continuidad de entregas y provisiones reducidas. Una actualización posterior integra [las compuertas numéricas en los desvíos de Encargos](docs/compuertas-encargos-0.2.md): diez casos, cuatro intentos, pistas y estado persistente; continuidad sigue en laboratorio. La documentación deja de presentar Beatriz, Guzmán, Jiménez, la ayuda de tres tramos o el cierre de versión como tareas pendientes. **390 pruebas aprobadas**. El siguiente trabajo acordado vuelve a ser visual y debe partir de las superficies ya aprobadas.
 
 ## Entrega anterior — entrega 17: escasez y ritmo
 
@@ -54,7 +54,7 @@ El mapa de Mensajeros ahora se presenta como una [pantalla montada en un panel d
 
 **Bloque 6 — Bitácora de Expedición (21 de septiembre):** se integra la opción A con `expedition-journal.css`, manteniendo la paleta, fuente y textura aprobadas. Ubicación, objetivo, equipo y recursos acompañan al relato y las decisiones; en móvil la lectura y sus opciones preceden al estado del grupo. Los retratos se muestran completos. Los valores, documentos contextuales, condiciones, costes, fichas e inhibidor siguen usando el renderizador de campaña. Cada nueva situación comienza arriba; consultar inventario conserva la posición de lectura. No se importan datos estáticos ni vistas previas del laboratorio, ni se cambian reglas, narrativa o guardados. `tests/expedition-preview.html` permite revisar tres escenas reales con almacenamiento en memoria y un iframe aislado sin acceso a partidas. 40 pruebas dirigidas aprobadas de decisiones, actividades y estabilidad. La prueba A/B y el laboratorio de compuertas se conservan separados. Próximo bloque visual propuesto: inicio, actividades, ayuda y desenlaces, sujeto a revisión del usuario.
 
-**Laboratorio separado:** los [tres paneles de compuertas con quince acertijos](docs/laboratorio-compuertas-0.2.md) siguen disponibles por URL directa en `labs/compuertas/`. El usuario pidió conservarlos en el repositorio para una futura implementación. El mapa toma su lenguaje visual, sin importar su código ni integrar compuertas a viajes, combates o guardados de la campaña. Guzmán se profundiza en la entrega 14; Jiménez sigue pendiente.
+**Laboratorio y producción:** los [tres paneles de compuertas con quince acertijos](docs/laboratorio-compuertas-0.2.md) siguen disponibles por URL directa en `labs/compuertas/`. La actualización posterior reutiliza los diez casos numéricos en desvíos de Encargos y conserva allí sus intentos; el panel de continuidad sigue aislado. Las notas anteriores de esta sección son historial del momento en que todavía no existía esa integración.
 
 ### Narrativa y economía — entrega 13
 
@@ -227,7 +227,7 @@ Cambiar el texto de algunas acciones podía alterar la inferencia de efectos psi
 | Media | Efectos de decisión explícitos | Algunas zonas antiguas de `game-v2.js` todavía infieren efectos psicológicos desde palabras de la opción. Las entregas nuevas están protegidas, pero sustituir toda esa dependencia es un trabajo técnico posterior. |
 | Media | Más continuidad y arcos corales | Los contactos y protagonistas ya recuerdan hechos concretos, aunque el sistema no simula vidas autónomas indefinidas ni ofrece la misma profundidad en cada escena. Cada ampliación necesita fuente, momento y consecuencia. |
 | Posterior | Arte situado por estación | Se reutilizan fondos. El arte nuevo debe aportar orientación o identidad y respetar retratos, paleta y lenguaje visual vigentes. |
-| Posterior | Compuertas jugables | Los quince acertijos siguen en laboratorio. Integrarlos requiere diseño de rutas, frecuencia, recompensa, guardado y consecuencias; V0.2 no los conecta silenciosamente. |
+| Completado después del cierre | Compuertas numéricas jugables | Diez acertijos abren desvíos de Encargos con estado guardado, coste diferido y bloqueo tras cuatro fallos. Los cinco casos de continuidad siguen en laboratorio. |
 
 Estos límites no reabren V0.2. Una prueba humana puede justificar correcciones puntuales o una versión posterior, pero el alcance de las dieciocho entregas queda registrado como terminado.
 
@@ -235,7 +235,7 @@ Estos límites no reabren V0.2. Una prueba humana puede justificar correcciones 
 
 El siguiente trabajo es **visual**. Debe usar lo ya aprobado: metal oscuro, marfil, cian, ámbar, óxido limitado a marcos, tipografía del juego, retratos completos y controles con apariencia de dispositivo. El avance continuará por bloques para evitar aplicar el mismo tratamiento indiscriminadamente a todas las secciones.
 
-Beatriz, Guzmán, Jiménez, la continuidad de red, la economía y la ayuda de tres tramos ya están implementados. No deben reaparecer como próximos bloques por seguir mencionados en documentos históricos. El laboratorio de compuertas permanece disponible por URL directa y fuera de la campaña hasta que el usuario decida integrarlo.
+Beatriz, Guzmán, Jiménez, la continuidad de red, la economía y la ayuda de tres tramos ya están implementados. No deben reaparecer como próximos bloques por seguir mencionados en documentos históricos. El laboratorio de compuertas permanece disponible por URL directa. Sus dos familias numéricas ya están integradas en Encargos; continuidad sigue pendiente de una decisión posterior.
 
 ## 12. Qué se comprobó y qué no
 
@@ -259,4 +259,4 @@ La [bibliografía narrativa ampliada](docs/BIBLIOGRAFIA-NARRATIVA.md), incorpora
 
 ## 14. Contexto listo para abrir otro chat
 
-> Continúa el desarrollo de Neo Santiago 2130 en `dbastias37/Neosantiago-rpg-demo`. Lee primero `INFORME-CONTINUIDAD-V0.2.md` y `docs/version-0.2.md`, verifica `main` y revisa los archivos correspondientes antes de editar. V0.2 está cerrada con dieciocho entregas y 385 pruebas. El siguiente trabajo acordado es visual, por bloques, usando la paleta, tipografía, metal oscuro, óxido limitado y retratos completos ya aprobados. Beatriz, Guzmán, Jiménez, continuidad de red, Créditos, pagos y provisiones ya están implementados; no los planifiques como pendientes por leer documentos históricos. El laboratorio de compuertas sigue separado. Mantén narrativa humana y concreta, rutas descubiertas progresivamente, efectos ligados a hechos comprobados y compatibilidad de guardados. Al terminar un nuevo bloque, registra cambios, pruebas y límites en este informe.
+> Continúa el desarrollo de Neo Santiago 2130 en `dbastias37/Neosantiago-rpg-demo`. Lee primero `INFORME-CONTINUIDAD-V0.2.md` y `docs/version-0.2.md`, verifica `main` y revisa los archivos correspondientes antes de editar. V0.2 está cerrada y la integración posterior de compuertas eleva la suite a 390 pruebas. El siguiente trabajo acordado es visual, por bloques, usando la paleta, tipografía, metal oscuro, óxido limitado y retratos completos ya aprobados. Beatriz, Guzmán, Jiménez, continuidad de red, Créditos, pagos y provisiones ya están implementados; no los planifiques como pendientes por leer documentos históricos. Los diez casos numéricos del laboratorio ya están conectados a desvíos; el panel de continuidad sigue separado. Mantén narrativa humana y concreta, rutas descubiertas progresivamente, efectos ligados a hechos comprobados y compatibilidad de guardados. Al terminar un nuevo bloque, registra cambios, pruebas y límites en este informe.

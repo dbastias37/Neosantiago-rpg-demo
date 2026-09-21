@@ -1,5 +1,5 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
-const {connectedWorld,atOrigin}=require('./courier-fixtures.cjs');
+const {connectedWorld,atOrigin,solveGate}=require('./courier-fixtures.cjs');
 const source=JSON.parse(fs.readFileSync(path.join(__dirname,'../extensions/mensajeros/production.json')));
 async function setup(){const E=await import('../extensions/mensajeros/production.mjs');return {E,d:E.prepare(source)};}
 function finish(E,d,w,choice){
@@ -12,7 +12,7 @@ function finish(E,d,w,choice){
   if(w.run.status!=='active')break;
   const options=E.options(d,w).filter(o=>E.optionAvailable(w,o));
   const o=w.run.pending.combat?(options.find(o=>o.id==='fire')||options.find(o=>o.id==='melee')):options.find(o=>o.id===choice)||options.find(o=>['scout','jam-skill','avoid','continue','assist'].includes(o.id))||options[0];
-  assert.ok(o);w=E.restore(d,E.serialize(E.choose(d,w,o.id)));
+  assert.ok(o);w=E.choose(d,w,o.id);w=solveGate(E,d,w);w=E.restore(d,E.serialize(w));
  }
  assert.equal(w.run.status,'completed',w.run.log.join('\n'));return w;
 }
@@ -61,7 +61,7 @@ test('only restored Plaza supplies rest, at the normal duration and once per sto
  const without=structuredClone(w);without.effects=[];assert.throws(()=>E.rest(d,without),/Falta/);without.effects=['guzman-01'];without.run.index=1;without.location='uchile';assert.equal(E.shelteredPlaza(d,without),false);assert.throws(()=>E.rest(d,without),/Falta/);
 });
 test('returning to repaired Plaza acknowledges the delivery and keeps the acknowledgement after reload',async()=>{
- const {E,d}=await setup();let w=deliver(E,d,connectedWorld(E,d,{seed:1}),'guzman-01');w=finish(E,d,E.travelToMission(d,w,'beatriz-01'));w=E.start(d,w,'beatriz-01');w=E.advance(d,w);assert.equal(w.run.pending.to,'plaza');const options=E.options(d,w).filter(o=>E.optionAvailable(w,o));let o=options.find(o=>['continue','scout','jam-skill','avoid'].includes(o.id))||options[0];assert.ok(o);w=E.choose(d,w,o.id);assert.equal(E.here(d,w).id,'plaza');assert.equal(w.run.log.filter(x=>x.includes('La torreta de Plaza')).length,1);w=E.restore(d,E.serialize(w));assert.equal(w.run.log.filter(x=>x.includes('La torreta de Plaza')).length,1);
+ const {E,d}=await setup();let w=deliver(E,d,connectedWorld(E,d,{seed:1}),'guzman-01');w=finish(E,d,E.travelToMission(d,w,'beatriz-01'));w=E.start(d,w,'beatriz-01');w=E.advance(d,w);assert.equal(w.run.pending.to,'plaza');const options=E.options(d,w).filter(o=>E.optionAvailable(w,o));let o=options.find(o=>['continue','scout','jam-skill','avoid'].includes(o.id))||options[0];assert.ok(o);w=solveGate(E,d,E.choose(d,w,o.id));assert.equal(E.here(d,w).id,'plaza');assert.equal(w.run.log.filter(x=>x.includes('La torreta de Plaza')).length,1);w=E.restore(d,E.serialize(w));assert.equal(w.run.log.filter(x=>x.includes('La torreta de Plaza')).length,1);
 });
 test('reset removes discoveries and infrastructure; malformed discovery saves are rejected',async()=>{
  const {E,d}=await setup(),w=E.createWorld(d,{seed:1});for(const patch of [{known:['missing']},{visited:['missing']},{version:99},{known:['relevo-01','relevo-01']}]){const bad=structuredClone(w);Object.assign(bad.progression,patch);assert.throws(()=>E.restore(d,JSON.stringify(bad)),/Progreso/);}assert.deepEqual(w.effects,[]);assert.deepEqual(w.progression.known,['relevo-01']);

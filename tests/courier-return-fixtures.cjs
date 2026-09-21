@@ -1,5 +1,5 @@
 const fs=require('node:fs'),path=require('node:path');
-const {connectedWorld,atOrigin}=require('./courier-fixtures.cjs');
+const {connectedWorld,atOrigin,solveGate}=require('./courier-fixtures.cjs');
 exports.setup=async()=>{const E=await import('../extensions/mensajeros/production.mjs');return {E,d:E.prepare(JSON.parse(fs.readFileSync(path.join(__dirname,'../extensions/mensajeros/production.json'))))};};
 function finish(E,d,source,{aid='assist',fight=false}={}){
  let w=source,fought=false;
@@ -12,7 +12,7 @@ function finish(E,d,source,{aid='assist',fight=false}={}){
   else if(w.run.pending.category==='rescue')o=aid==='none'?os.find(o=>['carry','escort'].includes(o.id)):os.find(o=>o.id===aid);
   else if(fight&&!fought&&w.run.pending.category==='hostile'){o=os.find(o=>o.combat);fought=true;}
   o??=os.find(o=>['scout','jam-skill','avoid','continue'].includes(o.id))||os[0];
-  if(!o)throw Error('No action on '+w.run.index);w=E.restore(d,E.serialize(E.choose(d,w,o.id)));
+  if(!o)throw Error('No action on '+w.run.index);w=E.choose(d,w,o.id);w=solveGate(E,d,w);w=E.restore(d,E.serialize(w));
  }
  if(w.run.status!=='completed')throw Error(w.run.log.join('\n'));return w;
 }

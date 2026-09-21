@@ -16,6 +16,8 @@ import {missionOpen,refreshProgression,restoreProgression} from './progression.m
 export {missionOpen,knownMissions,knownNodes,nextLead} from './progression.mjs';
 import * as Base from './engine.mjs';
 import {prepareJourneys,migrateNetworkSave,entryPoints} from './network.mjs';
+import {PUZZLES} from '../../labs/compuertas/puzzles.mjs';
+import {freshSession,restoreSession,transition} from '../../labs/compuertas/core.mjs';
 export {mission,route,here,nextEdge,effectiveRisk,eventFor,serialize} from './engine.mjs';
 const copy=x=>JSON.parse(JSON.stringify(x));
 const need=(ok,msg)=>{if(!ok)throw Error(msg);};
@@ -50,6 +52,17 @@ function spend(r,cost={}){for(const [id,n]of Object.entries(cost))need((r.suppli
 function gainOwned(data,r,member,id,qty){addBag(data,member,id,qty);r.ownedStock[id]=(r.ownedStock[id]||0)+qty;sync(r);}
 function time(r,n){r.minutes+=n;if(r.jammerOn){r.battery=Math.max(0,r.battery-n);if(!r.battery){r.jammerOn=false;r.log.push('La batería del inhibidor se agotó.');}}}
 function random(w,salt){let n=2166136261;for(const c of String(w.seed)+salt)n=Math.imul(n^c.charCodeAt(0),16777619);return(n>>>0)/4294967296;}
+const NUMERIC_GATES=PUZZLES.filter(p=>p.kind==='numeric');
+function detourGateOption(option){return ['detour','scout','echo-path'].includes(option.id)||(option.id==='avoid'&&/desv[ií]o|paso lateral|otro acceso|rodear/i.test(option.label));}
+function gatePuzzle(id){return NUMERIC_GATES.find(p=>p.id===id);}
+function gateKey(w){const p=w.run.pending;return [w.run.mission,p.edgeIndex,p.id].join(':');}
+function selectGate(w){return NUMERIC_GATES[Math.floor(random(w,'gate:'+gateKey(w))*NUMERIC_GATES.length)];}
+function createGate(w,choice){const puzzle=selectGate(w);return {version:1,key:gateKey(w),puzzle:puzzle.id,choice,session:freshSession(puzzle)};}
+function validatedGate(data,w){
+ const gate=w.run?.pending?.gate,puzzle=gatePuzzle(gate?.puzzle);need(gate?.version===1&&gate.key===gateKey(w)&&puzzle&&typeof gate.choice==='string','Compuerta inválida.');
+ need(options(data,w).some(o=>o.id===gate.choice&&o.gate==='numeric'),'Desvío de compuerta inválido.');
+ gate.session=restoreSession(puzzle,gate.session);return {gate,puzzle};
+}
 function memberBase(data,c){const d=definition(data,c.id);c.skills??=[];c.bag??=copy(d.bag||[]);c.equipment={...(d.equipment||{}),...(c.equipment||{})};return c;}
 function ownedParty(data,r){
  const keep={};for(const [id,n]of Object.entries(r.ownedStock||{}))keep[id]=Math.min(n,r.supplies[id]||0);
@@ -107,7 +120,7 @@ export function advance(data,source){
  if(r.rescued?.mode==='carry'&&r.party.find(x=>x.id==='bruno')?.hp>0&&r.status==='active')r.condition=Math.min(100,r.condition+(has(r.party.find(x=>x.id==='bruno'),'carry')?2:1));
  w.location=p.from;return w;
 }
-export function optionAvailable(w,o){return Base.optionAvailable(w,o)&&(!o.requiresCrew||w.run.party.some(p=>p.id===o.requiresCrew&&p.hp>0))&&(!o.once||(w.run.used[o.once]||0)<(o.limit||1));}
+export function optionAvailable(w,o){return Base.optionAvailable(w,o)&&(!o.requiresCrew||w.run.party.some(p=>p.id===o.requiresCrew&&p.hp>0))&&(!o.once||(w.run.used[o.once]||0)<(o.limit||1))&&!(o.gate&&w.run.pending?.gate?.session?.phase==='locked');}
 function weapon(data,actor){return data.items[actor?.equipment?.weapon]||null;}
 export function options(data,w){
  const r=w.run,p=r?.pending;if(!p||r.status!=='active')return [];
@@ -126,11 +139,11 @@ export function options(data,w){
  let opts=Base.options(data,w).map(copy);if(p.category==='delivery')opts[0].label=r.mission==='adasme-01'?'Acompañar a Darío hasta Adasme':'Entregar a '+Base.mission(data,w).recipient;
  if(p.category==='hostile'){
   if(Base.eventFor(data,w)?.mandatory)return [...opts,{id:'withdraw',label:'Volver al andén · el paso seguirá bloqueado'}];
-  opts.unshift({id:'scout',label:'Rocío busca un paso silencioso · 1 uso por encargo',requiresCrew:'rocio',once:'scout',limit:has(r.party.find(x=>x.id==='rocio'),'trail')?2:1},{id:'decoy',label:'Distraer con un señuelo · 1 unidad',cost:{decoy:1}});
+  opts.unshift({id:'scout',label:'Rocío busca un paso silencioso · compuerta · 1 uso por encargo',requiresCrew:'rocio',once:'scout',limit:has(r.party.find(x=>x.id==='rocio'),'trail')?2:1},{id:'decoy',label:'Distraer con un señuelo · 1 unidad',cost:{decoy:1}});
   if(Base.eventFor(data,w)?.electronic)opts.unshift({id:'jam-skill',label:'Tomás confunde el sensor · 1 uso por encargo',requiresCrew:'tomas',once:'jam'});
-  opts.unshift({id:'echo-path',label:'Tomás escucha y encuentra un desvío'+(Base.eventFor(data,w)?.electronic?' · ruido: desgaste 6':' · desgaste 2'),requiresCrew:'tomas',once:'echo',limit:has(r.party.find(x=>x.id==='tomas'),'echo')?2:1});opts.push({id:'withdraw',label:'Retroceder al andén · el paso seguirá bloqueado'});
+  opts.unshift({id:'echo-path',label:'Tomás escucha y encuentra un desvío · compuerta'+(Base.eventFor(data,w)?.electronic?' · ruido: desgaste 6':' · desgaste 2'),requiresCrew:'tomas',once:'echo',limit:has(r.party.find(x=>x.id==='tomas'),'echo')?2:1});opts.push({id:'withdraw',label:'Retroceder al andén · el paso seguirá bloqueado'});
  }
- return opts;
+ return opts.map(o=>detourGateOption(o)?{...o,gate:'numeric',label:o.label.includes('compuerta')?o.label:o.label+' · compuerta'}:o);
 }
 function lootFor(w,electronic,serial,index){
  const entries=electronic?[['electronics',1],['scrap',1],...(random(w,'battery:'+serial+':'+index)<.55?[['battery',1]]:[])]:[['scrap',1],[random(w,'ammo:'+serial+':'+index)<.5?'ammo9':'ammo556',1+Math.floor(random(w,'qty:'+serial+':'+index)*2)],...(random(w,'medical:'+serial+':'+index)<.4?[['bandage',1]]:[])];
@@ -174,6 +187,11 @@ function combatTurn(data,w,id){
 }
 export function choose(data,source,id){
  need(source.run?.status==='active','No hay un encargo activo.');const option=options(data,source).find(o=>o.id===id);need(option,'Acción no disponible.');need(optionAvailable(source,option),'No se cumplen los requisitos de esta acción.');let w=copy(source),r=w.run,p=r.pending;
+ if(option.gate==='numeric'){
+  if(!p.gate){p.gate=createGate(w,id);r.log.push('El desvío termina ante una compuerta de servicio. El panel todavía conserva alimentación.');}
+  const {gate}=validatedGate(data,w);gate.choice=id;
+  if(gate.session.phase!=='success')return w;
+ }else if(p.gate)delete p.gate;
  if(p.combat){spend(r,option.cost);return combatTurn(data,w,id);}if(option.combat){openCombat(data,w);return w;}if(id==='withdraw'){time(r,2);retreat(w);return w;}
  if(['scout','jam-skill','decoy','echo-path'].includes(id)){spend(r,option.cost);if(option.once)r.used[option.once]=(Number(r.used[option.once])||0)+1;if(id==='echo-path'){r.condition=Math.max(0,r.condition-(Base.eventFor(data,w)?.electronic?6:2));if(!r.condition){r.status='failed';return w;}}r.evaded++;time(r,2);r.log.push(option.label+'.');arrive(data,w);return w;}
  const wasDelivery=p.category==='delivery',pickup=Base.mission(data,w).pickup,before=copy(r.supplies);w=Base.choose(data,w,id);r=w.run;mirrorChanges(data,r,before);if(!r.pending){rememberEncounter(data,w,p,option);rememberCorridor(data,w,p,option);}
@@ -189,6 +207,24 @@ export function choose(data,source,id){
   addCombatXp(r,35);w.crew=copy(ownedParty(data,r));w.location=Base.here(data,w).id;if(r.mission==='morales-01')w.regions.centro=Math.max(0,w.regions.centro-1);r.log[r.log.length-1]='Entrega completada · '+r.receipt.amount+' créditos'+(penalty?' tras descontar '+penalty+' por demora':' sin descuento por demora')+'. '+r.receipt.effect;
  }
  refreshProgression(data,w);refreshAftermath(w);refreshBeatriz(w);refreshGuzman(w);refreshJimenez(w);updateCheckpoint(data,w);return w;
+}
+export function currentGate(data,w){
+ if(!w.run?.pending?.gate)return null;const snapshot=copy(w),{gate,puzzle}=validatedGate(data,snapshot);return {key:gate.key,choice:gate.choice,puzzle:copy(puzzle),session:copy(gate.session)};
+}
+export function gateAction(data,source,action){
+ need(source.run?.status==='active'&&source.run.pending?.gate,'No hay una compuerta activa.');
+ need(action&&['start','continue','hint','digit','erase','clear','submit'].includes(action.type),'Acción de panel no disponible.');
+ const w=copy(source),r=w.run,{gate,puzzle}=validatedGate(data,w),before=gate.session.phase;
+ gate.session=transition(gate.session,puzzle,action);
+ if(action.type==='start'&&before==='intro')r.log.push('El equipo examina la inscripción y los documentos que quedaron junto al panel.');
+ if(gate.session.phase!==before&&gate.session.phase==='failed')r.log.push('La compuerta rechaza la clave. Quedan '+gate.session.remaining+' intentos.');
+ if(gate.session.phase!==before&&gate.session.phase==='locked')r.log.push('El panel agota sus intentos y bloquea este desvío. El grupo tendrá que buscar otra salida.');
+ if(gate.session.phase!==before&&gate.session.phase==='success')r.log.push('La clave coincide con el registro. La compuerta libera la galería de servicio.');
+ return w;
+}
+export function completeGate(data,source){
+ need(source.run?.status==='active'&&source.run.pending?.gate,'No hay una compuerta activa.');
+ const checked=copy(source),{gate}=validatedGate(data,checked);need(gate.session.phase==='success','La compuerta todavía no está abierta.');return choose(data,checked,gate.choice);
 }
 export function lootRemaining(w){const c=w.run?.pending?.combat;return c?.phase==='loot'?c.enemies.reduce((n,e)=>n+e.loot.reduce((a,x)=>a+x.qty,0),0):0;}
 export function canLoot(data,w,memberId,itemId){const r=w.run,c=r?.pending?.combat,m=r?.party.find(x=>x.id===memberId);return !!(c?.phase==='loot'&&m?.hp>0&&data.items[itemId]&&bagUsed(m)<bagCapacity(data,m));}
@@ -317,6 +353,7 @@ export function restore(data,text){
   r.party.forEach(c=>memberBase(data,c));r.ownedStock??=copy(w.stock||{});r.borrowedStock??={};r.flags??=[];r.used??={};r.timeLimit??=(Base.mission(data,w).time_limit??null);r.rewardPenalty??=0;
   if(!r.party.some(c=>c.bag?.length)){for(const [id,n]of Object.entries(r.supplies||{}))distribute(data,r.party,id,n);}sync(r);
   const combat=r.pending?.combat;if(combat){combat.phase??='combat';combat.enemies.forEach((e,i)=>e.loot??=lootFor(w,e.id==='drone',r.combatSerial||0,i));}
+  if(r.pending?.gate)validatedGate(data,w);
   if(r.checkpoint?.snapshot?.party)r.checkpoint.snapshot.party.forEach(c=>memberBase(data,c));
  }
  for(const party of [w.crew,w.run?.party,w.run?.checkpoint?.snapshot?.party].filter(Boolean)){

@@ -1,5 +1,5 @@
 const test=require('node:test'),assert=require('node:assert/strict');
-const {connectedWorld,atOrigin}=require('./courier-fixtures.cjs');
+const {connectedWorld,atOrigin,solveGate}=require('./courier-fixtures.cjs');
 const {setup,finish}=require('./courier-return-fixtures.cjs');
 
 test('remote contacts require a physical approach; previews do not mutate or reveal locked contacts',async()=>{
@@ -43,13 +43,13 @@ test('the rescue uses the nearest preparation point without inventing visits or 
 test('starting at Vicuña keeps the full extraction and a moving mission keeps its accepted itinerary',async()=>{
  const {E,d}=await setup();let w=E.start(d,atOrigin(d,connectedWorld(E,d,{seed:1}),'adasme-01'),'adasme-01');
  assert.equal(w.run.startIndex,0);assert.equal(w.run.timeLimit,140);w=E.advance(d,w);
- const o=E.options(d,w).find(o=>E.optionAvailable(w,o)&&['scout','avoid','continue'].includes(o.id))||E.options(d,w).find(o=>E.optionAvailable(w,o));w=E.choose(d,w,o.id);
+ const o=E.options(d,w).find(o=>E.optionAvailable(w,o)&&['scout','avoid','continue'].includes(o.id))||E.options(d,w).find(o=>E.optionAvailable(w,o));w=solveGate(E,d,E.choose(d,w,o.id));
  assert.equal(w.location,'macul');assert.equal(E.departurePlan(d,w,'adasme-01').index,0);assert.equal(E.departurePlan(d,w,'adasme-01').limit,140);
 });
 
 test('retry restores the real approach checkpoint and its rolls; abandonment starts the next path from that stop',async()=>{
  const {E,d}=await setup();let w=E.travelToMission(d,connectedWorld(E,d,{seed:1}),'ana-01');
- w=E.advance(d,w);const o=E.options(d,w).find(o=>E.optionAvailable(w,o)&&['scout','avoid','continue'].includes(o.id))||E.options(d,w).find(o=>E.optionAvailable(w,o));w=E.choose(d,w,o.id);
+ w=E.advance(d,w);const o=E.options(d,w).find(o=>E.optionAvailable(w,o)&&['scout','avoid','continue'].includes(o.id))||E.options(d,w).find(o=>E.optionAvailable(w,o));w=solveGate(E,d,E.choose(d,w,o.id));
  assert.equal(w.location,'moneda');const stopped=E.abandon(d,w);assert.equal(stopped.location,'moneda');assert.equal(d.routes[E.departurePlan(d,stopped,'romero-01').journey.route].nodes[0],'moneda');
  w.run.status='failed';const rolls=structuredClone(w.run.rolls);w=E.retry(d,w);assert.equal(w.location,w.run.checkpoint.node);assert.equal(w.location,'heroes');assert.deepEqual(w.run.rolls,rolls);assert.deepEqual(E.restore(d,E.serialize(w)),w);
 });

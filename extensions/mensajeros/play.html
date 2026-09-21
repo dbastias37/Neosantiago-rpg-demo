@@ -26,8 +26,9 @@
 </main>
 <footer class="footer"><span>Mapa de la red conocida · nuevos recorridos al completar entregas</span><button id="journalButton" class="text-button" aria-haspopup="dialog">Registro de viaje</button><button id="resetCouriers" class="text-button">Reiniciar encargos</button></footer><div id="announcement" class="sr-only" aria-live="polite"></div>
 <iframe id="refugeLayer" class="courier-refuge-frame hidden" src="about:blank" title="Refugio Los Héroes"></iframe><iframe id="profileLayer" class="courier-profile-frame hidden" title="Equipo de Los Mensajeros" allow="autoplay" src="about:blank"></iframe>
+<iframe id="gateLayer" class="courier-gate-frame hidden" title="Compuerta de servicio del Metro" src="about:blank"></iframe>
 <iframe id="battleLayer" class="courier-combat-frame hidden" title="Combate de Los Mensajeros" allow="autoplay" src="about:blank"></iframe>
 <dialog id="dialog" aria-labelledby="dialogTitle"><div class="dialog-head"><span id="dialogKicker" class="eyebrow"></span><button class="close" data-close="dialog" aria-label="Cerrar ventana">×</button></div><div id="dialogBody"></div></dialog>
 <dialog id="itemDialog" aria-labelledby="itemTitle"><div class="dialog-head"><span class="eyebrow">INVENTARIO / INSPECCIÓN</span><button class="close" data-close="itemDialog" aria-label="Cerrar objeto">×</button></div><div id="itemBody"></div><div class="dialog-actions"><button data-close="itemDialog" class="primary">Volver</button></div></dialog>
-<script type="module">import("./play.mjs?v=25-scarcity").catch(()=>{document.getElementById("bootStatus").innerHTML='No se pudo cargar la central. <button onclick="location.reload()">Reintentar</button>';});</script>
+<script type="module">import("./play.mjs?v=26-compuertas").catch(()=>{document.getElementById("bootStatus").innerHTML='No se pudo cargar la central. <button onclick="location.reload()">Reintentar</button>';});</script>
 </body></html>

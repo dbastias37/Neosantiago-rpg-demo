@@ -20,8 +20,8 @@ El libro de referencia de la adaptación está en [Neo Santiago 2130](https://ne
 
 ## Laboratorio de compuertas
 
-[Probar los tres paneles y sus quince acertijos](https://neosantiago-rpg-demo.onrender.com/labs/compuertas/). Incluye dos teclados numéricos y un gabinete de continuidad, con relatos, pistas, intentos y resultados de apertura. Es un laboratorio independiente de las partidas del juego. El [documento de diseño y continuidad](docs/laboratorio-compuertas-0.2.md) registra sus reglas, soluciones y límites.
+[Probar los tres paneles y sus quince acertijos](https://neosantiago-rpg-demo.onrender.com/labs/compuertas/). Incluye dos teclados numéricos y un gabinete de continuidad, con relatos, pistas, intentos y resultados de apertura. El laboratorio mantiene un guardado independiente; sus diez casos numéricos también aparecen ahora en los desvíos de Encargos, mientras el gabinete de continuidad sigue reservado al laboratorio. El [documento de diseño y continuidad](docs/laboratorio-compuertas-0.2.md) registra sus reglas, soluciones y límites.
 
 ## Verificación
 
-Instalar las dependencias de desarrollo con `npm install` y ejecutar `npm test`. La comprobación de cierre de V0.2 aprobó 385 pruebas. Los límites de esas comprobaciones, incluida la evaluación humana pendiente, están detallados en el informe.
+Instalar las dependencias de desarrollo con `npm install` y ejecutar `npm test`. La comprobación vigente de V0.2 y la integración posterior de compuertas aprobó 390 pruebas. Los límites de esas comprobaciones, incluida la evaluación humana pendiente, están detallados en el informe.

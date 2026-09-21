@@ -1,4 +1,4 @@
-const {connectedWorld,atOrigin}=require('./courier-fixtures.cjs');
+const {connectedWorld,atOrigin,solveGate}=require('./courier-fixtures.cjs');
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const {parseHTML}=require('linkedom'),root=path.resolve(__dirname,'..');
 async function session({saved,reduced=false}={}){
@@ -84,6 +84,13 @@ test('choosing combat dismisses the encounter dialog before showing the battle',
  assert.equal(a.document.getElementById('dialog').open,false);
  assert.equal(a.document.getElementById('battleLayer').classList.contains('hidden'),false);
 });
+test('choosing a detour opens the numeric gate layer without resolving the encounter',async()=>{
+ const E=await import('../extensions/mensajeros/production.mjs'),data=E.prepare(JSON.parse(fs.readFileSync(root+'/extensions/mensajeros/production.json')));let saved;
+ for(let seed=0;seed<100;seed++){saved=E.advance(data,E.start(data,atOrigin(data,connectedWorld(E,data,{seed}),'adasme-01'),'adasme-01'));if(saved.run.pending.category==='hostile'&&!E.eventFor(data,saved).mandatory)break;}
+ const index=saved.run.index,condition=saved.run.condition,a=await session({saved}),d=a.document;a.click();a.click('[data-choice="scout"]');
+ assert.ok(E.currentGate(data,a.world()));assert.equal(a.world().run.index,index);assert.equal(a.world().run.condition,condition);assert.equal(d.getElementById('dialog').open,false);
+ assert.equal(d.getElementById('gateLayer').classList.contains('hidden'),false);assert.match(d.getElementById('gateLayer').src,/gate.html/);assert.ok(JSON.parse(a.storage.get(data.save_key)).run.pending.gate);
+});
 
 test('cargo and supplies open separately without stretching the map or advancing the mission',async()=>{
  const a=await session(),d=a.document,before=a.storage.get(a.data.save_key);
@@ -106,7 +113,7 @@ test('the market button starts a visible journey and a hostile arrival cannot op
 test('finishing a market journey renders arrival and opens both vendors without a fake reward or deadline',async()=>{
  const E=await import('../extensions/mensajeros/production.mjs'),data=E.prepare(JSON.parse(fs.readFileSync(root+'/extensions/mensajeros/production.json')));
  let w=connectedWorld(E,data,{seed:1});w.location='republica';w.credits=50;w=E.advance(data,E.travelHeroes(data,w));
- const option=E.options(data,w).find(o=>o.id==='scout')||E.options(data,w).find(o=>o.id==='continue')||E.options(data,w).find(o=>E.optionAvailable(w,o)&&!o.combat);w=E.choose(data,w,option.id);
+ const option=E.options(data,w).find(o=>o.id==='scout')||E.options(data,w).find(o=>o.id==='continue')||E.options(data,w).find(o=>E.optionAvailable(w,o)&&!o.combat);w=solveGate(E,data,E.choose(data,w,option.id));
  assert.equal(w.run.status,'completed');const a=await session({saved:w}),d=a.document;
  assert.match(d.getElementById('travel').textContent,/Llegaste a Los Héroes/);assert.doesNotMatch(d.getElementById('status').textContent,/undefined|NaN|Pago estimado/);
  a.click('#travel [data-heroes]');assert.equal(d.getElementById('refugeLayer').classList.contains('hidden'),false);assert.match(d.getElementById('refugeLayer').src,/refuge.html/);assert.equal(d.getElementById('dialog').open,undefined);

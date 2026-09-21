@@ -1,4 +1,4 @@
-const {connectedWorld,atOrigin}=require('./courier-fixtures.cjs');
+const {connectedWorld,atOrigin,solveGate}=require('./courier-fixtures.cjs');
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs');
 const source=JSON.parse(fs.readFileSync(require('node:path').join(__dirname,'../extensions/mensajeros/production.json')));
 async function setup(){const E=await import('../extensions/mensajeros/production.mjs');return {E,d:E.prepare(source)}}
@@ -7,7 +7,7 @@ function step(E,d,w){
  if(w.run.pending?.combat?.phase==='loot')return E.finishLoot(d,w);
  const available=E.options(d,w).filter(o=>E.optionAvailable(w,o));
  const option=w.run.pending?.combat?available.find(o=>o.id==='fire')||available.find(o=>o.id==='melee'):available.find(o=>o.id==='scout')||available.find(o=>o.id==='echo-path')||available.find(o=>o.id==='jam-skill')||available.find(o=>o.id==='avoid')||available.find(o=>o.id==='continue')||available.find(o=>o.id==='assist')||available[0];
- assert.ok(option,'available route action');return E.choose(d,w,option.id);
+ assert.ok(option,'available route action');return solveGate(E,d,E.choose(d,w,option.id));
 }
 function finish(E,d,w){let turns=0;while(w.run.status==='active'&&turns++<400)w=E.restore(d,E.serialize(step(E,d,w)));assert.ok(turns<400);assert.equal(w.run.status,'completed',w.run.log.join('\n'));return w;}
 test('Line 4 visits all eleven real intermediate stations in both directions and keeps Jiménez at Tobalaba',async()=>{

@@ -1,6 +1,6 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const {setup,finish}=require('./courier-return-fixtures.cjs');
-const {connectedWorld,atOrigin}=require('./courier-fixtures.cjs');
+const {connectedWorld,atOrigin,solveGate}=require('./courier-fixtures.cjs');
 function delivery(E,d,mark='copy-mark',lead='secure-lead'){
  let w=E.start(d,atOrigin(d,connectedWorld(E,d,{seed:1}),'guzman-01'),'guzman-01');
  while(w.run.status==='active'){
@@ -9,7 +9,7 @@ function delivery(E,d,mark='copy-mark',lead='secure-lead'){
   if(p?.combat?.phase==='loot'){w=E.finishLoot(d,w);continue;}
   const os=E.options(d,w).filter(o=>E.optionAvailable(w,o));
   const o=os.find(o=>o.id===(p.id==='guzman-casquillo'?mark:p.id==='guzman-conector'?lead:'__none'))||os.find(o=>['scout','jam-skill','avoid','continue','fire','melee'].includes(o.id))||os[0];
-  assert.ok(o);w=E.restore(d,E.serialize(E.choose(d,w,o.id)));
+  assert.ok(o);w=E.choose(d,w,o.id);w=solveGate(E,d,w);w=E.restore(d,E.serialize(w));
  }
  assert.equal(w.run.status,'completed');return w;
 }

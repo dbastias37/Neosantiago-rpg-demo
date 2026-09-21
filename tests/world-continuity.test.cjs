@@ -1,4 +1,4 @@
-const {connectedWorld,atOrigin}=require('./courier-fixtures.cjs');
+const {connectedWorld,atOrigin,solveGate}=require('./courier-fixtures.cjs');
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const {boot,root}=require('./runtime-harness.cjs');
 const {parseHTML}=require('linkedom');
@@ -14,7 +14,7 @@ async function delivery(approach='trace'){
     const options=E.options(d,w).filter(o=>E.optionAvailable(w,o));
     const action=options.find(o=>o.id===approach)||options.find(o=>o.id==='scout')||options.find(o=>o.id==='jam-skill')||options.find(o=>o.id==='avoid')||options.find(o=>o.id==='continue')||options.find(o=>!o.combat);
     assert.ok(action,'The courier route has a reachable noncombat action');
-    w=E.choose(d,w,action.id);w=E.restore(d,E.serialize(w));
+    w=E.choose(d,w,action.id);w=solveGate(E,d,w);w=E.restore(d,E.serialize(w));
   }
   assert.equal(w.run.status,'completed');
   return {E,d,w,raw:E.serialize(w),snapshots};

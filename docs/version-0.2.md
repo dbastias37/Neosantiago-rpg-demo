@@ -4,7 +4,7 @@
 **Estado:** jugable en `main`  
 **Guardados:** compatibles con la versión de producción anterior
 
-V0.2 cierra el bloque narrativo y de sistemas iniciado para dar propósito a los recorridos, conectar decisiones con consecuencias y presentar Expedición y Los Mensajeros como partes del mismo juego. El laboratorio de compuertas permanece separado y no forma parte de esta versión jugable.
+V0.2 cierra el bloque narrativo y de sistemas iniciado para dar propósito a los recorridos, conectar decisiones con consecuencias y presentar Expedición y Los Mensajeros como partes del mismo juego. Una actualización posterior integra los dos paneles numéricos del laboratorio en los desvíos de Encargos; el laboratorio completo sigue disponible por separado y el gabinete de continuidad todavía no entra en producción.
 
 ## Qué cambia
 
@@ -17,6 +17,7 @@ V0.2 cierra el bloque narrativo y de sistemas iniciado para dar propósito a los
 - El informe de Morales puede llegar a la expedición sin transferir dinero, inventario ni tiempo entre equipos.
 - El mapa, los expedientes, los refugios, el equipo, el comercio, el combate, el saqueo, la bitácora y las pantallas generales comparten la paleta oscura, tipografía y acabado metálico aprobados.
 - Varela usa el retrato definitivo del abuelo del archivo en todas sus apariciones.
+- Los desvíos de Encargos que conducen a pasos laterales usan las antiguas compuertas de personal: uno de diez acertijos numéricos, cuatro intentos, tres pistas y estado guardado. El coste del desvío solo se aplica después de abrir; un bloqueo obliga a escoger otra salida.
 
 ## Compatibilidad
 
@@ -26,13 +27,13 @@ Los contratos iniciados antes de cada revisión conservan ruta, escena pendiente
 
 ## Verificación de cierre
 
-La suite completa aprueba **385 pruebas**. Cubre guardado, migración, ocho encargos, progresión, continuidad, pagos, provisiones, combate, saqueo, equipo, refugio, teclado, foco y flujos narrativos principales. También verifica que V0.2 sea visible en las dos entradas de producción y que el laboratorio de compuertas no se importe en ellas.
+La suite completa aprueba **390 pruebas**. Cubre guardado, migración, ocho encargos, progresión, continuidad, pagos, provisiones, combate, saqueo, equipo, refugio, teclado, foco y flujos narrativos principales. También verifica que V0.2 sea visible en las dos entradas de producción y que Encargos reutilice únicamente los diez casos numéricos, sin activar el panel de continuidad.
 
 Las pruebas automatizadas no demuestran retención ni balance subjetivo. Sigue siendo necesaria una partida humana completa para observar comprensión, ritmo, compras, descansos, heridas y acumulación al elegir rutas distintas. Esa evaluación puede producir ajustes posteriores sin reabrir el alcance de esta entrega.
 
 ## Fuera de V0.2
 
-- Integrar las compuertas del laboratorio a los túneles.
+- Integrar el panel de continuidad en ubicaciones concretas, si las pruebas de juego justifican esa segunda familia.
 - Limitar existencias de la tienda o simular una economía comunitaria completa.
 - Crear vida autónoma indefinida para todos los contactos.
 - Sustituir todos los fondos reutilizados por arte específico de cada estación.

@@ -4,7 +4,7 @@ Fecha: 20 de septiembre de 2026.
 
 ## Alcance
 
-Laboratorio jugable independiente en `labs/compuertas/index.html`. Se accede por URL directa; no se integra todavía al menú, a los encuentros ni al mapa del juego. La petición es evaluar tres mecanismos a partir de las primeras maquetas: dos paneles numéricos y un gabinete de continuidad. Las compuertas podrían permitir usar galerías del antiguo personal del metro para evitar encuentros, pero esa consecuencia todavía no se aplica a la campaña.
+Laboratorio jugable en `labs/compuertas/index.html`, disponible por URL directa y con guardado propio. La petición original evaluó tres mecanismos a partir de las primeras maquetas: dos paneles numéricos y un gabinete de continuidad. Desde la actualización del 21 de septiembre, los diez casos numéricos y su interfaz se reutilizan en los desvíos de Encargos; el gabinete de continuidad permanece solo en el laboratorio.
 
 Los quince relatos son escenas originales de exploración para el prototipo, no episodios confirmados del libro ni nuevos acontecimientos compartidos con los guardados existentes. La prosa usa personas, registros, desacuerdos y reparaciones concretas, sin claves poéticas. El fondo procede del juego y las miniaturas, de las tres maquetas aprobadas para explorar. Los teclados, bornes, cables, medidor y puertas animadas son elementos HTML/CSS/SVG funcionales.
 
@@ -51,12 +51,14 @@ Fondo de estación, gabinetes con acabado de metal, luces, teclas con relieve, m
 
 ## Archivos y verificación
 
-`puzzles.mjs` contiene los relatos y circuitos; `core.mjs` contiene estados, comprobaciones y restauración; `app.mjs` presenta la interfaz; `styles.css` define los equipos y las transiciones. No hay dependencias nuevas ni backend.
+`puzzles.mjs` contiene los relatos y circuitos; `core.mjs` contiene estados, comprobaciones y restauración; `app.mjs` presenta el laboratorio; `styles.css` define los equipos y las transiciones. Encargos importa los diez relatos numéricos y el mismo núcleo, y los presenta mediante `extensions/mensajeros/gate.html`. No hay dependencias nuevas ni backend.
 
 `tests/compuertas-lab.test.cjs` cubre las quince soluciones, los ceros, entradas incompletas, cuatro fallos, restauración de intentos, mediciones en paralelo, rutas equivalentes, aislamiento y protecciones. La suite completa aprobó 359 pruebas al incorporar el laboratorio. Las pruebas automáticas no determinan si la dificultad, la extensión de los textos o la repetición resultan satisfactorias: esa evaluación corresponde a las partidas del laboratorio.
 
 Revisión realizada en el navegador del sitio publicado: apertura correcta en los tres paneles; rechazo de código con descuento de intento; teclado físico con Enter; clave de seis cifras con cero; documentos y pistas en la vista móvil; lectura OL antes de reparar y 0,8 Ω después de instalar el puente; cuatro fallos consecutivos y bloqueo conservado al recargar. Se inspeccionaron el gabinete numérico, el archivo, los cables y la pantalla de apertura. La vista móvil se comprobó con el contenedor angosto del laboratorio, no en un teléfono físico. Las capturas y las mediciones de la interfaz no mostraron desbordamiento horizontal del panel. El sonido opcional requiere valoración humana de volumen y carácter.
 
-## Pendiente después de probar
+## Integración vigente en Encargos
 
-Recoger observaciones sobre legibilidad, dificultad y ritmo. Decidir si se mantienen los cuatro intentos y las tres pistas. Solo después seleccionar compuertas para rutas concretas, recordar accesos abiertos por partida y definir las consecuencias de un fallo dentro del juego. El laboratorio no consume recursos, no abre rutas reales ni modifica la economía.
+Los desvíos ordinarios, los pasos silenciosos de Rocío y los desvíos acústicos de Tomás abren una compuerta numérica. El caso se asigna de forma estable al encuentro y conserva cifras, pistas e intentos dentro del guardado del encargo. Leer y pedir pistas no consumen tiempo. El cuarto error bloquea esa compuerta y permite volver para combatir, distraer o retroceder. El tiempo, desgaste, recurso o uso limitado de la opción elegida se aplican una sola vez, después de abrir. El laboratorio conserva su guardado y permite reiniciar; producción no permite reiniciar una compuerta bloqueada.
+
+Queda pendiente observar frecuencia, dificultad y extensión de lectura en partidas reales. El gabinete de continuidad continúa fuera de producción hasta asignarle ubicaciones y consecuencias propias.
