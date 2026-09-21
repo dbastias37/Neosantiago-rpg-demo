@@ -1,0 +1,100 @@
+/* Shared merchant presentation. Vendor state comes from the existing accessible tabs. */
+#refuge{--stall-accent:#d9a15c;--stall-line:#d9a15c4d;--stall-panel:#121710;--stall-texture:url('extensions/mensajeros/assets/textures/metal-oxidado.webp');--stall-surface:repeating-linear-gradient(0deg,transparent 0 5px,#d9a15c03 5px 6px),#0d1513;--paper:#e7e2d8;--muted:#9b9b92;--cyan:#75d3d7;--amber:#d9a15c;--amber2:#f2bd73;font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;background:radial-gradient(ellipse at 15% 30%,#d9a15c0c,transparent 50%),#020504f5;padding:12px}
+#refuge:has(#npcTabArmorer[aria-selected="true"]){--stall-accent:#75d3d7;--stall-line:#75d3d74d;--stall-panel:#101819;--stall-surface:repeating-linear-gradient(110deg,transparent 0 12px,#c0c4bd03 12px 13px),linear-gradient(140deg,#151e1d,#090e0c);background:radial-gradient(ellipse at 20% 30%,#75d3d70b,transparent 50%),#020504f5}
+#refuge .refuge-modal{position:relative;isolation:isolate;clip-path:none;border:2px solid #d9a15c50;border-radius:6px;background:#090e0c;box-shadow:0 24px 100px #000c;padding:18px!important;width:min(1320px,100%)}
+#refuge .refuge-modal:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:var(--stall-texture) center/560px repeat;opacity:.65;mask-image:linear-gradient(90deg,#000,transparent 15px,transparent calc(100% - 15px),#000),linear-gradient(0deg,#000,transparent 13px,transparent calc(100% - 13px),#000)}
+#refuge .refuge-head{padding:8px 6px 14px;margin-bottom:14px;border-bottom:1px solid var(--stall-line);background:linear-gradient(90deg,#090e0ccc,#090e0cf5),var(--stall-texture) center/560px repeat}
+#refuge .refuge-head h2{font-size:clamp(25px,2.7vw,36px);color:#e7e2d8;letter-spacing:.025em;line-height:1.1}
+#refuge .refuge-head .kicker{font-size:10px;color:#75d3d7}
+#refuge .refuge-head .modal-copy{font-size:13px;color:#c0c4bd;line-height:1.5;margin:8px 0 0}
+#refuge .refuge-day{font-size:10px;color:#9b9b92}
+#refuge .trader-panel{border:1px solid var(--stall-line);border-radius:4px;background:#0d1513}
+#refuge .npc-tabs{background:#090e0c;border-bottom:1px solid var(--stall-line)}
+#refuge .npc-tabs button{padding:12px 9px;min-height:54px}
+#refuge .npc-tabs button span{font-size:9px;letter-spacing:.05em}
+#refuge .npc-tabs button b{font-size:13px;letter-spacing:.03em}
+#refuge .npc-tabs button.active{color:var(--stall-accent);background:var(--stall-panel);box-shadow:inset 0 -3px var(--stall-accent)}
+#refuge .trader-art{background:#070a09;border-bottom:1px solid var(--stall-line)}
+#refuge .trader-art img{object-fit:contain;object-position:center;height:100%;width:100%;padding:0}
+#refuge .trader-art:after{background:none}
+#refuge .trader-copy{padding:15px;background:var(--stall-surface);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+#refuge .trader-copy h3{color:#e7e2d8;font-size:18px;line-height:1.2;letter-spacing:.02em}
+#refuge .trader-role{font-size:10px;color:var(--stall-accent);line-height:1.5;margin-top:7px}
+#refuge .trader-dialogue{font:14px/1.7 "Arial Narrow","Roboto Condensed",Arial,sans-serif;color:#c0c4bd;margin:14px 0}
+#refuge .trade-credit{padding:12px 10px;border:1px solid var(--stall-line);background:#090e0c;gap:10px}
+#refuge .trade-credit b{font-size:16px;color:#f2bd73;white-space:normal}
+#refuge .refuge-economy-help{color:#75d3d7;font-size:11px}
+#refuge .refuge-actions button{min-height:42px;font-size:10px;letter-spacing:.03em;border-color:var(--stall-line);background:#090e0c;color:#f2bd73}
+#refuge .refuge-section{background:#090e0c;border-color:var(--stall-line);border-radius:4px;padding:12px}
+#refuge .refuge-section-head{gap:10px;flex-wrap:wrap}
+#refuge .refuge-section-head h3{color:var(--stall-accent);font-size:12px;letter-spacing:.09em}
+#refuge .refuge-section-head small{font-size:11px;color:#9b9b92;text-transform:none;line-height:1.4}
+#refuge .refuge-ally{padding:9px;border:1px solid #75d3d730;border-radius:3px;background:#0d1513;grid-template-columns:38px minmax(0,1fr);gap:8px}
+#refuge .refuge-ally[aria-pressed="true"]{border-color:#d9a15c;background:#191c14;box-shadow:inset 3px 0 #d9a15c}
+#refuge .refuge-ally-photo{width:38px;height:57px;background:#070a09}
+#refuge .refuge-ally-photo img{object-fit:contain}
+#refuge .refuge-ally b{font-size:11px;line-height:1.3}
+#refuge .refuge-ally small{font-size:10px;line-height:1.4;text-transform:none}
+#refuge .refuge-ally em{grid-column:1/-1;font-size:9px;color:#75d3d7}
+#refuge .trade-ledger{gap:12px}
+#refuge .trade-column{background:var(--stall-surface);border:1px solid var(--stall-line);border-top:3px solid var(--stall-accent);border-radius:3px;padding:10px}
+#refuge .trade-column-title{color:var(--stall-accent);font-size:10px;padding:2px 0 12px;border-bottom:1px dashed var(--stall-line);margin-bottom:10px;gap:8px}
+#refuge:has(#npcTabArmorer[aria-selected="true"]) .trade-column-title{border-bottom-style:solid}
+#refuge .trade-list{gap:9px!important;scrollbar-color:var(--stall-accent) #090e0c;scrollbar-width:thin}
+#refuge .trade-card{flex:0 0 auto!important;min-height:114px!important;max-height:none!important;height:auto;padding:10px;gap:7px 10px;border:1px solid #d9a15c30;border-left:3px solid #55503a;border-radius:3px;background:#090e0c;box-shadow:0 3px 8px #0004}
+#refuge:has(#npcTabArmorer[aria-selected="true"]) .trade-card{border-color:#75d3d728;border-left-color:#47605b;border-radius:1px;background:linear-gradient(130deg,#14201d,#090e0c)}
+#refuge .trade-card b{font-size:12px;line-height:1.35;color:#e7e2d8;letter-spacing:0;text-transform:none;white-space:normal}
+#refuge .trade-card small{font-size:11px;line-height:1.5;color:#b1b8af;text-transform:none;white-space:normal}
+#refuge .trade-card em{font-size:11px;line-height:1.3;color:#f2bd73;white-space:normal}
+#refuge .trade-card button{font-size:10px;min-height:38px;padding:8px 10px;letter-spacing:.025em;color:#f2bd73;border-color:#d9a15c80;border-radius:2px}
+#refuge .trade-card .item-art.small{width:48px!important;height:48px!important;background:#070a09;border-color:var(--stall-line)}
+#refuge .trade-card .item-art img{object-fit:contain}
+#refuge .refuge-footer{background:#090e0c;border-top:1px solid var(--stall-line);gap:15px;padding:12px 0 0}
+#refuge .refuge-footer p{font-size:12px;color:#9b9b92;line-height:1.5}
+#refuge .refuge-footer .primary{background:#f2bd73;color:#070a09;border-color:#d9a15c;font-size:11px;min-width:170px}
+#refuge .refuge-footer .secondary{font-size:11px}
+#refuge .refuge-message{font-size:13px;line-height:1.5;color:#75d3d7;background:#0d1513;border-color:#75d3d740}
+#refuge button:focus-visible{outline:2px solid #75d3d7;outline-offset:2px}
+#refuge .empty{font-size:13px;line-height:1.6;color:#9b9b92}
+#refugeHelpModal .game-help-modal{clip-path:none;border:2px solid #d9a15c50;border-radius:6px;background:#090e0c}
+#refugeHelpModal h2{color:#e7e2d8}
+@media(min-width:901px){
+ #refuge .refuge-modal{height:calc(100dvh - 24px)!important;max-height:940px}
+ #refuge .refuge-grid{grid-template-columns:280px minmax(0,1fr);gap:14px}
+ #refuge .trader-panel{grid-template-rows:auto minmax(150px,28vh) minmax(0,1fr)}
+ #refuge .trader-art{min-height:0;max-height:none}
+ #refuge .refuge-main{grid-template-rows:auto auto minmax(0,1fr) 82px!important}
+ #refuge .refuge-footer{height:82px!important;min-height:82px!important;max-height:82px!important}
+}
+@media(min-width:901px) and (max-width:1100px){
+ #refuge .refuge-grid{grid-template-columns:230px minmax(0,1fr)}
+ #refuge .trade-card{grid-template-columns:40px minmax(0,1fr);min-height:150px!important}
+ #refuge .trade-card .item-art.small{width:40px!important;height:40px!important;grid-row:1}
+ #refuge .trade-card em{grid-column:1;grid-row:2}
+ #refuge .trade-card button{grid-column:2;grid-row:2}
+}
+@media(max-width:900px){
+ #refuge{padding:6px}
+ #refuge .refuge-modal{padding:12px!important;max-height:calc(100dvh - 12px);height:auto!important;overflow-y:auto}
+ #refuge .refuge-grid{display:block;height:auto}
+ #refuge .trader-panel{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto 260px auto;margin-bottom:16px;overflow:visible}
+ #refuge .npc-tabs,#refuge .trader-copy{grid-column:1}
+ #refuge .trader-art{grid-column:1;height:260px;min-height:0;max-height:none}
+ #refuge .trader-copy{overflow:visible}
+ #refuge .refuge-main{display:block;height:auto;overflow:visible}
+ #refuge .refuge-section{margin-bottom:14px}
+ #refuge .refuge-party{grid-template-columns:minmax(0,1fr)}
+ #refuge .refuge-ally{grid-template-columns:38px minmax(0,1fr) auto}
+ #refuge .refuge-ally em{grid-column:auto;max-width:70px}
+ #refuge .trade-ledger{grid-template-columns:minmax(0,1fr);height:auto;overflow:visible}
+ #refuge .trade-list{height:auto;max-height:400px;overflow-y:auto;display:grid;gap:9px}
+ #refuge .trade-card{min-height:110px!important;grid-template-columns:42px minmax(0,1fr) auto}
+ #refuge .trade-card .item-art.small{width:42px!important;height:42px!important}
+ #refuge .trade-card button{min-height:44px;padding-inline:8px}
+ #refuge .refuge-footer{position:sticky;bottom:0;z-index:5;height:auto!important;min-height:0!important;max-height:none!important;padding:10px 0;display:flex!important;flex-direction:column;gap:8px}
+ #refuge .refuge-footer p{margin:0}
+ #refuge .refuge-footer-buttons{display:flex;flex-wrap:wrap;width:100%;gap:8px}
+ #refuge .refuge-footer-buttons button{flex:1;min-width:0!important;min-height:44px}
+ #refuge .refuge-head h2{font-size:25px}
+ #refuge .refuge-head{gap:12px}
+}
