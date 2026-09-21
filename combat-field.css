@@ -1,0 +1,60 @@
+/* Shared Expedition / Messengers finish. Stage geometry and turn logic stay in combat-stage. */
+#battle,#lootModal{--paper:#e7e2d8;--muted:#9b9b92;--cyan:#75d3d7;--amber2:#f2bd73;--line:#d9a15c55;color:var(--paper);font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif}
+#battle .battle-head{border-bottom:1px solid #d9a15c55;background:#090e0ce8}
+#battle .battle-head h2{color:var(--paper);text-shadow:none;letter-spacing:.02em}
+#battle .round{color:var(--amber2);font-family:monospace}
+#battle #stageLog{background:#090e0cf5;border-color:#75d3d747;border-radius:0;box-shadow:inset 3px 0 #75d3d7}
+#battle .squad-title{color:var(--cyan)}
+#battle .squad:has(.enemies) .squad-title{color:#e6a296}
+#battle .units .unit-info{background:#0d1513;border-top:1px solid #d9a15c44}
+#battle .units .unit-info h3{color:var(--paper)}
+#battle .units .unit-info small{color:#c0c4bd}
+#battle .combat-console{background:#090e0c;border-color:#d9a15c66;box-shadow:0 -8px 25px #0006,inset 0 2px #d9a15c22}
+#battle .stage-status-card{padding-left:8px;border-left:2px solid #75d3d76b}
+#battle .stage-status-card.hostile{border-color:#b66d61}
+#battle .stage-status-card span{color:#c0c4bd}
+#battle #stageTargets button{background:#0d1513;border-color:#48524c;color:#c0c4bd;border-radius:0}
+#battle #stageTargets button[aria-pressed=true]{background:#241917;border-color:#df9a89;color:#ffe0d5;box-shadow:inset 0 -2px #df9a89}
+#battle .combat-console .action,#battle .loot-controls button,#battle #stageAdvance,#battle .combat-console #closeStageInventory.action{background:#101815;border:1px solid #d9a15c88;color:var(--amber2);border-radius:0;box-shadow:none;text-shadow:none;font-family:inherit}
+#battle .combat-console .action[data-action=attack]{background:var(--amber2);color:#090e0c;border-color:var(--amber2)}
+#battle .combat-console .action.danger{background:#171311;border-color:#b66d6177;color:#e6a296}
+#battle .combat-console .action:disabled{opacity:.4;cursor:not-allowed}
+#battle .combat-console .action:hover:not(:disabled),#battle #stageAdvance:hover:not(:disabled),#battle .loot-controls button:hover{background:#29352d;color:#fff0da;border-color:var(--amber2)}
+#battle .combat-console .item-tray{background:#0d1513;border-color:#d9a15c77}
+#battle .combat-console .item-action{background:#090e0c;color:var(--paper);border-color:#75d3d744}
+#battle button:focus-visible,#lootModal button:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+/* A recovery tray: quiet metal rim, individual compartments and an always reachable exit. */
+#lootModal{background:#030706d9;padding:12px}
+#lootModal .loot-modal{box-sizing:border-box;display:flex;flex-direction:column;gap:10px;width:min(880px,100%);height:auto;max-height:calc(100dvh - 24px);padding:22px;background:#090e0c;border:1px solid #d9a15c77;box-shadow:0 20px 70px #000b;overflow:hidden;position:relative;isolation:isolate}
+#lootModal .loot-modal:before{content:"";position:absolute;z-index:-1;inset:0 0 auto;height:7px;opacity:.5;background:linear-gradient(#090e0c55,#090e0c99),url("extensions/mensajeros/assets/textures/metal-oxidado.webp") center/440px;pointer-events:none}
+#lootModal .kicker{color:var(--cyan);font-size:11px;margin:0;letter-spacing:.12em}
+#lootModal h2{color:var(--paper);font-size:clamp(23px,3vw,32px);line-height:1.15;margin:0;overflow-wrap:anywhere}
+#lootModal .loot-owner{color:var(--cyan);font-size:12px;margin:0}
+#lootModal .loot-capacity{flex:none;margin:0;padding:10px 12px;background:#0d1513;border-color:#75d3d744}
+#lootModal .loot-capacity-head{font-size:11px;letter-spacing:.03em}
+#lootModal .loot-guidance,#lootModal .loot-message{font-size:13px;line-height:1.5;margin:0;text-transform:none}
+#lootModal .loot-guidance{color:#c0c4bd}
+#lootModal .loot-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;min-height:0;overflow:auto;align-content:start;scrollbar-width:thin;scrollbar-color:#697369 #0d1513}
+#lootModal .loot-list::-webkit-scrollbar{display:block;width:6px}
+#lootModal .loot-drop{grid-template-columns:72px minmax(0,1fr);gap:10px;padding:12px;min-width:0;background:#0d1513;border:1px solid #58615388;align-content:start}
+#lootModal .loot-drop .item-art{width:72px;grid-row:1;align-self:start;background:#090e0c}
+#lootModal .loot-drop strong{font-size:13px;line-height:1.3;color:var(--paper);overflow-wrap:anywhere}
+#lootModal .loot-drop small{font-size:12px;line-height:1.5;color:#c0c4bd;text-transform:none}
+#lootModal .loot-drop-copy em{font-size:11px;margin-bottom:0;letter-spacing:0}
+#lootModal .loot-buttons{grid-column:1/-1;gap:7px}
+#lootModal .loot-buttons button{font-size:11px;min-height:38px;padding:8px;color:var(--amber2);border-color:#d9a15c77;background:#090e0c}
+#lootModal .loot-buttons .discard{color:#e6a296;border-color:#b66d6177}
+#lootModal .loot-buttons button:hover:not(:disabled){background:#29352d;border-color:var(--amber2)}
+#lootModal .loot-drop.taken{border-color:#75d3d7;opacity:.7}
+#lootModal .buttons{flex:none;display:flex;flex-wrap:wrap;gap:10px;margin:0;padding-top:10px;border-top:1px solid #d9a15c44;background:#090e0c}
+#lootModal .buttons button{flex:1;min-height:44px;font-size:12px;box-shadow:none}
+#lootModal .loot-all{background:#101815;color:var(--amber2);border-color:#d9a15c88}
+#lootModal #closeLoot{background:var(--amber2);color:#090e0c;border-color:var(--amber2)}
+@media(max-width:600px){
+ #lootModal{padding:6px}
+ #lootModal .loot-modal{padding:15px;gap:8px;max-height:calc(100dvh - 12px)}
+ #lootModal .loot-list{grid-template-columns:1fr}
+ #lootModal .loot-drop{padding:10px}
+ #lootModal .buttons button{padding:9px 8px}
+}
+@media(max-height:500px){#lootModal .loot-modal{padding:12px;gap:5px}#lootModal h2{font-size:22px}#lootModal .loot-capacity{padding:6px 10px}}
