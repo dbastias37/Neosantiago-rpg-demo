@@ -1,0 +1,115 @@
+/* Shared field equipment finish for Expedition and Messengers. No gameplay rules. */
+#profileModal,#transferModal,#discardModal{--field-texture:url('extensions/mensajeros/assets/textures/metal-oxidado.webp');--field-ink:#070a09;--field-panel:#090e0c;--field-pocket:#0d1513;--paper:#e7e2d8;--muted:#9b9b92;--cyan:#75d3d7;--amber:#d9a15c;--amber2:#f2bd73;font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif}
+#profileModal{padding:12px;background:#020504ed}
+#profileModal .loadout-modal{position:relative;isolation:isolate;clip-path:none;border:2px solid #d9a15c50;border-radius:7px;background:#090e0c;box-shadow:inset 0 0 0 1px #e7e2d812,0 22px 90px #000c;padding:18px!important;width:min(1320px,100%)!important}
+#profileModal .loadout-modal:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:var(--field-texture) center/560px repeat;opacity:.6;mask-image:linear-gradient(90deg,#000,transparent 16px,transparent calc(100% - 16px),#000),linear-gradient(0deg,#000,transparent 14px,transparent calc(100% - 14px),#000)}
+#profileModal .loadout-head{position:sticky;top:0;z-index:8;padding:8px 8px 16px;margin-bottom:14px;border-bottom:1px solid #d9a15c50;background:linear-gradient(90deg,#090e0cce,#090e0cfa),var(--field-texture) center/560px repeat}
+#profileModal .loadout-head .kicker{font-size:10px;letter-spacing:.16em;color:#75d3d7;margin-bottom:8px}
+#profileModal .loadout-head h2{color:#e7e2d8;font-size:clamp(24px,2.7vw,38px);letter-spacing:.02em;line-height:1.12;text-wrap:initial}
+#profileModal .close{border-color:#d9a15c80;color:#f2bd73;min-width:44px;min-height:44px;background:#090e0c}
+#profileModal .profile-switcher{gap:8px;margin-bottom:14px}
+#profileModal .profile-switch{padding:8px 10px;border:1px solid #75d3d72b;border-radius:3px;background:#0d1513}
+#profileModal .profile-switch.active{background:#191c14;border-color:#d9a15c;box-shadow:inset 3px 0 #d9a15c}
+#profileModal .profile-switch.warning{border-color:#df4a4a}
+#profileModal .profile-switch b{font-size:11px;letter-spacing:.02em}
+#profileModal .profile-switch small{font-size:10px;text-transform:none;line-height:1.4}
+#profileModal .profile-switch em,#profileModal .skill-ready-copy{font-size:9px}
+#profileModal .profile-switch-photo{height:58px;width:42px;border-color:#d9a15c40;background:#070a09}
+#profileModal .profile-switch-photo img{object-fit:contain;object-position:center}
+#profileModal .loadout-person{border:1px solid #d9a15c50;border-radius:4px;background:radial-gradient(ellipse at 50% 40%,#24312966,transparent 65%),#070a09}
+#profileModal .loadout-character-art{object-fit:contain}
+#profileModal .psych-panel{background:#090e0cf5;border-color:#75d3d740}
+#profileModal .gear-slot{border:1px solid #d9a15c45;border-radius:4px;box-shadow:inset 0 2px 6px #0009;background:linear-gradient(150deg,#ffffff03,transparent 55%),#0d1513;padding:12px!important;gap:10px!important}
+#profileModal .gear-slot .slot-name{color:#75d3d7;font-size:10px;letter-spacing:.13em;border-bottom:1px solid #75d3d71f;padding-bottom:9px}
+#profileModal .gear-slot strong{font-size:12px!important;color:#e7e2d8;letter-spacing:.015em}
+#profileModal .gear-slot small{font-size:11px!important;color:#c0c4bd;text-transform:none}
+#profileModal .item-art{border-color:#d9a15c30;background:#070a09;box-shadow:inset 0 0 10px #0008}
+#profileModal .item-art img{object-fit:contain}
+#profileModal .loadout-hub{border:1px solid #75d3d733;border-radius:4px;background:#090e0c;grid-template-rows:46px minmax(0,1fr)}
+#profileModal .profile-tabs{background:#0d1513;border-bottom:1px solid #75d3d72b}
+#profileModal .profile-tabs button{font-size:10px!important;letter-spacing:.045em!important;color:#9b9b92}
+#profileModal .profile-tabs button.active{background:#17221e;color:#75d3d7;box-shadow:inset 0 -2px #75d3d7}
+#profileModal .bag-panel{display:flex;flex-direction:column;min-height:0;padding:12px!important;border:1px solid #d9a15c45;border-radius:4px;background:repeating-linear-gradient(0deg,transparent 0 3px,#ffffff02 3px 4px),repeating-linear-gradient(90deg,transparent 0 3px,#00000018 3px 4px),#101713}
+#profileModal .bag-head{flex:none;padding:0 0 12px;margin-bottom:10px;border-bottom:1px dashed #d9a15c4d;color:#75d3d7;font-size:10px;letter-spacing:.06em}
+#profileModal .bag-head b{color:#f2bd73;font-size:11px}
+#profileModal .bag-slots{min-height:0;flex:1;max-height:none;grid-auto-rows:max-content;align-content:start;gap:10px!important;padding:2px}
+#profileModal .bag-item{grid-template-columns:52px minmax(0,1fr)!important;padding:11px!important;gap:10px!important;min-height:160px!important;border:1px solid #d9a15c30;border-top:3px solid #444537;border-radius:3px;background:#090e0c;box-shadow:0 3px 7px #0005}
+#profileModal .bag-item .item-art{width:52px!important}
+#profileModal .bag-item b{color:#e7e2d8;font-size:11px!important;text-transform:none;letter-spacing:0}
+#profileModal .bag-item small{font-size:11px!important;color:#aeb7ad;text-transform:none}
+#profileModal .bag-item em{font-size:9px;color:#f2bd73}
+#profileModal .bag-actions{gap:6px!important;margin-top:5px}
+#profileModal .bag-actions>button,#profileModal .repair-btn{font-size:10px!important;min-height:36px!important;border-radius:2px;letter-spacing:.025em!important}
+#profileModal .equip-btn{border-color:#d9a15c80;color:#f2bd73}
+#profileModal .transfer-open-btn,#profileModal .profile-use-btn{color:#75d3d7;border-color:#75d3d766;background:#75d3d707}
+#profileModal .discard-open-btn{color:#e18c7b;border-color:#a85d514d;background:transparent}
+#profileModal .vital-row{font-size:9px;background:#090e0cf5;border-color:#75d3d728}
+#profileModal .vital-row b{font-size:10px}
+#profileModal .person-stat{font-size:8px;background:#090e0cf5;border-color:#d9a15c30}
+#profileModal .person-stat b{font-size:11px}
+#profileModal .skill-tree,#profileModal .workshop{background:#0d1513;border-color:#75d3d733}
+#profileModal .skill-node,#profileModal .recipe-card{background:#090e0c;border-color:#d9a15c35}
+#profileModal .skill-node p,#profileModal .skill-node small,#profileModal .skill-tree-head small,#profileModal .workshop-head small{font-size:11px;text-transform:none;line-height:1.5}
+#profileModal .skill-node b{font-size:12px}
+#profileModal .skill-node button{font-size:10px;min-height:40px}
+#profileModal .skill-node.available{border-color:#d9a15c}
+#profileModal .skill-node.unlocked{border-color:#75d3d7;background:#111e19}
+#profileModal button:focus-visible{outline:2px solid #75d3d7;outline-offset:2px}
+#transferModal .transfer-modal,#discardModal .discard-modal{clip-path:none;border:2px solid #d9a15c50;border-radius:6px;background:#090e0c}
+#transferModal .transfer-head,#discardModal .transfer-head{background:linear-gradient(90deg,#090e0cbf,#090e0cf5),var(--field-texture) center/560px repeat;border-bottom-color:#d9a15c50}
+#transferModal h2,#discardModal h2{color:#e7e2d8;letter-spacing:.02em}
+#transferModal .transfer-object,#discardModal .discard-object,#transferModal .transfer-target{background:#0d1513;border-color:#75d3d733}
+#transferModal .transfer-target b{font-size:14px;color:#e7e2d8}
+#transferModal .transfer-target small{font-size:12px;color:#9b9b92}
+#transferModal .transfer-target em{font-size:12px;color:#75d3d7}
+#transferModal #transferQty{background:#070a09;color:#e7e2d8;border-color:#d9a15c80;font-size:16px}
+body:has(#profileModal:not(.hidden)) #itemDetailModal .item-detail-modal{background:#090e0c;border:2px solid #d9a15c50;border-radius:6px;clip-path:none}
+body:has(#profileModal:not(.hidden)) #itemDetailModal .item-detail-head{background:linear-gradient(90deg,#101a15,#090e0c);border-bottom-color:#d9a15c50}
+@media(min-width:1101px){
+ #profileModal .loadout-modal{height:min(840px,calc(100dvh - 24px))!important}
+ #profileModal .loadout-grid{grid-template-columns:180px minmax(240px,.9fr) minmax(420px,1.35fr)!important;gap:12px!important}
+ #profileModal .loadout-inventory{grid-template-rows:minmax(174px,auto) minmax(0,1fr)!important}
+ #profileModal .loadout-inventory .loadout-side{grid-template-rows:auto!important}
+ #profileModal .loadout-inventory .gear-slot{min-height:0;grid-template-columns:54px minmax(0,1fr)!important}
+ #profileModal .loadout-grid>.loadout-side>.gear-slot{grid-template-columns:1fr;grid-template-rows:auto auto 1fr;align-content:start;align-items:start}
+ #profileModal .loadout-grid>.loadout-side .item-art{width:78px}
+ #profileModal .loadout-grid>.loadout-side .gear-copy{align-self:start}
+ #profileModal .bag-slots{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:1100px){
+ #profileModal .loadout-modal{display:block;height:auto!important;max-height:calc(100dvh - 24px);overflow-y:auto}
+ #profileModal #profileContent{display:block;height:auto}
+ #profileModal .loadout-grid{height:auto;grid-template-columns:180px minmax(0,1fr)!important;grid-template-rows:390px auto;gap:12px!important}
+ #profileModal .loadout-grid>.loadout-side{grid-column:1;grid-row:1}
+ #profileModal .loadout-person{grid-column:2;grid-row:1;min-height:0}
+ #profileModal .loadout-grid>.loadout-hub{grid-column:1/-1;grid-row:2;height:620px}
+ #profileModal .loadout-inventory{grid-template-rows:minmax(174px,auto) minmax(0,1fr)!important}
+ #profileModal .loadout-inventory .loadout-side{grid-template-rows:auto!important}
+ #profileModal .loadout-inventory .gear-slot{min-height:0}
+ #profileModal .bag-slots{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:700px){
+ #profileModal{padding:6px}
+ #profileModal .loadout-modal{padding:12px!important;max-height:calc(100dvh - 12px)}
+ #profileModal .loadout-head{position:sticky;top:0;z-index:8;padding:6px 0 12px;gap:10px}
+ #profileModal .loadout-head h2{font-size:24px}
+ #profileModal .profile-switcher{display:flex;overflow-x:auto;padding:3px 2px 7px;scrollbar-width:thin}
+ #profileModal .profile-switch{flex:0 0 220px;grid-template-columns:35px minmax(0,1fr);gap:9px}
+ #profileModal .profile-switch-photo{width:35px;height:54px}
+ #profileModal .profile-switch em{display:none}
+ #profileModal .loadout-grid{grid-template-columns:minmax(0,1fr)!important;grid-template-rows:360px auto auto}
+ #profileModal .loadout-person{grid-column:1;grid-row:1}
+ #profileModal .loadout-grid>.loadout-side{grid-column:1;grid-row:2;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto}
+ #profileModal .loadout-grid>.loadout-hub{grid-column:1;grid-row:3;height:720px}
+ #profileModal .gear-slot{grid-template-columns:minmax(0,1fr)!important;grid-template-rows:auto auto 1fr;align-content:start;align-items:start;min-height:0;padding:10px!important}
+ #profileModal .gear-slot .item-art{width:60px!important}
+ #profileModal .gear-slot strong{font-size:11px!important}
+ #profileModal .gear-slot small{font-size:11px!important}
+ #profileModal .loadout-inventory{grid-template-rows:minmax(210px,auto) minmax(0,1fr)!important}
+ #profileModal .loadout-inventory .loadout-side{grid-template-rows:auto!important}
+ #profileModal .bag-slots{grid-template-columns:minmax(0,1fr)!important}
+ #profileModal .bag-actions>button{min-height:44px!important}
+ #profileModal .profile-tabs button{font-size:9px!important;padding-inline:4px}
+ #profileModal .bag-head{font-size:9px}
+ #profileModal .skill-branches{grid-template-columns:minmax(0,1fr)}
+}
