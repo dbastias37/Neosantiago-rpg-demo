@@ -1,0 +1,12 @@
+/* Shared by the campaign and its courier presentation adapters. */
+:root{--text-scale:1;--focus-ring:var(--cyan,#75d3d7)}
+a:focus-visible,[role="button"]:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:2px solid var(--focus-ring);outline-offset:3px;
+}
+button,[role="button"]{touch-action:manipulation}
+button:disabled{cursor:not-allowed}
+/* Respect user motion preferences without changing timing-sensitive gameplay. */
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .cinematic-intro,.cinematic-card,.cinematic-skip{transition:none}
+}

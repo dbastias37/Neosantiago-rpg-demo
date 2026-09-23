@@ -1,0 +1,7 @@
+/* Shared approved V0.2 palette and safe areas. Keep product styling in the surface sheets. */
+:root{
+      --ink:#070a09;--panel:rgba(8,12,11,.93);--soft:rgba(9,15,14,.8);
+      --amber:#d9a15c;--amber2:#f2bd73;--cyan:#75d3d7;--red:#df4a4a;
+      --paper:#e7e2d8;--muted:#9b9b92;--line:rgba(217,161,92,.48);
+      --safe-b:env(safe-area-inset-bottom,0px);--safe-t:env(safe-area-inset-top,0px)
+    }

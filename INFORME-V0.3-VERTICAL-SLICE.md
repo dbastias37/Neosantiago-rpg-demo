@@ -79,4 +79,8 @@ No cambiar claves ni versiones de contenido para simular una nueva edición. Con
 
 Las partidas de prueba V0.2 (inicio y checkpoint tras retirada) se restauran con igualdad de estado, incluida tripulación, flags, recursos y refugio. Guardados y bloqueo transaccional conservan su contrato. **398/398 pruebas**, sintaxis y `git diff --check` aprobados tras esta extracción.
 
+### Estilos y accesibilidad
+
+Los dos bloques CSS inline se separaron en hojas con el mismo orden y contenido; comparación exacta contra `009092d` aprobada. La paleta y las áreas seguras se centralizan; los adaptadores conservan su carga desde la entrada. Foco visible extendido y transiciones de cinemática respetan movimiento reducido. No se alteró la especificidad de los estilos anteriores. Suite integrada en este punto: **403/403**, sin fallos; incluye pruebas nuevas de persistencia y noche en desarrollo.
+
 En curso. Consultar `docs/v0.3/` para QA, audio, resultados y guion de comprobación del tramo. No integrar a `main` hasta revisar la rama y sus comprobaciones.
