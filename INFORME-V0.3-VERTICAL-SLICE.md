@@ -73,4 +73,10 @@ No cambiar claves ni versiones de contenido para simular una nueva edición. Con
 
 ## Registro de entrega
 
+### Extracción conservadora
+
+`campaign-content.js` concentra catálogos narrativos; `campaign-config.js`, configuración y objetos; `persistence-v3.js`, estado inicial, carga y guardado. Se conservaron declaraciones, nombres y comportamiento. El runtime pasa de 355.331 a 230.231 bytes; es una separación de responsabilidades, no una reducción equivalente de descarga total.
+
+Las partidas de prueba V0.2 (inicio y checkpoint tras retirada) se restauran con igualdad de estado, incluida tripulación, flags, recursos y refugio. Guardados y bloqueo transaccional conservan su contrato. **398/398 pruebas**, sintaxis y `git diff --check` aprobados tras esta extracción.
+
 En curso. Consultar `docs/v0.3/` para QA, audio, resultados y guion de comprobación del tramo. No integrar a `main` hasta revisar la rama y sus comprobaciones.
