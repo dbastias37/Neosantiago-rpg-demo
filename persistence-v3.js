@@ -11,6 +11,9 @@ function fresh(){return{companionCommitments:{version:1,care:null,route:null,inf
 var gameSessionActive=false,encounterSaveLocked=false;
 function save(){if(!gameSessionActive||encounterSaveLocked)return;try{localStorage.setItem(KEY,JSON.stringify(state))}catch{}}
 function load(){
+  // Validation and legacy migrations use the shared state binding. Commit it
+  // only when every validator succeeds; a rejected save must not poison a session.
+  var previousState=state;
   try{
     var x=JSON.parse(localStorage.getItem(KEY)),base=fresh(),baseParty=base.party,baseRes=base.res,baseCons=base.cons,baseStats=base.stats,baseRefuge=base.refuge,baseInhibitor=base.inhibitor,baseEngineeringUses=base.engineeringUses,baseMedicalUses=base.medicalUses,baseOrdnanceUses=base.ordnanceUses;
     if(!x||x.version!==3||!Number.isInteger(x.index)||x.index<0||x.index>=events.length)return false;
@@ -19,5 +22,5 @@ function load(){
     state.inhibitor.needsSync=!state.inhibitor.active;
     state.party=baseParty.map(function(p,i){var saved=(x.party||[])[i]||{},baseRole=p.role,baseMaxHp=p.maxHp,baseHunger=p.hunger,baseEquipment=p.equipment,baseDurability=p.durability,baseCategories=p.categories,baseBag=p.bag,merged=Object.assign(p,saved),savedHp=Number(saved.hp),savedHunger=Number(saved.hunger);merged.level=Math.max(1,Number(merged.level)||1);merged.skills=Array.isArray(saved.skills)?saved.skills.filter(function(id){return(skillTrees[merged.id]||[]).some(function(node){return node.id===id})}):[];merged.role=baseRole;merged.maxHp=baseMaxHp+(merged.level-1)*6;merged.hp=clamp(Number.isFinite(savedHp)?savedHp:merged.maxHp,0,merged.maxHp);merged.hunger=clamp(Number.isFinite(savedHunger)?savedHunger:baseHunger,0,100);merged.equipment=Object.assign({},baseEquipment,saved.equipment||{});merged.durability=Object.assign({},baseDurability,saved.durability||{});["head","body"].forEach(function(slot){var d=gear(merged.equipment[slot]);if(d&&d.maxDurability&&!Number.isFinite(Number(merged.durability[slot])))merged.durability[slot]=d.maxDurability;if(!d)merged.durability[slot]=null});merged.categories=baseCategories.slice();merged.bag=(saved.bag||baseBag).map(function(entry){var d=gear(entry.id),out={id:entry.id,qty:entry.qty};if(d&&d.maxDurability)out.durability=clamp(Number.isFinite(Number(entry.durability))?Number(entry.durability):d.maxDurability,0,d.maxDurability);return out});normalizePsyche(merged);return merged});
     redistributeOverflow();migrateLegacyInventory();redistributeOverflow();if(typeof normalizeWorldContinuity==="function")normalizeWorldContinuity();if(typeof narrativeNormalize==="function")narrativeNormalize();if(typeof migrateNarrativeFinale==="function")migrateNarrativeFinale(x);if(typeof fieldNormalize==="function")fieldNormalize();if(typeof normalizeExpeditionRest==="function")normalizeExpeditionRest();if(typeof normalizeCompanionCommitments==="function")normalizeCompanionCommitments();return true
-  }catch{return false}
+  }catch{state=previousState;return false}
 }

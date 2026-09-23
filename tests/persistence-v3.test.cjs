@@ -48,3 +48,19 @@ test('new campaign states do not share mutable bags, flags or progression record
   assert.equal(second.flags.fixtureMutation, undefined);
   assert.deepEqual(plain(second.expeditionRest.nights), {});
 });
+
+test('a rejected save keeps the active campaign intact and preserves the original stored bytes', () => {
+  const a = boot(), c = a.ctx;
+  c.gameSessionActive = true;
+  c.state.index = 1;
+  c.state.flags.alreadyPlaying = true;
+  const previous = c.state, expected = plain(previous);
+  const invalid = JSON.parse(fixture('campaign-retreat'));
+  invalid.party[0].bag = {}; // Rejected after load has begun constructing the replacement state.
+  const text = JSON.stringify(invalid);
+  a.storage.set(key, text);
+  assert.equal(c.load(), false);
+  assert.equal(c.state, previous, 'failed restoration must not replace the active state object');
+  assert.deepEqual(plain(c.state), expected);
+  assert.equal(a.storage.get(key), text, 'a rejected save remains available for recovery');
+});
