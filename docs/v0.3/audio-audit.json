@@ -1,0 +1,2569 @@
+{
+  "schemaVersion": 1,
+  "scope": "Production source files, shared runtime and extensions/mensajeros. Tests, docs, scripts, labs and generated catalog excluded. Literal audio paths plus courier sound-call construction.",
+  "summary": {
+    "existing": 37,
+    "missing": 64,
+    "referenced": 101,
+    "existingBytes": 6760005,
+    "events": 81,
+    "eventsOriginal": 28,
+    "eventsFallback": 26,
+    "eventsPending": 27,
+    "missingByPriority": {
+      "P0": 50,
+      "P1": 13,
+      "P2": 1
+    }
+  },
+  "sourceFiles": [
+    "accessibility-foundation.css",
+    "activities.css",
+    "activities.js",
+    "audio-availability.js",
+    "campaign-config.js",
+    "campaign-content.js",
+    "campaign-v2.js",
+    "cinematic-intro.css",
+    "cinematic-intro.js",
+    "combat-common.js",
+    "combat-field.css",
+    "combat-stage.css",
+    "combat-stage.js",
+    "companion-commitments.js",
+    "companion-evidence.js",
+    "companion-nights.js",
+    "companion-routes.js",
+    "decision-v2.css",
+    "decision-v2.js",
+    "expedition-journal.css",
+    "expedition-rest.js",
+    "extensions/mensajeros/aftermath.mjs",
+    "extensions/mensajeros/assets/PROVENANCE.json",
+    "extensions/mensajeros/beatriz.mjs",
+    "extensions/mensajeros/combat-adapter.mjs",
+    "extensions/mensajeros/combat-loader.mjs",
+    "extensions/mensajeros/combat.html",
+    "extensions/mensajeros/community.css",
+    "extensions/mensajeros/community.mjs",
+    "extensions/mensajeros/continuity.mjs",
+    "extensions/mensajeros/corridors.mjs",
+    "extensions/mensajeros/data.json",
+    "extensions/mensajeros/dossier.css",
+    "extensions/mensajeros/dossier.mjs",
+    "extensions/mensajeros/economy.mjs",
+    "extensions/mensajeros/encounters.mjs",
+    "extensions/mensajeros/engine.mjs",
+    "extensions/mensajeros/gate.css",
+    "extensions/mensajeros/gate.html",
+    "extensions/mensajeros/gate.mjs",
+    "extensions/mensajeros/guzman.mjs",
+    "extensions/mensajeros/jimenez.mjs",
+    "extensions/mensajeros/map-console.css",
+    "extensions/mensajeros/network.mjs",
+    "extensions/mensajeros/outcomes.mjs",
+    "extensions/mensajeros/play.css",
+    "extensions/mensajeros/play.html",
+    "extensions/mensajeros/play.mjs",
+    "extensions/mensajeros/production.json",
+    "extensions/mensajeros/production.mjs",
+    "extensions/mensajeros/profile-adapter.mjs",
+    "extensions/mensajeros/profile-loader.mjs",
+    "extensions/mensajeros/profile.html",
+    "extensions/mensajeros/progression.mjs",
+    "extensions/mensajeros/refuge-adapter.mjs",
+    "extensions/mensajeros/refuge-loader.mjs",
+    "extensions/mensajeros/refuge.html",
+    "extensions/mensajeros/travel.mjs",
+    "extensions/mensajeros/ui.css",
+    "extensions/mensajeros/ui.mjs",
+    "field-upgrades-ui.js",
+    "field-upgrades.css",
+    "field-upgrades.js",
+    "game-shell.css",
+    "game-v2.js",
+    "index.html",
+    "item-details.css",
+    "item-details.js",
+    "journey-surfaces.css",
+    "loot-crates.css",
+    "loot-crates.js",
+    "mobile-back.js",
+    "narrative-chapters.js",
+    "narrative-finale.js",
+    "narrative-v3.js",
+    "neosantiago-demo.html",
+    "night-surface.css",
+    "outcome-campaign.js",
+    "outcome-screen.js",
+    "outcomes-v3.css",
+    "outcomes-v3.js",
+    "persistence-v3.js",
+    "profile-common.js",
+    "profile-field.css",
+    "refuge-stalls.css",
+    "theme-tokens.css",
+    "vera-negotiation.js",
+    "world-continuity.css",
+    "world-continuity.js"
+  ],
+  "assets": [
+    {
+      "path": "audio/ambience/archive-static.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P2",
+      "events": [
+        "ambience-archive"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1094,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/ambience/battle-loop.mp3",
+      "status": "existing",
+      "bytes": 1513480,
+      "priority": "P2",
+      "events": [
+        "ambience-battle"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1092,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/ambience/battle-victory.mp3",
+      "status": "existing",
+      "bytes": 1205026,
+      "priority": "P0",
+      "events": [
+        "ambience-battle-victory"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1093,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/ambience/title-enter.mp3",
+      "status": "existing",
+      "bytes": 243252,
+      "priority": "P1",
+      "events": [
+        "start-title-enter"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1022,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/ambience/title-rain-tunnel.mp3",
+      "status": "existing",
+      "bytes": 1992960,
+      "priority": "P2",
+      "events": [
+        "ambience-title"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1091,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/archive/dossier-switch.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "archive-switch"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1036,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/archive/file-close.mp3",
+      "status": "existing",
+      "bytes": 4438,
+      "priority": "P0",
+      "events": [
+        "archive-close"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1035,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/archive/file-open.mp3",
+      "status": "existing",
+      "bytes": 13842,
+      "priority": "P0",
+      "events": [
+        "archive-open"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1034,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/combat/critical-hit.mp3",
+      "status": "existing",
+      "bytes": 18231,
+      "priority": "P0",
+      "events": [
+        "combat-critical"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1067,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/combat/defend-cover.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "combat-defend"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1068,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/combat/emp-pulse.mp3",
+      "status": "existing",
+      "bytes": 40801,
+      "priority": "P0",
+      "events": [
+        "combat-emp"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1071,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/combat/enemy-hit-normal-1.mp3",
+      "status": "existing",
+      "bytes": 7573,
+      "priority": "P0",
+      "events": [
+        "combat-enemy-hit-normal"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1062,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/combat/enemy-hit-normal-2.mp3",
+      "status": "existing",
+      "bytes": 4438,
+      "priority": "P0",
+      "events": [
+        "combat-enemy-hit-normal"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1062,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/combat/enemy-hit-normal-3.mp3",
+      "status": "existing",
+      "bytes": 8200,
+      "priority": "P0",
+      "events": [
+        "combat-enemy-hit-normal"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1062,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/combat/enemy-hit-normal-4.mp3",
+      "status": "existing",
+      "bytes": 8200,
+      "priority": "P0",
+      "events": [
+        "combat-enemy-hit-normal"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1062,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/combat/flee.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "combat-flee"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1069,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/combat/grenade.mp3",
+      "status": "existing",
+      "bytes": 65878,
+      "priority": "P0",
+      "events": [
+        "combat-grenade"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1070,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/combat/hit-normal-1.mp3",
+      "status": "existing",
+      "bytes": 5692,
+      "priority": "P0",
+      "events": [
+        "combat-hit-normal"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1061,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/combat/hit-normal-2.mp3",
+      "status": "existing",
+      "bytes": 4438,
+      "priority": "P0",
+      "events": [
+        "combat-hit-normal"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1061,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/combat/hit-normal-3.mp3",
+      "status": "existing",
+      "bytes": 7573,
+      "priority": "P0",
+      "events": [
+        "combat-hit-normal"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1061,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/combat/hit-normal-4.mp3",
+      "status": "existing",
+      "bytes": 7573,
+      "priority": "P0",
+      "events": [
+        "combat-hit-normal"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1061,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/combat/hit-normal.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "combat-hit-normal"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1061,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/combat/melee-hit.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "combat-melee"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1060,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/combat/miss.mp3",
+      "status": "existing",
+      "bytes": 7573,
+      "priority": "P0",
+      "events": [
+        "combat-miss"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1066,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/combat/shot-9mm.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "combat-shot-9mm"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1063,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/combat/shot-rifle.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "combat-shot-rifle"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1064,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/combat/shot-shotgun.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "combat-shot-shotgun"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1065,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/combat/skill-elias.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "combat-skill-elias"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1058,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/combat/skill-noa.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "combat-skill-noa"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1059,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/combat/target-hover.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "combat-target-hover"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1056,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/combat/target-select.mp3",
+      "status": "existing",
+      "bytes": 3811,
+      "priority": "P0",
+      "events": [
+        "combat-target"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1057,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/crafting/craft-basic.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "craft-basic"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1052,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/crafting/craft-medical.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "craft-medical"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1053,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/crafting/craft-tech.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "craft-tech"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1054,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/decision/choice-confirm.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "decision-confirm"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1030,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/decision/choice-hover.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "decision-hover"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1029,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/decision/combat-trigger.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "decision-combat"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1032,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/decision/danger-choice.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "decision-danger"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1031,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/decision/result-reveal.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "decision-result"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1033,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/ending/bad-ending.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P1",
+      "events": [
+        "ending-bad"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1089,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/ending/good-ending.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P1",
+      "events": [
+        "ending-good"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1087,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/ending/neutral-ending.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P1",
+      "events": [
+        "ending-neutral"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1088,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/ending/summary-open.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P1",
+      "events": [
+        "ending-summary"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1090,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/hp/ally-damage.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "combat-enemy-hit-normal",
+        "hp-ally-damage"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1062,
+          "kind": "literal"
+        },
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1072,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/hp/ally-down.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "hp-ally-down"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1076,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/hp/enemy-damage.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "combat-hit-normal",
+        "hp-enemy-damage"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1061,
+          "kind": "literal"
+        },
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1073,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/hp/enemy-down.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "hp-enemy-down"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1077,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/hp/heal.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "hp-heal",
+        "hp-medical-use"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1074,
+          "kind": "literal"
+        },
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1075,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/hp/medical-use.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "hp-medical-use"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1075,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/hp/revive-pulse.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "hp-revive"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1078,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/loadout/equip-item.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "loadout-equip"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1046,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/loadout/item-tray-open.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "loadout-tray"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1050,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/loadout/profile-open.mp3",
+      "status": "existing",
+      "bytes": 11334,
+      "priority": "P0",
+      "events": [
+        "loadout-open"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1045,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/loadout/repair-gear.mp3",
+      "status": "existing",
+      "bytes": 16350,
+      "priority": "P0",
+      "events": [
+        "loadout-repair"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1049,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/loadout/transfer-item.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "loadout-transfer"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1048,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/loadout/use-food.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "loadout-food"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1051,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/loadout/use-item.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "loadout-use"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1047,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/loot/corpse-hover.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "loot-hover"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1079,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/loot/discard-item.mp3",
+      "status": "existing",
+      "bytes": 11334,
+      "priority": "P0",
+      "events": [
+        "loot-discard"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1084,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/loot/loot-exit.mp3",
+      "status": "existing",
+      "bytes": 11334,
+      "priority": "P0",
+      "events": [
+        "loot-exit"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1086,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/loot/loot-found.mp3",
+      "status": "existing",
+      "bytes": 16350,
+      "priority": "P0",
+      "events": [
+        "loot-found"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1082,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/loot/search-loop-1.mp3",
+      "status": "existing",
+      "bytes": 121049,
+      "priority": "P0",
+      "events": [
+        "loot-loop"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1081,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/loot/search-loop-2.mp3",
+      "status": "existing",
+      "bytes": 140484,
+      "priority": "P0",
+      "events": [
+        "loot-loop"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1081,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/loot/search-loop-3.mp3",
+      "status": "existing",
+      "bytes": 145499,
+      "priority": "P0",
+      "events": [
+        "loot-loop"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1081,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/loot/search-loop.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "loot-loop"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1081,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/loot/search-start.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "loot-search"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1080,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/loot/take-all.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "loot-take-all"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1085,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/loot/take-item-1.mp3",
+      "status": "existing",
+      "bytes": 9454,
+      "priority": "P0",
+      "events": [
+        "refuge-supply",
+        "loot-take"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1039,
+          "kind": "literal"
+        },
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1083,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/loot/take-item-2.mp3",
+      "status": "existing",
+      "bytes": 7573,
+      "priority": "P0",
+      "events": [
+        "loot-take"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1083,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/loot/take-item-3.mp3",
+      "status": "existing",
+      "bytes": 11334,
+      "priority": "P0",
+      "events": [
+        "loot-take"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1083,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/loot/take-item.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "loot-take"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1083,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/lore/archive-open.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "lore-open"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1026,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/lore/tab-switch.mp3",
+      "status": "existing",
+      "bytes": 2557,
+      "priority": "P0",
+      "events": [
+        "lore-page",
+        "lore-tab"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1027,
+          "kind": "literal"
+        },
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1028,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/lore/voice/council-silence.mp3",
+      "status": "existing",
+      "bytes": 418845,
+      "priority": "P1",
+      "events": [],
+      "references": [
+        {
+          "source": "game-v2.js",
+          "line": 488,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/lore/voice/final-broadcast.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P1",
+      "events": [],
+      "references": [
+        {
+          "source": "game-v2.js",
+          "line": 496,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/lore/voice/hunter-mother.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P1",
+      "events": [],
+      "references": [
+        {
+          "source": "game-v2.js",
+          "line": 489,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/lore/voice/irene-heart.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P1",
+      "events": [],
+      "references": [
+        {
+          "source": "game-v2.js",
+          "line": 495,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/lore/voice/lira-core.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P1",
+      "events": [],
+      "references": [
+        {
+          "source": "game-v2.js",
+          "line": 493,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/lore/voice/matias-fever.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P1",
+      "events": [],
+      "references": [
+        {
+          "source": "game-v2.js",
+          "line": 491,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/lore/voice/red-lights-border.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P1",
+      "events": [],
+      "references": [
+        {
+          "source": "game-v2.js",
+          "line": 490,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/lore/voice/signal-start.mp3",
+      "status": "existing",
+      "bytes": 411948,
+      "priority": "P1",
+      "events": [],
+      "references": [
+        {
+          "source": "game-v2.js",
+          "line": 487,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/lore/voice/sunken-voices.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P1",
+      "events": [],
+      "references": [
+        {
+          "source": "game-v2.js",
+          "line": 494,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/lore/voice/terminal-memory.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P1",
+      "events": [],
+      "references": [
+        {
+          "source": "game-v2.js",
+          "line": 492,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/refuge/group-ready.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "refuge-ready"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1041,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/refuge/npc-switch.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "refuge-npc"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1038,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/refuge/refuge-enter.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "refuge-enter"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1037,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/refuge/rest-soft.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "refuge-rest"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1040,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/skills/skill-unlock.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "skill-unlock"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1055,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/start/expedition-start.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P1",
+      "events": [
+        "start-expedition"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1025,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/start/title-enter.mp3",
+      "status": "existing",
+      "bytes": 243252,
+      "priority": "P1",
+      "events": [
+        "start-title-enter",
+        "start-new-game"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1022,
+          "kind": "literal"
+        },
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1023,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/trade/item-buy.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "trade-buy"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1043,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/trade/item-sell.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "trade-sell"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1042,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/trade/weapon-buy.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "trade-weapon"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1044,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/ui/click-metal.mp3",
+      "status": "existing",
+      "bytes": 4438,
+      "priority": "P0",
+      "events": [
+        "ui-click"
+      ],
+      "references": [
+        {
+          "source": "extensions/mensajeros/play.mjs",
+          "line": 233,
+          "kind": "sound-call"
+        },
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1015,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/ui/close-panel.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "ui-close-panel",
+        "loot-exit"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1018,
+          "kind": "literal"
+        },
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1086,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/ui/disabled-low.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "ui-disabled"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1016,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/ui/download.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "ui-download"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1021,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/ui/error-low.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "ui-error"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1019,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/ui/hover-soft.mp3",
+      "status": "existing",
+      "bytes": 2557,
+      "priority": "P0",
+      "events": [
+        "ui-hover"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1014,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/ui/open-panel.mp3",
+      "status": "existing",
+      "bytes": 11334,
+      "priority": "P0",
+      "events": [
+        "ui-open-panel",
+        "start-load-game"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1017,
+          "kind": "literal"
+        },
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1024,
+          "kind": "literal"
+        }
+      ]
+    },
+    {
+      "path": "audio/ui/tab-switch.mp3",
+      "status": "missing",
+      "bytes": 0,
+      "priority": "P0",
+      "events": [
+        "ui-tab"
+      ],
+      "references": [
+        {
+          "source": "neosantiago-demo.html",
+          "line": 1020,
+          "kind": "literal"
+        }
+      ]
+    }
+  ],
+  "eventCoverage": [
+    {
+      "id": "ui-hover",
+      "declared": [
+        "audio/ui/hover-soft.mp3"
+      ],
+      "playable": [
+        "audio/ui/hover-soft.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "ui-click",
+      "declared": [
+        "audio/ui/click-metal.mp3"
+      ],
+      "playable": [
+        "audio/ui/click-metal.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "ui-disabled",
+      "declared": [
+        "audio/ui/disabled-low.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "ui-open-panel",
+      "declared": [
+        "audio/ui/open-panel.mp3"
+      ],
+      "playable": [
+        "audio/ui/open-panel.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "ui-close-panel",
+      "declared": [
+        "audio/ui/close-panel.mp3"
+      ],
+      "playable": [
+        "audio/archive/file-close.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "ui-error",
+      "declared": [
+        "audio/ui/error-low.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "ui-tab",
+      "declared": [
+        "audio/ui/tab-switch.mp3"
+      ],
+      "playable": [
+        "audio/lore/tab-switch.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "ui-download",
+      "declared": [
+        "audio/ui/download.mp3"
+      ],
+      "playable": [
+        "audio/ui/click-metal.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "start-title-enter",
+      "declared": [
+        "audio/start/title-enter.mp3",
+        "audio/ambience/title-enter.mp3"
+      ],
+      "playable": [
+        "audio/start/title-enter.mp3",
+        "audio/ambience/title-enter.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "start-new-game",
+      "declared": [
+        "audio/start/title-enter.mp3"
+      ],
+      "playable": [
+        "audio/start/title-enter.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "start-load-game",
+      "declared": [
+        "audio/ui/open-panel.mp3"
+      ],
+      "playable": [
+        "audio/ui/open-panel.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "start-expedition",
+      "declared": [
+        "audio/start/expedition-start.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "lore-open",
+      "declared": [
+        "audio/lore/archive-open.mp3"
+      ],
+      "playable": [
+        "audio/archive/file-open.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "lore-page",
+      "declared": [
+        "audio/lore/tab-switch.mp3"
+      ],
+      "playable": [
+        "audio/lore/tab-switch.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "lore-tab",
+      "declared": [
+        "audio/lore/tab-switch.mp3"
+      ],
+      "playable": [
+        "audio/lore/tab-switch.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "decision-hover",
+      "declared": [
+        "audio/decision/choice-hover.mp3"
+      ],
+      "playable": [
+        "audio/ui/hover-soft.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "decision-confirm",
+      "declared": [
+        "audio/decision/choice-confirm.mp3"
+      ],
+      "playable": [
+        "audio/ui/click-metal.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "decision-danger",
+      "declared": [
+        "audio/decision/danger-choice.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "decision-combat",
+      "declared": [
+        "audio/decision/combat-trigger.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "decision-result",
+      "declared": [
+        "audio/decision/result-reveal.mp3"
+      ],
+      "playable": [
+        "audio/ui/open-panel.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "archive-open",
+      "declared": [
+        "audio/archive/file-open.mp3"
+      ],
+      "playable": [
+        "audio/archive/file-open.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "archive-close",
+      "declared": [
+        "audio/archive/file-close.mp3"
+      ],
+      "playable": [
+        "audio/archive/file-close.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "archive-switch",
+      "declared": [
+        "audio/archive/dossier-switch.mp3"
+      ],
+      "playable": [
+        "audio/lore/tab-switch.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "refuge-enter",
+      "declared": [
+        "audio/refuge/refuge-enter.mp3"
+      ],
+      "playable": [
+        "audio/ui/open-panel.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "refuge-npc",
+      "declared": [
+        "audio/refuge/npc-switch.mp3"
+      ],
+      "playable": [
+        "audio/lore/tab-switch.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "refuge-supply",
+      "declared": [
+        "audio/loot/take-item-1.mp3"
+      ],
+      "playable": [
+        "audio/loot/take-item-1.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "refuge-rest",
+      "declared": [
+        "audio/refuge/rest-soft.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "refuge-ready",
+      "declared": [
+        "audio/refuge/group-ready.mp3"
+      ],
+      "playable": [
+        "audio/ui/click-metal.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "trade-sell",
+      "declared": [
+        "audio/trade/item-sell.mp3"
+      ],
+      "playable": [
+        "audio/loot/discard-item.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "trade-buy",
+      "declared": [
+        "audio/trade/item-buy.mp3"
+      ],
+      "playable": [
+        "audio/loot/take-item-1.mp3",
+        "audio/loot/take-item-2.mp3",
+        "audio/loot/take-item-3.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "trade-weapon",
+      "declared": [
+        "audio/trade/weapon-buy.mp3"
+      ],
+      "playable": [
+        "audio/loot/take-item-1.mp3",
+        "audio/loot/take-item-2.mp3",
+        "audio/loot/take-item-3.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "loadout-open",
+      "declared": [
+        "audio/loadout/profile-open.mp3"
+      ],
+      "playable": [
+        "audio/loadout/profile-open.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "loadout-equip",
+      "declared": [
+        "audio/loadout/equip-item.mp3"
+      ],
+      "playable": [
+        "audio/ui/click-metal.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "loadout-use",
+      "declared": [
+        "audio/loadout/use-item.mp3"
+      ],
+      "playable": [
+        "audio/ui/click-metal.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "loadout-transfer",
+      "declared": [
+        "audio/loadout/transfer-item.mp3"
+      ],
+      "playable": [
+        "audio/loot/take-item-1.mp3",
+        "audio/loot/take-item-2.mp3",
+        "audio/loot/take-item-3.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "loadout-repair",
+      "declared": [
+        "audio/loadout/repair-gear.mp3"
+      ],
+      "playable": [
+        "audio/loadout/repair-gear.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "loadout-tray",
+      "declared": [
+        "audio/loadout/item-tray-open.mp3"
+      ],
+      "playable": [
+        "audio/ui/open-panel.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "loadout-food",
+      "declared": [
+        "audio/loadout/use-food.mp3"
+      ],
+      "playable": [
+        "audio/ui/click-metal.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "craft-basic",
+      "declared": [
+        "audio/crafting/craft-basic.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "craft-medical",
+      "declared": [
+        "audio/crafting/craft-medical.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "craft-tech",
+      "declared": [
+        "audio/crafting/craft-tech.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "skill-unlock",
+      "declared": [
+        "audio/skills/skill-unlock.mp3"
+      ],
+      "playable": [
+        "audio/ui/click-metal.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "combat-target-hover",
+      "declared": [
+        "audio/combat/target-hover.mp3"
+      ],
+      "playable": [
+        "audio/ui/hover-soft.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "combat-target",
+      "declared": [
+        "audio/combat/target-select.mp3"
+      ],
+      "playable": [
+        "audio/combat/target-select.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "combat-skill-elias",
+      "declared": [
+        "audio/combat/skill-elias.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "combat-skill-noa",
+      "declared": [
+        "audio/combat/skill-noa.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "combat-melee",
+      "declared": [
+        "audio/combat/melee-hit.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "combat-hit-normal",
+      "declared": [
+        "audio/combat/hit-normal-1.mp3",
+        "audio/combat/hit-normal-2.mp3",
+        "audio/combat/hit-normal-3.mp3",
+        "audio/combat/hit-normal-4.mp3",
+        "audio/combat/hit-normal.mp3",
+        "audio/hp/enemy-damage.mp3"
+      ],
+      "playable": [
+        "audio/combat/hit-normal-1.mp3",
+        "audio/combat/hit-normal-2.mp3",
+        "audio/combat/hit-normal-3.mp3",
+        "audio/combat/hit-normal-4.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "combat-enemy-hit-normal",
+      "declared": [
+        "audio/combat/enemy-hit-normal-1.mp3",
+        "audio/combat/enemy-hit-normal-2.mp3",
+        "audio/combat/enemy-hit-normal-3.mp3",
+        "audio/combat/enemy-hit-normal-4.mp3",
+        "audio/hp/ally-damage.mp3"
+      ],
+      "playable": [
+        "audio/combat/enemy-hit-normal-1.mp3",
+        "audio/combat/enemy-hit-normal-2.mp3",
+        "audio/combat/enemy-hit-normal-3.mp3",
+        "audio/combat/enemy-hit-normal-4.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "combat-shot-9mm",
+      "declared": [
+        "audio/combat/shot-9mm.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "combat-shot-rifle",
+      "declared": [
+        "audio/combat/shot-rifle.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "combat-shot-shotgun",
+      "declared": [
+        "audio/combat/shot-shotgun.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "combat-miss",
+      "declared": [
+        "audio/combat/miss.mp3"
+      ],
+      "playable": [
+        "audio/combat/miss.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "combat-critical",
+      "declared": [
+        "audio/combat/critical-hit.mp3"
+      ],
+      "playable": [
+        "audio/combat/critical-hit.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "combat-defend",
+      "declared": [
+        "audio/combat/defend-cover.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "combat-flee",
+      "declared": [
+        "audio/combat/flee.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "combat-grenade",
+      "declared": [
+        "audio/combat/grenade.mp3"
+      ],
+      "playable": [
+        "audio/combat/grenade.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "combat-emp",
+      "declared": [
+        "audio/combat/emp-pulse.mp3"
+      ],
+      "playable": [
+        "audio/combat/emp-pulse.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "hp-ally-damage",
+      "declared": [
+        "audio/hp/ally-damage.mp3"
+      ],
+      "playable": [
+        "audio/combat/enemy-hit-normal-1.mp3",
+        "audio/combat/enemy-hit-normal-2.mp3",
+        "audio/combat/enemy-hit-normal-3.mp3",
+        "audio/combat/enemy-hit-normal-4.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "hp-enemy-damage",
+      "declared": [
+        "audio/hp/enemy-damage.mp3"
+      ],
+      "playable": [
+        "audio/combat/hit-normal-1.mp3",
+        "audio/combat/hit-normal-2.mp3",
+        "audio/combat/hit-normal-3.mp3",
+        "audio/combat/hit-normal-4.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "hp-heal",
+      "declared": [
+        "audio/hp/heal.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "hp-medical-use",
+      "declared": [
+        "audio/hp/medical-use.mp3",
+        "audio/hp/heal.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "hp-ally-down",
+      "declared": [
+        "audio/hp/ally-down.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "hp-enemy-down",
+      "declared": [
+        "audio/hp/enemy-down.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "hp-revive",
+      "declared": [
+        "audio/hp/revive-pulse.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "loot-hover",
+      "declared": [
+        "audio/loot/corpse-hover.mp3"
+      ],
+      "playable": [
+        "audio/ui/hover-soft.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "loot-search",
+      "declared": [
+        "audio/loot/search-start.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "loot-loop",
+      "declared": [
+        "audio/loot/search-loop-1.mp3",
+        "audio/loot/search-loop-2.mp3",
+        "audio/loot/search-loop-3.mp3",
+        "audio/loot/search-loop.mp3"
+      ],
+      "playable": [
+        "audio/loot/search-loop-1.mp3",
+        "audio/loot/search-loop-2.mp3",
+        "audio/loot/search-loop-3.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "loot-found",
+      "declared": [
+        "audio/loot/loot-found.mp3"
+      ],
+      "playable": [
+        "audio/loot/loot-found.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "loot-take",
+      "declared": [
+        "audio/loot/take-item-1.mp3",
+        "audio/loot/take-item-2.mp3",
+        "audio/loot/take-item-3.mp3",
+        "audio/loot/take-item.mp3"
+      ],
+      "playable": [
+        "audio/loot/take-item-1.mp3",
+        "audio/loot/take-item-2.mp3",
+        "audio/loot/take-item-3.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "loot-discard",
+      "declared": [
+        "audio/loot/discard-item.mp3"
+      ],
+      "playable": [
+        "audio/loot/discard-item.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "loot-take-all",
+      "declared": [
+        "audio/loot/take-all.mp3"
+      ],
+      "playable": [
+        "audio/loot/take-item-1.mp3",
+        "audio/loot/take-item-2.mp3",
+        "audio/loot/take-item-3.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "loot-exit",
+      "declared": [
+        "audio/loot/loot-exit.mp3",
+        "audio/ui/close-panel.mp3"
+      ],
+      "playable": [
+        "audio/loot/loot-exit.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "ending-good",
+      "declared": [
+        "audio/ending/good-ending.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "ending-neutral",
+      "declared": [
+        "audio/ending/neutral-ending.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "ending-bad",
+      "declared": [
+        "audio/ending/bad-ending.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    },
+    {
+      "id": "ending-summary",
+      "declared": [
+        "audio/ending/summary-open.mp3"
+      ],
+      "playable": [
+        "audio/ui/open-panel.mp3"
+      ],
+      "status": "fallback"
+    },
+    {
+      "id": "ambience-title",
+      "declared": [
+        "audio/ambience/title-rain-tunnel.mp3"
+      ],
+      "playable": [
+        "audio/ambience/title-rain-tunnel.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "ambience-battle",
+      "declared": [
+        "audio/ambience/battle-loop.mp3"
+      ],
+      "playable": [
+        "audio/ambience/battle-loop.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "ambience-battle-victory",
+      "declared": [
+        "audio/ambience/battle-victory.mp3"
+      ],
+      "playable": [
+        "audio/ambience/battle-victory.mp3"
+      ],
+      "status": "original"
+    },
+    {
+      "id": "ambience-archive",
+      "declared": [
+        "audio/ambience/archive-static.mp3"
+      ],
+      "playable": [],
+      "status": "pending"
+    }
+  ],
+  "nonAudioFiles": [
+    "audio/ambience/d",
+    "audio/combat/.gitkeep",
+    "audio/hp/.gitkeep",
+    "audio/lore/voice/d",
+    "audio/start/d"
+  ]
+}

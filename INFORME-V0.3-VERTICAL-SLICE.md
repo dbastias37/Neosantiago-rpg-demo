@@ -89,4 +89,8 @@ Se reprodujo y corrigió una carga parcialmente aplicada: un guardado con mochil
 
 La primera noche incorpora Matías y la bomba usando hechos existentes. Atiende la diferencia entre auxilio, llegada confirmada y destino desconocido; conserva el contexto literal de noches V0.2 ya iniciadas. No cambia pagos, costes, recuperación ni decisiones. Casos dirigidos de noche: **20/20**; suite integrada del bloque: **403/403**. El recorrido y los límites están en `docs/v0.3/vertical-slice.md`.
 
+### Audio
+
+Inventario reproducible: **37 archivos existentes, 64 faltantes (50 P0 / 13 P1 / 1 P2)**. De 81 eventos, 28 tienen sus archivos, 26 disponen de alternativas existentes de propósito compatible y 27 quedan pendientes. `audio-catalog.js` y `audio-availability.js` evitan solicitudes conocidas como inexistentes y comparten resolución entre Expedición y los adaptadores de combate/perfil. No se añadieron assets. Las grabaciones ausentes conservan transcripción, mensaje accesible y foco en cerrar. **410/410 pruebas** y catálogo verificado. El detalle exacto de archivo, referencia y prioridad está en `docs/v0.3/audio-audit.md` y `.json`.
+
 En curso. Consultar `docs/v0.3/` para QA, audio, resultados y guion de comprobación del tramo. No integrar a `main` hasta revisar la rama y sus comprobaciones.

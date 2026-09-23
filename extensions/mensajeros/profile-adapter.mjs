@@ -19,7 +19,7 @@ function script(path) {
   });
 }
 function playSfx(id) {
-  const routes = sounds?.[id], path = Array.isArray(routes) ? routes[0] : routes;
+  const path = window.NeoAudioAvailability.resolve(id,sounds)[0];
   if (!path) return;
   try { const audio=new Audio(new URL(path,document.baseURI).href);audio.volume=.22;audio.play().catch(()=>{}); } catch {}
 }
@@ -83,6 +83,8 @@ Object.assign(window, {
   unlockSkill(i,id){if(transact(E.learn,party()[i].id,id)){refresh(i);playSfx('ui-click');}},
   closeProfile(){window.closeItemDetails(false);window.closeTransferModal();window.closeDiscardModal();$('profileModal').classList.add('hidden');host.close();},
 });
+await script('audio-catalog.js?v=1');
+await script('audio-availability.js?v=1');
 await script('profile-common.js?v=1');
 await script('item-details.js?v=2');
 // Keep the shared inspection dialogs, with facts from the actual courier catalog.
