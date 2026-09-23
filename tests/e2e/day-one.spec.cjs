@@ -83,9 +83,10 @@ async function firstDay(page,testInfo,rescue,marks){
    continue;
   }
   if(await visible('#routeNarrativeModal')){
-   // Typing can reveal the choices between inspection and click. Re-resolve
-   // the currently actionable control instead of waiting on a disabled button.
-   await page.locator('#routeNarrativeButton:enabled:visible, #routeNarrativeChoices [data-route-choice]:enabled:visible').first().click();
+   if(await visible('#routeNarrativeChoices'))await page.locator('[data-route-choice]:enabled').first().click();
+   // The supported Enter shortcut remains safe if typing reveals options
+   // between inspection and input: it leaves those options ready to choose.
+   else await page.keyboard.press('Enter');
    continue;
   }
   if(await visible('#crateModal')){await page.locator('#crateLeave').click();continue;}

@@ -67,6 +67,12 @@ Persisten los assets de audio P0 pendientes, la prueba en Safari/iOS y Android r
 
 La primera ejecución remota del PR #6 aprobó Node y validadores, pero detectó una carrera del conductor E2E en el rescate: la animación podía mostrar opciones entre `isVisible()` y el clic en Avanzar texto. El botón quedaba deshabilitado porque correspondía elegir ruta, y la prueba esperaba el control anterior. Todos los fallos remotos señalaban esa misma línea.
 
-El conductor ahora resuelve conjuntamente el botón de avance y las opciones visibles/habilitadas; Playwright vuelve a localizar el control disponible durante la espera. No se cambian texto, temporizadores, reglas, aserciones ni límites de tiempo del juego. La corrección se verifica con repeticiones locales de los tamaños afectados y una nueva matriz completa en GitHub Actions.
+El primer ajuste usó un selector conjunto del avance y las opciones habilitadas. Las dos ejecuciones remotas aprobaron, pero cada una registró dos casos que necesitaron reintento: Playwright mantenía el elemento ya resuelto mientras esperaba que volviera a habilitarse. Ese ajuste no bastaba para eliminar la carrera.
 
 Comprobación local de la corrección: **4/4 rescates completos**, dos repeticiones en 768×1024 y dos en 1366×768, sin reintentos. Node vuelve a aprobar **436/436**; sintaxis, referencias y audio aprobados. La matriz remota definitiva queda vinculada a los checks del PR #6.
+
+La corrección posterior usa el atajo Enter existente para avanzar texto y clics normales para elegir opciones. Si el texto termina entre la observación y Enter, el handler existente deja las opciones listas sin seleccionar ninguna. Así no queda un clic esperando sobre un botón deshabilitado. No se cambian texto, temporizadores, reglas, aserciones ni límites de tiempo del juego. Se repiten los recorridos afectados y la matriz remota completa.
+
+En la repetición local con este ajuste pasaron los dos recorridos simultáneos de 1366×768. Los dos de 1920×1080 agotaron la espera antes del segmento modificado (perfil/inhibidor); se repitieron con un proceso para aislar esa incidencia local. Esto no modifica los dos procesos de CI ni permite ignorar sus errores. Se conserva esta limitación junto con los resultados remotos.
+
+La repetición aislada en 1920×1080 aprobó **2/2**, sin reintentos (45,4 y 44,6 segundos). Con los **2/2** de 1366×768, el ajuste tiene cuatro recorridos locales completos aprobados; Node **436/436** y validadores aprobados. La matriz completa con dos procesos se vuelve a ejecutar en CI.
