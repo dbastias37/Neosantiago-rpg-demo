@@ -1,0 +1,1210 @@
+{
+  "label": "V0.2 main 009092d",
+  "measuredAt": "2026-09-23T19:11:29.600Z",
+  "environment": {
+    "browser": "153.0.8010.0",
+    "viewport": {
+      "width": 1366,
+      "height": 768
+    },
+    "server": "local static / no compression / no cache",
+    "network": "unthrottled",
+    "cpu": "unthrottled",
+    "note": "Warm OS filesystem, fresh browser context. Network timing includes local read overhead; not representative of Render/mobile service."
+  },
+  "initial": {
+    "usableTitleMs": 450.4000000022352,
+    "requestCount": 63,
+    "bodyBytes": 4036270,
+    "javascriptBytes": 704416,
+    "imageRequests": 26,
+    "imageBytes": 2934193,
+    "preloads": [
+      {
+        "path": "backgrounds/title-cover.webp",
+        "bytes": 87774
+      },
+      {
+        "path": "backgrounds/station-ruins.webp",
+        "bytes": 110222
+      },
+      {
+        "path": "backgrounds/flooded-gallery.webp",
+        "bytes": 127836
+      },
+      {
+        "path": "backgrounds/drone-rooftop.webp",
+        "bytes": 89534
+      },
+      {
+        "path": "backgrounds/uno-corridor.webp",
+        "bytes": 139866
+      },
+      {
+        "path": "backgrounds/antenna-core-room.webp",
+        "bytes": 132040
+      },
+      {
+        "path": "backgrounds/day-alameda.webp",
+        "bytes": 178510
+      },
+      {
+        "path": "backgrounds/day-station-entrance.webp",
+        "bytes": 219182
+      },
+      {
+        "path": "backgrounds/day-hunter-house.webp",
+        "bytes": 182222
+      },
+      {
+        "path": "backgrounds/day-market.webp",
+        "bytes": 164082
+      },
+      {
+        "path": "backgrounds/day-valley-perimeter.webp",
+        "bytes": 133780
+      },
+      {
+        "path": "assets/branding/producciones-verite.png",
+        "bytes": 23131
+      }
+    ],
+    "requests": [
+      {
+        "url": "http://127.0.0.1:4175/neosantiago-demo.html",
+        "status": 200,
+        "type": "document",
+        "bodyBytes": 282985
+      },
+      {
+        "url": "http://127.0.0.1:4175/backgrounds/title-cover.webp?v=24",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 87774
+      },
+      {
+        "url": "http://127.0.0.1:4175/decision-v2.css?v=3",
+        "status": 200,
+        "type": "stylesheet",
+        "bodyBytes": 11411
+      },
+      {
+        "url": "http://127.0.0.1:4175/combat-stage.css?v=4-mobile-arrows",
+        "status": 200,
+        "type": "stylesheet",
+        "bodyBytes": 18472
+      },
+      {
+        "url": "http://127.0.0.1:4175/field-upgrades.css?v=3",
+        "status": 200,
+        "type": "stylesheet",
+        "bodyBytes": 7981
+      },
+      {
+        "url": "http://127.0.0.1:4175/item-details.css?v=1",
+        "status": 200,
+        "type": "stylesheet",
+        "bodyBytes": 3737
+      },
+      {
+        "url": "http://127.0.0.1:4175/loot-crates.css?v=2",
+        "status": 200,
+        "type": "stylesheet",
+        "bodyBytes": 11553
+      },
+      {
+        "url": "http://127.0.0.1:4175/activities.css?v=opening-02-2-responsive",
+        "status": 200,
+        "type": "stylesheet",
+        "bodyBytes": 4887
+      },
+      {
+        "url": "http://127.0.0.1:4175/world-continuity.css?v=1",
+        "status": 200,
+        "type": "stylesheet",
+        "bodyBytes": 1971
+      },
+      {
+        "url": "http://127.0.0.1:4175/profile-field.css?v=2",
+        "status": 200,
+        "type": "stylesheet",
+        "bodyBytes": 11279
+      },
+      {
+        "url": "http://127.0.0.1:4175/refuge-stalls.css?v=1",
+        "status": 200,
+        "type": "stylesheet",
+        "bodyBytes": 9459
+      },
+      {
+        "url": "http://127.0.0.1:4175/combat-field.css?v=3-mobile-arrows",
+        "status": 200,
+        "type": "stylesheet",
+        "bodyBytes": 13127
+      },
+      {
+        "url": "http://127.0.0.1:4175/expedition-journal.css?v=1",
+        "status": 200,
+        "type": "stylesheet",
+        "bodyBytes": 11171
+      },
+      {
+        "url": "http://127.0.0.1:4175/cinematic-intro.css?v=1",
+        "status": 200,
+        "type": "stylesheet",
+        "bodyBytes": 1486
+      },
+      {
+        "url": "http://127.0.0.1:4175/journey-surfaces.css?v=1",
+        "status": 200,
+        "type": "stylesheet",
+        "bodyBytes": 8142
+      },
+      {
+        "url": "http://127.0.0.1:4175/backgrounds/station-ruins.webp?v=43",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 110222
+      },
+      {
+        "url": "http://127.0.0.1:4175/portraits/noa.webp?v=22",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 30356
+      },
+      {
+        "url": "http://127.0.0.1:4175/backgrounds/station-ruins.webp",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 110222
+      },
+      {
+        "url": "http://127.0.0.1:4175/allies.webp?v=22",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 119224
+      },
+      {
+        "url": "http://127.0.0.1:4175/portraits/drone.webp?v=22",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 22562
+      },
+      {
+        "url": "http://127.0.0.1:4175/campaign-v2.js?v=opening-02-73",
+        "status": 200,
+        "type": "script",
+        "bodyBytes": 59309
+      },
+      {
+        "url": "http://127.0.0.1:4175/decision-v2.js?v=opening-02-5",
+        "status": 200,
+        "type": "script",
+        "bodyBytes": 24836
+      },
+      {
+        "url": "http://127.0.0.1:4175/combat-common.js?v=1",
+        "status": 200,
+        "type": "script",
+        "bodyBytes": 17153
+      },
+      {
+        "url": "http://127.0.0.1:4175/item-details.js?v=16-credits",
+        "status": 200,
+        "type": "script",
+        "bodyBytes": 6854
+      },
+      {
+        "url": "http://127.0.0.1:4175/profile-common.js?v=1",
+        "status": 200,
+        "type": "script",
+        "bodyBytes": 15101
+      },
+      {
+        "url": "http://127.0.0.1:4175/backgrounds/flooded-gallery.webp?v=43",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 127836
+      },
+      {
+        "url": "http://127.0.0.1:4175/backgrounds/drone-rooftop.webp?v=43",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 89534
+      },
+      {
+        "url": "http://127.0.0.1:4175/backgrounds/uno-corridor.webp?v=43",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 139866
+      },
+      {
+        "url": "http://127.0.0.1:4175/backgrounds/antenna-core-room.webp?v=43",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 132040
+      },
+      {
+        "url": "http://127.0.0.1:4175/backgrounds/day-alameda.webp?v=44",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 178510
+      },
+      {
+        "url": "http://127.0.0.1:4175/backgrounds/day-station-entrance.webp?v=44",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 219182
+      },
+      {
+        "url": "http://127.0.0.1:4175/backgrounds/day-hunter-house.webp?v=44",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 182222
+      },
+      {
+        "url": "http://127.0.0.1:4175/backgrounds/day-market.webp?v=44",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 164082
+      },
+      {
+        "url": "http://127.0.0.1:4175/backgrounds/day-valley-perimeter.webp?v=44",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 133780
+      },
+      {
+        "url": "http://127.0.0.1:4175/assets/branding/producciones-verite.png",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 23131
+      },
+      {
+        "url": "http://127.0.0.1:4175/portraits/agent4.webp?v=22",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 33048
+      },
+      {
+        "url": "http://127.0.0.1:4175/portraits/merodeador5.webp?v=22",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 56234
+      },
+      {
+        "url": "http://127.0.0.1:4175/day3.webp?v=18",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 127012
+      },
+      {
+        "url": "http://127.0.0.1:4175/characters/mara-trader.webp?v=22",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 65030
+      },
+      {
+        "url": "http://127.0.0.1:4175/portraits/npc-varela.webp?v=2-abuelo",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 305142
+      },
+      {
+        "url": "http://127.0.0.1:4175/portraits/noa.webp",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 30356
+      },
+      {
+        "url": "http://127.0.0.1:4175/extensions/mensajeros/assets/textures/metal-oxidado.webp",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 342232
+      },
+      {
+        "url": "http://127.0.0.1:4175/cinematic-intro.js?v=1",
+        "status": 200,
+        "type": "script",
+        "bodyBytes": 2559
+      },
+      {
+        "url": "http://127.0.0.1:4175/expedition-rest.js?v=3-vera",
+        "status": 200,
+        "type": "script",
+        "bodyBytes": 10297
+      },
+      {
+        "url": "http://127.0.0.1:4175/companion-nights.js?v=4-evidence",
+        "status": 200,
+        "type": "script",
+        "bodyBytes": 10323
+      },
+      {
+        "url": "http://127.0.0.1:4175/companion-routes.js?v=1",
+        "status": 200,
+        "type": "script",
+        "bodyBytes": 11405
+      },
+      {
+        "url": "http://127.0.0.1:4175/companion-commitments.js?v=4",
+        "status": 200,
+        "type": "script",
+        "bodyBytes": 13971
+      },
+      {
+        "url": "http://127.0.0.1:4175/companion-evidence.js?v=1",
+        "status": 200,
+        "type": "script",
+        "bodyBytes": 16103
+      },
+      {
+        "url": "http://127.0.0.1:4175/game-v2.js?v=19-cinematic",
+        "status": 200,
+        "type": "script",
+        "bodyBytes": 355331
+      },
+      {
+        "url": "http://127.0.0.1:4175/vera-negotiation.js?v=1",
+        "status": 200,
+        "type": "script",
+        "bodyBytes": 17466
+      },
+      {
+        "url": "http://127.0.0.1:4175/narrative-chapters.js?v=2-vera",
+        "status": 200,
+        "type": "script",
+        "bodyBytes": 15140
+      },
+      {
+        "url": "http://127.0.0.1:4175/field-upgrades.js?v=2",
+        "status": 200,
+        "type": "script",
+        "bodyBytes": 16480
+      },
+      {
+        "url": "http://127.0.0.1:4175/narrative-v3.js?v=3-finale",
+        "status": 200,
+        "type": "script",
+        "bodyBytes": 18363
+      },
+      {
+        "url": "http://127.0.0.1:4175/narrative-finale.js?v=vera-2-reward",
+        "status": 200,
+        "type": "script",
+        "bodyBytes": 22757
+      },
+      {
+        "url": "http://127.0.0.1:4175/field-upgrades-ui.js?v=3",
+        "status": 200,
+        "type": "script",
+        "bodyBytes": 15182
+      },
+      {
+        "url": "http://127.0.0.1:4175/loot-crates.js?v=5-finale",
+        "status": 200,
+        "type": "script",
+        "bodyBytes": 18789
+      },
+      {
+        "url": "http://127.0.0.1:4175/activities.js?v=8-expediente",
+        "status": 200,
+        "type": "script",
+        "bodyBytes": 6095
+      },
+      {
+        "url": "http://127.0.0.1:4175/mobile-back.js?v=6-cinematic",
+        "status": 200,
+        "type": "script",
+        "bodyBytes": 4839
+      },
+      {
+        "url": "http://127.0.0.1:4175/world-continuity.js?v=1",
+        "status": 200,
+        "type": "script",
+        "bodyBytes": 9334
+      },
+      {
+        "url": "http://127.0.0.1:4175/combat-stage.js?v=5-mobile-arrows",
+        "status": 200,
+        "type": "script",
+        "bodyBytes": 16729
+      },
+      {
+        "url": "http://127.0.0.1:4175/portraits/sara.webp?v=71",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 38638
+      },
+      {
+        "url": "http://127.0.0.1:4175/portraits/elias.webp?v=71",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 35602
+      },
+      {
+        "url": "http://127.0.0.1:4175/portraits/noa.webp?v=71",
+        "status": 200,
+        "type": "image",
+        "bodyBytes": 30356
+      }
+    ],
+    "cdpMetrics": [
+      {
+        "name": "Timestamp",
+        "value": 19297.854041
+      },
+      {
+        "name": "AudioHandlers",
+        "value": 0
+      },
+      {
+        "name": "AudioWorkletProcessors",
+        "value": 0
+      },
+      {
+        "name": "Documents",
+        "value": 6
+      },
+      {
+        "name": "Frames",
+        "value": 5
+      },
+      {
+        "name": "JSEventListeners",
+        "value": 181
+      },
+      {
+        "name": "LayoutObjects",
+        "value": 301
+      },
+      {
+        "name": "MediaKeySessions",
+        "value": 0
+      },
+      {
+        "name": "MediaKeys",
+        "value": 0
+      },
+      {
+        "name": "Nodes",
+        "value": 3002
+      },
+      {
+        "name": "Resources",
+        "value": 62
+      },
+      {
+        "name": "ContextLifecycleStateObservers",
+        "value": 13
+      },
+      {
+        "name": "V8PerContextDatas",
+        "value": 6
+      },
+      {
+        "name": "WorkerGlobalScopes",
+        "value": 0
+      },
+      {
+        "name": "UACSSResources",
+        "value": 0
+      },
+      {
+        "name": "RTCPeerConnections",
+        "value": 0
+      },
+      {
+        "name": "ResourceFetchers",
+        "value": 6
+      },
+      {
+        "name": "AdSubframes",
+        "value": 0
+      },
+      {
+        "name": "DetachedScriptStates",
+        "value": 2
+      },
+      {
+        "name": "ArrayBufferContents",
+        "value": 0
+      },
+      {
+        "name": "LayoutCount",
+        "value": 7
+      },
+      {
+        "name": "RecalcStyleCount",
+        "value": 27
+      },
+      {
+        "name": "LayoutDuration",
+        "value": 0.089978
+      },
+      {
+        "name": "RecalcStyleDuration",
+        "value": 0.033465
+      },
+      {
+        "name": "DevToolsCommandDuration",
+        "value": 0.02344
+      },
+      {
+        "name": "ScriptDuration",
+        "value": 0.031446
+      },
+      {
+        "name": "V8CompileDuration",
+        "value": 0.000919
+      },
+      {
+        "name": "TaskDuration",
+        "value": 0.397056
+      },
+      {
+        "name": "TaskOtherDuration",
+        "value": 0.217808
+      },
+      {
+        "name": "ThreadTime",
+        "value": 0.141382
+      },
+      {
+        "name": "ProcessTime",
+        "value": 0.55
+      },
+      {
+        "name": "JSHeapUsedSize",
+        "value": 3817556
+      },
+      {
+        "name": "JSHeapTotalSize",
+        "value": 6615040
+      },
+      {
+        "name": "FirstMeaningfulPaint",
+        "value": 0
+      },
+      {
+        "name": "DomContentLoaded",
+        "value": 19297.342659
+      },
+      {
+        "name": "NavigationStart",
+        "value": 19296.950149
+      }
+    ],
+    "navigation": [
+      {
+        "domContentLoaded": 392.5,
+        "load": 392.80000000074506,
+        "transferBytes": 283285,
+        "bodyBytes": 282985
+      }
+    ],
+    "resources": [
+      {
+        "url": "http://127.0.0.1:4175/backgrounds/title-cover.webp?v=24",
+        "type": "link",
+        "transferBytes": 88074,
+        "bodyBytes": 87774,
+        "duration": 17
+      },
+      {
+        "url": "http://127.0.0.1:4175/backgrounds/station-ruins.webp?v=43",
+        "type": "link",
+        "transferBytes": 110522,
+        "bodyBytes": 110222,
+        "duration": 46
+      },
+      {
+        "url": "http://127.0.0.1:4175/backgrounds/flooded-gallery.webp?v=43",
+        "type": "link",
+        "transferBytes": 128136,
+        "bodyBytes": 127836,
+        "duration": 100.69999999925494
+      },
+      {
+        "url": "http://127.0.0.1:4175/backgrounds/drone-rooftop.webp?v=43",
+        "type": "link",
+        "transferBytes": 89834,
+        "bodyBytes": 89534,
+        "duration": 106
+      },
+      {
+        "url": "http://127.0.0.1:4175/backgrounds/uno-corridor.webp?v=43",
+        "type": "link",
+        "transferBytes": 140166,
+        "bodyBytes": 139866,
+        "duration": 108.19999999925494
+      },
+      {
+        "url": "http://127.0.0.1:4175/backgrounds/antenna-core-room.webp?v=43",
+        "type": "link",
+        "transferBytes": 132340,
+        "bodyBytes": 132040,
+        "duration": 107.89999999850988
+      },
+      {
+        "url": "http://127.0.0.1:4175/backgrounds/day-alameda.webp?v=44",
+        "type": "link",
+        "transferBytes": 178810,
+        "bodyBytes": 178510,
+        "duration": 108.59999999776483
+      },
+      {
+        "url": "http://127.0.0.1:4175/backgrounds/day-station-entrance.webp?v=44",
+        "type": "link",
+        "transferBytes": 219482,
+        "bodyBytes": 219182,
+        "duration": 109.89999999850988
+      },
+      {
+        "url": "http://127.0.0.1:4175/backgrounds/day-hunter-house.webp?v=44",
+        "type": "link",
+        "transferBytes": 182522,
+        "bodyBytes": 182222,
+        "duration": 110.5
+      },
+      {
+        "url": "http://127.0.0.1:4175/backgrounds/day-market.webp?v=44",
+        "type": "link",
+        "transferBytes": 164382,
+        "bodyBytes": 164082,
+        "duration": 112.29999999701977
+      },
+      {
+        "url": "http://127.0.0.1:4175/backgrounds/day-valley-perimeter.webp?v=44",
+        "type": "link",
+        "transferBytes": 134080,
+        "bodyBytes": 133780,
+        "duration": 112.79999999701977
+      },
+      {
+        "url": "http://127.0.0.1:4175/decision-v2.css?v=3",
+        "type": "link",
+        "transferBytes": 11711,
+        "bodyBytes": 11411,
+        "duration": 15.699999999254942
+      },
+      {
+        "url": "http://127.0.0.1:4175/combat-stage.css?v=4-mobile-arrows",
+        "type": "link",
+        "transferBytes": 18772,
+        "bodyBytes": 18472,
+        "duration": 16
+      },
+      {
+        "url": "http://127.0.0.1:4175/field-upgrades.css?v=3",
+        "type": "link",
+        "transferBytes": 8281,
+        "bodyBytes": 7981,
+        "duration": 16
+      },
+      {
+        "url": "http://127.0.0.1:4175/item-details.css?v=1",
+        "type": "link",
+        "transferBytes": 4037,
+        "bodyBytes": 3737,
+        "duration": 15.899999998509884
+      },
+      {
+        "url": "http://127.0.0.1:4175/loot-crates.css?v=2",
+        "type": "link",
+        "transferBytes": 11853,
+        "bodyBytes": 11553,
+        "duration": 16
+      },
+      {
+        "url": "http://127.0.0.1:4175/activities.css?v=opening-02-2-responsive",
+        "type": "link",
+        "transferBytes": 5187,
+        "bodyBytes": 4887,
+        "duration": 30.599999997764826
+      },
+      {
+        "url": "http://127.0.0.1:4175/world-continuity.css?v=1",
+        "type": "link",
+        "transferBytes": 2271,
+        "bodyBytes": 1971,
+        "duration": 29.600000001490116
+      },
+      {
+        "url": "http://127.0.0.1:4175/profile-field.css?v=2",
+        "type": "link",
+        "transferBytes": 11579,
+        "bodyBytes": 11279,
+        "duration": 30.699999999254942
+      },
+      {
+        "url": "http://127.0.0.1:4175/refuge-stalls.css?v=1",
+        "type": "link",
+        "transferBytes": 9759,
+        "bodyBytes": 9459,
+        "duration": 30.800000000745058
+      },
+      {
+        "url": "http://127.0.0.1:4175/combat-field.css?v=3-mobile-arrows",
+        "type": "link",
+        "transferBytes": 13427,
+        "bodyBytes": 13127,
+        "duration": 31.100000001490116
+      },
+      {
+        "url": "http://127.0.0.1:4175/expedition-journal.css?v=1",
+        "type": "link",
+        "transferBytes": 11471,
+        "bodyBytes": 11171,
+        "duration": 31.300000000745058
+      },
+      {
+        "url": "http://127.0.0.1:4175/cinematic-intro.css?v=1",
+        "type": "link",
+        "transferBytes": 1786,
+        "bodyBytes": 1486,
+        "duration": 40.099999997764826
+      },
+      {
+        "url": "http://127.0.0.1:4175/journey-surfaces.css?v=1",
+        "type": "link",
+        "transferBytes": 8442,
+        "bodyBytes": 8142,
+        "duration": 43.5
+      },
+      {
+        "url": "http://127.0.0.1:4175/backgrounds/station-ruins.webp",
+        "type": "img",
+        "transferBytes": 110522,
+        "bodyBytes": 110222,
+        "duration": 45.599999997764826
+      },
+      {
+        "url": "http://127.0.0.1:4175/assets/branding/producciones-verite.png",
+        "type": "link",
+        "transferBytes": 23431,
+        "bodyBytes": 23131,
+        "duration": 111.89999999850988
+      },
+      {
+        "url": "http://127.0.0.1:4175/portraits/noa.webp?v=22",
+        "type": "img",
+        "transferBytes": 30656,
+        "bodyBytes": 30356,
+        "duration": 44.80000000074506
+      },
+      {
+        "url": "http://127.0.0.1:4175/allies.webp?v=22",
+        "type": "img",
+        "transferBytes": 119524,
+        "bodyBytes": 119224,
+        "duration": 45.600000001490116
+      },
+      {
+        "url": "http://127.0.0.1:4175/portraits/drone.webp?v=22",
+        "type": "img",
+        "transferBytes": 22862,
+        "bodyBytes": 22562,
+        "duration": 56.399999998509884
+      },
+      {
+        "url": "http://127.0.0.1:4175/portraits/agent4.webp?v=22",
+        "type": "img",
+        "transferBytes": 33348,
+        "bodyBytes": 33048,
+        "duration": 111.89999999850988
+      },
+      {
+        "url": "http://127.0.0.1:4175/portraits/merodeador5.webp?v=22",
+        "type": "img",
+        "transferBytes": 56534,
+        "bodyBytes": 56234,
+        "duration": 114.19999999925494
+      },
+      {
+        "url": "http://127.0.0.1:4175/day3.webp?v=18",
+        "type": "img",
+        "transferBytes": 127312,
+        "bodyBytes": 127012,
+        "duration": 114.5
+      },
+      {
+        "url": "http://127.0.0.1:4175/campaign-v2.js?v=opening-02-73",
+        "type": "script",
+        "transferBytes": 59609,
+        "bodyBytes": 59309,
+        "duration": 51.80000000074506
+      },
+      {
+        "url": "http://127.0.0.1:4175/decision-v2.js?v=opening-02-5",
+        "type": "script",
+        "transferBytes": 25136,
+        "bodyBytes": 24836,
+        "duration": 56.70000000298023
+      },
+      {
+        "url": "http://127.0.0.1:4175/item-details.js?v=16-credits",
+        "type": "script",
+        "transferBytes": 7154,
+        "bodyBytes": 6854,
+        "duration": 58.600000001490116
+      },
+      {
+        "url": "http://127.0.0.1:4175/characters/mara-trader.webp?v=22",
+        "type": "img",
+        "transferBytes": 65330,
+        "bodyBytes": 65030,
+        "duration": 117.90000000223517
+      },
+      {
+        "url": "http://127.0.0.1:4175/combat-common.js?v=1",
+        "type": "script",
+        "transferBytes": 17453,
+        "bodyBytes": 17153,
+        "duration": 58.69999999925494
+      },
+      {
+        "url": "http://127.0.0.1:4175/profile-common.js?v=1",
+        "type": "script",
+        "transferBytes": 15401,
+        "bodyBytes": 15101,
+        "duration": 58.80000000074506
+      },
+      {
+        "url": "http://127.0.0.1:4175/cinematic-intro.js?v=1",
+        "type": "script",
+        "transferBytes": 2859,
+        "bodyBytes": 2559,
+        "duration": 67.19999999925494
+      },
+      {
+        "url": "http://127.0.0.1:4175/companion-nights.js?v=4-evidence",
+        "type": "script",
+        "transferBytes": 10623,
+        "bodyBytes": 10323,
+        "duration": 71.89999999850988
+      },
+      {
+        "url": "http://127.0.0.1:4175/game-v2.js?v=19-cinematic",
+        "type": "script",
+        "transferBytes": 355631,
+        "bodyBytes": 355331,
+        "duration": 73.5
+      },
+      {
+        "url": "http://127.0.0.1:4175/expedition-rest.js?v=3-vera",
+        "type": "script",
+        "transferBytes": 10597,
+        "bodyBytes": 10297,
+        "duration": 71.69999999925494
+      },
+      {
+        "url": "http://127.0.0.1:4175/companion-routes.js?v=1",
+        "type": "script",
+        "transferBytes": 11705,
+        "bodyBytes": 11405,
+        "duration": 72.19999999925494
+      },
+      {
+        "url": "http://127.0.0.1:4175/companion-commitments.js?v=4",
+        "type": "script",
+        "transferBytes": 14271,
+        "bodyBytes": 13971,
+        "duration": 71.90000000223517
+      },
+      {
+        "url": "http://127.0.0.1:4175/companion-evidence.js?v=1",
+        "type": "script",
+        "transferBytes": 16403,
+        "bodyBytes": 16103,
+        "duration": 78.30000000074506
+      },
+      {
+        "url": "http://127.0.0.1:4175/vera-negotiation.js?v=1",
+        "type": "script",
+        "transferBytes": 17766,
+        "bodyBytes": 17466,
+        "duration": 80.5
+      },
+      {
+        "url": "http://127.0.0.1:4175/field-upgrades.js?v=2",
+        "type": "script",
+        "transferBytes": 16780,
+        "bodyBytes": 16480,
+        "duration": 80.60000000149012
+      },
+      {
+        "url": "http://127.0.0.1:4175/narrative-v3.js?v=3-finale",
+        "type": "script",
+        "transferBytes": 18663,
+        "bodyBytes": 18363,
+        "duration": 80.69999999925494
+      },
+      {
+        "url": "http://127.0.0.1:4175/narrative-chapters.js?v=2-vera",
+        "type": "script",
+        "transferBytes": 15440,
+        "bodyBytes": 15140,
+        "duration": 80.59999999776483
+      },
+      {
+        "url": "http://127.0.0.1:4175/narrative-finale.js?v=vera-2-reward",
+        "type": "script",
+        "transferBytes": 23057,
+        "bodyBytes": 22757,
+        "duration": 80.80000000074506
+      },
+      {
+        "url": "http://127.0.0.1:4175/loot-crates.js?v=5-finale",
+        "type": "script",
+        "transferBytes": 19089,
+        "bodyBytes": 18789,
+        "duration": 92.40000000223517
+      },
+      {
+        "url": "http://127.0.0.1:4175/portraits/npc-varela.webp?v=2-abuelo",
+        "type": "img",
+        "transferBytes": 305442,
+        "bodyBytes": 305142,
+        "duration": 118.10000000149012
+      },
+      {
+        "url": "http://127.0.0.1:4175/portraits/noa.webp",
+        "type": "img",
+        "transferBytes": 30656,
+        "bodyBytes": 30356,
+        "duration": 117.69999999925494
+      },
+      {
+        "url": "http://127.0.0.1:4175/field-upgrades-ui.js?v=3",
+        "type": "script",
+        "transferBytes": 15482,
+        "bodyBytes": 15182,
+        "duration": 94
+      },
+      {
+        "url": "http://127.0.0.1:4175/combat-stage.js?v=5-mobile-arrows",
+        "type": "script",
+        "transferBytes": 17029,
+        "bodyBytes": 16729,
+        "duration": 93.89999999850988
+      },
+      {
+        "url": "http://127.0.0.1:4175/activities.js?v=8-expediente",
+        "type": "script",
+        "transferBytes": 6395,
+        "bodyBytes": 6095,
+        "duration": 94.39999999850988
+      },
+      {
+        "url": "http://127.0.0.1:4175/mobile-back.js?v=6-cinematic",
+        "type": "script",
+        "transferBytes": 5139,
+        "bodyBytes": 4839,
+        "duration": 94.5
+      },
+      {
+        "url": "http://127.0.0.1:4175/world-continuity.js?v=1",
+        "type": "script",
+        "transferBytes": 9634,
+        "bodyBytes": 9334,
+        "duration": 94.29999999701977
+      },
+      {
+        "url": "http://127.0.0.1:4175/extensions/mensajeros/assets/textures/metal-oxidado.webp",
+        "type": "css",
+        "transferBytes": 342532,
+        "bodyBytes": 342232,
+        "duration": 52.599999997764826
+      },
+      {
+        "url": "http://127.0.0.1:4175/portraits/sara.webp?v=71",
+        "type": "img",
+        "transferBytes": 38938,
+        "bodyBytes": 38638,
+        "duration": 15
+      },
+      {
+        "url": "http://127.0.0.1:4175/portraits/elias.webp?v=71",
+        "type": "img",
+        "transferBytes": 35902,
+        "bodyBytes": 35602,
+        "duration": 14.899999998509884
+      },
+      {
+        "url": "http://127.0.0.1:4175/portraits/noa.webp?v=71",
+        "type": "img",
+        "transferBytes": 30656,
+        "bodyBytes": 30356,
+        "duration": 15
+      }
+    ],
+    "longTasks": [
+      {
+        "start": 83.19999999925494,
+        "duration": 84
+      },
+      {
+        "start": 292.9000000022352,
+        "duration": 50
+      }
+    ],
+    "memory": {
+      "used": 10000000,
+      "total": 10000000,
+      "limit": 3760000000
+    }
+  },
+  "sceneFixtures": {
+    "cinematicToTwoFramesMs": 65.40000000223517,
+    "refugeToTwoFramesMs": 162.5,
+    "combatToTwoFramesMs": 111.80000000074506
+  },
+  "cdpMetrics": [
+    {
+      "name": "Timestamp",
+      "value": 19298.210595
+    },
+    {
+      "name": "AudioHandlers",
+      "value": 0
+    },
+    {
+      "name": "AudioWorkletProcessors",
+      "value": 0
+    },
+    {
+      "name": "Documents",
+      "value": 10
+    },
+    {
+      "name": "Frames",
+      "value": 7
+    },
+    {
+      "name": "JSEventListeners",
+      "value": 272
+    },
+    {
+      "name": "LayoutObjects",
+      "value": 1286
+    },
+    {
+      "name": "MediaKeySessions",
+      "value": 0
+    },
+    {
+      "name": "MediaKeys",
+      "value": 0
+    },
+    {
+      "name": "Nodes",
+      "value": 4003
+    },
+    {
+      "name": "Resources",
+      "value": 79
+    },
+    {
+      "name": "ContextLifecycleStateObservers",
+      "value": 21
+    },
+    {
+      "name": "V8PerContextDatas",
+      "value": 10
+    },
+    {
+      "name": "WorkerGlobalScopes",
+      "value": 0
+    },
+    {
+      "name": "UACSSResources",
+      "value": 0
+    },
+    {
+      "name": "RTCPeerConnections",
+      "value": 0
+    },
+    {
+      "name": "ResourceFetchers",
+      "value": 10
+    },
+    {
+      "name": "AdSubframes",
+      "value": 0
+    },
+    {
+      "name": "DetachedScriptStates",
+      "value": 6
+    },
+    {
+      "name": "ArrayBufferContents",
+      "value": 0
+    },
+    {
+      "name": "LayoutCount",
+      "value": 22
+    },
+    {
+      "name": "RecalcStyleCount",
+      "value": 54
+    },
+    {
+      "name": "LayoutDuration",
+      "value": 0.131888
+    },
+    {
+      "name": "RecalcStyleDuration",
+      "value": 0.056248
+    },
+    {
+      "name": "DevToolsCommandDuration",
+      "value": 0.057393
+    },
+    {
+      "name": "ScriptDuration",
+      "value": 0.038504
+    },
+    {
+      "name": "V8CompileDuration",
+      "value": 0.000919
+    },
+    {
+      "name": "TaskDuration",
+      "value": 0.600521
+    },
+    {
+      "name": "TaskOtherDuration",
+      "value": 0.315569
+    },
+    {
+      "name": "ThreadTime",
+      "value": 0.253032
+    },
+    {
+      "name": "ProcessTime",
+      "value": 0.99
+    },
+    {
+      "name": "JSHeapUsedSize",
+      "value": 4799076
+    },
+    {
+      "name": "JSHeapTotalSize",
+      "value": 7401472
+    },
+    {
+      "name": "FirstMeaningfulPaint",
+      "value": 19297.436706
+    },
+    {
+      "name": "DomContentLoaded",
+      "value": 19297.342659
+    },
+    {
+      "name": "NavigationStart",
+      "value": 19296.950149
+    }
+  ],
+  "errors": []
+}

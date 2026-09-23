@@ -6,16 +6,32 @@ const vm=require('node:vm');
 const root=path.resolve(__dirname,'..');
 const policy=require('../audio-availability.js');
 const catalog=require('../audio-catalog.js');
-const {audit,catalogFor}=require('../scripts/audit-audio.cjs');
+const {audit,catalogFor,artifactContents,staleArtifacts}=require('../scripts/audit-audio.cjs');
 const routes=JSON.parse(fs.readFileSync(path.join(root,'neosantiago-demo.html'),'utf8').match(/<script id="audioRoutes"[^>]*>([\s\S]*?)<\/script>/)[1]);
 
 test('audio audit includes every physical asset, known missing voice and courier map path',()=>{
   const report=audit();
+  assert.ok(report.sourceFiles.every(file=>!/^test-results(?:-|\/)/.test(file)),'browser traces are not production source files');
   assert.deepEqual(catalogFor(report),catalog,'regenerate the audio audit when assets or paths change');
   assert.ok(report.assets.some(a=>a.path==='audio/lore/voice/hunter-mother.mp3'&&a.status==='missing'&&a.priority==='P1'));
   assert.ok(report.assets.find(a=>a.path==='audio/ui/click-metal.mp3').references.some(r=>r.source==='extensions/mensajeros/play.mjs'&&r.kind==='sound-call'));
   for(const file of catalog.existing)assert.ok(fs.statSync(path.join(root,file)).size>0,file);
   for(const file of catalog.missing)assert.ok(!fs.existsSync(path.join(root,file))||fs.statSync(path.join(root,file)).size===0,file);
+});
+
+test('audit check catches stale byte counts and moved references even when catalog paths are unchanged',()=>{
+  const report=audit(),stored=artifactContents(report),read=file=>stored[file]??null;
+  assert.deepEqual(staleArtifacts(report,read),[]);
+  assert.ok(report.sourceFiles.every(file=>!file.startsWith('docs/')&&file!=='audio-catalog.js'));
+  const resized=structuredClone(report),asset=resized.assets.find(a=>a.status==='existing');
+  asset.bytes+=17;resized.summary.existingBytes+=17;
+  assert.deepEqual(catalogFor(resized),catalogFor(report));
+  assert.deepEqual(staleArtifacts(resized,read),['docs/v0.3/audio-audit.json','docs/v0.3/audio-audit.md']);
+  const moved=structuredClone(report);
+  moved.assets.find(a=>a.references.length).references[0].line+=1;
+  assert.deepEqual(catalogFor(moved),catalogFor(report));
+  assert.deepEqual(staleArtifacts(moved,read),['docs/v0.3/audio-audit.json','docs/v0.3/audio-audit.md']);
+  assert.deepEqual(staleArtifacts(report,()=>null),Object.keys(stored));
 });
 
 test('known absent variants never reach Audio while available variations remain intact',()=>{

@@ -4,6 +4,8 @@ RPG narrativo web con una expedición coral y la red de encargos de Los Mensajer
 
 **Versión vigente: V0.2.** La actualización narrativa y de sistemas está cerrada; la siguiente etapa acordada vuelve al trabajo visual. El alcance, las pruebas y los límites están en las [notas de versión](docs/version-0.2.md).
 
+**V0.3 en desarrollo:** la rama `feature/v0.3-vertical-slice` consolida arquitectura, guardados, resultados, audio y verificación sin reemplazar la versión publicada. El [informe V0.3](INFORME-V0.3-VERTICAL-SLICE.md) registra el alcance implementado y las condiciones que todavía faltan para cerrar el vertical slice.
+
 ## Continuar el desarrollo
 
 Leer primero [INFORME-CONTINUIDAD-V0.2.md](INFORME-CONTINUIDAD-V0.2.md). Reúne lo implementado, el estado de la actualización hacia V0.2, los pendientes, la arquitectura, los criterios narrativos, la compatibilidad de partidas y el contexto necesario para continuar en otro chat.
@@ -25,3 +27,5 @@ El libro de referencia de la adaptación está en [Neo Santiago 2130](https://ne
 ## Verificación
 
 Instalar las dependencias de desarrollo con `npm install` y ejecutar `npm test`. La comprobación vigente de V0.2 y la integración posterior de compuertas aprobó 390 pruebas. Los límites de esas comprobaciones, incluida la evaluación humana pendiente, están detallados en el informe.
+
+En la rama V0.3: `npm ci`, `npm test` y `npm run validate`. Para la segunda capa, `npx playwright install --with-deps chromium` y `npm run test:e2e`. La [guía QA](docs/v0.3/qa.md) explica la matriz de siete pantallas, los fixtures y sus límites; la [baseline de rendimiento](docs/v0.3/performance.md) permite repetir las mediciones.
