@@ -62,3 +62,11 @@ Coste de este bloque frente a la base: **6.072 bytes adicionales de fuentes sin 
 Medir una sesión humana desde portada hasta la segunda preparación, separando lectura, decisiones, combate e inventario. Revisar la oportunidad económica del comercio diario con varios estilos de juego. La selección de prueba evita desvíos opcionales y no certifica el balance de todas las rutas.
 
 Persisten los assets de audio P0 pendientes, la prueba en Safari/iOS y Android real, la aprobación de referencias visuales y el acoplamiento de escenas por índice/título. La orientación contextual no sustituye un mapa geográfico. El siguiente corte de arquitectura por IDs estables requiere análisis y aprobación propios; este bloque no lo implementa ni declara cerrada V0.3.
+
+## Ajuste descubierto por CI
+
+La primera ejecución remota del PR #6 aprobó Node y validadores, pero detectó una carrera del conductor E2E en el rescate: la animación podía mostrar opciones entre `isVisible()` y el clic en Avanzar texto. El botón quedaba deshabilitado porque correspondía elegir ruta, y la prueba esperaba el control anterior. Todos los fallos remotos señalaban esa misma línea.
+
+El conductor ahora resuelve conjuntamente el botón de avance y las opciones visibles/habilitadas; Playwright vuelve a localizar el control disponible durante la espera. No se cambian texto, temporizadores, reglas, aserciones ni límites de tiempo del juego. La corrección se verifica con repeticiones locales de los tamaños afectados y una nueva matriz completa en GitHub Actions.
+
+Comprobación local de la corrección: **4/4 rescates completos**, dos repeticiones en 768×1024 y dos en 1366×768, sin reintentos. Node vuelve a aprobar **436/436**; sintaxis, referencias y audio aprobados. La matriz remota definitiva queda vinculada a los checks del PR #6.

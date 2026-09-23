@@ -83,8 +83,9 @@ async function firstDay(page,testInfo,rescue,marks){
    continue;
   }
   if(await visible('#routeNarrativeModal')){
-   if(await visible('#routeNarrativeChoices'))await page.locator('[data-route-choice]:enabled').first().click();
-   else await page.locator('#routeNarrativeButton').click();
+   // Typing can reveal the choices between inspection and click. Re-resolve
+   // the currently actionable control instead of waiting on a disabled button.
+   await page.locator('#routeNarrativeButton:enabled:visible, #routeNarrativeChoices [data-route-choice]:enabled:visible').first().click();
    continue;
   }
   if(await visible('#crateModal')){await page.locator('#crateLeave').click();continue;}
