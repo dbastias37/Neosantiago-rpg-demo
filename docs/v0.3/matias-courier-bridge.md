@@ -47,3 +47,15 @@ La nueva opción mantiene la postura de observación de Noa y se oculta si ya se
 Los botones del refugio usan sus clases y variables visuales existentes. La ficha y el comercio de Mensajeros continúan usando sus adaptadores compartidos. El panel de campaña se elimina del refugio comercial de Mensajeros: la entrega se gestiona desde la conversación del relevo, no desde una segunda copia sin comportamiento. No se añaden imágenes ni sonidos.
 
 La primera pasada E2E detectó dos errores del conductor: usar la carpeta sin `index.html` en el servidor estático, y seleccionar a la vez el cierre superior y «Volver al mapa». Se corrigieron los localizadores y se volvió a ejecutar. Los seis casos A/B y delegación en 360×800 y 915×412 pasan, incluyendo ficha compartida y comercio; la matriz completa se registra al finalizar.
+
+## Entrega para revisión
+
+Node: **453/453**. Sintaxis, referencias y catálogo de audio: aprobados, sin referencias ausentes nuevas. El conjunto E2E tiene **63 casos**: 42 previos y 21 del puente (A, B y delegación en las siete resoluciones). Usa `npm run test:e2e`; CI ejecuta la misma matriz y conserva capturas/trazas. El resultado de la ejecución completa para cada revisión se consulta en [NeoSantiago QA](https://github.com/dbastias37/Neosantiago-rpg-demo/actions/workflows/qa.yml); los seis casos específicos en 360×800 y 915×412 ya se verificaron localmente, además de la inspección visual de sus capturas.
+
+Los casos de navegador preparan llegadas usando el motor real y comprueban recogida/entrega mediante botones, recarga, guardado, cambio de actividad, inventario y refugio compartidos. No son una sesión humana ininterrumpida. Node recorre los trayectos completos, incluyendo tres semillas de rescate con un equipo nuevo y sin cinco pagos previos. La suite previa conserva los recorridos del primer día hechos mediante UI.
+
+Se añaden 12.7 KiB sin comprimir entre los tres scripts de campaña y la hoja específica (12,991 bytes); no aumenta el preload de imágenes ni se incorpora audio. Esta cifra es peso estático, no una nueva medición de rendimiento en Render.
+
+Para revisar: `npm ci`, `npm run qa:serve`, abrir `http://127.0.0.1:4173/labs/community-bridge/index.html`. Cada botón prepara su propia variante y conserva una copia anterior. En el juego, «Continuar» lleva al refugio; abrir «Matías · La reserva de Vicuña». Probar recoger directamente, combinar con Darío, dejar la coordinación, llegar tarde y recargar. Jugar desde el comienzo permite comprobar la entrada natural tras rescatar a Matías.
+
+Pendiente: prueba humana A/B de motivación, duración y claridad; elección de la variante de producción; balance del enlace largo con jugadores nuevos; activación posterior explícita. El siguiente enlace Rosa/Sorsa requiere revisar sus hechos y rutas concretas antes de ampliar esta estructura. No hay migración automática ni activación del episodio en las partidas habituales.
