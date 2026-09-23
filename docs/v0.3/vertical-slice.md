@@ -40,9 +40,9 @@ El guardado no cambia de clave ni de esquema: se reutiliza `expeditionRest.night
 
 ## Límites que no deben ocultarse
 
-El regreso de Matías contiene una escena situada en la enfermería, pero no abre automáticamente la superficie de Mara y el Armero antes de la noche. `continueAfterNight()` abre el refugio cuando hace falta recuperación y, en otro caso, continúa la jornada. Cambiar esa navegación requiere un bloque propio para preservar reanudación y flujo nocturno.
+El regreso de Matías conserva la escena de enfermería antes de la noche. El bloque `day-one-continuity` conecta la primera noche confirmada con Mara/Armero: preparación normal sin repetir recuperación, o recuperación de emergencia cuando corresponde. La segunda noche conserva su navegación anterior. El regreso y la noche mantienen prioridad al reanudar un guardado.
 
-La Expedición tiene un **mapa de decisiones de capítulos** (`narrative-v3.js`), no navegación geográfica por el mapa de Mensajeros. No se presenta ese gráfico como un mapa completo del viaje. Integrar orientación geográfica legible en la campaña queda pendiente; no debe trasladar al grupo ni inventar estaciones para ajustar el mapa.
+La Expedición tiene un **mapa de decisiones de capítulos** (`narrative-v3.js`), no navegación geográfica por el mapa de Mensajeros. No se presenta ese gráfico como un mapa completo del viaje. La bitácora incorpora orientación contextual del primer día (sector, propósito presente y base de regreso). Sigue pendiente una representación geográfica; la lectura contextual no traslada al grupo ni inventa estaciones para ajustar el mapa.
 
 La interacción técnica de este tramo usa el lector de «La puerta sellada». Las compuertas numéricas permanecen en los desvíos de Encargos y tienen cobertura de regresión separada. Llevar su iframe a la campaña requiere antes un adaptador con contrato de coste, checkpoint y resultado único. No se incrusta como un minijuego independiente ni se añade otra interfaz de combate.
 
@@ -77,4 +77,4 @@ La comunicación entre equipos sigue el patrón de `world-continuity.js`: leer u
 
 `tests/vertical-slice-night.test.cjs` recorre las cinco salidas reales de la farmacia hasta la primera noche, incluido el traslado sin combate. Verifica recibos restaurados, distinción atención/llegada, resultados de bomba, ausencia de efectos al leer, protección del contexto V0.2, consumo único y compañeros agotados. La batería dirigida de noche y conversaciones aprueba 20 casos.
 
-Las pruebas de continuidad aíslan el estado narrativo; no demuestran la duración ni el balance de una sesión completa. El siguiente bloque del slice debe medir el recorrido jugable completo en navegador, registrar las pausas reales y resolver orientación geográfica/retorno visible conservando las superficies aprobadas. Solo después corresponde ajustar densidad o sumar otro encuentro.
+Las pruebas de continuidad aíslan el estado narrativo; no demuestran la duración ni el balance de una sesión completa. El bloque de continuidad añade recorridos de navegador desde una partida nueva, orientación contextual y retorno visible, conservando las superficies aprobadas. Su resultado y límites se registran en `day-one-continuity.md`. La duración de lectura humana sigue pendiente; solo después corresponde ajustar densidad o sumar otro encuentro.

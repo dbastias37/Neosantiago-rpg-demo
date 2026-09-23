@@ -58,12 +58,23 @@
 #refuge .empty{font-size:13px;line-height:1.6;color:#9b9b92}
 #refugeHelpModal .game-help-modal{clip-path:none;border:2px solid #d9a15c50;border-radius:6px;background:#090e0c}
 #refugeHelpModal h2{color:#e7e2d8}
+/* Short landscape screens need one scrollable shop, not clipped grid rows.
+   Shared by the campaign and the courier refuge loader. */
+@media(min-width:901px) and (max-height:550px){
+ #refuge .refuge-modal{display:block;overflow-y:auto}
+ #refuge .refuge-grid{height:600px}
+}
 @media(min-width:901px){
  #refuge .refuge-modal{height:calc(100dvh - 24px)!important;max-height:940px}
  #refuge .refuge-grid{grid-template-columns:280px minmax(0,1fr);gap:14px}
  #refuge .trader-panel{grid-template-rows:auto minmax(150px,28vh) minmax(0,1fr)}
  #refuge .trader-art{min-height:0;max-height:none}
  #refuge .refuge-main{grid-template-rows:auto auto minmax(0,1fr) 82px!important}
+ /* Hidden feedback must not shift the shop or footer into another row. */
+ #refuge .refuge-main>.refuge-section:first-of-type{grid-row:1}
+ #refuge .refuge-message{grid-row:2}
+ #refuge .refuge-main>.refuge-section:last-of-type{grid-row:3}
+ #refuge .refuge-footer{grid-row:4}
  #refuge .refuge-footer{height:82px!important;min-height:82px!important;max-height:82px!important}
 }
 @media(min-width:901px) and (max-width:1100px){

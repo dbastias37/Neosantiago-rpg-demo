@@ -3,7 +3,7 @@ const plain=x=>JSON.parse(JSON.stringify(x));
 function session(agreement='dudas',options={}){
  const a=boot(new Map(),options),c=a.ctx;c.gameSessionActive=true;c.state.introCompleted=true;c.state.starterKitGiven=true;c.state.activity='story';
  for(const id of ['titleScreen','start','gameIntro','refuge','storyPrelude','activityMenu'])a.nodes.get(id).classList.add('hidden');
- c.state.index=9;c.prepareNight(1);if(agreement)c.answerNightCompanion('elias',agreement);c.settleNight('share');c.continueAfterNight();c.state.index=c.evidenceIndex();c.save();c.render();return a;
+ c.state.index=9;c.prepareNight(1);if(agreement)c.answerNightCompanion('elias',agreement);c.settleNight('share');c.continueAfterNight();c.confirmLeaveRefuge();c.state.index=c.evidenceIndex();c.save();c.render();return a;
 }
 function current(c){return c.eventDisplay(c.events[c.state.index],c.state.index)}
 function prepare(c,method){

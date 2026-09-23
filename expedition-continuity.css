@@ -1,0 +1,29 @@
+/* Contextual journal reading; the refuge account reuses its existing modal. */
+.expedition-context {
+  margin: .75rem 0;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--amber);
+  background: rgba(0, 0, 0, .16);
+  color: var(--paper);
+}
+.expedition-context > summary {
+  padding: .75rem;
+  min-height: 44px;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-weight: 700;
+}
+.expedition-context > summary:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+.expedition-context p {
+  padding: 0 .75rem;
+  margin: .5rem 0 .75rem;
+  line-height: 1.5;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+#refugeReturnAccount { margin-top: .5rem; }
+#refugeReturnButton { min-height: 44px; }

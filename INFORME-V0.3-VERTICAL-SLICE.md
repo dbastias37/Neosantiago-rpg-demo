@@ -1,6 +1,6 @@
 # NeoSantiago 2130 — V0.3 Vertical Slice
 
-Fecha de inicio: 23 de septiembre de 2026. Rama: `feature/v0.3-vertical-slice`.
+Fecha de inicio: 23 de septiembre de 2026. Fundamentos integrados mediante PR #5 (`main` en `d9f4a22`). Bloque actual: `feature/v0.3-day-one-continuity`.
 
 **Estado: desarrollo y revisión; V0.2 sigue siendo la versión publicada.** Este documento no certifica todavía una experiencia de 30–60 minutos ni el cierre de V0.3.
 
@@ -109,7 +109,7 @@ Se retiraron diez preloads de escenas tardías. Medición local comparable de cu
 
 ## Estado para revisión y continuación
 
-La rama entrega los fundamentos P0 y el primer pulido del tramo. **No declara V0.3 terminada.** V0.2 sigue publicada y `main` no se modifica por este trabajo. No se cambió motor, balance, inventario compartido, finales aprobados ni se añadieron misiones grandes.
+La entrega inicial, ya integrada en `main` mediante PR #5, contiene los fundamentos P0 y el primer pulido del tramo. Los resultados de esa entrega se conservan abajo como baseline histórica. **No declara V0.3 terminada.** La versión visible sigue siendo V0.2; los cambios siguientes se revisan en una rama separada. No se cambió motor, balance, inventario compartido, finales aprobados ni se añadieron misiones grandes.
 
 | Criterio | Evidencia / pendiente |
 | --- | --- |
@@ -123,4 +123,21 @@ La rama entrega los fundamentos P0 y el primer pulido del tramo. **No declara V0
 | Pipeline de misiones | Datos separados y contrato autoral documentado; aún existen acoplamientos por índice antes de ampliar/reordenar campaña. |
 | Audio final | 64 archivos referenciados ausentes; fallbacks parciales no sustituyen producción sonora ni escucha. |
 
-**Siguiente bloque:** jugar el primer día completo en navegador sin alterar salud/recursos ni saltar combates; registrar duración y fricciones; resolver orientación y retorno visible usando las superficies existentes; completar assets P0 autorizados. Después aprobar referencias visuales y evaluar el siguiente corte de arquitectura por IDs estables. No iniciar la producción de 12–15 misiones hasta validar ese circuito.
+**Siguiente bloque propuesto al entregar los fundamentos:** recorrido completo, orientación y retorno visible. Su implementación y evidencia están en la sección siguiente. Después quedan la sesión humana medida, assets P0 autorizados, aprobación visual y análisis de IDs estables. No iniciar la producción de 12–15 misiones hasta validar ese circuito.
+
+
+## Bloque de continuidad del primer día
+
+Autorizado después de revisar `main` en `d9f4a22`. Detalle y compatibilidad: `docs/v0.3/day-one-continuity.md`.
+
+La primera noche ahora termina en la preparación del refugio, antes de confirmar logística y volver a sincronizar el inhibidor. El motivo `preparation` utiliza Mara/Armero, inventario y precios existentes; no da un segundo descanso ni reagrupamiento. Las recuperaciones de emergencia conservan su funcionamiento. La visita comercial del día 2 se vuelve accesible de forma regular, una oportunidad económica que deberá evaluarse con sesiones humanas.
+
+La bitácora ofrece orientación plegable por sector y propósito presente. El refugio permite releer el registro capturado al llegar, sin atribuir conocimiento al comerciante ni inventar el destino de Matías. No hay mapa geográfico nuevo, misiones añadidas ni cambios en el orden de eventos.
+
+Los guardados conservan clave y esquema 3. `returnAccount` es texto opcional en la primera noche; se valida, no se reconstruye en guardados antiguos y no sustituye su contexto. Recargar una jornada ya cerrada fuera del refugio no retrocede la partida.
+
+Node: **436/436** tras la implementación y el ajuste del lector; misma deuda de 64 archivos de audio. El registro utiliza el modal existente para conservar espacio comercial. El CSS compartido corrige el acceso a compras en horizontal corto y fija las filas para que el feedback no tape el comercio. **42/42 E2E aprobadas** en la ejecución local final: 28 casos existentes y 14 recorridos completos, con compras y recargas reales, en las siete resoluciones. Sintaxis, referencias y catálogo aprobados. Resultados reproducibles: `docs/v0.3/day-one-baseline.json`. La reproducción automatizada no valida los 30–60 minutos humanos.
+
+La primera matriz remota del PR #6 detectó una carrera adicional en el conductor de la narrativa de ruta: el texto podía terminar mientras Playwright intentaba pulsar un botón que acababa de deshabilitarse. Se corrige la selección del control disponible sin modificar la jugabilidad ni relajar aserciones. El registro técnico está en `docs/v0.3/day-one-continuity.md`; el estado remoto definitivo se consulta en los checks del PR.
+
+El primer ajuste aprobó CI con dos casos intermitentes por ejecución; no se considera evidencia de estabilidad. El conductor pasa a usar Enter, atajo existente y válido durante la transición, para revelar/avanzar texto; las decisiones siguen usando clics. Se conserva el historial de validación y se repite la matriz con esa corrección.

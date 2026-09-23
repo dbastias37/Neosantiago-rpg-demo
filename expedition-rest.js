@@ -6,6 +6,7 @@ function normalizeExpeditionRest(){
   var ledger=restLedger();if(ledger.version!==1||!ledger.nights||typeof ledger.nights!=="object"||Array.isArray(ledger.nights))throw Error("Descanso inválido");
   Object.keys(ledger.nights).forEach(function(key){var n=ledger.nights[key];
     if(!n||!["1","2"].includes(key)||n.day!==Number(key)||!["planning","settled","closed"].includes(n.phase)||![null,"fled","exhausted","morale"].includes(n.returnToRefuge)||typeof n.context!=="string")throw Error("Noche inválida");
+    if(n.returnAccount!==undefined&&typeof n.returnAccount!=="string")throw Error("Registro de regreso inválido");
     normalizeNightConversations(n);
     if(n.phase==="closed"&&currentDay()<=n.day)throw Error("Descanso futuro");
     if(n.phase!=="closed"&&state.index!==events.findIndex(function(e){return e.day===n.day+1}))throw Error("Noche fuera de jornada");
@@ -43,26 +44,28 @@ function nightContext(day){
   var f=state.flags,awake=state.party.every(function(p){return p.hp>0});
   var firstNight=day===1?firstNightConsequences():"";
   if(!awake)return "En el refugio apartan una mesa para atender a quienes volvieron agotados. Las mochilas quedan al alcance del grupo. Antes de repartir las reservas, alguien cuenta qué comida y agua trajeron de vuelta."+(firstNight?"\n\n"+firstNight:"");
-  if(day===1)return "Sara deja las vendas usadas aparte y pide que nadie se acueste con una herida sin revisar. Elías acerca su cuaderno, pero Noa le hace sitio junto a la comida: «Primero sentémonos». Noa revisa las correas mientras Sara cuenta los suministros. Quieren saber con qué podrán salir mañana, antes de prometer otra ayuda."+(firstNight?"\n\n"+firstNight:"");
+  if(day===1)return "De vuelta en Línea 1, el grupo deja las mochilas junto a la mesa. Sara deja las vendas usadas aparte y pide que nadie se acueste con una herida sin revisar. Elías acerca su cuaderno, pero Noa le hace sitio junto a la comida: «Primero sentémonos». Noa revisa las correas mientras Sara cuenta los suministros. Quieren saber con qué podrán salir mañana, antes de prometer otra ayuda."+(firstNight?"\n\n"+firstNight:"");
   return "Elías extiende las hojas recuperadas y busca dónde apoyar el receptor sin mojar los papeles. Noa deja su arma a un lado para repartir las reservas. "+(f.liraDead?"Sara se detiene al llegar a la anotación de Lira. «Esto no lo arreglamos durmiendo». Elías conserva el registro; no intenta convertirlo en una buena noticia.":f.savedMerodeadora?"Sara vuelve a la anotación de Lira. «La atendimos. No escribas que ya se recuperó». Elías corrige la línea y deja espacio para lo que aún no saben.":"Sara le pide que distinga lo que vieron de lo que suponen. «Mañana vamos a decidir con esas hojas». Elías tacha una conclusión y conserva la pregunta.");
 }
 function showNight(){
   var n=pendingNight();if(!n)return false;var settled=n.phase==="settled",f=settled?null:nightForecast("share");
-  $("nightTitle").textContent="Noche del día "+n.day+" · preparar el regreso";
+  $("nightTitle").textContent="De vuelta en el refugio · noche del día "+n.day;
   $("nightText").textContent=n.context;
   $("nightExplanation").textContent=settled?n.receipt.text:"Todavía no se han consumido reservas. Una ración se comparte entre los tres; también se utiliza 1 agua si queda. Puedes conservar la comida para mañana, con el costo de energía y moral indicado. Leer esta conversación no consume tiempo.";
   var rows=settled?n.receipt.changes:[["Reservas disponibles",stockCount("food")+" raciones · "+stockCount("water")+" aguas"],["Si comparten",f.food+" ración · "+f.water+" agua"],["Energía por persona",(f.energy>0?"+":"")+f.energy+" · entre 0 y 100"],["Moral del grupo",String(f.morale)],["Atención nocturna","+8 HP; agotados vuelven a 12, hasta su máximo"],["Talleres","Se reponen a 3 acciones cada uno"]];
   $("nightChanges").innerHTML=rows.map(function(x){return '<div class="result-chip">'+esc(x[0])+'<strong>'+esc(x[1])+'</strong></div>'}).join("");
   $("nightShare").classList.toggle("hidden",settled);$("nightShare").textContent=stockCount("food")?"Compartir una ración y descansar":"Descansar con lo que queda";
   $("nightKeep").classList.toggle("hidden",settled||!stockCount("food"));$("nightKeep").textContent="Guardar la comida · energía −8 · moral "+nightForecast("save-food").morale;
-  $("nextDay").classList.toggle("hidden",!settled);$("nextDay").textContent=n.returnToRefuge||state.morale<10||state.party.some(function(p){return p.hp<10||p.hunger<10})?"Preparar al equipo en el refugio":"Comenzar el día "+(n.day+1);
+  $("nextDay").classList.toggle("hidden",!settled);$("nextDay").textContent=n.day===1||n.returnToRefuge||state.morale<10||state.party.some(function(p){return p.hp<10||p.hunger<10})?"Preparar al equipo en el refugio":"Comenzar el día "+(n.day+1);
   renderNightConversation();$("night").classList.remove("hidden");$("nightReading").scrollTop=0;$("nightReading").focus({preventScroll:true});return true;
 }
 function prepareNight(day,returnToRefuge){
   if(![1,2].includes(day)||state.finished||state.index!==events.findIndex(function(e){return e.day===day+1}))return false;
   var ledger=restLedger();if(ledger.nights[day])return showNight();
   state.inhibitor.active=false;state.inhibitor.remainingMs=0;state.inhibitor.exposed=true;state.inhibitor.needsSync=true;state.inhibitor.exposedMoves=0;
-  ledger.nights[day]={day:day,phase:"planning",returnToRefuge:returnToRefuge||null,choice:null,receipt:null,context:nightContext(day)+(day===2&&typeof veraNightContext==="function"&&veraNightContext()?"\n\n"+veraNightContext():""),conversations:{}};nightCompanion=null;
+  ledger.nights[day]={day:day,phase:"planning",returnToRefuge:returnToRefuge||null,choice:null,receipt:null,context:nightContext(day)+(day===2&&typeof veraNightContext==="function"&&veraNightContext()?"\n\n"+veraNightContext():""),conversations:{}};
+  if(day===1)ledger.nights[day].returnAccount=firstNightConsequences();
+  nightCompanion=null;
   save();render();renderSignalHud();return showNight();
 }
 function settleNight(mode){
@@ -82,7 +85,7 @@ function settleNight(mode){
 function continueAfterNight(){
   var n=pendingNight();if(!n||n.phase!=="settled")return false;n.phase="closed";$("night").classList.add("hidden");
   var reason=n.returnToRefuge||(state.morale<10?"morale":state.party.some(function(p){return p.hp<10||p.hunger<10})?"exhausted":null);
-  if(reason)openRefuge(reason);else{save();render();setTimeout(function(){openSignalHack("newday")},260)}return true;
+  if(reason)openRefuge(reason);else if(n.day===1)openRefuge("preparation");else{save();render();setTimeout(function(){openSignalHack("newday")},260)}return true;
 }
 function nightKeydown(e){
   if($("night").classList.contains("hidden"))return false;

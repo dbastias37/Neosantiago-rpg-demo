@@ -1,0 +1,660 @@
+{
+  "schemaVersion": 1,
+  "baseCommit": "d9f4a2295873fae4b4cf73e9abab22eda25f1127",
+  "method": "Real UI from New Game. Text reveal and narration advance controls used; no injected game state, RNG seed, resources, victory or timers. Includes reloads and next-day synchronization. These seconds are not human reading time.",
+  "environment": "Playwright 1.63.0, local Chromium 153 via documented executable override; CI uses official Playwright Chromium.",
+  "verification": {
+    "nodePassed": 436,
+    "browserPassed": 42,
+    "newBrowserJourneys": 14,
+    "unexpectedBrowserErrors": 0
+  },
+  "productionSourceDeltaBytes": 6072,
+  "newPreloadedAssets": 0,
+  "runs": [
+    {
+      "viewport": "360x800",
+      "route": "rescue",
+      "automatedSeconds": 41.73,
+      "battles": 1,
+      "wins": 1,
+      "lootUnits": 5,
+      "matiasAtRefuge": true,
+      "leftSupplies": false,
+      "pumpAbandoned": true,
+      "arrival": {
+        "food": 7,
+        "water": 3,
+        "credits": 6,
+        "party": [
+          {
+            "id": "sara",
+            "hp": 44,
+            "energy": 46
+          },
+          {
+            "id": "elias",
+            "hp": 40,
+            "energy": 40
+          },
+          {
+            "id": "noa",
+            "hp": 38,
+            "energy": 52
+          }
+        ]
+      },
+      "afterNight": {
+        "food": 6,
+        "water": 2,
+        "rests": 1
+      },
+      "afterPurchaseAndDeparture": {
+        "food": 7,
+        "water": 2,
+        "credits": 0,
+        "rests": 1,
+        "refugeActive": false,
+        "sceneIndex": 9
+      }
+    },
+    {
+      "viewport": "360x800",
+      "route": "supplies",
+      "automatedSeconds": 28.22,
+      "battles": 0,
+      "wins": 0,
+      "lootUnits": 0,
+      "matiasAtRefuge": false,
+      "leftSupplies": true,
+      "pumpAbandoned": true,
+      "arrival": {
+        "food": 5,
+        "water": 4,
+        "credits": 6,
+        "party": [
+          {
+            "id": "sara",
+            "hp": 44,
+            "energy": 46
+          },
+          {
+            "id": "elias",
+            "hp": 40,
+            "energy": 40
+          },
+          {
+            "id": "noa",
+            "hp": 38,
+            "energy": 52
+          }
+        ]
+      },
+      "afterNight": {
+        "food": 4,
+        "water": 3,
+        "rests": 1
+      },
+      "afterPurchaseAndDeparture": {
+        "food": 5,
+        "water": 3,
+        "credits": 0,
+        "rests": 1,
+        "refugeActive": false,
+        "sceneIndex": 9
+      }
+    },
+    {
+      "viewport": "390x844",
+      "route": "rescue",
+      "automatedSeconds": 38.95,
+      "battles": 1,
+      "wins": 1,
+      "lootUnits": 5,
+      "matiasAtRefuge": true,
+      "leftSupplies": false,
+      "pumpAbandoned": true,
+      "arrival": {
+        "food": 7,
+        "water": 3,
+        "credits": 6,
+        "party": [
+          {
+            "id": "sara",
+            "hp": 44,
+            "energy": 46
+          },
+          {
+            "id": "elias",
+            "hp": 40,
+            "energy": 40
+          },
+          {
+            "id": "noa",
+            "hp": 38,
+            "energy": 52
+          }
+        ]
+      },
+      "afterNight": {
+        "food": 6,
+        "water": 2,
+        "rests": 1
+      },
+      "afterPurchaseAndDeparture": {
+        "food": 7,
+        "water": 2,
+        "credits": 0,
+        "rests": 1,
+        "refugeActive": false,
+        "sceneIndex": 9
+      }
+    },
+    {
+      "viewport": "390x844",
+      "route": "supplies",
+      "automatedSeconds": 28.58,
+      "battles": 0,
+      "wins": 0,
+      "lootUnits": 0,
+      "matiasAtRefuge": false,
+      "leftSupplies": true,
+      "pumpAbandoned": true,
+      "arrival": {
+        "food": 5,
+        "water": 4,
+        "credits": 6,
+        "party": [
+          {
+            "id": "sara",
+            "hp": 44,
+            "energy": 46
+          },
+          {
+            "id": "elias",
+            "hp": 40,
+            "energy": 40
+          },
+          {
+            "id": "noa",
+            "hp": 38,
+            "energy": 52
+          }
+        ]
+      },
+      "afterNight": {
+        "food": 4,
+        "water": 3,
+        "rests": 1
+      },
+      "afterPurchaseAndDeparture": {
+        "food": 5,
+        "water": 3,
+        "credits": 0,
+        "rests": 1,
+        "refugeActive": false,
+        "sceneIndex": 9
+      }
+    },
+    {
+      "viewport": "412x915",
+      "route": "rescue",
+      "automatedSeconds": 40.4,
+      "battles": 1,
+      "wins": 1,
+      "lootUnits": 5,
+      "matiasAtRefuge": true,
+      "leftSupplies": false,
+      "pumpAbandoned": true,
+      "arrival": {
+        "food": 7,
+        "water": 3,
+        "credits": 6,
+        "party": [
+          {
+            "id": "sara",
+            "hp": 44,
+            "energy": 46
+          },
+          {
+            "id": "elias",
+            "hp": 40,
+            "energy": 40
+          },
+          {
+            "id": "noa",
+            "hp": 38,
+            "energy": 52
+          }
+        ]
+      },
+      "afterNight": {
+        "food": 6,
+        "water": 2,
+        "rests": 1
+      },
+      "afterPurchaseAndDeparture": {
+        "food": 7,
+        "water": 2,
+        "credits": 0,
+        "rests": 1,
+        "refugeActive": false,
+        "sceneIndex": 9
+      }
+    },
+    {
+      "viewport": "412x915",
+      "route": "supplies",
+      "automatedSeconds": 29.16,
+      "battles": 0,
+      "wins": 0,
+      "lootUnits": 0,
+      "matiasAtRefuge": false,
+      "leftSupplies": true,
+      "pumpAbandoned": true,
+      "arrival": {
+        "food": 5,
+        "water": 4,
+        "credits": 6,
+        "party": [
+          {
+            "id": "sara",
+            "hp": 44,
+            "energy": 46
+          },
+          {
+            "id": "elias",
+            "hp": 40,
+            "energy": 40
+          },
+          {
+            "id": "noa",
+            "hp": 38,
+            "energy": 52
+          }
+        ]
+      },
+      "afterNight": {
+        "food": 4,
+        "water": 3,
+        "rests": 1
+      },
+      "afterPurchaseAndDeparture": {
+        "food": 5,
+        "water": 3,
+        "credits": 0,
+        "rests": 1,
+        "refugeActive": false,
+        "sceneIndex": 9
+      }
+    },
+    {
+      "viewport": "768x1024",
+      "route": "rescue",
+      "automatedSeconds": 47.68,
+      "battles": 1,
+      "wins": 1,
+      "lootUnits": 5,
+      "matiasAtRefuge": true,
+      "leftSupplies": false,
+      "pumpAbandoned": true,
+      "arrival": {
+        "food": 7,
+        "water": 3,
+        "credits": 6,
+        "party": [
+          {
+            "id": "sara",
+            "hp": 44,
+            "energy": 46
+          },
+          {
+            "id": "elias",
+            "hp": 40,
+            "energy": 40
+          },
+          {
+            "id": "noa",
+            "hp": 38,
+            "energy": 52
+          }
+        ]
+      },
+      "afterNight": {
+        "food": 6,
+        "water": 2,
+        "rests": 1
+      },
+      "afterPurchaseAndDeparture": {
+        "food": 7,
+        "water": 2,
+        "credits": 0,
+        "rests": 1,
+        "refugeActive": false,
+        "sceneIndex": 9
+      }
+    },
+    {
+      "viewport": "768x1024",
+      "route": "supplies",
+      "automatedSeconds": 31.88,
+      "battles": 0,
+      "wins": 0,
+      "lootUnits": 0,
+      "matiasAtRefuge": false,
+      "leftSupplies": true,
+      "pumpAbandoned": true,
+      "arrival": {
+        "food": 5,
+        "water": 4,
+        "credits": 6,
+        "party": [
+          {
+            "id": "sara",
+            "hp": 44,
+            "energy": 46
+          },
+          {
+            "id": "elias",
+            "hp": 40,
+            "energy": 40
+          },
+          {
+            "id": "noa",
+            "hp": 38,
+            "energy": 52
+          }
+        ]
+      },
+      "afterNight": {
+        "food": 4,
+        "water": 3,
+        "rests": 1
+      },
+      "afterPurchaseAndDeparture": {
+        "food": 5,
+        "water": 3,
+        "credits": 0,
+        "rests": 1,
+        "refugeActive": false,
+        "sceneIndex": 9
+      }
+    },
+    {
+      "viewport": "915x412",
+      "route": "rescue",
+      "automatedSeconds": 42.25,
+      "battles": 1,
+      "wins": 1,
+      "lootUnits": 5,
+      "matiasAtRefuge": true,
+      "leftSupplies": false,
+      "pumpAbandoned": true,
+      "arrival": {
+        "food": 7,
+        "water": 3,
+        "credits": 6,
+        "party": [
+          {
+            "id": "sara",
+            "hp": 44,
+            "energy": 46
+          },
+          {
+            "id": "elias",
+            "hp": 40,
+            "energy": 40
+          },
+          {
+            "id": "noa",
+            "hp": 38,
+            "energy": 52
+          }
+        ]
+      },
+      "afterNight": {
+        "food": 6,
+        "water": 2,
+        "rests": 1
+      },
+      "afterPurchaseAndDeparture": {
+        "food": 7,
+        "water": 2,
+        "credits": 0,
+        "rests": 1,
+        "refugeActive": false,
+        "sceneIndex": 9
+      }
+    },
+    {
+      "viewport": "915x412",
+      "route": "supplies",
+      "automatedSeconds": 29.54,
+      "battles": 0,
+      "wins": 0,
+      "lootUnits": 0,
+      "matiasAtRefuge": false,
+      "leftSupplies": true,
+      "pumpAbandoned": true,
+      "arrival": {
+        "food": 5,
+        "water": 4,
+        "credits": 6,
+        "party": [
+          {
+            "id": "sara",
+            "hp": 44,
+            "energy": 46
+          },
+          {
+            "id": "elias",
+            "hp": 40,
+            "energy": 40
+          },
+          {
+            "id": "noa",
+            "hp": 38,
+            "energy": 52
+          }
+        ]
+      },
+      "afterNight": {
+        "food": 4,
+        "water": 3,
+        "rests": 1
+      },
+      "afterPurchaseAndDeparture": {
+        "food": 5,
+        "water": 3,
+        "credits": 0,
+        "rests": 1,
+        "refugeActive": false,
+        "sceneIndex": 9
+      }
+    },
+    {
+      "viewport": "1366x768",
+      "route": "rescue",
+      "automatedSeconds": 46.26,
+      "battles": 1,
+      "wins": 1,
+      "lootUnits": 5,
+      "matiasAtRefuge": true,
+      "leftSupplies": false,
+      "pumpAbandoned": true,
+      "arrival": {
+        "food": 7,
+        "water": 3,
+        "credits": 6,
+        "party": [
+          {
+            "id": "sara",
+            "hp": 44,
+            "energy": 46
+          },
+          {
+            "id": "elias",
+            "hp": 40,
+            "energy": 40
+          },
+          {
+            "id": "noa",
+            "hp": 38,
+            "energy": 52
+          }
+        ]
+      },
+      "afterNight": {
+        "food": 6,
+        "water": 2,
+        "rests": 1
+      },
+      "afterPurchaseAndDeparture": {
+        "food": 7,
+        "water": 2,
+        "credits": 0,
+        "rests": 1,
+        "refugeActive": false,
+        "sceneIndex": 9
+      }
+    },
+    {
+      "viewport": "1366x768",
+      "route": "supplies",
+      "automatedSeconds": 32.07,
+      "battles": 0,
+      "wins": 0,
+      "lootUnits": 0,
+      "matiasAtRefuge": false,
+      "leftSupplies": true,
+      "pumpAbandoned": true,
+      "arrival": {
+        "food": 5,
+        "water": 4,
+        "credits": 6,
+        "party": [
+          {
+            "id": "sara",
+            "hp": 44,
+            "energy": 46
+          },
+          {
+            "id": "elias",
+            "hp": 40,
+            "energy": 40
+          },
+          {
+            "id": "noa",
+            "hp": 38,
+            "energy": 52
+          }
+        ]
+      },
+      "afterNight": {
+        "food": 4,
+        "water": 3,
+        "rests": 1
+      },
+      "afterPurchaseAndDeparture": {
+        "food": 5,
+        "water": 3,
+        "credits": 0,
+        "rests": 1,
+        "refugeActive": false,
+        "sceneIndex": 9
+      }
+    },
+    {
+      "viewport": "1920x1080",
+      "route": "rescue",
+      "automatedSeconds": 50.23,
+      "battles": 1,
+      "wins": 1,
+      "lootUnits": 5,
+      "matiasAtRefuge": true,
+      "leftSupplies": false,
+      "pumpAbandoned": true,
+      "arrival": {
+        "food": 7,
+        "water": 3,
+        "credits": 6,
+        "party": [
+          {
+            "id": "sara",
+            "hp": 44,
+            "energy": 46
+          },
+          {
+            "id": "elias",
+            "hp": 40,
+            "energy": 40
+          },
+          {
+            "id": "noa",
+            "hp": 38,
+            "energy": 52
+          }
+        ]
+      },
+      "afterNight": {
+        "food": 6,
+        "water": 2,
+        "rests": 1
+      },
+      "afterPurchaseAndDeparture": {
+        "food": 7,
+        "water": 2,
+        "credits": 0,
+        "rests": 1,
+        "refugeActive": false,
+        "sceneIndex": 9
+      }
+    },
+    {
+      "viewport": "1920x1080",
+      "route": "supplies",
+      "automatedSeconds": 32.03,
+      "battles": 0,
+      "wins": 0,
+      "lootUnits": 0,
+      "matiasAtRefuge": false,
+      "leftSupplies": true,
+      "pumpAbandoned": true,
+      "arrival": {
+        "food": 5,
+        "water": 4,
+        "credits": 6,
+        "party": [
+          {
+            "id": "sara",
+            "hp": 44,
+            "energy": 46
+          },
+          {
+            "id": "elias",
+            "hp": 40,
+            "energy": 40
+          },
+          {
+            "id": "noa",
+            "hp": 38,
+            "energy": 52
+          }
+        ]
+      },
+      "afterNight": {
+        "food": 4,
+        "water": 3,
+        "rests": 1
+      },
+      "afterPurchaseAndDeparture": {
+        "food": 5,
+        "water": 3,
+        "credits": 0,
+        "rests": 1,
+        "refugeActive": false,
+        "sceneIndex": 9
+      }
+    }
+  ]
+}
