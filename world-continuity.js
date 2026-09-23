@@ -2,7 +2,7 @@
 
 // Read only the durable delivery receipt. Neither team writes the other's save.
 // A fact is learned at a safe boundary; its benefit is spent on an explicit departure.
-var WORLD_COURIER_KEY="neosantiago.mensajeros.production.v1";
+var WORLD_COURIER_KEY=NeoBridgeContext.key("neosantiago.mensajeros.production.v1");
 var WORLD_MORALES_FACT="morales-corridor-report";
 var worldNewsOpen=false;
 

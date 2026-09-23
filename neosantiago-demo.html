@@ -32,6 +32,7 @@
 <link rel="preload" href="assets/branding/producciones-verite.png" as="image">
 <link rel="stylesheet" href="night-surface.css?v=1">
 <link rel="stylesheet" href="accessibility-foundation.css?v=1">
+<link rel="stylesheet" href="styles/medical-bridge.css">
 </head>
 <body>
   <div class="app expedition-journal">
@@ -434,6 +435,16 @@
             <div class="refuge-section-head"><h3>Estado del grupo</h3><small>Abre una ficha para curar, fabricar o transferir</small></div>
             <div class="refuge-party" id="refugeParty"></div>
             <div class="hidden" id="refugeReturnAccount"><button class="secondary" id="refugeReturnButton" aria-haspopup="dialog" aria-controls="refugeHelpModal">Lo que el grupo trajo de vuelta</button></div>
+            <details class="medical-bridge hidden" id="medicalBridgePanel">
+              <summary>Matías · La reserva de Vicuña</summary>
+              <p id="medicalBridgeText" aria-live="polite"></p>
+              <div class="medical-bridge-actions">
+                <button class="secondary" id="medicalAccept">Coordinar el relevo</button>
+                <button class="secondary" id="medicalCouriers">Seguir con Los Mensajeros</button>
+                <button class="secondary" id="medicalReview">Escuchar a Matías durante el relevo</button>
+                <button class="secondary" id="medicalDelegate">Dejar la coordinación a la posta</button>
+              </div>
+            </details>
             <div class="world-news-entry hidden" id="worldNewsEntry">
               <p id="worldNewsStatus"></p>
               <button class="secondary" id="worldNewsButton" aria-haspopup="dialog" aria-controls="worldNewsModal">Informe de Morales</button>
@@ -783,10 +794,12 @@
   </aside>
   <div class="toast hidden" id="toast" role="status"></div>
 
+  <script src="bridge-context.js"></script>
+  <script src="community-bridge.js"></script>
   <script src="campaign-v2.js?v=opening-02-73"></script>
   <script>
   "use strict";
-  var KEY="neosantiago2130_demo_v3";
+  var KEY=NeoBridgeContext.key("neosantiago2130_demo_v3");
   var $=function(id){return document.getElementById(id)};
   var chapters={1:"Día 1 · La señal",2:"Día 2 · El pulso",3:"Día 3 · La verdad"};
   var items={
@@ -1122,8 +1135,8 @@
   <script src="outcomes-v3.js?v=1"></script>
   <script src="outcome-screen.js?v=1"></script>
   <script src="outcome-campaign.js?v=1"></script>
-  <script src="persistence-v3.js?v=2"></script>
-  <script src="game-v2.js?v=23-return-reader"></script>
+  <script src="persistence-v3.js?v=3-medical-bridge"></script>
+  <script src="game-v2.js?v=24-medical-bridge"></script>
   <script src="companion-nights.js?v=4-evidence"></script>
   <script src="expedition-rest.js?v=4-return"></script>
   <script src="expedition-continuity.js?v=2"></script>
@@ -1166,7 +1179,8 @@
   </article>
 </section>
 <script src="world-continuity.js?v=1"></script>
-<script src="activities.js?v=8-expediente"></script>
+<script src="medical-bridge-campaign.js"></script>
+  <script src="activities.js?v=8-expediente"></script>
 <script src="mobile-back.js?v=6-cinematic"></script>
 </body>
 </html>

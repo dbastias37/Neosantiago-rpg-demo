@@ -15,8 +15,8 @@ function openActivityMenu(){
 function courierAudioVisible(active){var frame=$('courierFrame');try{if(frame.contentWindow&&frame.contentWindow.NeoCourierVisibility)frame.contentWindow.NeoCourierVisibility(active)}catch(e){}}
 function resetActivityProgress(){
  try{
-  localStorage.removeItem('neosantiago.mensajeros.production.v1');
-  localStorage.removeItem('neosantiago.mensajeros.production.v1.backup');
+  localStorage.removeItem(NeoBridgeContext.key('neosantiago.mensajeros.production.v1'));
+  localStorage.removeItem(NeoBridgeContext.key('neosantiago.mensajeros.production.v1')+'.backup');
  }catch(e){toast('No se pudo reiniciar el guardado de encargos. Revisa el almacenamiento del navegador.');return false}
  courierAudioVisible(false);
  // Destroy the old browsing context, including its combat, timers and in-memory world.
@@ -28,6 +28,7 @@ function openCourierActivity(){
  setSceneAmbience(null);courierAudioVisible(true);
  state.activity='couriers';save();$("activityMenu").classList.add("hidden");$("courierScreen").classList.remove("hidden");
  var frame=$("courierFrame");if(!frame.getAttribute('src'))frame.setAttribute('src','extensions/mensajeros/play.html?v=18-expediente');
+ try{frame.contentWindow.postMessage({type:"neo-medical-request"},location.origin)}catch(e){}
  $("courierReturn").focus({preventScroll:true});
 }
 function returnToActivities(){courierAudioVisible(false);setSceneAmbience('ambience-title',AUDIO_CROSSFADE_MS);state.activity='hub';openActivityMenu()}

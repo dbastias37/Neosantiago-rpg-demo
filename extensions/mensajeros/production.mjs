@@ -1,3 +1,4 @@
+import {bridge,prepareMedicalVisits} from './medical-bridge.mjs';
 import {recordInterruption,normalizeOutcomes,nextOutcomeAttempt} from './outcomes.mjs';
 import {prepareJimenez,prepareJimenezVisits,jimenezArrival,refreshJimenez,jimenezMemory} from './jimenez.mjs';
 export {jimenezMemory} from './jimenez.mjs';
@@ -77,7 +78,7 @@ export function prepare(data){
  const prepared=prepareJimenezVisits(prepareGuzmanVisits(prepareBeatrizVisits(prepareJourneys(prepareEncounters(prepareJimenez(prepareGuzman(prepareEconomy(prepareBeatriz(prepareCorridors(d))))))))));
  prepared.legacyJourneys={};
  for(const [id,m]of Object.entries(legacy.journeys)){const route='legacy-'+m.route;prepared.legacyJourneys[id]={...m,route};prepared.routes[route]={...legacy.routes[m.route],id:route};}
- return prepared;
+ return prepareMedicalVisits(prepared);
 }
 export function createWorld(data,{seed=Date.now()}={}){
  const w=Base.createWorld(data,{mode:'laboratory',seed});
@@ -285,6 +286,12 @@ export function travelToMission(data,source,id){
  const journey=approachJourney(data,source,id);need(journey,'No hay un trayecto disponible hasta ese punto de preparación.');
  return beginTravel(data,source,journey);
 }
+export function travelMedical(data,source){
+ bridge.cargo(source.matiasBridge);need(bridge.idle(source),"Termina o devuelve el viaje antes de recoger la reserva.");
+ need(source.matiasBridge.stage==='requested',"La reserva ya fue recogida.");
+ const journey=data.journeys['medical-'+source.location];need(journey,"El equipo ya está en Vicuña o no hay un recorrido disponible.");
+ return beginTravel(data,source,journey);
+}
 export function visitJimenez(data,source){
  need(jimenezMemory(source,'vicuna').length,'Primero entrega el módulo de Jiménez.');
  need(!source.run||!['active','failed'].includes(source.run.status),'Termina o devuelve el encargo antes de visitar operaciones.');
@@ -347,7 +354,7 @@ export function learn(data,source,memberId,skillId){const w=copy(source);need(!w
 export function rewardForecast(data,w){const r=w.run,m=Base.mission(data,w);if(!r||!m||m.type==='travel')return null;if(r.status==='completed'&&r.receipt?.gross!==undefined){const p=r.receipt;return{gross:p.gross,amount:p.amount,late:p.late,penalty:p.penalty,limit:p.timeLimit,minutes:p.minutes};}const gross=m.reward.base+(r.combats===0?m.reward.stealth_bonus:0),late=Math.max(0,r.minutes-(r.timeLimit??m.time_limit)),penalty=Math.min(Math.floor(gross*.5),Math.ceil(late/m.late_step_minutes)*m.late_penalty);return{gross,amount:gross-penalty,late,penalty,limit:r.timeLimit??m.time_limit,minutes:r.minutes};}
 export function restore(data,text){
  const migrated=restoreTerms(data,restoreCorridors(data,JSON.parse(migrateNetworkSave(data,text))));
- const w=Base.restore(data,JSON.stringify(migrated));need(w.mode==='production'&&Array.isArray(w.crew)&&Array.isArray(w.effects)&&w.stock,'Guardado de encargos inválido.');w.location??=(w.run&&Base.here(data,w)?.id)||'heroes';w.hubVisits??=0;
+ const w=Base.restore(data,JSON.stringify(migrated));if(w.matiasBridge!==undefined)bridge.cargo(w.matiasBridge);need(w.mode==='production'&&Array.isArray(w.crew)&&Array.isArray(w.effects)&&w.stock,'Guardado de encargos inválido.');w.location??=(w.run&&Base.here(data,w)?.id)||'heroes';w.hubVisits??=0;
  for(const c of w.crew)memberBase(data,c);
  if(w.run){const r=w.run;
   if(r.startIndex!==undefined)need(Number.isInteger(r.startIndex)&&r.startIndex>=0&&r.startIndex<=r.index&&!!data.missions[r.mission]&&(Base.mission(data,w).entry_points||[{index:0}]).some(p=>p.index===r.startIndex),'Punto de incorporación inválido.');
