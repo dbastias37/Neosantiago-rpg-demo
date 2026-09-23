@@ -93,4 +93,10 @@ La primera noche incorpora Matías y la bomba usando hechos existentes. Atiende 
 
 Inventario reproducible: **37 archivos existentes, 64 faltantes (50 P0 / 13 P1 / 1 P2)**. De 81 eventos, 28 tienen sus archivos, 26 disponen de alternativas existentes de propósito compatible y 27 quedan pendientes. `audio-catalog.js` y `audio-availability.js` evitan solicitudes conocidas como inexistentes y comparten resolución entre Expedición y los adaptadores de combate/perfil. No se añadieron assets. Las grabaciones ausentes conservan transcripción, mensaje accesible y foco en cerrar. **410/410 pruebas** y catálogo verificado. El detalle exacto de archivo, referencia y prioridad está en `docs/v0.3/audio-audit.md` y `.json`.
 
+### Derrota, misión y Game Over
+
+`outcomes-v3.js` define los tres resultados y un registro aditivo, validado e idempotente. La derrota real se conecta a Expedición y Encargos sin duplicar costes; se conservan el reintento de Mensajeros y los cinco cierres de torre. La API de misión irreversible y el colapso «LA RED CAYÓ» quedan preparados para contenido futuro, sin activar una muerte nueva en V0.2.
+
+La recuperación de campaña conserva checkpoint y estado previo por operación, valida antes de escribir, guarda un backup y restaura recursos/flags conjuntamente. Continuar reabre el colapso pendiente; inhibidor, teclado y Atrás respetan la pantalla. No borra la partida ni modifica el guardado del otro equipo. **14 pruebas de resultados**; suite integrada **425/425**. Contratos y límites: `docs/v0.3/outcomes.md`.
+
 En curso. Consultar `docs/v0.3/` para QA, audio, resultados y guion de comprobación del tramo. No integrar a `main` hasta revisar la rama y sus comprobaciones.

@@ -42,6 +42,7 @@
   };
 
   function handleBack() {
+    if(window.NeoOutcomeScreen&&window.NeoOutcomeScreen.isOpen())return false;
     if(window.cinematicRunning){window.revealCinematicDestination();return true;}
     if(typeof window.activityBack === "function" && window.activityVisible()) return window.activityBack();
     var top = topWindow();
