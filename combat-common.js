@@ -8,6 +8,7 @@ function loadAudioRoutes(){
   }catch{}
 }
 function audioRouteList(name){
+  if(typeof NeoAudioAvailability!=="undefined")return NeoAudioAvailability.resolve(name,audioRoutes,audioMissing);
   var route=audioRoutes[name];
   if(Array.isArray(route))return route.slice();
   if(typeof route==="string"&&route)return[route];
@@ -32,10 +33,10 @@ function playAudioRoute(name,options,index){
   if(options.random){var available=routes.filter(function(route){return !audioMissing[route]});if(!available.length)return false;path=available[Math.floor(Math.random()*available.length)]}else{path=routes[index];if(audioMissing[path])return playAudioRoute(name,options,index+1)}
   try{
     var sound=new Audio(path),nextSound;sound.preload="auto";sound.volume=options.volume!==undefined?options.volume:sfxVolume(name);sound.loop=!!options.loop;
-    sound.addEventListener("error",function(){audioMissing[path]=true;if(options.loop)delete audioLoopInstances[name];nextSound=playAudioRoute(name,options,options.random?0:index+1);if(options.loop&&nextSound)audioLoopInstances[name]=nextSound},{once:true});
+    sound.addEventListener("error",function(){audioMissing[path]=true;if(options.loop)delete audioLoopInstances[name];nextSound=playAudioRoute(name,options,typeof NeoAudioAvailability!=="undefined"||options.random?0:index+1);if(options.loop&&nextSound)audioLoopInstances[name]=nextSound},{once:true});
     var started=sound.play();if(started&&started.catch)started.catch(function(){});
     return sound
-  }catch{audioMissing[path]=true;return playAudioRoute(name,options,index+1)}
+  }catch{audioMissing[path]=true;return playAudioRoute(name,options,typeof NeoAudioAvailability!=="undefined"?0:index+1)}
 }
 function playSfx(name){
   var randomNames=["loot-take"];

@@ -1,0 +1,6 @@
+/* Shared future outcome surface; inherits the approved typeface and palette. */
+.outcome-screen { width: min(38rem, calc(100vw - 2rem)); max-height: calc(100dvh - 2rem); box-sizing: border-box; overflow: auto; color: var(--text, #e9ddc3); background: var(--panel, #14181a); border: 1px solid var(--line, #6e5943); padding: 1.25rem; }
+.outcome-screen::backdrop { background: rgba(0, 0, 0, .8); }
+.outcome-screen .outcome-actions { display: flex; flex-wrap: wrap; gap: .65rem; }
+.outcome-screen button { min-height: 44px; flex: 1 1 10rem; font: inherit; }
+.outcome-screen button:focus-visible { outline: 2px solid var(--cyan, #78c9d4); outline-offset: 3px; }

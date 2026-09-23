@@ -1,1 +1,6 @@
 node_modules/
+
+# Reproducible browser QA outputs
+playwright-report/
+test-results/
+test-results-entry-review/

@@ -1,0 +1,350 @@
+{
+  "companionCommitments": {
+    "version": 1,
+    "care": null,
+    "route": null,
+    "information": null,
+    "trade": null
+  },
+  "expeditionRest": {
+    "version": 1,
+    "nights": {}
+  },
+  "worldContinuity": {
+    "version": 1,
+    "facts": {}
+  },
+  "fieldUpgrades": {
+    "version": 2,
+    "victories": 0,
+    "tutorialSeen": false,
+    "progressNotice": "",
+    "seed": 3506941302,
+    "selected": [],
+    "offer": null,
+    "stats": {
+      "activations": 0,
+      "bonusDamage": 0,
+      "prevented": 0,
+      "healed": 0,
+      "batteries": 0
+    }
+  },
+  "version": 3,
+  "finaleRevision": 1,
+  "campaignRevision": 3,
+  "inventoryRevision": 5,
+  "progressionRevision": 1,
+  "introCompleted": true,
+  "introPage": 0,
+  "storyPreludeSeen": false,
+  "logisticsSeen": false,
+  "economyHelpSeen": false,
+  "index": 2,
+  "threat": 22,
+  "morale": 59,
+  "credits": 0,
+  "factionPoints": 1,
+  "tradeStock": {
+    "cloth": 4,
+    "bandage": 2,
+    "meds": 1,
+    "medkit": 0,
+    "food": 3,
+    "ammo9": 5,
+    "ammo556": 4,
+    "shell12": 2,
+    "battery": 1
+  },
+  "tradeStockDay": 1,
+  "armorerStock": {
+    "knife": 1,
+    "crowbar": 1,
+    "pistol9": 1,
+    "revolver": 0,
+    "shotgun12": 0,
+    "rifle556": 0
+  },
+  "armorerStockDay": 1,
+  "starterKitGiven": false,
+  "refuge": {
+    "active": true,
+    "reason": "fled",
+    "rested": false,
+    "rejoined": false,
+    "visits": 1,
+    "npc": "mara",
+    "message": "Retirarse cuesta 8 de moral, aumenta 4 la amenaza y tensa al grupo. La situación sigue pendiente."
+  },
+  "inhibitor": {
+    "active": false,
+    "remainingMs": 0,
+    "durationMs": 270000,
+    "exposed": true,
+    "needsSync": true,
+    "tutorialSeen": false,
+    "successes": 0,
+    "failures": 0,
+    "alarms": 0,
+    "exposedMoves": 0,
+    "pendingContact": null,
+    "contactStarted": false
+  },
+  "summarySeen": false,
+  "finalTier": null,
+  "score": 0,
+  "engineeringUses": 3,
+  "medicalUses": 3,
+  "ordnanceUses": 3,
+  "res": {
+    "food": 0,
+    "water": 4,
+    "meds": 0,
+    "ammo": 0,
+    "battery": 0
+  },
+  "cons": {
+    "bandage": 0,
+    "emp": 0,
+    "grenade": 0
+  },
+  "party": [
+    {
+      "id": "sara",
+      "name": "Sara",
+      "role": "Médico",
+      "hp": 44,
+      "maxHp": 44,
+      "hunger": 70,
+      "xp": 0,
+      "level": 1,
+      "skills": [],
+      "guard": 0,
+      "bleed": 0,
+      "psyche": {
+        "stress": 1,
+        "empathy": 6,
+        "resolve": 1,
+        "pragmatism": 1
+      },
+      "categories": [
+        "sidearm",
+        "melee"
+      ],
+      "equipment": {
+        "head": null,
+        "body": "vestLight",
+        "weapon": "pistol9",
+        "backpack": "packMedic"
+      },
+      "durability": {
+        "head": null,
+        "body": 10
+      },
+      "bag": [
+        {
+          "id": "ammo9",
+          "qty": 6
+        },
+        {
+          "id": "bandage",
+          "qty": 1
+        },
+        {
+          "id": "meds",
+          "qty": 1
+        },
+        {
+          "id": "food",
+          "qty": 2
+        }
+      ]
+    },
+    {
+      "id": "elias",
+      "name": "Elías",
+      "role": "Ingeniero",
+      "hp": 40,
+      "maxHp": 40,
+      "hunger": 64,
+      "xp": 0,
+      "level": 1,
+      "skills": [],
+      "guard": 0,
+      "bleed": 0,
+      "psyche": {
+        "stress": 1,
+        "empathy": 4,
+        "resolve": 1,
+        "pragmatism": 3
+      },
+      "categories": [
+        "sidearm",
+        "shotgun",
+        "rifle",
+        "melee"
+      ],
+      "equipment": {
+        "head": "helmetWork",
+        "body": null,
+        "weapon": "crowbar",
+        "backpack": "packRig"
+      },
+      "durability": {
+        "head": 8,
+        "body": null
+      },
+      "bag": [
+        {
+          "id": "shell12",
+          "qty": 4
+        },
+        {
+          "id": "emp",
+          "qty": 1
+        },
+        {
+          "id": "food",
+          "qty": 1
+        },
+        {
+          "id": "battery",
+          "qty": 2
+        },
+        {
+          "id": "tool",
+          "qty": 1
+        }
+      ]
+    },
+    {
+      "id": "noa",
+      "name": "Noa",
+      "role": "Cazadora",
+      "hp": 38,
+      "maxHp": 38,
+      "hunger": 76,
+      "xp": 0,
+      "level": 1,
+      "skills": [],
+      "guard": 0,
+      "bleed": 0,
+      "psyche": {
+        "stress": 3,
+        "empathy": 2,
+        "resolve": 2,
+        "pragmatism": 2
+      },
+      "categories": [
+        "rifle",
+        "sidearm",
+        "melee"
+      ],
+      "equipment": {
+        "head": null,
+        "body": "vestLight",
+        "weapon": "rifle556",
+        "backpack": "packHunt"
+      },
+      "durability": {
+        "head": null,
+        "body": 10
+      },
+      "bag": [
+        {
+          "id": "ammo556",
+          "qty": 6
+        },
+        {
+          "id": "grenade",
+          "qty": 1
+        },
+        {
+          "id": "food",
+          "qty": 1
+        }
+      ]
+    }
+  ],
+  "inv": [],
+  "docs": [
+    "signal"
+  ],
+  "flags": {
+    "choseBattery": true,
+    "partyOwnsTruth": true
+  },
+  "missionRewards": {},
+  "history": [
+    {
+      "day": 1,
+      "loc": "Refugio Línea 1",
+      "choice": "Reservar una celda de energía",
+      "result": "Energía bajo custodia",
+      "faction": 0
+    },
+    {
+      "day": 1,
+      "loc": "Andén de Asamblea",
+      "choice": "Prometer que cada superviviente decidirá",
+      "result": "Una promesa entre tres",
+      "faction": 1
+    }
+  ],
+  "stats": {
+    "battles": 1,
+    "wins": 0,
+    "enemies": 0,
+    "loot": 0,
+    "lootItems": {},
+    "fullSquadWins": 0,
+    "criticals": 0,
+    "retreats": 1,
+    "refugeVisits": 1,
+    "trades": 0,
+    "creditsEarned": 0,
+    "attacks": 0,
+    "hits": 0,
+    "misses": 0,
+    "shots": 0,
+    "damageDealt": 0,
+    "damageTaken": 0,
+    "medicineUsed": 0,
+    "hpRestored": 0,
+    "restHpRecovered": 0,
+    "rests": 0,
+    "skillsUsed": 0,
+    "revives": 0,
+    "defends": 0,
+    "crafts": 0,
+    "craftedItems": {},
+    "itemsUsed": {},
+    "disassembled": 0,
+    "disassembleFailures": 0,
+    "mentalShifts": 39,
+    "xpFromHits": 0,
+    "xpFromCrafting": 0,
+    "xpFromVictories": 0,
+    "factionEarned": 1,
+    "factionSpent": 0,
+    "skillsUnlocked": 0,
+    "signalHacks": 0,
+    "signalSuccesses": 0,
+    "signalFailures": 0,
+    "signalAlarms": 0,
+    "trackingCombats": 0
+  },
+  "seed": 264375177,
+  "ending": null,
+  "finished": false,
+  "narrative": {
+    "version": 1,
+    "routes": {},
+    "knowledge": {}
+  },
+  "lootCrates": {
+    "checked": {},
+    "lastIndex": -10,
+    "active": null
+  }
+}

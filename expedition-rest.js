@@ -22,10 +22,28 @@ function expeditionReserveText(){
   var day=currentDay(),left=events.slice(state.index).filter(function(e){return e.day===day}).length;
   return "Día "+day+" de 3 · "+left+" situaciones principales por resolver hoy. Los desvíos se añaden a ese recorrido. Las horas acompañan las escenas; leer no adelanta el día. "+(day<3?"Al cerrar la jornada, compartir comida utiliza 1 ración y 1 agua para todo el grupo. Llevan "+stockCount("food")+" raciones y "+stockCount("water")+" reservas de agua. Sin comida: energía −8 y moral −5; sin agua: moral −8. Podrás decidir antes de consumirlas.":"Esta es la última jornada: no hay otro consumo nocturno automático antes del desenlace. Conserva suministros para las heridas, la energía y las decisiones del trayecto.");
 }
+// Recall only observed outcomes. This text is captured in the existing night
+// receipt; it neither changes flags nor infers an NPC's recovery from treatment.
+function firstNightConsequences(){
+  var f=state.flags,lines=[];
+  if(f.matiasAtRefuge)lines.push("Matías quedó en la enfermería de Línea 1. En el registro de regreso figura la entrega a la posta, no un alta: sigue necesitando atención. La próxima salida tendrá que contar con ese traslado, como ya acordaron al volver.");
+  else if(f.matiasRadioAlly)lines.push("El receptor de Matías sigue sobre la mesa. El grupo comprueba el canal que acordaron mantener abierto; no lo confunde con una confirmación de que esté a salvo.");
+  else if(f.usedMatiasAsDecoy)lines.push("La frecuencia que usaron para desviar el rastreo queda anotada junto a la ruta. Les permitió seguir; no les dice qué ocurrió después con Matías. Su situación sigue sin confirmarse.");
+  else if(f.leftSupplies)lines.push("Dejaron provisiones junto a Matías. La hoja conserva ese hecho, pero no lo cuenta entre quienes llegaron al refugio. Todavía no saben qué ocurrió después de cerrar la puerta.");
+  else if(f.abandonedMatias)lines.push("Conservaron la frecuencia y dejaron a Matías en la farmacia. El registro mantiene su ubicación; no hay una confirmación de su regreso ni de su muerte.");
+  else if(f.savedMatias||f.carriedMatias)lines.push("La atención a Matías queda registrada, pero no hay una llegada confirmada a la enfermería. Haberlo atendido no permite dar por terminado el rescate.");
+  var pumpStates=[f.pumpSecured,f.pumpLost,f.pumpAbandoned].filter(Boolean).length;
+  if(pumpStates>1)lines.push("Las anotaciones de la casa de bombas no coinciden. El grupo deja esa duda junto al plano; no presenta el paso como asegurado.");
+  else if(f.pumpSecured)lines.push("En el plano queda marcada la bomba que dejaron funcionando. El registro distingue ese acceso de los tramos que aún no revisaron; no promete que todo el recorrido esté despejado.");
+  else if(f.pumpLost)lines.push("La casa de bombas quedó fuera del control del grupo. El aviso se conserva junto al recorrido de vuelta: nadie debe preparar otra salida suponiendo que aseguraron ese acceso.");
+  else if(f.pumpAbandoned)lines.push("Marcaron la casa de bombas y siguieron sin asegurarla. El plano conserva la ubicación como trabajo pendiente; todavía no hay una noticia que permita darla por recuperada o destruida.");
+  return lines.join("\n\n");
+}
 function nightContext(day){
   var f=state.flags,awake=state.party.every(function(p){return p.hp>0});
-  if(!awake)return "En el refugio apartan una mesa para atender a quienes volvieron agotados. Las mochilas quedan al alcance del grupo. Antes de repartir las reservas, alguien cuenta qué comida y agua trajeron de vuelta.";
-  if(day===1)return "Sara deja las vendas usadas aparte y pide que nadie se acueste con una herida sin revisar. Elías acerca su cuaderno, pero Noa le hace sitio junto a la comida: «Primero sentémonos». "+(f.matiasRadioAlly?"El receptor de Matías sigue sobre la mesa. Elías comprueba el canal que acordaron mantener abierto; no lo confunde con una confirmación de que esté a salvo.":f.usedMatiasAsDecoy?"Elías anota la frecuencia que usaron para desviar el rastreo. Sara mira la anotación. «Eso nos sacó de ahí. De Matías seguimos sin saber». Nadie añade una respuesta que no tiene.":"Noa revisa las correas mientras Sara cuenta los suministros. Quieren saber con qué podrán salir mañana, antes de prometer otra ayuda.");
+  var firstNight=day===1?firstNightConsequences():"";
+  if(!awake)return "En el refugio apartan una mesa para atender a quienes volvieron agotados. Las mochilas quedan al alcance del grupo. Antes de repartir las reservas, alguien cuenta qué comida y agua trajeron de vuelta."+(firstNight?"\n\n"+firstNight:"");
+  if(day===1)return "Sara deja las vendas usadas aparte y pide que nadie se acueste con una herida sin revisar. Elías acerca su cuaderno, pero Noa le hace sitio junto a la comida: «Primero sentémonos». Noa revisa las correas mientras Sara cuenta los suministros. Quieren saber con qué podrán salir mañana, antes de prometer otra ayuda."+(firstNight?"\n\n"+firstNight:"");
   return "Elías extiende las hojas recuperadas y busca dónde apoyar el receptor sin mojar los papeles. Noa deja su arma a un lado para repartir las reservas. "+(f.liraDead?"Sara se detiene al llegar a la anotación de Lira. «Esto no lo arreglamos durmiendo». Elías conserva el registro; no intenta convertirlo en una buena noticia.":f.savedMerodeadora?"Sara vuelve a la anotación de Lira. «La atendimos. No escribas que ya se recuperó». Elías corrige la línea y deja espacio para lo que aún no saben.":"Sara le pide que distinga lo que vieron de lo que suponen. «Mañana vamos a decidir con esas hojas». Elías tacha una conclusión y conserva la pregunta.");
 }
 function showNight(){

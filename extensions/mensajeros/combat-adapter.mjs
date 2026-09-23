@@ -66,7 +66,9 @@ Object.assign(window, {
     if(transact(E.finishLoot)){window.playSfx('loot-exit');exit();host.refresh();}
   }
 });
-await script('combat-common.js?v=1');
+await script('audio-catalog.js?v=1');
+await script('audio-availability.js?v=1');
+await script('combat-common.js?v=2-audio');
 await script('combat-stage.js?v=5-mobile-arrows');
 window.loadAudioRoutes();
 window.audioUnlocked=true;
