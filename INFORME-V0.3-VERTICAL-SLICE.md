@@ -83,4 +83,10 @@ Las partidas de prueba V0.2 (inicio y checkpoint tras retirada) se restauran con
 
 Los dos bloques CSS inline se separaron en hojas con el mismo orden y contenido; comparación exacta contra `009092d` aprobada. La paleta y las áreas seguras se centralizan; los adaptadores conservan su carga desde la entrada. Foco visible extendido y transiciones de cinemática respetan movimiento reducido. No se alteró la especificidad de los estilos anteriores. Suite integrada en este punto: **403/403**, sin fallos; incluye pruebas nuevas de persistencia y noche en desarrollo.
 
+### Carga y memoria nocturna
+
+Se reprodujo y corrigió una carga parcialmente aplicada: un guardado con mochila inválida podía reemplazar el estado activo antes de retornar error. La carga ahora restaura la referencia anterior al rechazarlo y no escribe sobre los bytes originales. Prueba dirigida incluida en `tests/persistence-v3.test.cjs`.
+
+La primera noche incorpora Matías y la bomba usando hechos existentes. Atiende la diferencia entre auxilio, llegada confirmada y destino desconocido; conserva el contexto literal de noches V0.2 ya iniciadas. No cambia pagos, costes, recuperación ni decisiones. Casos dirigidos de noche: **20/20**; suite integrada del bloque: **403/403**. El recorrido y los límites están en `docs/v0.3/vertical-slice.md`.
+
 En curso. Consultar `docs/v0.3/` para QA, audio, resultados y guion de comprobación del tramo. No integrar a `main` hasta revisar la rama y sus comprobaciones.
