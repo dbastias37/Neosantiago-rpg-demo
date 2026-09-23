@@ -26,6 +26,7 @@
 <link rel="stylesheet" href="refuge-stalls.css?v=1">
   <link rel="stylesheet" href="combat-field.css?v=3-mobile-arrows">
 <link rel="stylesheet" href="expedition-journal.css?v=1">
+<link rel="stylesheet" href="expedition-continuity.css?v=1">
 <link rel="stylesheet" href="journey-surfaces.css?v=1">
 <link rel="stylesheet" href="cinematic-intro.css?v=1">
 <link rel="preload" href="assets/branding/producciones-verite.png" as="image">
@@ -50,6 +51,7 @@
           <h2 id="eventTitle">La señal imposible</h2>
           <p class="story" id="eventText"></p>
           <div class="context-archives" id="contextArchives"></div>
+          <details class="expedition-context hidden" id="expeditionOrientation"><summary>Orientación de la jornada</summary><p id="expeditionSector"></p><p id="expeditionPurpose"></p><p>Base de salida y regreso: Los Héroes · Línea 1. Sigue la señal y conserva recursos para volver; leer no adelanta la hora narrativa.</p></details>
           <section id="careDiscussion" class="hidden" aria-label="Conversación antes de decidir"><button class="secondary" id="careDiscussionButton" aria-controls="drawer">Revisar las reservas con el equipo</button><p class="muted" id="careDiscussionNote"></p></section>
           <h3 class="journal-decision-heading">Decisión del grupo</h3>
           <div class="choices" id="choices"></div>
@@ -436,6 +438,7 @@
               <button class="secondary" id="worldNewsButton" aria-haspopup="dialog" aria-controls="worldNewsModal">Informe de Morales</button>
             </div>
           </section>
+          <details class="expedition-context hidden" id="refugeReturnAccount"><summary>Lo que el grupo trajo de vuelta</summary><p id="refugeReturnText"></p></details>
           <p class="refuge-message hidden" id="refugeMessage" aria-live="polite"></p>
           <section class="refuge-section">
             <div class="refuge-section-head"><h3 id="tradeSectionTitle">Compra y venta</h3><small id="tradeSectionHint">Una operación mueve una unidad</small></div>
@@ -1120,9 +1123,10 @@
   <script src="outcome-screen.js?v=1"></script>
   <script src="outcome-campaign.js?v=1"></script>
   <script src="persistence-v3.js?v=2"></script>
-  <script src="game-v2.js?v=21-outcomes"></script>
+  <script src="game-v2.js?v=22-day-one"></script>
   <script src="companion-nights.js?v=4-evidence"></script>
-  <script src="expedition-rest.js?v=3-vera"></script>
+  <script src="expedition-rest.js?v=4-return"></script>
+  <script src="expedition-continuity.js?v=1"></script>
   <script src="companion-commitments.js?v=4"></script>
   <script src="companion-routes.js?v=1"></script>
   <script src="companion-evidence.js?v=1"></script>

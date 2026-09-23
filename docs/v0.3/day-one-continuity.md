@@ -25,3 +25,14 @@ Las capturas y los tiempos de automatización son evidencia de funcionamiento. N
 ## Registro
 
 Análisis confirmado contra código real. Baseline local antes de modificar producción: **427/427 pruebas Node aprobadas**. Se actualizarán resultados, decisiones y límites al completar cada bloque.
+
+
+### Transición y presentación implementadas
+
+La primera noche normal ahora abre `openRefuge("preparation")`. Ese contexto bloquea descanso y reagrupamiento tanto en UI como en funciones; conserva inventario, precios y consumos nocturnos. Las condiciones de emergencia mantienen los motivos anteriores. Confirmar la salida utiliza el flujo de logística e inhibidor existente. Se registra una visita real al puesto, sin sumar otro descanso.
+
+`expedition-continuity.js` contiene orientación y presentación del registro; no administra combate ni recursos. Dos lecturas plegables se integran en bitácora/refugio, con controles de teclado y paleta existente. La orientación no muestra destinos futuros.
+
+Migración aditiva: una noche nueva del día 1 captura `expeditionRest.nights[1].returnAccount` como texto de hechos observados. El campo es opcional, se valida al cargar y jamás se calcula retroactivamente para una noche antigua. `context` permanece intacto. La preparación reutiliza `refuge.reason/rested/rejoined`; una jornada cerrada con refugio inactivo no vuelve a abrirse por cargar.
+
+Validación del bloque: **435/435 Node** (8 nuevos), sintaxis y referencias aprobadas; mismo inventario de audio (solo se regeneraron las líneas de referencia). Se adaptaron tres fixtures de conversaciones posteriores para salir explícitamente del refugio después de la noche. La prueba E2E previa de entrada/Encargos pasó en 390×844. Recorrido completo y matriz final aún en curso.

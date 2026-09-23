@@ -4,7 +4,7 @@ const test=require('node:test'),assert=require('node:assert/strict'),{boot}=requ
 function session(agreement='compartir',options={}){
  const a=boot(new Map(),options),c=a.ctx;c.gameSessionActive=true;c.state.introCompleted=true;c.state.starterKitGiven=true;c.state.activity='story';
  for(const id of ['titleScreen','start','gameIntro','refuge','storyPrelude','activityMenu'])a.nodes.get(id).classList.add('hidden');
- c.state.index=9;c.prepareNight(1);if(agreement)c.answerNightCompanion('sara',agreement);c.settleNight('share');c.continueAfterNight();c.state.index=c.careIndex();c.save();c.render();return a;
+ c.state.index=9;c.prepareNight(1);if(agreement)c.answerNightCompanion('sara',agreement);c.settleNight('share');c.continueAfterNight();c.confirmLeaveRefuge();c.state.index=c.careIndex();c.save();c.render();return a;
 }
 function stock(c,meds,water){c.removePartyItem('meds',100);if(meds)c.placePartyItem('meds',meds);c.state.res.water=water;c.save();c.render();}
 function resources(c){return JSON.stringify({party:c.state.party,res:c.state.res,morale:c.state.morale,threat:c.state.threat,stats:c.state.stats,history:c.state.history,seed:c.state.seed,index:c.state.index,faction:c.state.factionPoints});}

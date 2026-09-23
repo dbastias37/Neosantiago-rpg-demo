@@ -3,7 +3,7 @@ const test=require('node:test'),assert=require('node:assert/strict'),{boot,root}
 function session(agreement='motivo',options={}){
  const a=boot(new Map(),options),c=a.ctx;c.gameSessionActive=true;c.state.introCompleted=true;c.state.starterKitGiven=true;c.state.activity='story';
  for(const id of ['titleScreen','start','gameIntro','refuge','storyPrelude','activityMenu'])a.nodes.get(id).classList.add('hidden');
- c.state.index=9;c.prepareNight(1);if(agreement)c.answerNightCompanion('noa',agreement);c.settleNight('share');c.continueAfterNight();c.state.index=c.noaRouteIndex();c.save();c.render();return a;
+ c.state.index=9;c.prepareNight(1);if(agreement)c.answerNightCompanion('noa',agreement);c.settleNight('share');c.continueAfterNight();c.confirmLeaveRefuge();c.state.index=c.noaRouteIndex();c.save();c.render();return a;
 }
 function current(c){return c.eventDisplay(c.events[c.state.index],c.state.index)}
 function choose(c,key,value){const i=current(c).choices.findIndex(o=>o[key]===value);assert.ok(i>=0);assert.equal(c.reason(current(c).choices[i]),'');c.choose(i);}
