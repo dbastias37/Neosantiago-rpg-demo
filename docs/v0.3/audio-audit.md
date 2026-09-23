@@ -95,16 +95,16 @@ Los disparos de los tres tipos, melee y caídas de aliados/enemigos siguen neces
 | `audio/loot/take-item.mp3` | Falta | P0 | 0 | loot-take | `neosantiago-demo.html:1087` (literal) |
 | `audio/lore/archive-open.mp3` | Falta | P0 | 0 | lore-open | `neosantiago-demo.html:1030` (literal) |
 | `audio/lore/tab-switch.mp3` | Existe | P0 | 2557 | lore-page, lore-tab | `neosantiago-demo.html:1031` (literal)<br>`neosantiago-demo.html:1032` (literal) |
-| `audio/lore/voice/council-silence.mp3` | Existe | P1 | 418845 | Voz / ruta directa | `game-v2.js:490` (literal) |
-| `audio/lore/voice/final-broadcast.mp3` | Falta | P1 | 0 | Voz / ruta directa | `game-v2.js:498` (literal) |
-| `audio/lore/voice/hunter-mother.mp3` | Falta | P1 | 0 | Voz / ruta directa | `game-v2.js:491` (literal) |
-| `audio/lore/voice/irene-heart.mp3` | Falta | P1 | 0 | Voz / ruta directa | `game-v2.js:497` (literal) |
-| `audio/lore/voice/lira-core.mp3` | Falta | P1 | 0 | Voz / ruta directa | `game-v2.js:495` (literal) |
-| `audio/lore/voice/matias-fever.mp3` | Falta | P1 | 0 | Voz / ruta directa | `game-v2.js:493` (literal) |
-| `audio/lore/voice/red-lights-border.mp3` | Falta | P1 | 0 | Voz / ruta directa | `game-v2.js:492` (literal) |
-| `audio/lore/voice/signal-start.mp3` | Existe | P1 | 411948 | Voz / ruta directa | `game-v2.js:489` (literal) |
-| `audio/lore/voice/sunken-voices.mp3` | Falta | P1 | 0 | Voz / ruta directa | `game-v2.js:496` (literal) |
-| `audio/lore/voice/terminal-memory.mp3` | Falta | P1 | 0 | Voz / ruta directa | `game-v2.js:494` (literal) |
+| `audio/lore/voice/council-silence.mp3` | Existe | P1 | 418845 | Voz / ruta directa | `game-v2.js:495` (literal) |
+| `audio/lore/voice/final-broadcast.mp3` | Falta | P1 | 0 | Voz / ruta directa | `game-v2.js:503` (literal) |
+| `audio/lore/voice/hunter-mother.mp3` | Falta | P1 | 0 | Voz / ruta directa | `game-v2.js:496` (literal) |
+| `audio/lore/voice/irene-heart.mp3` | Falta | P1 | 0 | Voz / ruta directa | `game-v2.js:502` (literal) |
+| `audio/lore/voice/lira-core.mp3` | Falta | P1 | 0 | Voz / ruta directa | `game-v2.js:500` (literal) |
+| `audio/lore/voice/matias-fever.mp3` | Falta | P1 | 0 | Voz / ruta directa | `game-v2.js:498` (literal) |
+| `audio/lore/voice/red-lights-border.mp3` | Falta | P1 | 0 | Voz / ruta directa | `game-v2.js:497` (literal) |
+| `audio/lore/voice/signal-start.mp3` | Existe | P1 | 411948 | Voz / ruta directa | `game-v2.js:494` (literal) |
+| `audio/lore/voice/sunken-voices.mp3` | Falta | P1 | 0 | Voz / ruta directa | `game-v2.js:501` (literal) |
+| `audio/lore/voice/terminal-memory.mp3` | Falta | P1 | 0 | Voz / ruta directa | `game-v2.js:499` (literal) |
 | `audio/refuge/group-ready.mp3` | Falta | P0 | 0 | refuge-ready | `neosantiago-demo.html:1045` (literal) |
 | `audio/refuge/npc-switch.mp3` | Falta | P0 | 0 | refuge-npc | `neosantiago-demo.html:1042` (literal) |
 | `audio/refuge/refuge-enter.mp3` | Falta | P0 | 0 | refuge-enter | `neosantiago-demo.html:1041` (literal) |

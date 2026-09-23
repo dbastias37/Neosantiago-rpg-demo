@@ -31,8 +31,17 @@ Análisis confirmado contra código real. Baseline local antes de modificar prod
 
 La primera noche normal ahora abre `openRefuge("preparation")`. Ese contexto bloquea descanso y reagrupamiento tanto en UI como en funciones; conserva inventario, precios y consumos nocturnos. Las condiciones de emergencia mantienen los motivos anteriores. Confirmar la salida utiliza el flujo de logística e inhibidor existente. Se registra una visita real al puesto, sin sumar otro descanso.
 
-`expedition-continuity.js` contiene orientación y presentación del registro; no administra combate ni recursos. Dos lecturas plegables se integran en bitácora/refugio, con controles de teclado y paleta existente. La orientación no muestra destinos futuros.
+`expedition-continuity.js` contiene orientación y presentación del registro; no administra combate ni recursos. La orientación es plegable en la bitácora. El registro del regreso se lee en el modal de ayuda existente del refugio, con controles de teclado, foco restaurado y paleta aprobada. La orientación no muestra destinos futuros.
 
 Migración aditiva: una noche nueva del día 1 captura `expeditionRest.nights[1].returnAccount` como texto de hechos observados. El campo es opcional, se valida al cargar y jamás se calcula retroactivamente para una noche antigua. `context` permanece intacto. La preparación reutiliza `refuge.reason/rested/rejoined`; una jornada cerrada con refugio inactivo no vuelve a abrirse por cargar.
 
 Validación del bloque: **435/435 Node** (8 nuevos), sintaxis y referencias aprobadas; mismo inventario de audio (solo se regeneraron las líneas de referencia). Se adaptaron tres fixtures de conversaciones posteriores para salir explícitamente del refugio después de la noche. La prueba E2E previa de entrada/Encargos pasó en 390×844. Recorrido completo y matriz final aún en curso.
+
+
+### Corrección visual verificada por capturas
+
+El primer montaje desplegaba el relato dentro de la cuadrícula del refugio y reducía demasiado el área comercial. Se sustituyó por un botón dentro de Estado del grupo que abre `refugeHelpModal` con el tema `return`. Continuar y Escape solo cierran la lectura; nunca ejecutan el descanso del tema `rest`.
+
+Las compras del recorrido E2E expusieron además un recorte real en 915×412: las filas fijas y el footer tapaban los botones del comercio. El CSS compartido conserva las cuatro filas del diseño, asigna posiciones explícitas para que el mensaje de compra no desplace el comercio y permite scroll exterior en pantallas anchas de hasta 550 px de alto. El ajuste llega también a Encargos por su loader existente. No añade `!important` ni cambia paleta, retratos o reglas económicas.
+
+La prueba completa ahora compra una ración con créditos reales después de la noche, comprueba el descuento y las existencias, recarga, cambia de actividad y confirma la salida. También exige espacio visible en la lista antes y después del feedback de compra. Se corrigieron dos carreras del conductor E2E: esperar el fin del registro del cadáver y esperar la oferta de mejora ganada antes de intentar otra decisión. No se alteraron los temporizadores ni los resultados del juego para hacer pasar la prueba.

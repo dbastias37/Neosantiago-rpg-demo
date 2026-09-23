@@ -1,4 +1,4 @@
-/* Small, optional reading surfaces inside the existing journal and refuge. */
+/* Contextual journal reading; the refuge account reuses its existing modal. */
 .expedition-context {
   margin: .75rem 0;
   border: 1px solid var(--line);
@@ -24,3 +24,6 @@
   white-space: pre-line;
   overflow-wrap: anywhere;
 }
+
+#refugeReturnAccount { margin-top: .5rem; }
+#refugeReturnButton { min-height: 44px; }

@@ -28,7 +28,6 @@ function firstDayReturnAccount() {
 function renderExpeditionPreparation() {
   var preparing = state.refuge.reason === "preparation", account = firstDayReturnAccount();
   $("refugeReturnAccount").classList.toggle("hidden", !account);
-  $("refugeReturnText").textContent = account;
   $("refugeRest").textContent = preparing ? "Descanso nocturno aplicado" : "Descansar y estabilizar";
   if (preparing) {
     $("refugeRest").disabled = true;
@@ -39,3 +38,5 @@ function renderExpeditionPreparation() {
   }
   $("leaveRefuge").textContent = preparing ? "Preparar salida · día 2" : "Volver a la expedición";
 }
+
+$("refugeReturnButton").addEventListener("click", function(){openRefugeHelp("return", $("refugeReturnButton"))});

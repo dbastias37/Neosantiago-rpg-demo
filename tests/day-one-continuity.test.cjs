@@ -19,8 +19,8 @@ test('saving a food ration stays meaningful at the new preparation stop',()=>{
 
 test('return account remains a saved observation through trader switches and reloads',()=>{
  const a=session(),c=a.ctx;c.state.flags={leftSupplies:true,pumpAbandoned:true};arrive(c);const account=c.pendingNight().returnAccount;c.settleNight('share');c.continueAfterNight();assert.match(account,/no lo cuenta entre quienes llegaron/);assert.match(account,/sin asegurarla/);
- c.state.flags.matiasAtRefuge=true;c.switchRefugeNpc('armorer');assert.equal(a.nodes.get('refugeReturnText').textContent,account);assert.doesNotMatch(account,/Matías quedó en la enfermería/);
- const b=boot(a.storage);b.ctx.continueGame();assert.equal(b.nodes.get('refugeReturnText').textContent,account);assert.equal(b.ctx.state.refuge.npc,'armorer');assert.equal(b.ctx.state.stats.refugeVisits,1);
+ c.state.flags.matiasAtRefuge=true;c.switchRefugeNpc('armorer');assert.equal(c.firstDayReturnAccount(),account);assert.doesNotMatch(account,/Matías quedó en la enfermería/);
+ const b=boot(a.storage);b.ctx.continueGame();assert.equal(b.ctx.firstDayReturnAccount(),account);assert.equal(b.ctx.state.refuge.npc,'armorer');assert.equal(b.ctx.state.stats.refugeVisits,1);
 });
 
 test('day-two shop purchases survive preparation reload and do not restock when switching activities',()=>{
@@ -46,4 +46,14 @@ test('retreat recovery remains available and a later defeat does not inherit pre
 test('orientation reads the present sector without leaking future locations or mutating the save',()=>{
  const a=session(),c=a.ctx;const locations=[];for(let i=0;i<9;i++){c.state.index=i;const ev=c.eventDisplay(c.events[i],i),before=JSON.stringify(c.state);c.renderExpeditionOrientation(ev);assert.equal(JSON.stringify(c.state),before);assert.equal(a.nodes.get('expeditionOrientation').classList.contains('hidden'),false);assert.equal(a.nodes.get('expeditionSector').textContent,'Sector actual: '+ev.loc+'.');assert.ok(a.nodes.get('expeditionPurpose').textContent);locations.push(ev.loc);}
  c.state.index=9;c.renderExpeditionOrientation(c.events[9]);assert.equal(a.nodes.get('expeditionOrientation').classList.contains('hidden'),true);assert.equal(new Set(locations).size,9);
+});
+
+
+test('return reading reuses the refuge modal, traps focus and closes without applying another rest',()=>{
+ const a=session(),c=a.ctx;c.state.flags={matiasAtRefuge:true};arrive(c);c.settleNight('share');c.continueAfterNight();const before=resources(c),opener=a.nodes.get('refugeReturnButton');opener.classList.remove('hidden');
+ assert.equal(c.openRefugeHelp('return',opener),true);assert.match(a.nodes.get('refugeHelpText').textContent,/Matías quedó en la enfermería/);assert.equal(a.nodes.get('refuge').getAttribute('inert'),'');
+ a.nodes.get('refugeHelpContinue').focus();c.refugeHelpKeydown({key:'Tab',preventDefault(){}});assert.equal(c.document.activeElement,a.nodes.get('refugeHelpReading'));
+ assert.equal(c.continueRefugeHelp(),true);assert.equal(c.document.activeElement,opener);assert.equal(a.nodes.get('refuge').getAttribute('inert'),undefined);assert.equal(resources(c),before);
+ c.openRefugeHelp('return',opener);c.refugeHelpKeydown({key:'Escape',preventDefault(){}});assert.equal(resources(c),before);assert.equal(c.document.activeElement,opener);
+ c.newGame();assert.equal(c.openRefugeHelp('return',opener),false);
 });

@@ -181,13 +181,18 @@ function refugeCanLeave(){return !(typeof pendingNight==="function"&&pendingNigh
 // Contextual help stays inside the shop. Only Continue can confirm a pending rest.
 var refugeHelpTopic=null,refugeHelpOpener=null;
 function openRefugeHelp(topic,opener){
-  if(!state.refuge.active||refugeHelpTopic||["economy","rest"].indexOf(topic)<0)return false;
+  if(!state.refuge.active||refugeHelpTopic||["economy","rest","return"].indexOf(topic)<0)return false;
   if(topic==="rest"&&state.refuge.rested)return false;
+  if(topic==="return"&&(typeof firstDayReturnAccount!=="function"||!firstDayReturnAccount()))return false;
   refugeHelpTopic=topic;refugeHelpOpener=opener||$("refugeEconomyHelp");
   if(topic==="economy"){
     $("refugeHelpTitle").textContent="Cómo funciona la economía";
     $("refugeHelpText").textContent=(state.starterKitGiven?"Ya recibiste el lote inicial de Mara. Los créditos son el dinero compartido del grupo.":"Primero pulsa Recibir lote inicial: Mara entrega gratis 10 unidades de suministros y 6 créditos. Los créditos son el dinero compartido del grupo.")+"\n\nVender: en Tu loot, pulsa Entregar. Sale una unidad de la mochila y recibes los créditos indicados.\n\nComprar: en Reservas de Mara, pulsa Recibir. Pagas el precio indicado y el objeto se guarda en una mochila con espacio. Cada compra o venta mueve una unidad.\n\nEl stock es limitado y se renueva cada día. El Armero usa los mismos créditos para vender armas; equípalas desde la ficha del aliado.";
     $("refugeHelpTip").textContent="Guarda comida, medicina y materiales que puedas necesitar para curar, fabricar o reparar. Puedes volver a leer esta ayuda desde Créditos · ayuda.";
+  }else if(topic==="return"){
+    $("refugeHelpTitle").textContent="Lo que el grupo trajo de vuelta";
+    $("refugeHelpText").textContent=firstDayReturnAccount();
+    $("refugeHelpTip").textContent="Registro del grupo al llegar a Línea 1. Leerlo no consume recursos ni repite recompensas. Continuar vuelve al puesto de intercambio.";
   }else{
     $("refugeHelpTitle").textContent="Para qué sirve descansar";
     $("refugeHelpText").textContent="Descansar y estabilizar recupera al grupo antes de volver a la superficie.\n\nCada aliado recupera 8 HP. Si está agotado, con 0 HP, vuelve a 12 HP. Todos recuperan 25 puntos de energía y baja su tensión, sin superar sus valores máximos.\n\nEs gratis: no gasta créditos ni comida. Puedes hacerlo una vez por visita al refugio.\n\nSi necesitas recuperar la moral del grupo, utiliza Reagrupar al equipo.";
@@ -205,7 +210,7 @@ function continueRefugeHelp(){
   var topic=refugeHelpTopic;closeRefugeHelp();
   if(!state.refuge.active)return false;
   if(topic==="economy"){state.economyHelpSeen=true;save()}
-  else{restAtRefuge();$("refugeEconomyHelp").focus({preventScroll:true})}
+  else if(topic==="rest"){restAtRefuge();$("refugeEconomyHelp").focus({preventScroll:true})}
   return true
 }
 function refugeHelpKeydown(e){
