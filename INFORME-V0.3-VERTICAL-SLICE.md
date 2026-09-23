@@ -141,3 +141,11 @@ Node: **436/436** tras la implementación y el ajuste del lector; misma deuda de
 La primera matriz remota del PR #6 detectó una carrera adicional en el conductor de la narrativa de ruta: el texto podía terminar mientras Playwright intentaba pulsar un botón que acababa de deshabilitarse. Se corrige la selección del control disponible sin modificar la jugabilidad ni relajar aserciones. El registro técnico está en `docs/v0.3/day-one-continuity.md`; el estado remoto definitivo se consulta en los checks del PR.
 
 El primer ajuste aprobó CI con dos casos intermitentes por ejecución; no se considera evidencia de estabilidad. El conductor pasa a usar Enter, atajo existente y válido durante la transición, para revelar/avanzar texto; las decisiones siguen usando clics. Se conserva el historial de validación y se repite la matriz con esa corrección.
+
+## Conexión Matías–Adasme en laboratorio A/B
+
+Autorizada tras revisar la propuesta narrativa. Rama `feature/v0.3-matias-courier-bridge`, base `e121ed1`. Contrato, límites y evidencia: `docs/v0.3/matias-courier-bridge.md`.
+
+La preparación posterior a la primera noche permite coordinar una reserva médica mediante Los Mensajeros. El contacto contextual no inventa encargos anteriores. Recogida física en Vicuña, regreso por la red y recepción en Los Héroes; recogida independiente de la recompensa de Darío. La memoria de Noa y las recompensas anteriores de Matías se conservan. Una nueva indicación de Matías puede utilizarse antes de cruzar República.
+
+Campo opcional validado en ambos guardados; cada equipo escribe solo el propio. Laboratorio con claves A/B independientes: la campaña habitual no se activa automáticamente. 448/448 Node aprobadas en este bloque; navegador y revisión final pendientes. Sin assets nuevos. Rosa/Sorsa queda para otro bloque tras validar este enlace; no se considera completada V0.3 por esta incorporación.

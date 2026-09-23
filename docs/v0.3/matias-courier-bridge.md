@@ -33,3 +33,9 @@ Emily Short: [Storylets: You Want Them](https://emshort.blog/2019/11/29/storylet
 ## Verificación y pendientes
 
 Se actualizará al cerrar cada bloque. Requeridos: idempotencia, guardado antiguo, almacenamiento fallido, recibo ajeno, entrega tardía, rescate ya pagado, encargo en curso, cancelación, A/B aislados y navegador en las siete resoluciones. Queda pendiente aprobación narrativa y prueba humana A/B antes de activar el episodio en la campaña habitual.
+
+## Bloque implementado: contrato y adaptadores
+
+448/448 pruebas Node aprobadas (436 previas y 12 nuevas). El recorrido nuevo se ejecuta con un equipo recién creado, hasta Vicuña y de vuelta, usando el motor de viajes y encuentros existente. También se verifica el recibo de un rescate real ya completado, sin nuevo pago. Pruebas de almacenamiento, migración, aislamiento, ingreso tardío y memoria de Noa aprobadas. Sintaxis y referencias sin errores nuevos; el inventario de audio solo cambia sus líneas de referencia (64 archivos ausentes heredados).
+
+La alternativa de Matías adopta la postura de observación de Noa: no salta el enfrentamiento posterior de la Alameda ni crea otra categoría incompatible en su registro. Se conserva la conversación de regreso de Darío, independiente de la recogida médica. El laboratorio está en `labs/community-bridge/`; permite iniciar una escena de ensayo claramente identificada o jugar desde el comienzo.

@@ -1,3 +1,4 @@
+import {contextualAdasme} from './medical-bridge.mjs';
 import {jimenezMemory} from './jimenez.mjs';
 import {guzmanMemory} from './guzman.mjs';
 import {beatrizMemory} from './beatriz.mjs';
@@ -10,7 +11,7 @@ export function assignment(data,w,id){
  const record=w.run?.mission===id&&w.run.status!=='abandoned'?w.run:w.completed?.[id];
  const m=record?.corridorVersion===1&&(data.legacyMissions?.[id]||data.legacyJourneys?.[id])||id==='jimenez-01'&&record&&record.jimenezVersion!==1&&data.jimenezLegacyMission||id==='guzman-01'&&record&&record.guzmanVersion!==1&&data.guzmanLegacyMission||id==='beatriz-01'&&record&&record.beatrizVersion!==1&&data.beatrizLegacyMission||data.missions[id]||data.journeys?.[id];
  const payment=record?.rewardTerms||(record&&data.previousTerms?.[id]&&(record.corridorVersion===1&&data.legacyMissions[id]?data.legacyMissions[id]:data.previousTerms[id]));
- return payment?{...m,reward:payment.reward,late_step_minutes:payment.late_step_minutes,late_penalty:payment.late_penalty}:m;
+ return contextualAdasme(payment?{...m,reward:payment.reward,late_step_minutes:payment.late_step_minutes,late_penalty:payment.late_penalty}:m,w);
 }
 export function runAssignment(data,w){const r=w.run;if(r?.corridorVersion===1){const m=data.legacyMissions?.[r.mission]||data.legacyJourneys?.[r.mission];if(m)return r.rewardTerms?{...m,...r.rewardTerms}:m;}return assignment(data,w,r?.mission);}
 export function scriptAt(data,r,index){if(r.jimenezVersion===1&&data.jimenezScripted?.[r.mission+':'+index])return data.jimenezScripted[r.mission+':'+index];if(r.guzmanVersion===1&&data.guzmanScripted?.[r.mission+':'+index])return data.guzmanScripted[r.mission+':'+index];if(r.beatrizVersion===1&&data.beatrizScripted?.[r.mission+':'+index])return data.beatrizScripted[r.mission+':'+index];return (r.corridorVersion===2?data.corridorScripted:data.scripted)?.[r.mission+':'+index]||null;}
