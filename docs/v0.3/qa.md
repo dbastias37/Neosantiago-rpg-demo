@@ -53,3 +53,16 @@ El CDN del navegador devolvió un archivo truncado en este entorno. Se verificó
 ## Pendiente antes de declarar terminado el vertical slice
 
 Recorrer el tramo completo sin fixtures; medir tiempo de lectura y decisiones; verificar ambas rutas de consecuencias; aprobar capturas visuales definitivas; probar Safari/iOS y Android real; revisar audio de los assets que faltan. Los éxitos de Node/E2E no sustituyen estos criterios.
+
+
+## Ampliación: continuidad del primer día
+
+`tests/e2e/day-one.spec.cjs` añade dos recorridos completos a cada una de las siete resoluciones. Ambos comienzan mediante la portada y la introducción, eligen Exploración, recogen el lote inicial y resuelven el inhibidor con su teclado real. No inyectan partidas, salud, objetos, semillas, resultados ni temporizadores. Las lecturas de estado se utilizan para comprobar efectos y elegir controles que están disponibles para el jugador.
+
+La variante de rescate fuerza la compuerta, gana el combate por turnos, registra el cadáver, recoge loot que cabe en la mochila y elige la mejora ganada. La variante alternativa alimenta el lector y deja provisiones a Matías sin trasladarlo. Ambas recorren las nueve situaciones principales, usan los recursos y costes normales, deciden no asegurar la bomba, llegan a la noche, hablan con Noa, descansan y preparan la segunda salida. No afirman cubrir todas las decisiones ni certificar dificultad.
+
+Se recarga en noche pendiente, noche pagada y refugio preparado; se cambia de actividad y comerciante; se lee el relato en el modal existente y se compra una ración con los créditos disponibles. La salida se comprueba antes del segundo hack, porque esa sincronización puede pagar una recompensa de misión ya existente. Los informes `day-one-run.json` adjuntan recursos, hechos y tiempos de reproducción automática; las capturas incluyen orientación, combate, loot, noche, lectura del regreso y preparación.
+
+Las pausas del registro del cadáver y de la oferta de mejora se esperan explícitamente. No se adelantan sus timers desde el test ni se pulsa a través de overlays. La lista comercial debe conservar espacio para operar antes y después del mensaje de compra, incluida la pantalla 915×412.
+
+Resultado integrado del bloque: **436/436 Node y 42/42 E2E**, sin reintentos en la ejecución local final. Incluye los 28 casos anteriores y 14 recorridos completos nuevos. Sintaxis, referencias y audio aprobados. La matriz final incluye compras reales y las correcciones de scroll/filas compartidas. El CI existente descubre automáticamente la nueva suite.

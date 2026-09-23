@@ -45,3 +45,20 @@ El primer montaje desplegaba el relato dentro de la cuadrícula del refugio y re
 Las compras del recorrido E2E expusieron además un recorte real en 915×412: las filas fijas y el footer tapaban los botones del comercio. El CSS compartido conserva las cuatro filas del diseño, asigna posiciones explícitas para que el mensaje de compra no desplace el comercio y permite scroll exterior en pantallas anchas de hasta 550 px de alto. El ajuste llega también a Encargos por su loader existente. No añade `!important` ni cambia paleta, retratos o reglas económicas.
 
 La prueba completa ahora compra una ración con créditos reales después de la noche, comprueba el descuento y las existencias, recarga, cambia de actividad y confirma la salida. También exige espacio visible en la lista antes y después del feedback de compra. Se corrigieron dos carreras del conductor E2E: esperar el fin del registro del cadáver y esperar la oferta de mejora ganada antes de intentar otra decisión. No se alteraron los temporizadores ni los resultados del juego para hacer pasar la prueba.
+
+
+## Resultado final local
+
+**436/436 pruebas Node y 42/42 E2E aprobadas**, sin reintentos en la matriz final. Los 28 escenarios anteriores conservan su cobertura; los 14 nuevos corresponden a dos variantes en siete tamaños. Validadores y `git diff --check` aprobados. Se inspeccionaron capturas de orientación, lectura del regreso y comercio en portrait, landscape y escritorio; no son baselines de comparación por píxel aprobadas.
+
+`day-one-baseline.json` conserva las medidas y recursos de los 14 recorridos. La reproducción automática tarda aproximadamente 28–51 segundos según variante/resolución: omite cinemática con su botón, revela texto, avanza narración, incluye recargas y sincronizaciones. **No mide duración humana ni valida el objetivo de 30–60 minutos.** La ruta con rescate gana un combate y recoge cinco unidades de loot; la alternativa no combate y mantiene a Matías fuera del registro de llegadas.
+
+La compra de comprobación cuesta 6 créditos y mueve una ración del stock a una mochila. La noche consume exactamente una ración y un agua en estas variantes. Cargar, abrir el registro o cambiar de actividad no repite esos movimientos. Las variantes unitarias sin reservas y con derrota mantienen la salida de emergencia.
+
+Coste de este bloque frente a la base: **6.072 bytes adicionales de fuentes sin comprimir** entre HTML, JS y CSS. Dos referencias externas nuevas, cero imágenes, audio o preloads nuevos. No es una medición de transferencia comprimida ni de rendimiento en teléfonos reales.
+
+## Pendientes y siguiente bloque
+
+Medir una sesión humana desde portada hasta la segunda preparación, separando lectura, decisiones, combate e inventario. Revisar la oportunidad económica del comercio diario con varios estilos de juego. La selección de prueba evita desvíos opcionales y no certifica el balance de todas las rutas.
+
+Persisten los assets de audio P0 pendientes, la prueba en Safari/iOS y Android real, la aprobación de referencias visuales y el acoplamiento de escenas por índice/título. La orientación contextual no sustituye un mapa geográfico. El siguiente corte de arquitectura por IDs estables requiere análisis y aprobación propios; este bloque no lo implementa ni declara cerrada V0.3.
