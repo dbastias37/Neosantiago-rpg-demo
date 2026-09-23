@@ -64,6 +64,7 @@ function prepareNight(day,returnToRefuge){
   var ledger=restLedger();if(ledger.nights[day])return showNight();
   state.inhibitor.active=false;state.inhibitor.remainingMs=0;state.inhibitor.exposed=true;state.inhibitor.needsSync=true;state.inhibitor.exposedMoves=0;
   ledger.nights[day]={day:day,phase:"planning",returnToRefuge:returnToRefuge||null,choice:null,receipt:null,context:nightContext(day)+(day===2&&typeof veraNightContext==="function"&&veraNightContext()?"\n\n"+veraNightContext():""),conversations:{}};
+  if(day===2&&typeof medicalNightContext==="function"&&medicalNightContext())ledger.nights[day].context+="\n\n"+medicalNightContext();
   if(day===1)ledger.nights[day].returnAccount=firstNightConsequences();
   nightCompanion=null;
   save();render();renderSignalHud();return showNight();

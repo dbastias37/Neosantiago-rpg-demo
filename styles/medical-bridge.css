@@ -1,7 +1,7 @@
 /* Uses the established refuge controls and palette; no global overrides. */
-.medical-bridge { margin-block: 12px; padding: 12px; border: 1px solid #695337; background: #171a1a; }
-.medical-bridge summary { cursor: pointer; color: #e5c391; min-height: 44px; padding: 10px 0; }
+.medical-bridge { margin-block: 12px; padding: 12px; border: 1px solid var(--line); background: var(--panel); }
+.medical-bridge summary { cursor: pointer; color: var(--amber); min-height: 44px; padding: 10px 0; }
 .medical-bridge p { line-height: 1.6; }
 .medical-bridge-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-.medical-bridge-actions button { min-height: 44px; white-space: normal; }
-.medical-bridge :focus-visible { outline: 2px solid #8ecaca; outline-offset: 3px; }
+.medical-bridge-actions button { min-height: 44px; white-space: normal; font-size: 11px; }
+.medical-bridge :focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }

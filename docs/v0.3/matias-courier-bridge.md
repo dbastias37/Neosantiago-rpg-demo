@@ -28,7 +28,7 @@ Este bloque implementa y prueba Matías–Adasme. Rosa/Sorsa queda como siguient
 
 ## Referencias de escritura
 
-Emily Short: [Storylets: You Want Them](https://emshort.blog/2019/11/29/storylets-you-want-them/), [Pacing Storylet Structures](https://emshort.blog/2019/11/30/pacing-storylet-structures/). Se aplican requisitos locales, memoria de hechos y convergencia, no un árbol de ramas duplicadas. Las líneas se escriben desde necesidades concretas: Sara necesita una entrega verificable, Adasme recuperar a una persona, Matías saber quién volvió.
+Emily Short: [Storylets: You Want Them](https://emshort.blog/2019/11/29/storylets-you-want-them/), [Pacing Storylet Structures](https://emshort.blog/2020/01/21/pacing-storylet-structures/). Se aplican requisitos locales, memoria de hechos y convergencia, no un árbol de ramas duplicadas. Becky Slitt: [How to Write Intentional Choices](https://www.choiceofgames.com/2016/12/how-to-write-intentional-choices/), aplicado a explicar antes de aceptar qué espera, qué sigue abierto y qué oportunidad puede perderse. Las líneas se escriben desde necesidades concretas: Sara necesita una entrega verificable, Adasme recuperar a una persona, Matías saber quién volvió.
 
 ## Verificación y pendientes
 
@@ -39,3 +39,11 @@ Se actualizará al cerrar cada bloque. Requeridos: idempotencia, guardado antigu
 448/448 pruebas Node aprobadas (436 previas y 12 nuevas). El recorrido nuevo se ejecuta con un equipo recién creado, hasta Vicuña y de vuelta, usando el motor de viajes y encuentros existente. También se verifica el recibo de un rescate real ya completado, sin nuevo pago. Pruebas de almacenamiento, migración, aislamiento, ingreso tardío y memoria de Noa aprobadas. Sintaxis y referencias sin errores nuevos; el inventario de audio solo cambia sus líneas de referencia (64 archivos ausentes heredados).
 
 La alternativa de Matías adopta la postura de observación de Noa: no salta el enfrentamiento posterior de la Alameda ni crea otra categoría incompatible en su registro. Se conserva la conversación de regreso de Darío, independiente de la recogida médica. El laboratorio está en `labs/community-bridge/`; permite iniciar una escena de ensayo claramente identificada o jugar desde el comienzo.
+
+## Revisión de narrativa e interfaz
+
+La nueva opción mantiene la postura de observación de Noa y se oculta si ya se acordó cualquier ruta; no permite elegir dos veces ni saltar la Alameda. La segunda noche captura el comprobante médico en su contexto, distinguiendo rescate confirmado de destino desconocido de Darío. La primera noche cerrada no se reescribe. El epílogo recuerda la reserva sin declarar el alta de Matías.
+
+Los botones del refugio usan sus clases y variables visuales existentes. La ficha y el comercio de Mensajeros continúan usando sus adaptadores compartidos. El panel de campaña se elimina del refugio comercial de Mensajeros: la entrega se gestiona desde la conversación del relevo, no desde una segunda copia sin comportamiento. No se añaden imágenes ni sonidos.
+
+La primera pasada E2E detectó dos errores del conductor: usar la carpeta sin `index.html` en el servidor estático, y seleccionar a la vez el cierre superior y «Volver al mapa». Se corrigieron los localizadores y se volvió a ejecutar. Los seis casos A/B y delegación en 360×800 y 915×412 pasan, incluyendo ficha compartida y comercio; la matriz completa se registra al finalizar.
