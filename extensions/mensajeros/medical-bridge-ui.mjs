@@ -4,27 +4,27 @@ import {conversation} from './community.mjs';
 export function medicalUI({data,E,getWorld,setWorld,canWrite,render,open,close,announce,esc,image}){
  const context=globalThis.NeoBridgeContext;
  function commit(fn){
-  if(!context?.variant||!canWrite())return false;
+  if(!(context?.policy||context?.variant)||!canWrite())return false;
   try{const next=fn(getWorld());localStorage.setItem(data.save_key,E.serialize(next));setWorld(next);render();return true;}
   catch(err){announce('No se confirmó el cambio: '+err.message);return false;}
  }
  function sync(){
-  if(!context?.variant||!canWrite())return;
+  if(!(context?.policy||context?.variant)||!canWrite())return;
   try{
    const s=JSON.parse(localStorage.getItem(context.key('neosantiago2130_demo_v3')));
-   if(s?.version!==3||!s.flags?.matiasAtRefuge||!s.matiasBridge||s.matiasBridge.variant!==context.variant||s.matiasBridge.stage!=='requested')return;
+   if(s?.version!==3||s.finished||!s.flags?.matiasAtRefuge||!s.matiasBridge||s.matiasBridge.variant!==(context.policy||context.variant)||s.matiasBridge.stage!=='requested')return;
    if(getWorld().matiasBridge)return;
    const next=bridge.join(getWorld(),s.matiasBridge,crypto.randomUUID());
    localStorage.setItem(data.save_key,E.serialize(next));setWorld(next);
   }catch(err){announce('La solicitud no pudo incorporarse. Se conserva el guardado: '+err.message);}
  }
  function entry(){
-  const b=getWorld().matiasBridge;if(!context?.variant||!b)return '';
+  const b=getWorld().matiasBridge;if(!(context?.policy||context?.variant)||!b)return '';
   const status={requested:'Recoger en Vicuña',collected:'Llevar a Los Héroes',delivered:'Recepción confirmada'}[b.stage];
   return `<div class="return-entry"><p>Matías · ${esc(status)}</p><button data-medical-open>La reserva de Vicuña</button></div>`;
  }
  function show(){
-  const w=getWorld(),b=w.matiasBridge;if(!context?.variant||!b)return;
+  const w=getWorld(),b=w.matiasBridge;if(!(context?.policy||context?.variant)||!b)return;
   const idle=bridge.idle(w),rescued=bridge.rescued(w),local=w.location==='vicuna'&&idle;
   let text='',actions='';
   if(b.stage==='requested'){

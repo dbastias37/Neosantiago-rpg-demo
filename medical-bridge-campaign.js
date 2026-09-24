@@ -1,8 +1,8 @@
 /* Safe-boundary adapter. The campaign imports receipts, never courier inventory. */
 'use strict';
-function medicalEligible(){var n=state.expeditionRest&&state.expeditionRest.nights[1];return !!(NeoBridgeContext.variant&&gameSessionActive&&!state.finished&&state.refuge.active&&state.index===9&&state.flags.matiasAtRefuge&&n&&n.phase==='closed')}
-function medicalSafe(){return !!(NeoBridgeContext.variant&&gameSessionActive&&!state.finished&&state.refuge.active&&!encounterSaveLocked&&!battleState&&!pendingNight())}
-function medicalBlocked(){return !!(NeoBridgeContext.variant&&state.matiasBridge&&NeoCommunityBridge.blocked(state.matiasBridge))}
+function medicalEligible(){var n=state.expeditionRest&&state.expeditionRest.nights[1];return !!(NeoBridgeContext.policy&&gameSessionActive&&!state.finished&&state.refuge.active&&state.index===9&&state.flags.matiasAtRefuge&&n&&n.phase==='closed')}
+function medicalSafe(){return !!(NeoBridgeContext.policy&&gameSessionActive&&!state.finished&&state.refuge.active&&!encounterSaveLocked&&!battleState&&!pendingNight())}
+function medicalBlocked(){return !!(NeoBridgeContext.policy&&state.matiasBridge&&NeoCommunityBridge.blocked(state.matiasBridge))}
 function medicalCommit(next){
   if(!medicalSafe())return false;
   try{NeoCommunityBridge.request(next);var snapshot=Object.assign({},state,{matiasBridge:next});localStorage.setItem(KEY,JSON.stringify(snapshot));state.matiasBridge=next;return true}
@@ -16,13 +16,13 @@ function syncMedicalBridge(){
 }
 function medicalRoutePassed(){return state.index>10||!!(typeof noaRouteRecord==="function"&&noaRouteRecord())}
 function medicalNightContext(){
-  var b=state.matiasBridge;if(!NeoBridgeContext.variant||!b||b.stage!=='reviewed')return '';
+  var b=state.matiasBridge;if(!NeoBridgeContext.policy||!b||b.stage!=='reviewed')return '';
   return 'En la mesa queda la copia que trajeron Rocío, Tomás y Bruno. Matías recibió su reserva y sigue en la posta. '+(b.source==='rescue'?'También quedó confirmado el regreso de Darío a Vicuña. El papel no dice que ninguno esté listo para salir otra vez.':'La recepción no trae noticias de Darío. La pregunta queda anotada para el próximo contacto con Vicuña.')+(state.flags.matiasBridgeRouteUsed?' Junto al comprobante está el dibujo de la marca baja: la indicación sirvió al salir de República.':'');
 }
 function medicalText(){
   var b=state.matiasBridge;
-  if(!b)return 'Sara sale de la posta con un papel doblado. «La fiebre bajó, pero aquí no tenemos todo lo que necesita. En Vicuña apartaron una reserva a su nombre. Los Mensajeros pueden traerla. Adasme coordina allí una búsqueda: le falta un hombre, Darío. Matías puede quedarse aquí acompañado. Darío sigue afuera. Que hablen con Adasme antes de elegir por dónde salir». '+(NeoBridgeContext.variant==='A'?'Si te haces cargo, el grupo esperará el relevo antes de salir. Puedes devolver la coordinación a la posta.':'Puedes seguir la expedición mientras viajan. Para aprovechar una nueva indicación de Matías tendrás que volver a escucharlo antes de pasar por República.');
-  if(b.stage==='requested')return (b.delegated?'Sara deja la coordinación en manos de la posta. El grupo puede salir; la entrega sigue pendiente. ':'La solicitud quedó anotada. Matías permanece al cuidado de la posta. ')+(b.variant==='A'&&!b.delegated?'El grupo espera este relevo antes de salir. ':'')+'Los Mensajeros deben recoger la reserva en Vicuña y traerla a Los Héroes. Un encargo en curso debe terminar o devolverse antes de iniciar ese viaje. No hay una muerte por cuenta atrás.';
+  if(!b)return 'Sara sale de la posta con un papel doblado. «La fiebre bajó, pero aquí no tenemos todo lo que necesita. En Vicuña apartaron una reserva a su nombre. Los Mensajeros pueden traerla. Adasme coordina allí una búsqueda: le falta un hombre, Darío. Matías puede quedarse aquí acompañado. Darío sigue afuera. Que hablen con Adasme antes de elegir por dónde salir». '+(NeoBridgeContext.policy==='A'?'Si te haces cargo, el grupo esperará el relevo antes de salir. Puedes devolver la coordinación a la posta.':'Puedes seguir la expedición mientras viajan. Para aprovechar una nueva indicación de Matías tendrás que volver a escucharlo antes de pasar por República.');
+  if(b.stage==='requested')return (b.delegated?'Sara deja la coordinación en manos de la posta. El grupo puede salir; la entrega sigue pendiente. ':'La solicitud quedó anotada. Matías permanece al cuidado de la posta. ')+(b.variant==='A'&&!b.delegated?'El grupo espera este relevo antes de salir. ':'')+'Los Mensajeros deben recoger la reserva en Vicuña y traerla a Los Héroes. Un encargo en curso debe terminar o devolverse antes de iniciar ese viaje. La posta sigue atendiendo a Matías durante el traslado.';
   if(b.stage==='delivered')return 'La posta confirma la recepción. El paquete lleva el nombre de Matías y el registro de Vicuña. Sara lo abre junto a la cama y coteja lo que llegó con su solicitud. «Ahora sí podemos continuar. Que se quede aquí; no está para volver a los túneles». Habla con él durante el siguiente relevo de la posta.';
   return (b.source==='rescue'?'«¿Darío? ¿Así se llama el que trajeron?», pregunta Matías. Sara asiente. Él vuelve a acomodar la manta antes de seguir. ':'Matías pregunta por el hombre que buscaba Adasme. Sara le dice que esta entrega no confirma su regreso. Él asiente sin insistir. ')+(state.flags.matiasBridgeRouteUsed?'Noa ya utilizó su indicación al salir de la escalera de República. Matías sigue al cuidado de la posta.':medicalRoutePassed()?'La indicación que añade sobre República llega después del paso del grupo. La entrega sigue importando, aunque ya no puede cambiar ese recorrido.':'Sobre el papel señala un hueco bajo la escalera de República. «Me confundí al explicarlo. La marca baja, no la de la pared. Desde ahí se puede ver el barrido antes de salir». Noa lo copia. Matías se queda en la posta; la indicación podrá usarse en La primera luz.');
 }
@@ -41,7 +41,7 @@ function acceptMedicalBridge(){
   if(!medicalEligible()||state.matiasBridge)return false;
   var requestId;
   try{requestId=crypto.randomUUID()}catch(e){toast('Este navegador no permite crear una solicitud segura.');return false}
-  var ok=medicalCommit(NeoCommunityBridge.create(requestId,NeoBridgeContext.variant));if(ok)renderRefuge();return ok;
+  var ok=medicalCommit(NeoCommunityBridge.create(requestId,NeoBridgeContext.policy));if(ok)renderRefuge();return ok;
 }
 function reviewMedicalBridge(){
   if(!medicalSafe()||!state.matiasBridge||state.matiasBridge.stage!=='delivered')return false;
@@ -52,7 +52,7 @@ function delegateMedicalBridge(){
   var ok=medicalCommit(NeoCommunityBridge.delegate(state.matiasBridge));if(ok)renderRefuge();return ok;
 }
 function medicalBridgeEvent(ev,index){
-  if(!NeoBridgeContext.variant||!state.matiasBridge)return ev;
+  if(!NeoBridgeContext.policy||!state.matiasBridge)return ev;
   var result=Object.assign({},ev);
   // Parallel teams have no shared clock. Keep scene order without pretending their hours synchronize.
   if(ev.day===2)result.time=state.matiasBridge.stage==='reviewed'?'Tras la visita a la posta':'Segunda jornada';
@@ -62,4 +62,8 @@ function medicalBridgeEvent(ev,index){
 $('medicalAccept').addEventListener('click',acceptMedicalBridge);
 $('medicalReview').addEventListener('click',reviewMedicalBridge);
 $('medicalDelegate').addEventListener('click',delegateMedicalBridge);
-$('medicalCouriers').addEventListener('click',function(){if(medicalSafe()&&state.matiasBridge){openActivityMenu();openCourierActivity()}});
+$('medicalCouriers').addEventListener('click',function(){if(medicalSafe()&&state.matiasBridge){openActivityMenu();openCourierActivity('medical')}});
+// Bring an opened notice into view inside the bounded refuge section.
+['medicalBridgePanel','rosaBridgePanel'].forEach(function(id){
+  var panel=$(id);if(panel)panel.addEventListener('toggle',function(){if(panel.open)panel.scrollIntoView({block:'start',behavior:'auto'})});
+});

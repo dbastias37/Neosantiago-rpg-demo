@@ -445,6 +445,15 @@
                 <button class="secondary" id="medicalDelegate">Dejar la coordinación a la posta</button>
               </div>
             </details>
+            <details class="medical-bridge hidden" id="rosaBridgePanel">
+              <summary>Rosa · Una puerta para volver</summary>
+              <p id="rosaBridgeText" aria-live="polite"></p>
+              <div class="medical-bridge-actions">
+                <button class="secondary" id="rosaAccept">Pedir a los Mensajeros que coordinen la recepción</button>
+                <button class="secondary" id="rosaCouriers">Seguir con Los Mensajeros</button>
+                <button class="secondary" id="rosaReview">Revisar con Noa el relevo civil</button>
+              </div>
+            </details>
             <div class="world-news-entry hidden" id="worldNewsEntry">
               <p id="worldNewsStatus"></p>
               <button class="secondary" id="worldNewsButton" aria-haspopup="dialog" aria-controls="worldNewsModal">Informe de Morales</button>
@@ -794,8 +803,9 @@
   </aside>
   <div class="toast hidden" id="toast" role="status"></div>
 
-  <script src="bridge-context.js"></script>
+  <script src="bridge-context.js?v=2-production"></script>
   <script src="community-bridge.js"></script>
+  <script src="rosa-bridge.js"></script>
   <script src="campaign-v2.js?v=opening-02-73"></script>
   <script>
   "use strict";
@@ -1135,11 +1145,11 @@
   <script src="outcomes-v3.js?v=1"></script>
   <script src="outcome-screen.js?v=1"></script>
   <script src="outcome-campaign.js?v=1"></script>
-  <script src="persistence-v3.js?v=3-medical-bridge"></script>
-  <script src="game-v2.js?v=24-medical-bridge"></script>
+  <script src="persistence-v3.js?v=4-community"></script>
+  <script src="game-v2.js?v=25-community"></script>
   <script src="companion-nights.js?v=4-evidence"></script>
-  <script src="expedition-rest.js?v=4-return"></script>
-  <script src="expedition-continuity.js?v=2"></script>
+  <script src="expedition-rest.js?v=5-community"></script>
+  <script src="expedition-continuity.js?v=3"></script>
   <script src="companion-commitments.js?v=4"></script>
   <script src="companion-routes.js?v=1"></script>
   <script src="companion-evidence.js?v=1"></script>
@@ -1147,7 +1157,7 @@
   <script src="field-upgrades.js?v=2"></script>
   <script src="narrative-v3.js?v=3-finale"></script>
   <script src="narrative-chapters.js?v=2-vera"></script>
-  <script src="narrative-finale.js?v=vera-2-reward"></script>
+  <script src="narrative-finale.js?v=community-3"></script>
   <script src="loot-crates.js?v=5-finale"></script>
   <script src="combat-stage.js?v=5-mobile-arrows"></script>
   <script src="field-upgrades-ui.js?v=3"></script>
@@ -1179,8 +1189,9 @@
   </article>
 </section>
 <script src="world-continuity.js?v=1"></script>
-<script src="medical-bridge-campaign.js"></script>
-  <script src="activities.js?v=8-expediente"></script>
+<script src="medical-bridge-campaign.js?v=2-production"></script>
+<script src="rosa-bridge-campaign.js"></script>
+  <script src="activities.js?v=9-community"></script>
 <script src="mobile-back.js?v=6-cinematic"></script>
 </body>
 </html>

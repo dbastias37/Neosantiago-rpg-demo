@@ -38,7 +38,7 @@ function render(){
 }
 function message(text){$('refugeMessage').textContent=text;$('refugeMessage').classList.remove('hidden');}
 function transact(fn,...args){if(host.transact(fn,...args)){render();message('Intercambio realizado.');}else message(host.error());}
-$('starterKit').remove();$('refugeActivities').remove();$('worldNewsEntry')?.remove();$('medicalBridgePanel')?.remove();
+$('starterKit').remove();$('refugeActivities').remove();$('worldNewsEntry')?.remove();$('medicalBridgePanel')?.remove();$('rosaBridgePanel')?.remove();
 $('refugeRejoin').textContent='Gestionar equipo';$('refugeRejoin').onclick=()=>host.profile(recipient);
 $('refugeParty').previousElementSibling.querySelector('small').textContent='Selecciona quién recibe las compras';
 $('npcTabMara').onclick=()=>{vendor='mara';render();};$('npcTabArmorer').onclick=()=>{vendor='armorer';render();};

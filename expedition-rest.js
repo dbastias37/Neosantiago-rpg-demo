@@ -86,7 +86,7 @@ function settleNight(mode){
 function continueAfterNight(){
   var n=pendingNight();if(!n||n.phase!=="settled")return false;n.phase="closed";$("night").classList.add("hidden");
   var reason=n.returnToRefuge||(state.morale<10?"morale":state.party.some(function(p){return p.hp<10||p.hunger<10})?"exhausted":null);
-  if(reason)openRefuge(reason);else if(n.day===1)openRefuge("preparation");else{save();render();setTimeout(function(){openSignalHack("newday")},260)}return true;
+  if(reason)openRefuge(reason);else if(n.day===1||(typeof rosaBridgeAvailable==="function"&&rosaBridgeAvailable()))openRefuge("preparation");else{save();render();setTimeout(function(){openSignalHack("newday")},260)}return true;
 }
 function nightKeydown(e){
   if($("night").classList.contains("hidden"))return false;

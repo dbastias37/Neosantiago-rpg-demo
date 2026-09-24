@@ -1,4 +1,4 @@
-# La reserva de Vicuña — bloque de conexión en revisión
+# La reserva de Vicuña — conexión de campaña
 
 Base contrastada: `main` e121ed1. Suite inicial: 436/436. Rama: `feature/v0.3-matias-courier-bridge`.
 
@@ -10,9 +10,9 @@ La solicitud se ofrece en la preparación después de cerrar la primera noche, s
 
 La reserva es carga protegida, separada de los consumibles y los pagos. Se recoge físicamente en Vicuña y se entrega físicamente en Los Héroes. Cada equipo escribe únicamente su propio guardado. La campaña importa una recepción persistida y ligada a su solicitud; Sara verifica la entrega. Matías sigue al cuidado de la posta y puede precisar un acceso a República: no queda mágicamente sano ni sale de expedición. Su información habilita una opción discreta en «La primera luz»; llegar después no modifica decisiones pasadas.
 
-## Comparación A/B
+## Variante de producción y regresión A/B
 
-El laboratorio emplea claves separadas por variante. La campaña habitual no activa el episodio. A espera el relevo antes de salir si el jugador aceptó hacerse cargo; permite devolver la coordinación a la posta, liberando la salida sin inventar una entrega. B permite continuar y solo condiciona la nueva opción de República. La conversación explica la diferencia antes de aceptar. Los dos permiten rechazar el compromiso y terminar encargos pendientes.
+Desde el bloque de producción del 24 de septiembre se activa B en la campaña habitual por autorización del usuario. El laboratorio conserva claves separadas para regresiones. A espera el relevo antes de salir si el jugador aceptó hacerse cargo; permite devolver la coordinación a la posta, liberando la salida sin inventar una entrega. B permite continuar y solo condiciona la nueva opción de República. La conversación explica la diferencia antes de aceptar. Los dos permiten rechazar el compromiso y terminar encargos pendientes.
 
 El tiempo de los encargos sigue siendo duración del viaje y plazo de la extracción, no un reloj universal sincronizado con las horas de la campaña. El episodio se presenta como un relevo paralelo; los encabezados de la segunda jornada pasan a expresar el orden de los sucesos cuando hay una solicitud activa. No se añade muerte por temporizador oculto. Hace falta una sesión humana para evaluar duración y motivación: automatizar el recorrido no prueba una experiencia de 30–60 minutos.
 
@@ -24,7 +24,7 @@ Adaptadores pequeños para campaña y Mensajeros. Diálogo integrado en el refug
 
 ## Alcance
 
-Este bloque implementa y prueba Matías–Adasme. Rosa/Sorsa queda como siguiente conexión: no se cambia su contenido ni se extiende un bloqueo a toda la campaña. Las cuatro direcciones finales y sus condiciones siguen intactas.
+El primer bloque implementó Matías–Adasme. El bloque de producción añade Rosa–Ana, documentado en `community-links-production.md`; no existe un personaje Sorsa en el contenido vigente. Ninguna de las dos conexiones bloquea toda la campaña. Las cuatro direcciones finales y sus condiciones siguen intactas.
 
 ## Referencias de escritura
 
@@ -32,7 +32,7 @@ Emily Short: [Storylets: You Want Them](https://emshort.blog/2019/11/29/storylet
 
 ## Verificación y pendientes
 
-Se actualizará al cerrar cada bloque. Requeridos: idempotencia, guardado antiguo, almacenamiento fallido, recibo ajeno, entrega tardía, rescate ya pagado, encargo en curso, cancelación, A/B aislados y navegador en las siete resoluciones. Queda pendiente aprobación narrativa y prueba humana A/B antes de activar el episodio en la campaña habitual.
+Se actualizará al cerrar cada bloque. Requeridos: idempotencia, guardado antiguo, almacenamiento fallido, recibo ajeno, entrega tardía, rescate ya pagado, encargo en curso, cancelación, A/B aislados y navegador en las siete resoluciones. La prueba humana A/B dejó de ser requisito de activación por decisión expresa del usuario; la evidencia automática y sus límites se registran en `community-links-production.md`.
 
 ## Bloque implementado: contrato y adaptadores
 
@@ -58,4 +58,4 @@ Se añaden 12.7 KiB sin comprimir entre los tres scripts de campaña y la hoja e
 
 Para revisar: `npm ci`, `npm run qa:serve`, abrir `http://127.0.0.1:4173/labs/community-bridge/index.html`. Cada botón prepara su propia variante y conserva una copia anterior. En el juego, «Continuar» lleva al refugio; abrir «Matías · La reserva de Vicuña». Probar recoger directamente, combinar con Darío, dejar la coordinación, llegar tarde y recargar. Jugar desde el comienzo permite comprobar la entrada natural tras rescatar a Matías.
 
-Pendiente: prueba humana A/B de motivación, duración y claridad; elección de la variante de producción; balance del enlace largo con jugadores nuevos; activación posterior explícita. El siguiente enlace Rosa/Sorsa requiere revisar sus hechos y rutas concretas antes de ampliar esta estructura. No hay migración automática ni activación del episodio en las partidas habituales.
+Decisión posterior: B seleccionada y activada en la campaña habitual. Rosa–Ana se incorpora como segunda conexión en la preparación de la tercera jornada. No se generan solicitudes ni recepciones al cargar partidas antiguas: se ofrecen en los puntos narrativos compatibles. Siguen sin medirse con jugadores la duración y el balance del enlace largo; no son una prueba A/B que el usuario deba realizar antes de jugar este bloque.

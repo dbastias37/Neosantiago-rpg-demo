@@ -24,11 +24,12 @@ function resetActivityProgress(){
  replacement.removeAttribute('src');frame.replaceWith(replacement);
  return true;
 }
-function openCourierActivity(){
+function openCourierActivity(bridgeFocus){
+ bridgeFocus=bridgeFocus==='rosa'?'rosa':bridgeFocus==='medical'?'medical':null;
  setSceneAmbience(null);courierAudioVisible(true);
  state.activity='couriers';save();$("activityMenu").classList.add("hidden");$("courierScreen").classList.remove("hidden");
- var frame=$("courierFrame");if(!frame.getAttribute('src'))frame.setAttribute('src','extensions/mensajeros/play.html?v=18-expediente');
- try{frame.contentWindow.postMessage({type:"neo-medical-request"},location.origin)}catch(e){}
+ var frame=$("courierFrame");if(!frame.getAttribute('src'))frame.setAttribute('src','extensions/mensajeros/play.html?v=19-community'+(bridgeFocus?'&community='+bridgeFocus:''));
+ try{frame.contentWindow.postMessage({type:"neo-medical-request",focus:bridgeFocus},location.origin)}catch(e){}
  $("courierReturn").focus({preventScroll:true});
 }
 function returnToActivities(){courierAudioVisible(false);setSceneAmbience('ambience-title',AUDIO_CROSSFADE_MS);state.activity='hub';openActivityMenu()}

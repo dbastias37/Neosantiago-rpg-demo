@@ -1,3 +1,4 @@
+import {rosaBridge,prepareRosaVisits} from './rosa-bridge.mjs';
 import {bridge,prepareMedicalVisits} from './medical-bridge.mjs';
 import {recordInterruption,normalizeOutcomes,nextOutcomeAttempt} from './outcomes.mjs';
 import {prepareJimenez,prepareJimenezVisits,jimenezArrival,refreshJimenez,jimenezMemory} from './jimenez.mjs';
@@ -78,7 +79,7 @@ export function prepare(data){
  const prepared=prepareJimenezVisits(prepareGuzmanVisits(prepareBeatrizVisits(prepareJourneys(prepareEncounters(prepareJimenez(prepareGuzman(prepareEconomy(prepareBeatriz(prepareCorridors(d))))))))));
  prepared.legacyJourneys={};
  for(const [id,m]of Object.entries(legacy.journeys)){const route='legacy-'+m.route;prepared.legacyJourneys[id]={...m,route};prepared.routes[route]={...legacy.routes[m.route],id:route};}
- return prepareMedicalVisits(prepared);
+ return prepareRosaVisits(prepareMedicalVisits(prepared));
 }
 export function createWorld(data,{seed=Date.now()}={}){
  const w=Base.createWorld(data,{mode:'laboratory',seed});
@@ -91,7 +92,8 @@ export function start(data,source,id){
  need(!source.paid.includes(id),'Este encargo ya fue entregado.');
  const entry=entryPoints(data,id).find(p=>p.node===source.location);
  need(entry,'Viaja a '+entryPoints(data,id).map(p=>data.nodes[p.node].name).join(' o ')+' antes de aceptar este encargo.');
- const w=Base.start(data,source,id),r=w.run,m=data.missions[id],issued=copy(r.supplies);
+ const origin=id==='ana-01'&&source.rosaBridge?.stage==='requested'?rosaBridge.collect(source):source;
+ const w=Base.start(data,origin,id),r=w.run,m=data.missions[id],issued=copy(r.supplies);
  r.outcomeAttempt=nextOutcomeAttempt(w);r.jimenezVersion=m.jimenezVersion||0;r.guzmanVersion=m.guzmanVersion||0;r.rewardTerms=terms(m);r.beatrizVersion=m.beatrizVersion||0;restoreEncounters(w);r.corridorVersion=2;r.directorVersion=1;r.startIndex=entry.index;r.index=entry.index;
  r.party=copy(w.crew).map(c=>memberBase(data,{...c,hp:Math.max(c.hp,Math.ceil(c.maxHp*.4))}));
  // Migrate any old shared reserve into individual bags before leaving the hub.
@@ -111,7 +113,7 @@ function updateCheckpoint(data,w){
  if(w.location==='plaza'&&w.effects.includes('guzman-01')&&!r.used['plaza-'+r.index]){r.used['plaza-'+r.index]=true;r.log.push('La torreta de Plaza sigue girando. El guardia reconoce al equipo y señala el banco que dejó Ana: hay agua y una ración para descansar sin gastar las propias.');}
  if(Base.mission(data,w).type==='travel'&&r.index===Base.route(data,w).edges.length){
   r.status='completed';r.jammerOn=false;w.crew=copy(r.party);if(w.location==='heroes')w.hubVisits=(w.hubVisits||0)+1;
-  r.log.push(Base.mission(data,w).purpose==='visit'?'Llegada a '+Base.here(data,w).name+'. El contacto puede recibir al equipo; esta visita no tiene pago.':Base.mission(data,w).purpose==='assignment'?'Llegada a '+Base.here(data,w).name+'. Revisa la propuesta de '+Base.mission(data,w).issuer+' antes de aceptar. Todavía no has recibido la carga.':'Llegada a Los Héroes. Mara y el Armero ya pueden atender al grupo.');return;
+  r.log.push(['medical','rosa'].includes(Base.mission(data,w).purpose)?'Llegada a '+Base.here(data,w).name+'. La solicitud se presenta al contacto; el traslado no tiene pago.':Base.mission(data,w).purpose==='visit'?'Llegada a '+Base.here(data,w).name+'. El contacto puede recibir al equipo; esta visita no tiene pago.':Base.mission(data,w).purpose==='assignment'?'Llegada a '+Base.here(data,w).name+'. Revisa la propuesta de '+Base.mission(data,w).issuer+' antes de aceptar. Todavía no has recibido la carga.':'Llegada a Los Héroes. Mara y el Armero ya pueden atender al grupo.');return;
  }
  if(Base.here(data,w).checkpoint){const {checkpoint,rolls,log,...snapshot}=r;r.checkpoint={node:Base.here(data,w).id,snapshot:copy(snapshot)};}
 }
@@ -286,6 +288,12 @@ export function travelToMission(data,source,id){
  const journey=approachJourney(data,source,id);need(journey,'No hay un trayecto disponible hasta ese punto de preparación.');
  return beginTravel(data,source,journey);
 }
+export function travelRosa(data,source){
+ rosaBridge.cargo(source.rosaBridge);need(rosaBridge.idle(source),'Termina o devuelve el viaje antes de visitar a Ana.');
+ need(source.rosaBridge.stage==='requested','El añadido ya fue recogido.');
+ const journey=data.journeys['rosa-'+source.location];need(journey,'El equipo ya está en Plaza o no hay un recorrido disponible.');
+ return beginTravel(data,source,journey);
+}
 export function travelMedical(data,source){
  bridge.cargo(source.matiasBridge);need(bridge.idle(source),"Termina o devuelve el viaje antes de recoger la reserva.");
  need(source.matiasBridge.stage==='requested',"La reserva ya fue recogida.");
@@ -354,7 +362,7 @@ export function learn(data,source,memberId,skillId){const w=copy(source);need(!w
 export function rewardForecast(data,w){const r=w.run,m=Base.mission(data,w);if(!r||!m||m.type==='travel')return null;if(r.status==='completed'&&r.receipt?.gross!==undefined){const p=r.receipt;return{gross:p.gross,amount:p.amount,late:p.late,penalty:p.penalty,limit:p.timeLimit,minutes:p.minutes};}const gross=m.reward.base+(r.combats===0?m.reward.stealth_bonus:0),late=Math.max(0,r.minutes-(r.timeLimit??m.time_limit)),penalty=Math.min(Math.floor(gross*.5),Math.ceil(late/m.late_step_minutes)*m.late_penalty);return{gross,amount:gross-penalty,late,penalty,limit:r.timeLimit??m.time_limit,minutes:r.minutes};}
 export function restore(data,text){
  const migrated=restoreTerms(data,restoreCorridors(data,JSON.parse(migrateNetworkSave(data,text))));
- const w=Base.restore(data,JSON.stringify(migrated));if(w.matiasBridge!==undefined)bridge.cargo(w.matiasBridge);need(w.mode==='production'&&Array.isArray(w.crew)&&Array.isArray(w.effects)&&w.stock,'Guardado de encargos inválido.');w.location??=(w.run&&Base.here(data,w)?.id)||'heroes';w.hubVisits??=0;
+ const w=Base.restore(data,JSON.stringify(migrated));if(w.matiasBridge!==undefined)bridge.cargo(w.matiasBridge);if(w.rosaBridge!==undefined)rosaBridge.cargo(w.rosaBridge);need(w.mode==='production'&&Array.isArray(w.crew)&&Array.isArray(w.effects)&&w.stock,'Guardado de encargos inválido.');w.location??=(w.run&&Base.here(data,w)?.id)||'heroes';w.hubVisits??=0;
  for(const c of w.crew)memberBase(data,c);
  if(w.run){const r=w.run;
   if(r.startIndex!==undefined)need(Number.isInteger(r.startIndex)&&r.startIndex>=0&&r.startIndex<=r.index&&!!data.missions[r.mission]&&(Base.mission(data,w).entry_points||[{index:0}]).some(p=>p.index===r.startIndex),'Punto de incorporación inválido.');
