@@ -19,7 +19,7 @@ for (const name of ['campaign-new', 'campaign-retreat']) {
     assert.equal(storage.get(key), text, 'reading a save must not rewrite it');
     c.gameSessionActive = true;
     c.save();
-    assert.deepEqual(JSON.parse(storage.get(key)), expected);
+    assert.deepEqual(JSON.parse(storage.get(key)), {...expected,sceneId:c.events[expected.index].id}, 'the first write adds only the optional stable scene anchor');
     assert.equal(storage.get('neosantiago.mensajeros.production.v1'), '{"otherTeam":"untouched"}');
     assert.equal(storage.size, 2, 'the extraction introduces no new save namespace');
   });
@@ -37,6 +37,39 @@ test('a continued V0.2 retreat keeps its refuge, earned consequences and next ev
   assert.deepEqual(plain(c.state.flags), expected.flags);
   assert.equal(c.state.stats.retreats, expected.stats.retreats);
   assert.deepEqual(plain(c.state.party), expected.party);
+});
+
+test('stable scene identifiers migrate both numeric V0.2 saves and newer anchored saves after catalog insertion', () => {
+  const c = boot().ctx, scenes = c.NeoCampaignScenes;
+  assert.equal(scenes.validate(c.events), true);
+  assert.deepEqual(plain(scenes.legacyIds), plain(c.events.map(e => e.id)));
+  const inserted = [{id:'d1-added-between',day:1,title:'Nueva situación'},...c.events];
+  assert.equal(scenes.validate(inserted), true);
+  assert.equal(scenes.resolve(inserted,{index:2,campaignRevision:3}),3);
+  assert.equal(scenes.resolve(inserted,{index:0,campaignRevision:3,sceneId:'d3-avenue'}),19);
+  assert.equal(scenes.resolve(inserted,{index:0,campaignRevision:0}),1);
+  assert.equal(scenes.resolve(inserted,{index:999,campaignRevision:3}),-1);
+  assert.equal(scenes.resolve(inserted,{index:1,campaignRevision:3,sceneId:'invented'}),-1);
+  assert.throws(()=>scenes.validate(inserted.concat(inserted[0])),/duplicado/);
+  assert.throws(()=>scenes.validate(inserted.filter(e=>e.id!=='d2-republica')),/migración/);
+});
+
+test('invalid scene anchors reject atomically, while a resumed legacy save gains an anchor only when written', () => {
+  const old=fixture('campaign-retreat'),storage=new Map([[key,old]]),c=boot(storage).ctx;
+  assert.equal(c.load(),true);
+  assert.equal(storage.get(key),old);
+  const before=c.state;
+  const bad=JSON.stringify({...JSON.parse(old),sceneId:'d9-fabricated'});
+  storage.set(key,bad);
+  assert.equal(c.load(),false);
+  assert.equal(c.state,before);
+  assert.equal(storage.get(key),bad);
+  storage.set(key,old);
+  c.gameSessionActive=true;c.save();
+  assert.equal(JSON.parse(storage.get(key)).sceneId,'d1-gate');
+  assert.equal(c.load(),true);
+  assert.equal(c.state.index,2);
+  assert.equal(c.state.sceneId,undefined,'runtime state has no stale scene ID when progress changes');
 });
 
 test('new campaign states do not share mutable bags, flags or progression records', () => {
