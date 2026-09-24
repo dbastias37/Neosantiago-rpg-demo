@@ -151,3 +151,9 @@ La preparación posterior a la primera noche permite coordinar una reserva médi
 Campo opcional validado en ambos guardados; cada equipo escribe solo el propio. Laboratorio con claves A/B independientes: la campaña habitual no se activa automáticamente. 448/448 Node aprobadas en este bloque; navegador y revisión final pendientes. Sin assets nuevos. Rosa/Sorsa queda para otro bloque tras validar este enlace; no se considera completada V0.3 por esta incorporación.
 
 Cierre técnico del puente: **453/453 Node**, validadores aprobados, **21 E2E nuevos** que amplían la matriz a 63. Se prueban transporte, recepción y recarga, A/B, delegación, superficies compartidas, guardados antiguos y escrituras fallidas. La segunda noche conserva una memoria del comprobante y el epílogo reconoce la entrega. La opción de Matías no permite sustituir una ruta ya acordada con Noa. La ejecución por revisión y sus capturas quedan en GitHub Actions; el documento del bloque detalla los comandos y límites de la evidencia. Quedan la evaluación humana y la elección de A/B antes de activarlo fuera del laboratorio.
+
+## Activación de enlaces en campaña — 24 septiembre 2026
+
+Por instrucción del usuario se selecciona B y se elimina la prueba humana A/B como requisito de activación. La campaña habitual ofrece la reserva de Matías tras la primera noche, conserva la expedición disponible y condiciona solo su indicación nueva a una recepción a tiempo. Las claves normales siguen iguales; A/B mantienen su aislamiento para regresiones. No se fabrican solicitudes al cargar ni se cambian premios previos. Plan del segundo enlace y riesgos: `docs/v0.3/community-links-production.md`.
+
+Bloque de activación: 454/454 Node; sintaxis, referencias y audio aprobados. Segunda conexión y E2E de producción pendientes en este punto del registro.
