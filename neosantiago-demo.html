@@ -33,6 +33,7 @@
 <link rel="stylesheet" href="night-surface.css?v=1">
 <link rel="stylesheet" href="accessibility-foundation.css?v=1">
 <link rel="stylesheet" href="styles/medical-bridge.css">
+<link rel="stylesheet" href="styles/inhibitor-device.css?v=1">
 </head>
 <body>
   <div class="app expedition-journal">
@@ -675,13 +676,26 @@
         </div>
         <div class="signal-timer"><span id="signalRoundBar"></span></div>
         <p class="signal-instruction" id="signalInstruction">Repite el código antes de perder la ventana.</p>
-        <div class="signal-sequence" id="signalSequence" aria-label="Secuencia solicitada"></div>
-        <div class="signal-input" id="signalInput" aria-live="polite"></div>
-        <div class="signal-pad" aria-label="Controles del inhibidor">
-          <button data-signal-key="up" aria-label="Arriba">↑</button>
-          <button data-signal-key="left" aria-label="Izquierda">←</button>
-          <button data-signal-key="down" aria-label="Abajo">↓</button>
-          <button data-signal-key="right" aria-label="Derecha">→</button>
+        <div class="signal-map-display" role="group" aria-label="Mapa de sincronización">
+          <div class="signal-map-header"><span>MAPA DE SEÑAL · CANAL FANTASMA</span><strong id="signalMapPosition" aria-live="polite">Paso 1 / 7</strong></div>
+          <div class="signal-map-screen">
+            <svg class="signal-map-trace" viewBox="0 0 680 120" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+              <path d="M0 80H92L128 34H236L278 68H389L436 27H538L584 75H680"/>
+              <path d="M0 34H68L113 90H203L257 48H342L394 103H501L562 44H680"/>
+              <circle cx="128" cy="34" r="4"/><circle cx="278" cy="68" r="4"/><circle cx="436" cy="27" r="4"/><circle cx="584" cy="75" r="4"/>
+            </svg>
+            <div class="signal-sequence" id="signalSequence" aria-label="Secuencia solicitada"></div>
+          </div>
+          <div class="signal-map-footer" aria-hidden="true"><span>PROTOCOLO DE SUPLANTACIÓN</span><span>RUTA DE PULSO  ·  2130</span></div>
+        </div>
+        <div class="signal-keyboard" role="group" aria-label="Teclado del inhibidor">
+          <div class="signal-keyboard-label" aria-hidden="true"><span>INHIBIDOR / ELÍAS</span><span>ENTRADA DE RUTA</span></div>
+          <div class="signal-pad">
+            <button type="button" data-signal-key="up" aria-label="Arriba"><span aria-hidden="true">↑</span><small aria-hidden="true">W</small></button>
+            <button type="button" data-signal-key="left" aria-label="Izquierda"><span aria-hidden="true">←</span><small aria-hidden="true">A</small></button>
+            <button type="button" data-signal-key="down" aria-label="Abajo"><span aria-hidden="true">↓</span><small aria-hidden="true">S</small></button>
+            <button type="button" data-signal-key="right" aria-label="Derecha"><span aria-hidden="true">→</span><small aria-hidden="true">D</small></button>
+          </div>
         </div>
       </div>
       <div class="signal-outcome hidden" id="signalOutcome">
