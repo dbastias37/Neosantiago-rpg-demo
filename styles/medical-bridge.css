@@ -5,3 +5,12 @@
 .medical-bridge-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .medical-bridge-actions button { min-height: 44px; white-space: normal; font-size: 11px; }
 .medical-bridge :focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+/* Community notices scroll within their section so the shared shop keeps room. */
+@media (min-width:901px) {
+  #refuge .refuge-main > .refuge-section:first-of-type:has(.medical-bridge:not(.hidden)) {
+    max-height: clamp(160px,28dvh,240px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+}
