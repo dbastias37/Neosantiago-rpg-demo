@@ -62,4 +62,4 @@ function medicalBridgeEvent(ev,index){
 $('medicalAccept').addEventListener('click',acceptMedicalBridge);
 $('medicalReview').addEventListener('click',reviewMedicalBridge);
 $('medicalDelegate').addEventListener('click',delegateMedicalBridge);
-$('medicalCouriers').addEventListener('click',function(){if(medicalSafe()&&state.matiasBridge){openActivityMenu();openCourierActivity()}});
+$('medicalCouriers').addEventListener('click',function(){if(medicalSafe()&&state.matiasBridge){openActivityMenu();openCourierActivity('medical')}});

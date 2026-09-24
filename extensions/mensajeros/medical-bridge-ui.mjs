@@ -12,7 +12,7 @@ export function medicalUI({data,E,getWorld,setWorld,canWrite,render,open,close,a
   if(!(context?.policy||context?.variant)||!canWrite())return;
   try{
    const s=JSON.parse(localStorage.getItem(context.key('neosantiago2130_demo_v3')));
-   if(s?.version!==3||!s.flags?.matiasAtRefuge||!s.matiasBridge||s.matiasBridge.variant!==(context.policy||context.variant)||s.matiasBridge.stage!=='requested')return;
+   if(s?.version!==3||s.finished||!s.flags?.matiasAtRefuge||!s.matiasBridge||s.matiasBridge.variant!==(context.policy||context.variant)||s.matiasBridge.stage!=='requested')return;
    if(getWorld().matiasBridge)return;
    const next=bridge.join(getWorld(),s.matiasBridge,crypto.randomUUID());
    localStorage.setItem(data.save_key,E.serialize(next));setWorld(next);

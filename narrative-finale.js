@@ -53,6 +53,7 @@ function finaleStory(kind){
   else if(f.ireneLeft||!f.ireneConsentHeard)story.group+=" Irene quedó en la torre. El grupo no puede asegurar qué ocurrió con ella cuando la Red UNO volvió a ocupar las salas.";
   if(f.matiasAtRefuge)story.refuge+=" Matías se incorpora en la enfermería cuando los oye volver. Sara le pide que no se levante todavía.";
   if(state.matiasBridge&&state.matiasBridge.stage==="reviewed")story.refuge+=" La posta conserva el comprobante de Vicuña. Matías pregunta por los Mensajeros que llevaron su reserva.";
+  if(state.rosaBridge&&state.rosaBridge.stage==="reviewed")story.refuge+=" La recepción conserva el acuerdo que los Mensajeros llevaron desde Plaza para la red de Rosa. "+(f.rosaBridgeRouteUsed?"Los civiles de la avenida alcanzaron ese relevo; Noa anota sus nombres junto a la copia.":"El acuerdo quedó disponible, aunque la expedición no lo utilizó para sacar a los civiles de la avenida.");
   if(f.rosaWarnedCommunities)story.world+=" Los avisos de Rosa ya habían permitido salir a varias familias antes de que cambiara el rastreo.";
   if(f.liraDead)story.world+=" Lira no regresará. Los exiliados recuerdan quién le quitó el núcleo.";
   else if(f.liraBrotherLost)story.world+=" Lira conserva el nombre de su hermano y la memoria de quienes lo desconectaron. La llegada del grupo no repara esa pérdida.";

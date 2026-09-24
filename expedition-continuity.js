@@ -26,17 +26,18 @@ function firstDayReturnAccount() {
     && typeof n.returnAccount === "string" ? n.returnAccount : "";
 }
 function renderExpeditionPreparation() {
-  var preparing = state.refuge.reason === "preparation", account = firstDayReturnAccount();
+  var day=events[state.index].day, preparing = state.refuge.reason === "preparation", account = firstDayReturnAccount();
   $("refugeReturnAccount").classList.toggle("hidden", !account);
   $("refugeRest").textContent = preparing ? "Descanso nocturno aplicado" : "Descansar y estabilizar";
   if (preparing) {
+    if(day===3){$("refugeTitle").textContent="Antes de subir a la torre";$("refugeText").textContent="El grupo terminó la segunda noche. Queda revisar las reservas y los mensajes de la red antes de volver a la superficie.";}
     $("refugeRest").disabled = true;
     $("refugeRejoin").disabled = true;
     $("refugeRejoin").textContent = "Equipo reunido durante la noche";
     if (activeRefugeNpc() === "mara") $("traderDialogue").textContent = "«Revisen lo que les queda antes de salir. Si necesitan cambiar algo, vemos qué alcanza con lo que trajeron.»";
     $("refugeLeaveHint").textContent = "El descanso y las reservas de la noche ya están registrados. Revisa mochilas y equipo; comerciar es opcional y conserva los precios del puesto.";
   }
-  $("leaveRefuge").textContent = preparing ? "Preparar salida · día 2" : "Volver a la expedición";
+  $("leaveRefuge").textContent = preparing ? "Preparar salida · día "+day : "Volver a la expedición";
 }
 
 $("refugeReturnButton").addEventListener("click", function(){openRefugeHelp("return", $("refugeReturnButton"))});

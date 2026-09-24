@@ -13,8 +13,8 @@ async function session({saved,reduced=false}={}){
  const sampled=[];window.Element.prototype.getTotalLength=()=>600;
  window.Element.prototype.getPointAtLength=n=>{sampled.push(n);return{x:945+(977-945)*n/600,y:519+(487-519)*n/600}};
  let clock=0;const frames=[];
- const views={...await import('../extensions/mensajeros/medical-bridge-ui.mjs'),...await import('../extensions/mensajeros/dossier.mjs'),...await import('../extensions/mensajeros/community.mjs')};
- const ctx={...views,E,URL,document,console,crypto:{getRandomValues:a=>a},localStorage:{getItem:k=>storage.get(k),setItem:(k,v)=>storage.set(k,v)},matchMedia:()=>({matches:reduced}),setTimeout,clearTimeout,performance:{now:()=>clock},requestAnimationFrame:fn=>frames.push(fn),fetch:async url=>({ok:true,json:async()=>raw,text:async()=>fs.readFileSync(root+'/extensions/mensajeros/map.svg','utf8')})};ctx.NeoBridgeContext={variant:null,key:k=>k};ctx.addEventListener=()=>{};ctx.window=ctx;
+ const views={...await import('../extensions/mensajeros/rosa-bridge-ui.mjs'),...await import('../extensions/mensajeros/medical-bridge-ui.mjs'),...await import('../extensions/mensajeros/dossier.mjs'),...await import('../extensions/mensajeros/community.mjs')};
+ const ctx={...views,E,URL,location:{href:'https://game.test/extensions/mensajeros/play.html'},document,console,crypto:{getRandomValues:a=>a},localStorage:{getItem:k=>storage.get(k),setItem:(k,v)=>storage.set(k,v)},matchMedia:()=>({matches:reduced}),setTimeout,clearTimeout,performance:{now:()=>clock},requestAnimationFrame:fn=>frames.push(fn),fetch:async url=>({ok:true,json:async()=>raw,text:async()=>fs.readFileSync(root+'/extensions/mensajeros/map.svg','utf8')})};ctx.NeoBridgeContext={variant:null,key:k=>k};ctx.addEventListener=()=>{};ctx.window=ctx;
  ctx.animateRoute=args=>animateRoute({...args,requestFrame:fn=>frames.push(fn),now:()=>clock});vm.createContext(ctx);
  const code=fs.readFileSync(root+'/extensions/mensajeros/play.mjs','utf8').replace(/^import .*;\n/gm,'').replaceAll('import.meta.url',JSON.stringify('https://game.test/extensions/mensajeros/play.mjs'));
  await vm.runInContext('(async()=>{'+code+'})()',ctx);

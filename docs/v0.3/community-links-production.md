@@ -23,3 +23,13 @@ Necesidad primero, acuerdo comprensible antes del viaje, encuentro y consecuenci
 ## Verificación
 
 Se actualizará al terminar implementación y pruebas. Pendientes de producción heredados: audio ausente, prueba en dispositivos reales y duración de una sesión humana. No se requieren nuevos assets visuales o sonoros para este bloque.
+
+## Implementación del segundo enlace
+
+`rosa-bridge.js` valida solicitudes y recepciones sin DOM. Los adaptadores de campaña y Mensajeros presentan el acuerdo en los paneles y modales existentes. Ana se descubre sin marcar encargos previos como pagados. Su escolta mantiene familias, decisiones, desgaste, combate, loot y pago. Al aceptarla en Plaza se adjunta la petición si aún no se recogió; una escolta ya completada requiere un viaje nuevo por el añadido, nunca otro pago.
+
+La segunda noche abre preparación únicamente cuando existe el vínculo de Rosa. Usa el mismo refugio, sin otra curación, comida o reagrupamiento gratis. Los textos identifican la tercera jornada. La reserva médica y el acuerdo civil pueden coexistir; el acceso desde cada panel abre su conversación correspondiente.
+
+En la avenida, la recepción revisada permite guiar a los civiles gastando agua y ganando amenaza. No despeja la patrulla, no entrega el código del ascensor ni traslada a Rosa e Iara. Reutiliza la consecuencia `rescuedStrangers` y añade la memoria específica `rosaBridgeRouteUsed`. La escena y el epílogo recuerdan únicamente hechos confirmados. Una elección ya hecha no se sustituye por una entrega tardía.
+
+Verificación del bloque: 463/463 Node, sintaxis y referencias aprobadas. Audio conserva 64 ausencias heredadas y cero nuevas; se actualizan solo índices de referencias. Primera pasada de navegador: 4/4 recorridos de producción en 360×800 y 915×412 (Matías y Rosa). Se ejecutará la matriz completa tras cerrar la prueba de salida de Rosa por los controles del inhibidor.
