@@ -1,7 +1,7 @@
 // Noa's agreement is tested by a route and the obstacle actually met there.
 // Rendering is pure. Outcomes commit with their existing campaign encounter.
-function noaRouteIndex(){return events.findIndex(function(e){return e.title==="La primera luz"})}
-function noaCrossingIndex(){return events.findIndex(function(e){return e.title==="Sombras sobre el asfalto"})}
+function noaRouteIndex(){return NeoCampaignScenes.index(events,'d2-republica')}
+function noaCrossingIndex(){return NeoCampaignScenes.index(events,'d2-alameda')}
 function noaAgreement(){return state.expeditionRest?.nights[1]?.conversations?.noa?.choice||null}
 function noaRouteRecord(){return state.companionCommitments?.route||null}
 function noaCanConverse(){return state.party.every(function(p){return p.hp>0})}

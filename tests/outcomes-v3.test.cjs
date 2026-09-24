@@ -122,6 +122,7 @@ test('existing tower defeat still advances instead of creating a Game Over', () 
 test('dormant campaign operation persists collapse, resumes recovery screen, and rolls back resources once', () => {
   const a = campaign(), c = a.ctx;
   c.state.credits = 10; c.NeoCampaignOutcomes.prepare('operation');
+  assert.equal(c.state.outcomes.recovery.preOperation.snapshot.sceneId,c.events[c.state.index].id);
   c.state.credits = 7; c.NeoCampaignOutcomes.checkpoint('operation');
   c.state.credits = 100;
   const declaration = { id: 'operation:collapse', operationId: 'operation', reason: 'network-collapse', irreversible: true, summary: 'La red perdió su último relevo.' };

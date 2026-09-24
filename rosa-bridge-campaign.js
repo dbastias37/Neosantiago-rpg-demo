@@ -1,12 +1,12 @@
 'use strict';
 function rosaBridgeAvailable(){
   var n=state.expeditionRest&&state.expeditionRest.nights[2],f=state.flags;
-  return gameSessionActive&&!state.finished&&state.index===18&&n&&n.phase==='closed'&&f.iaraAtSafeHouse&&!!(f.rosaSafeHouseMarked||f.rosaCivilNetwork)&&!f.rosaDebtClosed;
+  return gameSessionActive&&!state.finished&&NeoCampaignScenes.at(events,state.index,'d3-avenue')&&n&&n.phase==='closed'&&f.iaraAtSafeHouse&&!!(f.rosaSafeHouseMarked||f.rosaCivilNetwork)&&!f.rosaDebtClosed;
 }
 function rosaBridgeEligible(){return medicalSafe()&&rosaBridgeAvailable()}
 function rosaBridgeCommit(next){
   if(!medicalSafe())return false;
-  try{NeoRosaBridge.request(next);localStorage.setItem(KEY,JSON.stringify(Object.assign({},state,{rosaBridge:next})));state.rosaBridge=next;return true}
+  try{NeoRosaBridge.request(next);localStorage.setItem(KEY,serializeCampaignSave(Object.assign({},state,{rosaBridge:next})));state.rosaBridge=next;return true}
   catch(e){toast('No se pudo guardar la recepción. Se conserva el registro anterior.');return false}
 }
 function syncRosaBridge(){
@@ -14,7 +14,7 @@ function syncRosaBridge(){
   var next;try{next=NeoRosaBridge.receive(state.rosaBridge,JSON.parse(localStorage.getItem(WORLD_COURIER_KEY)))}catch(e){return}
   rosaBridgeCommit(next);
 }
-function rosaBridgeRoutePassed(){var f=state.flags;return state.index>18||!!(f.rescuedStrangers||f.lostStrangers||f.silentSurface)}
+function rosaBridgeRoutePassed(){var f=state.flags;return NeoCampaignScenes.past(events,state.index,'d3-avenue')||!!(f.rescuedStrangers||f.lostStrangers||f.silentSurface)}
 function rosaBridgeText(){
   var b=state.rosaBridge;
   if(!b)return 'Noa deja la petición de Rosa junto a las mochilas. «Iara durmió. Nos quedamos en la casa, pero necesito saber quién va a abrir si tenemos que bajar con más gente». Ana prepara una salida de familias desde Plaza de Armas. Los Mensajeros pueden acompañarlas y dejar acordada otra recepción en Los Héroes. El grupo puede seguir hacia la torre; si esperas la confirmación antes de cruzar la avenida, tendrás a quién enviar a los civiles que encuentres.';
@@ -39,8 +39,8 @@ function reviewRosaBridge(){
 }
 function rosaBridgeEvent(ev,index){
   var f=state.flags;
-  if(index===12&&f.iaraAtSafeHouse&&(f.rosaSafeHouseMarked||f.rosaCivilNetwork)&&!f.rosaDebtClosed)return Object.assign({},ev,{text:ev.text+' Entre los papeles hay una petición de Rosa para Ana: si las familias de las casas deben bajar, alguien tiene que recibirlas al otro extremo. Noa guarda una copia para coordinarlo con los Mensajeros al volver al refugio.'});
-  if(!state.rosaBridge||index!==18||state.rosaBridge.stage!=='reviewed'||rosaBridgeRoutePassed()||state.flags.rosaBridgeRouteUsed)return ev;
+  if(NeoCampaignScenes.at(events,index,'d2-safe-house')&&f.iaraAtSafeHouse&&(f.rosaSafeHouseMarked||f.rosaCivilNetwork)&&!f.rosaDebtClosed)return Object.assign({},ev,{text:ev.text+' Entre los papeles hay una petición de Rosa para Ana: si las familias de las casas deben bajar, alguien tiene que recibirlas al otro extremo. Noa guarda una copia para coordinarlo con los Mensajeros al volver al refugio.'});
+  if(!state.rosaBridge||!NeoCampaignScenes.at(events,index,'d3-avenue')||state.rosaBridge.stage!=='reviewed'||rosaBridgeRoutePassed()||state.flags.rosaBridgeRouteUsed)return ev;
   return Object.assign({},ev,{choices:ev.choices.concat([{label:'Guiar a los civiles hasta el relevo acordado con Ana',hint:'Hay quien los reciba al bajar. Noa cubrirá la retirada mientras Sara los guía; la patrulla seguirá en la avenida. No obtienes el código de la torre.',cost:'Agua −1 · Amenaza +3',req:{water:1},title:'Alguien espera abajo',result:'Sara reparte agua y pide que bajen juntos. Noa atrae el visor hacia el otro extremo de la galería; cuando vuelve, la última mujer ya está junto a la responsable del relevo. «Vienen por el acuerdo de Ana», dice Sara. La puerta se abre. El grupo sigue hacia la torre por una salida lateral. La patrulla permanece arriba: han sacado a esas personas, no despejado la avenida.',fx:{water:-1,threat:3,morale:3},flags:{rescuedStrangers:true,rosaBridgeRouteUsed:true}}])});
 }
 $('rosaAccept').addEventListener('click',acceptRosaBridge);

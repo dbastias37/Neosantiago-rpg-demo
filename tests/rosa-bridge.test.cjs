@@ -44,6 +44,19 @@ test('late or already chosen avenue cannot be rewritten, and a closed ending imp
  }
  const a=campaign(),c=a.ctx;c.acceptRosaBridge();const w=copy(done);w.rosaBridge.requestId=c.state.rosaBridge.requestId;a.storage.set(c.WORLD_COURIER_KEY,E.serialize(w));c.state.finished=true;const before=JSON.stringify(c.state);c.syncRosaBridge();assert.equal(JSON.stringify(c.state),before);
 });
+
+test('the avenue orientation distinguishes an unconfirmed reception from a usable civil route',()=>{
+ const a=campaign(),c=a.ctx;c.acceptRosaBridge();c.state.refuge.active=false;
+ assert.equal(JSON.parse(a.storage.get(c.KEY)).sceneId,'d3-avenue');
+ c.renderExpeditionOrientation(c.events[18]);
+ assert.match(a.nodes.get('expeditionPurpose').textContent,/aún no está confirmado/);
+ c.state.rosaBridge={...c.state.rosaBridge,stage:'reviewed',courierId:randomUUID(),method:'lists'};
+ c.renderExpeditionOrientation(c.events[18]);
+ assert.match(a.nodes.get('expeditionPurpose').textContent,/gastando agua/);
+ assert.match(a.nodes.get('expeditionPurpose').textContent,/patrulla permanecerá/);
+ c.state.index=19;c.renderExpeditionOrientation(c.events[19]);
+ assert.equal(a.nodes.get('expeditionOrientation').classList.contains('hidden'),true);
+});
 test('legacy saves do not acquire a request; malformed optional records preserve the loaded campaign',async()=>{
  const a=campaign(),c=a.ctx,raw=JSON.stringify(c.state);assert.equal(c.load(raw),true);assert.equal(c.state.rosaBridge,undefined);const old=c.state,bad=JSON.parse(raw);bad.rosaBridge={version:77};assert.equal(c.load(JSON.stringify(bad)),false);assert.equal(c.state,old);
  const {E,d}=await setup(),w=E.createWorld(d);assert.equal(E.restore(d,E.serialize(w)).rosaBridge,undefined);w.rosaBridge={version:77};assert.throws(()=>E.restore(d,E.serialize(w)));c.localStorage.setItem=()=>{throw Error('quota')};assert.equal(c.acceptRosaBridge(),false);assert.equal(c.state.rosaBridge,undefined);

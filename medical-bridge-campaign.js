@@ -1,11 +1,11 @@
 /* Safe-boundary adapter. The campaign imports receipts, never courier inventory. */
 'use strict';
-function medicalEligible(){var n=state.expeditionRest&&state.expeditionRest.nights[1];return !!(NeoBridgeContext.policy&&gameSessionActive&&!state.finished&&state.refuge.active&&state.index===9&&state.flags.matiasAtRefuge&&n&&n.phase==='closed')}
+function medicalEligible(){var n=state.expeditionRest&&state.expeditionRest.nights[1];return !!(NeoBridgeContext.policy&&gameSessionActive&&!state.finished&&state.refuge.active&&NeoCampaignScenes.at(events,state.index,'d2-drone-pulse')&&state.flags.matiasAtRefuge&&n&&n.phase==='closed')}
 function medicalSafe(){return !!(NeoBridgeContext.policy&&gameSessionActive&&!state.finished&&state.refuge.active&&!encounterSaveLocked&&!battleState&&!pendingNight())}
 function medicalBlocked(){return !!(NeoBridgeContext.policy&&state.matiasBridge&&NeoCommunityBridge.blocked(state.matiasBridge))}
 function medicalCommit(next){
   if(!medicalSafe())return false;
-  try{NeoCommunityBridge.request(next);var snapshot=Object.assign({},state,{matiasBridge:next});localStorage.setItem(KEY,JSON.stringify(snapshot));state.matiasBridge=next;return true}
+  try{NeoCommunityBridge.request(next);var snapshot=Object.assign({},state,{matiasBridge:next});localStorage.setItem(KEY,serializeCampaignSave(snapshot));state.matiasBridge=next;return true}
   catch(e){toast('No se pudo guardar el relevo. La solicitud anterior se conserva.');return false}
 }
 function syncMedicalBridge(){
@@ -14,7 +14,7 @@ function syncMedicalBridge(){
   try{next=NeoCommunityBridge.receive(state.matiasBridge,JSON.parse(localStorage.getItem(NeoBridgeContext.key('neosantiago.mensajeros.production.v1'))))}catch(e){return}
   medicalCommit(next);
 }
-function medicalRoutePassed(){return state.index>10||!!(typeof noaRouteRecord==="function"&&noaRouteRecord())}
+function medicalRoutePassed(){return NeoCampaignScenes.past(events,state.index,'d2-republica')||!!(typeof noaRouteRecord==="function"&&noaRouteRecord())}
 function medicalNightContext(){
   var b=state.matiasBridge;if(!NeoBridgeContext.policy||!b||b.stage!=='reviewed')return '';
   return 'En la mesa queda la copia que trajeron Rocío, Tomás y Bruno. Matías recibió su reserva y sigue en la posta. '+(b.source==='rescue'?'También quedó confirmado el regreso de Darío a Vicuña. El papel no dice que ninguno esté listo para salir otra vez.':'La recepción no trae noticias de Darío. La pregunta queda anotada para el próximo contacto con Vicuña.')+(state.flags.matiasBridgeRouteUsed?' Junto al comprobante está el dibujo de la marca baja: la indicación sirvió al salir de República.':'');
@@ -56,7 +56,7 @@ function medicalBridgeEvent(ev,index){
   var result=Object.assign({},ev);
   // Parallel teams have no shared clock. Keep scene order without pretending their hours synchronize.
   if(ev.day===2)result.time=state.matiasBridge.stage==='reviewed'?'Tras la visita a la posta':'Segunda jornada';
-  if(index!==10||state.matiasBridge.stage!=='reviewed'||medicalRoutePassed()||state.flags.matiasBridgeRouteUsed)return result;
+  if(!NeoCampaignScenes.at(events,index,'d2-republica')||state.matiasBridge.stage!=='reviewed'||medicalRoutePassed()||state.flags.matiasBridgeRouteUsed)return result;
   result.choices=ev.choices.concat([{label:'Observar desde el acceso que precisó Matías',hint:'Noa reconoce la marca baja. Esperan a cubierto el barrido del sensor. Solo está disponible antes de cruzar República.',cost:'Amenaza −2',title:'La marca junto al suelo',result:'Noa encuentra la pintura bajo el peldaño. Desde el hueco observan el primer sensor y suben sin salir de golpe a su barrido. La Alameda sigue pendiente: esta indicación no despeja el cruce. Sara guarda el papel para devolverlo a Matías. La posta sigue cuidándolo, pero esta vez pudieron entender lo que intentaba explicar.',fx:{threat:-2},flags:{matiasBridgeRouteUsed:true},_noaPath:'wait'}]);return result;
 }
 $('medicalAccept').addEventListener('click',acceptMedicalBridge);

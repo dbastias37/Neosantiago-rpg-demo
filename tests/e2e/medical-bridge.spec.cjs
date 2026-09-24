@@ -59,6 +59,10 @@ for(const variant of ['A','B','production'])test(`medical bridge ${variant}: req
  expect(await page.evaluate(()=>({episode:state.matiasBridge,party:state.party,credits:state.credits}))).toEqual(result);
  if(variant==='production')expect(await page.evaluate(()=>localStorage.getItem('neosantiago.lab.bridge.A.neosantiago2130_demo_v3'))).toBe('lab sentinel');
  else expect(await page.evaluate(()=>[localStorage.getItem('neosantiago2130_demo_v3'),localStorage.getItem('neosantiago.mensajeros.production.v1')])).toEqual(['production sentinel','courier sentinel']);
+ if(variant==='production'){
+  await page.locator('#leaveRefuge').click();await page.locator('#confirmLogistics').click();
+  await expect(page.locator('#expeditionPurpose')).toContainText('marca baja');
+ }
 });
 
 test('medical bridge A: delegating releases departure and keyboard keeps the refuge usable',async({page},testInfo)=>{

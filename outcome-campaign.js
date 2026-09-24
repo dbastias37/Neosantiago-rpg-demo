@@ -20,7 +20,7 @@ function recordCampaignCombatOutcome(fled) {
   }
   function commit(next) {
     // Write before swapping memory. On quota/write errors the active state survives.
-    var previous = localStorage.getItem(KEY), serialized = JSON.stringify(next);
+    var previous = localStorage.getItem(KEY), serialized = serializeCampaignSave(next);
     if (previous !== null) localStorage.setItem(KEY + '.outcomes-backup', previous);
     localStorage.setItem(KEY, serialized); state = next;
   }
@@ -29,7 +29,10 @@ function recordCampaignCombatOutcome(fled) {
   }
   function reload() { canReload(); root.location.reload(); }
   function capture(slot, operationId) {
-    stableBoundary(); commit(NeoOutcomes.captureRecovery(state, slot, operationId)); return true;
+    stableBoundary();
+    var next=NeoOutcomes.captureRecovery(state, slot, operationId), snapshot=next.outcomes.recovery[slot].snapshot;
+    snapshot.sceneId=events[snapshot.index].id;
+    commit(next); return true;
   }
   function recover(slot) {
     if (busy) return false;

@@ -1,6 +1,6 @@
 # NeoSantiago 2130 — V0.3 Vertical Slice
 
-Fecha de inicio: 23 de septiembre de 2026. Fundamentos integrados mediante PR #5 (`main` en `d9f4a22`). Bloque actual: `feature/v0.3-community-links`, basado en main `6233e1a`.
+Fecha de inicio: 23 de septiembre de 2026. Fundamentos integrados mediante PR #5 (`main` en `d9f4a22`). Bloque actual: `feature/v0.3-scene-continuity`, basado en main `53400cd` tras la fusión del PR #8.
 
 **Estado: desarrollo y revisión; V0.2 sigue siendo la versión publicada.** Este documento no certifica todavía una experiencia de 30–60 minutos ni el cierre de V0.3.
 
@@ -163,3 +163,8 @@ Segundo bloque de enlaces: Rosa–Ana conecta las casas seguras con la escolta e
 Cierre de la matriz de este bloque: **463/463 Node, 77/77 E2E** y validadores aprobados. La primera pasada detectó que el aviso médico comprimía el comercio en 915×412 y 1366×768; se corrigió con scroll acotado de avisos y se mantuvieron las aserciones de compra. Los seis casos afectados pasaron antes de repetir la matriz completa. Se añadió orientación al abrir un aviso para mantener su texto visible y se identificó el retrato de Ana como autora de la solicitud. Verificación específica de esos detalles en los 14 recorridos de producción.
 
 La variante B y Rosa–Ana están habilitadas en la campaña de la rama `feature/v0.3-community-links`; la entrada al laboratorio no es requisito. [PR #8](https://github.com/dbastias37/Neosantiago-rpg-demo/pull/8). No se declara completada V0.3 ni verificado el despliegue de Render. Siguiente trabajo: medir el ritmo de ambas conexiones, mantener la compatibilidad al extraer IDs de escenas y atender audio con fuentes autorizadas. Las 64 ausencias de audio siguen siendo deuda heredada, sin assets ausentes nuevos.
+## Bloque de continuidad de escenas y enlaces — 24 septiembre 2026
+
+Base comprobada: `main` tras PR #8 (`53400cd`). Las 27 situaciones reciben identificadores estables; `campaign-scenes.js` conserva el mapa de índices anteriores y resuelve la ubicación de guardados antiguos. Los guardados nuevos añaden `sceneId` opcional a la misma clave/esquema, incluidas recepciones y recuperación; no se reescriben al leer. Matías, Rosa, Noa y la orientación inicial consultan IDs en sus puntos relevantes. La orientación existente explica, antes de República y la avenida, si el relevo está pendiente o confirmado y qué riesgo conserva el cruce.
+
+Verificación: **467/467 Node**, sintaxis, referencias y audio aprobados. Playwright: **77/77** en 360×800, 390×844, 412×915, 915×412, 768×1024, 1366×768 y 1920×1080, sin reintentos locales; además **15/15** recorridos dirigidos en portrait, landscape y escritorio. Los E2E de los enlaces comprueban orientación, solicitud, entrega, regreso y recarga; se preservan el día inicial, combate, loot y refugio. El Chromium temporal se instaló fuera del repositorio porque la descarga directa de Playwright estaba incompleta. El inventario de audio regenerado conserva 37 archivos, 64 ausencias heredadas y ninguna nueva. La migración de ubicación no libera todavía la inserción arbitraria de escenas: finales y otras reglas conservan índices. Contrato y límites: `docs/v0.3/scene-continuity.md`. Pendientes: comprobar ritmo humano de 30–60 minutos, móviles reales, fuentes autorizadas de audio P0 y revisión separada de combate.

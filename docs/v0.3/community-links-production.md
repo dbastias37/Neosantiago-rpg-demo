@@ -46,6 +46,8 @@ En la revisión visual se conserva el retrato de Ana identificado como autora de
 
 Para seguir: revisar el ritmo de estas dos conexiones dentro de una partida, sin añadir una tercera dependencia antes de observarlas; la activación no queda condicionada a una prueba A/B. La siguiente mejora técnica debería sustituir gradualmente los índices de escena por identificadores estables con pruebas de migración. Este bloque usa los puntos 9/10 y 18 existentes y no intenta reescribir el mapa de campaña. Persisten la deuda de audio, las pruebas en dispositivos reales y la medición humana de 30–60 minutos.
 
+La extracción posterior de `docs/v0.3/scene-continuity.md` asigna IDs estables a las 27 escenas, migra la ubicación de guardados sin cambiar el esquema y traslada estos enlaces a los IDs. El resto de los índices del runtime requiere una migración antes de insertar o mover situaciones.
+
 
 ## Cierre de verificación
 
