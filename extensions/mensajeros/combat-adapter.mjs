@@ -4,6 +4,9 @@ import * as E from './production.mjs';
 const host = parent.NeoCourierCombatHost;
 if (!host) throw Error('Abre el combate desde Encargos.');
 const data = host.data, $ = id => document.getElementById(id);
+// The courier roster uses its own ability engine; expedition tactics stay on the story team.
+document.getElementById('activateSynergy')?.remove();
+document.getElementById('tacticsTray')?.remove();
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const asset = p => new URL(p, import.meta.url).href;
 const definition = id => data.crew.find(p => p.id === id);

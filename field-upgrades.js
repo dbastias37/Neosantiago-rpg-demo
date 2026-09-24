@@ -71,7 +71,7 @@ function fieldWeaponHit(p,e,w,scale,label,opening,fallback){
 }
 function fieldNormalAttack(p,e){
  var w=weaponFor(p),fallback=false;if(w.ammo){if(!consumeFromBag(p,w.ammo)){fieldLog(p.name+' no tiene '+gear(w.ammo).name+' y cambia al cuchillo.');w=gear('knife');fallback=true}else state.stats.shots++}
- fieldWeaponHit(p,e,w,1,p.name+' usa '+w.name,fieldBeginWeapon(p),fallback);
+ battleState.attackWeapon=w;try{fieldWeaponHit(p,e,w,1,p.name+' usa '+w.name,fieldBeginWeapon(p),fallback)}finally{battleState.attackWeapon=null}
 }
 /* Hook around the engine strike; secondary electric damage bypasses proc chains. */
 function fieldStrike(enemy,damage,label,index,critical,options){

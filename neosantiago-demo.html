@@ -33,7 +33,8 @@
 <link rel="stylesheet" href="night-surface.css?v=1">
 <link rel="stylesheet" href="accessibility-foundation.css?v=1">
 <link rel="stylesheet" href="styles/medical-bridge.css">
-<link rel="stylesheet" href="styles/inhibitor-device.css?v=1">
+  <link rel="stylesheet" href="styles/inhibitor-device.css?v=1">
+  <link rel="stylesheet" href="combat-tactics.css?v=1">
 </head>
 <body>
   <div class="app expedition-journal">
@@ -67,6 +68,7 @@
     </main>
     <nav class="nav" aria-label="Información de la partida">
       <button data-panel="archive" id="archiveNav">Archivo <span class="badge" id="archiveCount">1</span></button>
+      <button data-panel="collection" id="collectionNav">Recolección <span class="badge" id="collectionCount">0</span></button>
       <button data-panel="missions">Misiones <span class="badge" id="missionCount">4</span></button>
       <button data-panel="group">Grupo</button>
       <button data-panel="history">Historial</button>
@@ -92,10 +94,12 @@
             <div class="actions">
               <button class="action" data-action="attack">Atacar</button>
               <button class="action" data-action="skill">Habilidad</button>
+              <button class="action synergy-action" data-action="synergy" data-sfx="combat-skill-noa" id="activateSynergy" disabled>Activar sinergia</button>
               <button class="action" data-action="defend">Defender</button>
               <button class="action" id="itemsToggle">Objetos</button>
               <button class="action danger" data-action="flee" id="fleeAction">Retirarse</button>
             </div>
+            <div class="tactics-tray hidden" id="tacticsTray" aria-label="Tácticas desbloqueadas"></div>
             <div class="item-tray hidden" id="itemTray"></div>
           </div>
           <div class="loot-controls hidden" id="lootControls">
@@ -1162,6 +1166,7 @@
   <script src="outcome-campaign.js?v=1"></script>
   <script src="persistence-v3.js?v=4-community"></script>
   <script src="game-v2.js?v=25-community"></script>
+  <script src="combat-tactics.js?v=1"></script>
   <script src="companion-nights.js?v=4-evidence"></script>
   <script src="expedition-rest.js?v=5-community"></script>
   <script src="expedition-continuity.js?v=3"></script>

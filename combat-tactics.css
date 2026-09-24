@@ -1,0 +1,35 @@
+#battle .stage-status-card.with-synergy{position:relative;padding-left:22px}
+#battle .stage-status-card .synergy-meter{position:absolute;left:2px;top:0;width:12px;height:calc(100% - 3px);min-height:52px;border:1px solid #72c9b3;background:#0a1717;overflow:hidden;display:flex;align-items:flex-end}
+#battle .synergy-meter>span{display:block;width:100%;background:linear-gradient(0deg,#276c70,#85dfd0,#e4be77);transition:height .65s ease-out}
+#battle .synergy-meter>span.growing{animation:synergyRise .7s ease-out both}
+@keyframes synergyRise{from{height:var(--synergy-from)}to{height:var(--synergy-to)}}
+#battle .stage-status-card .synergy-caption{position:absolute;left:21px;bottom:-13px;font-size:8px;line-height:1;letter-spacing:.04em;color:#85dfd0;white-space:nowrap}
+#battle .stage-status-card .synergy-caption b{color:#efcb87}
+#battle .stage-status-card .status-heading{display:flex;justify-content:space-between;align-items:baseline;gap:7px;margin-bottom:4px}
+#battle .combat-console .actions{grid-template-columns:repeat(6,minmax(0,1fr))}
+#battle .combat-console .actions:not(:has(.synergy-action)){grid-template-columns:repeat(5,minmax(0,1fr))}
+#battle .combat-console .synergy-action{color:#e4be77;border-color:#bf9864}
+#battle .combat-console .synergy-action:disabled{opacity:.55}
+#battle .tactics-tray{display:flex;gap:5px;overflow-x:auto;scrollbar-width:thin;overscroll-behavior:contain}
+#battle .tactics-tray.hidden{display:none!important}
+#battle .tactics-tray button{flex:1 0 auto;min-height:30px;padding:5px 9px;border:1px solid #7ba9a4;background:#10201e;color:#c5e8db;font:700 12px Arial,sans-serif;cursor:pointer}
+#battle .tactics-tray button:disabled{opacity:.45;cursor:default}
+#battle .tactics-tray button:not(:disabled):hover,#battle .tactics-tray button:focus-visible{border-color:#f0c98b;color:#fff}
+@media(max-width:600px){#battle .combat-console .actions{grid-template-columns:repeat(3,minmax(0,1fr))}#battle .tactics-tray button{font-size:11px;min-height:28px}#battle .stage-status-card .synergy-caption{font-size:7px}}
+@media(max-height:500px) and (min-aspect-ratio:1/1){#battle .combat-console .actions{grid-template-columns:repeat(6,minmax(0,1fr))}#battle .tactics-tray button{min-height:22px;font-size:10px}#battle .stage-status-card .synergy-caption{display:none}}
+@media(prefers-reduced-motion:reduce){#battle .synergy-meter>span{transition:none;animation:none!important}}
+.collection-intro{color:#b7c5bb;line-height:1.5;margin:0 0 16px}
+.collection-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;padding-bottom:25px}
+.collection-card{position:relative;min-height:180px;padding:13px;border:1px solid #a4a48c58;background:linear-gradient(135deg,#19241f,#0b120f);outline:none;overflow:hidden}
+.collection-card.found{border-color:#cdaa70a0}
+.collection-mark,.collection-loot-mark{display:grid;place-items:center;width:54px;height:54px;margin-bottom:9px;border:1px solid #cdaa70;color:#e6cea3;background:radial-gradient(circle,#333a31,#161b17);font:800 17px Georgia,serif;letter-spacing:.02em}
+.collection-card.unknown .collection-mark{filter:grayscale(1);opacity:.35}
+.collection-mark svg,.collection-loot-mark svg{display:block;width:85%;height:85%}
+.collection-card b,.collection-card small{display:block;overflow-wrap:anywhere}
+.collection-card b{font-size:14px;color:#e9ddc4}.collection-card small{margin-top:4px;color:#9dad9f;font-size:11px}
+.collection-card p{display:none;margin:10px 0 0;font-size:12px;line-height:1.5;color:#e5e2d7}
+.collection-card.found:hover,.collection-card.found:focus-visible{border-color:#f2d39d;background:#1a2925;box-shadow:0 0 0 2px #d4b37755}
+.collection-card.found:hover p,.collection-card.found:focus-visible p{display:block}
+.collection-card.found:hover,.collection-card.found:focus-visible{min-height:180px}
+.collection-drop .collection-loot-mark{flex:none;margin:0;width:48px;height:48px;font-size:14px}
+@media(hover:none){.collection-card.found p{display:block}}

@@ -134,7 +134,9 @@ function arrange(id,side,front){
 function statusCard(p,label,enemy,looting){
  if(!p)return '';var hp=Math.max(0,p.hp),xp=enemy?'':'<div class="stage-meter"><span>XP</span><div class="bar xp"><span style="width:'+Math.min(100,100*p.xp/xpNeeded(p))+'%"></span></div><b>'+p.xp+'/'+xpNeeded(p)+'</b></div>';
  var cargo='';if(looting&&!enemy){var used=bagUsed(p),cap=bagCapacity(p);cargo='<div class="stage-meter cargo"><span>Carga</span><div class="bar bag"><span style="width:'+Math.min(100,100*used/cap)+'%"></span></div><b>'+used+'/'+cap+'</b></div><small class="cargo-free">'+bagFree(p)+' espacios libres</small>'}
- return '<section class="stage-status-card '+(enemy?'hostile':'')+'"><div><strong>'+esc(p.name)+'</strong><span>'+esc(label)+(enemy?'':' · Lvl. '+p.level)+'</span></div>'+(looting&&!enemy?cargo:'<div class="stage-meter"><span>HP</span><div class="bar"><span style="width:'+(100*hp/p.maxHp)+'%"></span></div><b>'+hp+'/'+p.maxHp+'</b></div>'+xp)+'</section>';
+ var fill=battleState.synergy||0,previous=battleState.displaySynergy===undefined?fill:battleState.displaySynergy;
+ var synergy=!enemy&&!looting&&typeof renderBattleTactics==='function'?'<div class="synergy-meter" role="progressbar" aria-label="Sinergia del equipo" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+fill+'"><span id="synergyFill" class="'+(fill!==previous?'growing':'')+'" style="height:'+fill+'%;--synergy-from:'+previous+'%;--synergy-to:'+fill+'%"></span></div><small class="synergy-caption">SINERGIA <b id="synergyValue">'+fill+'%</b></small>':'';
+ return '<section class="stage-status-card '+(enemy?'hostile':'')+(synergy?' with-synergy':'')+'">'+synergy+'<div class="status-heading"><strong>'+esc(p.name)+'</strong><span>'+esc(label)+(enemy?'':' · Lvl. '+p.level)+'</span></div>'+(looting&&!enemy?cargo:'<div class="stage-meter"><span>HP</span><div class="bar"><span style="width:'+(100*hp/p.maxHp)+'%"></span></div><b>'+hp+'/'+p.maxHp+'</b></div>'+xp)+'</section>';
 }
 renderBattle=function(){
  if(!battleState)return;var b=battleState;
@@ -149,6 +151,8 @@ renderBattle=function(){
  var allyIndex=looting?b.looter:enemyTurn?null:b.actor,enemyIndex=enemyTurn?b.enemyActing:looting?b.lootTarget:b.target;
  shell.classList.toggle('stage-looting',looting);
  status.innerHTML=statusCard(state.party[allyIndex],looting?'Saqueador':'En turno',false,looting)+statusCard(b.enemies[enemyIndex],enemyTurn?'Atacando':looting?'Cuerpo seleccionado':'Objetivo',true,looting);
+ b.displaySynergy=b.synergy||0;
+ if(typeof renderBattleTactics==='function'&&!looting&&allyIndex!==null)renderBattleTactics();else if($('tacticsTray'))$('tacticsTray').classList.add('hidden');
  if(looting&&allyIndex===null)status.insertAdjacentHTML('afterbegin','<section class="stage-status-card"><strong>Elige quién saquea</strong><span>Usa las flechas o presiona una tarjeta aliada.</span></section>');
  $('turnLabel').textContent=enemyTurn?'Ataca '+b.enemies[enemyIndex].name:looting?(allyIndex===null?'Elige quién saquea':'Saquea '+state.party[allyIndex].name):'Turno de '+state.party[b.actor].name;
  if(looting)$('lootInstruction').textContent='Elige aliado y cuerpo con las flechas o sus tarjetas. Presiona el cuerpo seleccionado para saquear.';
