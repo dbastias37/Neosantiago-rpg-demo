@@ -63,3 +63,7 @@ $('medicalAccept').addEventListener('click',acceptMedicalBridge);
 $('medicalReview').addEventListener('click',reviewMedicalBridge);
 $('medicalDelegate').addEventListener('click',delegateMedicalBridge);
 $('medicalCouriers').addEventListener('click',function(){if(medicalSafe()&&state.matiasBridge){openActivityMenu();openCourierActivity('medical')}});
+// Bring an opened notice into view inside the bounded refuge section.
+['medicalBridgePanel','rosaBridgePanel'].forEach(function(id){
+  var panel=$(id);if(panel)panel.addEventListener('toggle',function(){if(panel.open)panel.scrollIntoView({block:'start',behavior:'auto'})});
+});

@@ -66,3 +66,13 @@ Se recarga en noche pendiente, noche pagada y refugio preparado; se cambia de ac
 Las pausas del registro del cadáver y de la oferta de mejora se esperan explícitamente. No se adelantan sus timers desde el test ni se pulsa a través de overlays. La lista comercial debe conservar espacio para operar antes y después del mensaje de compra, incluida la pantalla 915×412.
 
 Resultado integrado del bloque: **436/436 Node y 42/42 E2E**, sin reintentos en la ejecución local final. Incluye los 28 casos anteriores y 14 recorridos completos nuevos. Sintaxis, referencias y audio aprobados. La matriz final incluye compras reales y las correcciones de scroll/filas compartidas. El CI existente descubre automáticamente la nueva suite.
+
+## Enlaces de comunidad en producción
+
+`medical-bridge.spec.cjs` añade el recorrido sin parámetro de laboratorio, con las claves normales; conserva A/B para regresión e aislamiento. `rosa-bridge.spec.cjs` comprueba preparación de la tercera jornada, teclado, solicitud, viaje a Plaza, recogida, aceptación de la escolta de Ana, recepción en Los Héroes, refugio compartido, regreso a Expedición, recarga, inhibidor y decisión en la avenida. Ambos se ejecutan en las siete resoluciones: 14 casos adicionales, 77 en total.
+
+Se prepara la frontera de jornada con un fixture; los viajes intermedios y la escolta se resuelven con el motor de producción y se cargan al llegar. Los botones de solicitud, aceptación y entrega, el almacenamiento y las ventanas son reales. Estos recorridos no equivalen a una partida humana ininterrumpida. Node recorre los trayectos con tres semillas, además de verificar encargos en curso, pagos anteriores, recibos ajenos/provisionales, guardados antiguos, escritura fallida, entrega tardía e idempotencia.
+
+La primera matriz detectó compresión del comercio al aparecer el aviso médico en dos resoluciones. La corrección conserva las aserciones y da scroll propio a la sección de avisos en pantalla ancha; los seis casos afectados pasan. Se conserva esta incidencia en `community-links-production.md` y se registra allí el cierre de la matriz final.
+
+Cierre local de enlaces: **463/463 Node y 77/77 E2E**, sin reintentos en la matriz final. Ver detalles y revisión adicional de lectura de los avisos en `community-links-production.md`.

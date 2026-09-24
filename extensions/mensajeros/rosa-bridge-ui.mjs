@@ -30,7 +30,7 @@ export function rosaUI({data,E,getWorld,setWorld,canWrite,render,open,close,anno
    actions='<button data-rosa-action="campaign" class="primary">Llevar la confirmación a la expedición</button>';
   }
   const note=!idle?'Resuelve, reintenta o devuelve el viaje actual antes de preparar otro. La solicitud no sustituye tu encargo.':b.stage==='delivered'?'La expedición podrá consultar la copia en el refugio. No se vuelve a pagar el encargo.':'El añadido se conserva al retirarse y no ocupa una mochila. Cambiar de actividad no lo entrega: hay que recorrer el trayecto.';
-  open('RELEVO CIVIL',conversation({portrait:data.missions['ana-01'].portrait,name:b.stage==='delivered'?'Recepción de Los Héroes':'Ana · nota para el relevo',place:b.stage==='delivered'?'Copia de la recepción':w.location==='plaza'?'Plaza de Armas':'Solicitud de Plaza de Armas',title:'Una puerta para volver',body:'<p>'+esc(text)+'</p>',note,image})+`<div class="dialog-actions">${actions}<button data-close="dialog">Volver al mapa</button></div>`,'community');
+  open('RELEVO CIVIL',conversation({portrait:data.missions['ana-01'].portrait,name:b.stage==='delivered'?'Ana · solicitud recibida':'Ana · nota para el relevo',place:b.stage==='delivered'?'Copia firmada · Los Héroes':w.location==='plaza'?'Plaza de Armas':'Solicitud de Plaza de Armas',title:'Una puerta para volver',body:'<p>'+esc(text)+'</p>',note,image})+`<div class="dialog-actions">${actions}<button data-close="dialog">Volver al mapa</button></div>`,'community');
  }
  function handle(button){
   if(button.hasAttribute('data-rosa-open')){sync();show();return true;}

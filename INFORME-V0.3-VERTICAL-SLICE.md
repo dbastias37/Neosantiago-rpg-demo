@@ -1,6 +1,6 @@
 # NeoSantiago 2130 — V0.3 Vertical Slice
 
-Fecha de inicio: 23 de septiembre de 2026. Fundamentos integrados mediante PR #5 (`main` en `d9f4a22`). Bloque actual: `feature/v0.3-day-one-continuity`.
+Fecha de inicio: 23 de septiembre de 2026. Fundamentos integrados mediante PR #5 (`main` en `d9f4a22`). Bloque actual: `feature/v0.3-community-links`, basado en main `6233e1a`.
 
 **Estado: desarrollo y revisión; V0.2 sigue siendo la versión publicada.** Este documento no certifica todavía una experiencia de 30–60 minutos ni el cierre de V0.3.
 
@@ -159,3 +159,7 @@ Por instrucción del usuario se selecciona B y se elimina la prueba humana A/B c
 Bloque de activación: 454/454 Node; sintaxis, referencias y audio aprobados. Segunda conexión y E2E de producción pendientes en este punto del registro.
 
 Segundo bloque de enlaces: Rosa–Ana conecta las casas seguras con la escolta existente de familias. Oferta dosificada tras la segunda noche, recogida en Plaza, confirmación física en Los Héroes y alternativa con coste ante los civiles de la avenida. No existe un NPC Sorsa en main: se trabaja con Rosa e Iara y se conserva su llegada anterior a la casa. No se fabrica un traslado ni se repiten pagos. Contrato opcional `rosaBridge`, mismas claves/esquemas. 463/463 Node y validadores aprobados; 4/4 pruebas iniciales de navegador en portrait y landscape. Matriz completa pendiente de cierre.
+
+Cierre de la matriz de este bloque: **463/463 Node, 77/77 E2E** y validadores aprobados. La primera pasada detectó que el aviso médico comprimía el comercio en 915×412 y 1366×768; se corrigió con scroll acotado de avisos y se mantuvieron las aserciones de compra. Los seis casos afectados pasaron antes de repetir la matriz completa. Se añadió orientación al abrir un aviso para mantener su texto visible y se identificó el retrato de Ana como autora de la solicitud. Verificación específica de esos detalles en los 14 recorridos de producción.
+
+La variante B y Rosa–Ana están habilitadas en la campaña de la rama `feature/v0.3-community-links`; la entrada al laboratorio no es requisito. [PR #8](https://github.com/dbastias37/Neosantiago-rpg-demo/pull/8). No se declara completada V0.3 ni verificado el despliegue de Render. Siguiente trabajo: medir el ritmo de ambas conexiones, mantener la compatibilidad al extraer IDs de escenas y atender audio con fuentes autorizadas. Las 64 ausencias de audio siguen siendo deuda heredada, sin assets ausentes nuevos.

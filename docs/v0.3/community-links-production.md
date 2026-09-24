@@ -33,3 +33,24 @@ La segunda noche abre preparación únicamente cuando existe el vínculo de Rosa
 En la avenida, la recepción revisada permite guiar a los civiles gastando agua y ganando amenaza. No despeja la patrulla, no entrega el código del ascensor ni traslada a Rosa e Iara. Reutiliza la consecuencia `rescuedStrangers` y añade la memoria específica `rosaBridgeRouteUsed`. La escena y el epílogo recuerdan únicamente hechos confirmados. Una elección ya hecha no se sustituye por una entrega tardía.
 
 Verificación del bloque: 463/463 Node, sintaxis y referencias aprobadas. Audio conserva 64 ausencias heredadas y cero nuevas; se actualizan solo índices de referencias. Primera pasada de navegador: 4/4 recorridos de producción en 360×800 y 915×412 (Matías y Rosa). Se ejecutará la matriz completa tras cerrar la prueba de salida de Rosa por los controles del inhibidor.
+
+## Corrección encontrada por navegador
+
+La primera matriz completa aprobó 75/77 casos. El aviso de Matías comprimía la lista comercial a 94.9 px en 915×412 y 60.6 px en 1366×768. Se mantiene la aserción de espacio de comercio y se acota el panel superior con scroll propio únicamente cuando muestra un enlace comunitario en disposición ancha. No se cambia el retrato, el comercio ni las reglas de compra. Los seis recorridos afectados (primer día, Matías y Rosa, en ambas pantallas) vuelven a aprobar. La matriz completa se repite sobre la corrección.
+
+El delta de fuentes cargadas por la campaña, frente a 6233e1a, es 11.983 bytes sin comprimir incluyendo HTML, scripts afectados y la hoja del enlace. No se añaden imágenes, sonidos ni preloads. No es una medición de transferencia ni una nueva baseline de Render.
+
+En la revisión visual se conserva el retrato de Ana identificado como autora de la solicitud recibida y la ubicación como copia firmada en Los Héroes. No se presenta a Ana como la responsable que atiende físicamente ese otro refugio. La conversación, los botones y el marco siguen siendo los compartidos de Encargos.
+
+## Continuidad de producción
+
+Para seguir: revisar el ritmo de estas dos conexiones dentro de una partida, sin añadir una tercera dependencia antes de observarlas; la activación no queda condicionada a una prueba A/B. La siguiente mejora técnica debería sustituir gradualmente los índices de escena por identificadores estables con pruebas de migración. Este bloque usa los puntos 9/10 y 18 existentes y no intenta reescribir el mapa de campaña. Persisten la deuda de audio, las pruebas en dispositivos reales y la medición humana de 30–60 minutos.
+
+
+## Cierre de verificación
+
+463/463 Node y validadores de sintaxis, referencias y audio aprobados. Matriz completa final: 77/77 E2E en las siete resoluciones, sin reintentos locales (9,8 minutos). Se revisaron capturas de portrait, landscape y desktop. Al expandir un aviso, el panel se desplaza hasta su comienzo para que el texto no quede oculto bajo las fichas; se comprueban nuevamente los 14 recorridos de producción tras ese detalle de lectura y el rótulo de Ana.
+
+El navegador local utilizado fue Chromium 153 empaquetado por Sparticuz, sin añadir esa dependencia al repositorio ni desactivar las políticas de origen del navegador. La descarga de Playwright del entorno devolvía archivos incompletos. CI instala la versión de Chromium de Playwright fijada en el proyecto. Los checks remotos se consultan en el [PR #8](https://github.com/dbastias37/Neosantiago-rpg-demo/pull/8); no se confunde la validación local con una publicación en Render.
+
+La revisión final de lectura aprueba **14/14 recorridos adicionales**, Matías y Rosa en las siete pantallas, después del ajuste de scroll y del rótulo. No aparecen errores JS, HTTP nuevos ni excepciones de consola.
