@@ -15,11 +15,12 @@ for (const name of ['campaign-new', 'campaign-retreat']) {
     const a = boot(storage), c = a.ctx;
     assert.equal(c.KEY, key);
     assert.equal(c.load(), true);
-    assert.deepEqual(plain(c.state), expected);
+    const upgraded = {...expected,collection:[],armorerStock:{...plain(c.armorerStockForDay(expected.armorerStockDay)),...expected.armorerStock}};
+    assert.deepEqual(plain(c.state), upgraded);
     assert.equal(storage.get(key), text, 'reading a save must not rewrite it');
     c.gameSessionActive = true;
     c.save();
-    assert.deepEqual(JSON.parse(storage.get(key)), {...expected,sceneId:c.events[expected.index].id}, 'the first write adds only the optional stable scene anchor');
+    assert.deepEqual(JSON.parse(storage.get(key)), {...upgraded,sceneId:c.events[expected.index].id}, 'the first write includes the new collection and armorer stock without altering the legacy progress');
     assert.equal(storage.get('neosantiago.mensajeros.production.v1'), '{"otherTeam":"untouched"}');
     assert.equal(storage.size, 2, 'the extraction introduces no new save namespace');
   });

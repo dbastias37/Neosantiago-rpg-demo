@@ -58,7 +58,7 @@ test('every object has its real image and description; salvage and unavailable p
   }
   assert.equal(JSON.stringify(c.state),before);
   c.openItemDetails('scrap');assert.match(d.getElementById('itemDetailPrices').textContent,/No vende/);assert.match(d.getElementById('itemDetailPurpose').textContent,/reparar cascos y chalecos/);back(a);
-  c.openItemDetails('rifle556');assert.deepEqual([...d.querySelectorAll('#itemDetailPrices tbody td')].map(n=>n.textContent),['30 créditos','15 créditos']);back(a);
+  c.openItemDetails('rifle556');assert.deepEqual([...d.querySelectorAll('#itemDetailPrices tbody td')].map(n=>n.textContent),['44 créditos','20 créditos']);back(a);
   c.elias().skills.push('elias_disassemble');c.openItemDetails('radio');assert.match(d.getElementById('itemDetailDisassembly').textContent,/ya tiene Desarme fino/);back(a);
 });
 
