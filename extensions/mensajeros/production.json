@@ -1746,7 +1746,7 @@
       "stack": false,
       "slot": "weapon",
       "weapon": "melee",
-      "damage": 2,
+      "damage": 3,
       "accuracy": 0
     },
     "pistol9": {
@@ -1762,7 +1762,7 @@
       "slot": "weapon",
       "weapon": "firearm",
       "ammo": "ammo9",
-      "damage": 3,
+      "damage": 6,
       "accuracy": 0
     },
     "rifle556": {
@@ -1778,7 +1778,7 @@
       "slot": "weapon",
       "weapon": "firearm",
       "ammo": "ammo556",
-      "damage": 6,
+      "damage": 10,
       "accuracy": 0.05
     },
     "vestLight": {
@@ -1816,6 +1816,48 @@
       "trade": false,
       "discard": false,
       "disassemble": false
+    },
+    "shotgun12": {
+      "id": "shotgun12",
+      "name": "Escopeta recortada",
+      "description": "Daño devastador de cerca. Consume un cartucho calibre 12 por disparo.",
+      "kind": "weapon",
+      "image": "../../items/shotgun12.webp",
+      "trade": true,
+      "discard": true,
+      "disassemble": false,
+      "stack": false,
+      "slot": "weapon",
+      "weapon": "firearm",
+      "ammo": "shell12",
+      "damage": 17,
+      "accuracy": -0.08
+    },
+    "shell12": {
+      "id": "shell12",
+      "name": "Cartucho calibre 12",
+      "description": "Munición para escopeta.",
+      "kind": "ammo",
+      "image": "../../items/shell12.webp",
+      "trade": true,
+      "discard": true,
+      "disassemble": false,
+      "stack": true
+    },
+    "pipe": {
+      "id": "pipe",
+      "name": "Fierro de túnel",
+      "description": "Arma improvisada y contundente; menos letal que un disparo.",
+      "kind": "weapon",
+      "image": "../../items/crowbar.webp",
+      "trade": true,
+      "discard": true,
+      "disassemble": false,
+      "stack": false,
+      "slot": "weapon",
+      "weapon": "melee",
+      "damage": 5,
+      "accuracy": 0
     }
   },
   "events": [
@@ -2468,6 +2510,24 @@
       "price": 24,
       "qty": 1,
       "vendor": "armorer"
+    },
+    {
+      "id": "pipe",
+      "price": 9,
+      "qty": 1,
+      "vendor": "armorer"
+    },
+    {
+      "id": "shotgun12",
+      "price": 34,
+      "qty": 1,
+      "vendor": "armorer"
+    },
+    {
+      "id": "shell12",
+      "price": 10,
+      "qty": 3,
+      "vendor": "armorer"
     }
   ],
   "recipes": [],
@@ -2490,6 +2550,30 @@
         "name": "Pulso firme",
         "description": "Reduce 5 puntos porcentuales la probabilidad de fallar.",
         "requires": "trail"
+      },
+      {
+        "id": "tactic-aim",
+        "name": "Golpe certero",
+        "description": "Un ataque con mejor precisión, a distancia si lleva munición. Enfriamiento: una ronda.",
+        "requires": null,
+        "branch": "Tácticas de combate",
+        "tier": 1
+      },
+      {
+        "id": "tactic-double",
+        "name": "Golpe doble",
+        "description": "Dos impactos cercanos independientes, con menos daño por impacto.",
+        "requires": "tactic-aim",
+        "branch": "Tácticas de combate",
+        "tier": 2
+      },
+      {
+        "id": "tactic-distract",
+        "name": "Distraer",
+        "description": "El objetivo pierde su siguiente respuesta.",
+        "requires": "tactic-aim",
+        "branch": "Tácticas de combate",
+        "tier": 2
       }
     ],
     "tomas": [
@@ -2510,6 +2594,22 @@
         "name": "Ruta de salida",
         "description": "La retirada guiada desgasta 2 puntos en lugar de 5.",
         "requires": "echo"
+      },
+      {
+        "id": "tactic-knock",
+        "name": "Noquear",
+        "description": "Un golpe cercano que puede anular la próxima respuesta. Escuchar mejora su precisión.",
+        "requires": null,
+        "branch": "Tácticas de combate",
+        "tier": 1
+      },
+      {
+        "id": "tactic-disarm",
+        "name": "Quitar arma",
+        "description": "Intento de arrebatar el arma al enemigo. Si falla, Tomás puede salir herido.",
+        "requires": "tactic-knock",
+        "branch": "Tácticas de combate",
+        "tier": 2
       }
     ],
     "bruno": [
@@ -2530,6 +2630,30 @@
         "name": "Primeros auxilios",
         "description": "Los botiquines usados por Bruno en combate le curan hasta 32 HP.",
         "requires": "carry"
+      },
+      {
+        "id": "tactic-knock",
+        "name": "Noquear",
+        "description": "Un golpe contundente que anula la próxima respuesta al acertar.",
+        "requires": null,
+        "branch": "Tácticas de combate",
+        "tier": 1
+      },
+      {
+        "id": "tactic-disarm",
+        "name": "Quitar arma",
+        "description": "Arrebata el arma al enemigo si acierta. Si falla, puede salir herido.",
+        "requires": "tactic-knock",
+        "branch": "Tácticas de combate",
+        "tier": 2
+      },
+      {
+        "id": "tactic-double",
+        "name": "Golpe doble",
+        "description": "Dos golpes cercanos con una sola acción.",
+        "requires": "tactic-knock",
+        "branch": "Tácticas de combate",
+        "tier": 2
       }
     ]
   }

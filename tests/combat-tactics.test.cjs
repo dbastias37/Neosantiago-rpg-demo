@@ -15,6 +15,14 @@ test('one collectible belongs to one body, costs no bag space and survives a com
  c.save();const restored=boot(new Map([[c.KEY,c.localStorage.getItem(c.KEY)]]));assert.equal(restored.ctx.load(),true);
  assert.deepEqual([...restored.ctx.state.collection],[drops[0].id]);
 });
+test('Recolección combines expedition and courier discoveries from their separate saves',()=>{
+ const storage=new Map([['neosantiago.mensajeros.production.v1',JSON.stringify({collection:['usb_marauder','bip_card']})]]);
+ const a=boot(storage),c=a.ctx;c.state.collection=['metro_ticket','bip_card'];
+ assert.deepEqual([...c.collectedIds()],['metro_ticket','bip_card','usb_marauder']);
+ assert.match(c.collectionGallery(),/Memoria: el paso de Franklin/);
+ assert.match(c.collectionGallery(),/Boleto del Metro/);
+ storage.delete('neosantiago.mensajeros.production.v1');assert.deepEqual([...c.collectedIds()],['metro_ticket','bip_card']);
+});
 test('disarm removes an actual weapon, guarantees its loot and has risk on failure',()=>{
  const c=encounter(['merodeador']);const e=c.battleState.enemies[0],p=c.state.party[1];
  p.skills.push('elias_disarm');c.battleState.actor=1;e.hp=300;e.maxHp=300;c.d20=()=>20;
