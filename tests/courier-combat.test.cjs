@@ -25,7 +25,7 @@ test('couriers mount the shared Exploration cards and controls, skills, inventor
  const a=await battle(),d=a.document,c=a.ctx;
  assert.equal(d.querySelectorAll('#allyUnits .unit').length,3);assert.equal(d.querySelectorAll('#allyUnits .stage-front').length,1);
  assert.match(d.querySelector('#allyUnits').textContent,/Rocío/);assert.match(d.querySelector('#allyUnits img').src,/characters\/mensajeros\/rocio.webp/);
- assert.deepEqual([...d.querySelectorAll('#turnControls .actions button')].map(b=>b.textContent),['Atacar','Habilidad','Defender','Inventario','Retirarse']);
+ assert.deepEqual([...d.querySelectorAll('#turnControls .actions button')].map(b=>b.textContent),['Atacar','Habilidad','Activar sinergia','Defender','Inventario','Retirarse']);
  a.click('[data-action="skill"]');assert.match(d.querySelector('#fieldSkillTray').textContent,/Marcar al enemigo/);
  a.click('[data-courier-choice="skill"]');assert.ok(c.battleState.busy);a.drain();assert.equal(a.world().run.pending.combat.actor,1);
  a.click('[data-action="skill"]');assert.match(d.querySelector('#fieldSkillTray').textContent,/Escuchar/);
@@ -39,6 +39,19 @@ test('attack commits ammunition once, narration blocks double attacks, reload re
  assert.equal(a.world().run.supplies.ammo9,ammo-1);assert.ok(a.ctx.battleState.busy);
  const reload=await battle(a.E.restore(a.data,a.stored()));assert.equal(reload.ctx.battleState.actor,1);
  a.drain();assert.equal(a.ctx.battleState.actor,1);assert.deepEqual(a.errors,[]);
+});
+test('courier tactical tray and animated synergy meter drive saved engine actions',async()=>{
+ const a=await battle(),c=a.ctx,d=a.document,w=a.world();
+ assert.ok(d.querySelector('.synergy-meter'));assert.equal(d.querySelector('#activateSynergy').disabled,true);
+ w.run.party[0].skills.push('tactic-aim');c.NeoCourierCombat.sync();
+ assert.match(d.querySelector('#tacticsTray').textContent,/Golpe certero/);
+ a.click('[data-courier-choice="tactic-aim"]');a.drain();assert.equal(a.world().run.pending.combat.actor,1);
+ const b=await battle();b.world().run.pending.combat.synergy=100;b.world().run.pending.combat.enemies.forEach(e=>{e.hp=200;e.maxHp=200});b.ctx.NeoCourierCombat.sync();
+ assert.equal(b.document.querySelector('#activateSynergy').disabled,false);
+ assert.equal(b.document.querySelector('.synergy-meter').getAttribute('aria-valuenow'),'100');
+ b.click('#activateSynergy');b.drain();assert.equal(b.world().run.pending.combat.synergy,0);
+ assert.equal(b.world().run.log.filter(x=>/ inflige | falla el ataque/.test(x)).length,3);
+ const reload=await battle(b.E.restore(b.data,b.stored()));assert.equal(reload.world().run.pending.combat.synergyReadyRound,4);
 });
 test('victory searches bodies with the same loot modal, persists collection and discard, and returns to route',async()=>{
  const a=await battle();let turns=0;

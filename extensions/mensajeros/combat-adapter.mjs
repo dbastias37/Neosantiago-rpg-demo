@@ -4,9 +4,7 @@ import * as E from './production.mjs';
 const host = parent.NeoCourierCombatHost;
 if (!host) throw Error('Abre el combate desde Encargos.');
 const data = host.data, $ = id => document.getElementById(id);
-// The courier roster uses its own ability engine; expedition tactics stay on the story team.
-document.getElementById('activateSynergy')?.remove();
-document.getElementById('tacticsTray')?.remove();
+// The courier roster uses its own ability engine and the shared battle presentation.
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const asset = p => new URL(p, import.meta.url).href;
 const definition = id => data.crew.find(p => p.id === id);
@@ -69,6 +67,7 @@ Object.assign(window, {
     if(transact(E.finishLoot)){window.playSfx('loot-exit');exit();host.refresh();}
   }
 });
+await script('collection-catalog.js?v=1');
 await script('audio-catalog.js?v=1');
 await script('audio-availability.js?v=1');
 await script('combat-common.js?v=2-audio');
@@ -77,6 +76,13 @@ window.loadAudioRoutes();
 window.audioUnlocked=true;
 const tray=document.createElement('div');tray.id='fieldSkillTray';tray.className='hidden';tray.setAttribute('aria-label','Habilidades disponibles');document.querySelector('.combat-console').append(tray);window.fieldSkillTray=tray;
 function closeSkills(){tray.classList.add('hidden');document.querySelector('[data-action="skill"]').setAttribute('aria-expanded','false');}
+window.renderBattleTactics=function(){
+  const b=window.battleState,c=combat(),slot=$('tacticsTray'),blocked=b.busy||b.phase!=='combat'||c.actor<0;
+  slot.innerHTML=options().filter(o=>o.id.startsWith('tactic-')).map(o=>`<button type="button" data-courier-choice="${esc(o.id)}" ${blocked||!E.optionAvailable(current(),o)?'disabled':''}>${esc(o.label)}</button>`).join('');
+  slot.classList.toggle('hidden',!slot.innerHTML);
+  const synergy=$('activateSynergy');synergy.disabled=blocked||!options().some(o=>o.id==='synergy');synergy.textContent='Activar sinergia'+(c.round<(c.synergyReadyRound||0)?' · '+(c.synergyReadyRound-c.round)+' rondas':'');
+  synergy.title='Tres ataques, uno por Mensajero · requiere 100% y tres aliados en pie · enfriamiento de 2 rondas';
+};
 function skills(){
   const b=window.battleState;if(!b||b.busy||b.phase!=='combat')return;
   if(!tray.classList.contains('hidden')){closeSkills();return;}
@@ -116,7 +122,7 @@ function sync(){
   }
   if(pendingTurn||window.battleState.busy)return;
   const b=window.battleState,was=b.phase;syncParty();syncEnemies();
-  Object.assign(b,{actor:c.actor,target:c.target,phase:c.phase,round:c.round,log:r.log.slice(logStart)});
+  Object.assign(b,{actor:c.actor,target:c.target,phase:c.phase,round:c.round,synergy:c.synergy||0,synergyReadyRound:c.synergyReadyRound||1,log:r.log.slice(logStart)});
   if(was!==b.phase){closeSkills();$('itemTray').classList.add('hidden');}
   $('battle').classList.remove('hidden');window.renderBattle();
   window.setSceneAmbience(c.phase==='loot'?'ambience-battle-victory':'ambience-battle',window.AUDIO_CROSSFADE_MS);
@@ -127,7 +133,7 @@ function choose(id){
   const oldParty=window.state.party,oldEnemies=b.enemies,oldActor=b.actor;
   if(!transact(E.choose,id))return;
   const weapon=data.items[oldParty[oldActor].equipment.weapon];
-  window.playSfx(id==='fire'?(weapon.ammo==='ammo556'?'combat-shot-rifle':'combat-shot-9mm'):id==='melee'?'combat-melee':id==='cover'?'combat-defend':id.includes('retreat')?'combat-flee':id==='heal'?'hp-medical-use':id==='skill'&&oldParty[oldActor].id==='tomas'?'combat-skill-elias':'ui-click');
+  window.playSfx(id==='fire'||id==='tactic-aim'&&weapon?.weapon==='firearm'?(weapon?.ammo==='ammo556'?'combat-shot-rifle':'combat-shot-9mm'):id==='melee'||id.startsWith('tactic-')?'combat-melee':id==='cover'?'combat-defend':id.includes('retreat')?'combat-flee':id==='heal'?'hp-medical-use':id==='skill'&&oldParty[oldActor].id==='tomas'?'combat-skill-elias':'ui-click');
   closeSkills();$('itemTray').classList.add('hidden');
   if(!combat()||current().run.status!=='active'){exit();host.refresh();return;}
   syncParty();syncEnemies();
@@ -144,7 +150,7 @@ document.querySelectorAll('[data-action]').forEach(button=>button.addEventListen
   window.unlockAudioAmbience();
   const action=button.dataset.action;
   if(action==='skill'){skills();return;}
-  choose(action==='attack'?(options().some(o=>o.id==='fire'&&E.optionAvailable(current(),o))?'fire':'melee'):action==='defend'?'cover':'retreat');
+  choose(action==='attack'?(options().some(o=>o.id==='fire'&&E.optionAvailable(current(),o))?'fire':'melee'):action==='defend'?'cover':action==='synergy'?'synergy':'retreat');
 }));
 document.addEventListener('click',event=>{
   const button=event.target.closest('button');if(!button||button.disabled||!window.battleState)return;window.unlockAudioAmbience();

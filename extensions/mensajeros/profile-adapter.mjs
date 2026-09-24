@@ -59,7 +59,7 @@ Object.assign(window, {
     return `<aside class="psych-panel ${open?'expanded':'compact'}"><header><span>Especialidad</span><strong>${esc(definition(p.id).skill)}</strong><button class="psych-panel-toggle" data-psych-toggle aria-expanded="${open}" aria-label="${open?'Contraer':'Expandir'} especialidad">${open?'−':'+'}</button></header><div class="psych-panel-body"><p>${esc(definition(p.id).description)}</p><small>La resistencia pertenece al grupo y se recupera al descansar.</small></div></aside>`;
   },
   professionWorkshopHtml:()=>'<section class="workshop"><div class="workshop-head"><span><b>Suministros del refugio</b><small>Los Mensajeros no tienen una profesión de fabricación. Mara y el Armero venden suministros en Los Héroes.</small></span></div></section>',
-  skillTrees:Object.fromEntries(data.crew.map(p=>[p.id,data.skillTrees[p.id].map(s=>({...s,desc:s.description,branch:definition(p.id).skill,tier:s.requires?2:1,cost:1}))])),
+  skillTrees:Object.fromEntries(data.crew.map(p=>[p.id,data.skillTrees[p.id].map(s=>({...s,desc:s.description,branch:s.branch||definition(p.id).skill,tier:s.tier||(s.requires?2:1),cost:1}))])),
   hasSkill:(p,id)=>p.skills.includes(id),
   hasUnspentSkill:p=>E.skillPoints(p)>0&&data.skillTrees[p.id].some(s=>!p.skills.includes(s.id)&&(!s.requires||p.skills.includes(s.requires))),
   canUnlockSkill:(p,s)=>canLearn()&&E.skillPoints(p)>0&&!p.skills.includes(s.id)&&(!s.requires||p.skills.includes(s.requires)),

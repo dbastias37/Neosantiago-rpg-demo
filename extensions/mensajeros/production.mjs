@@ -25,6 +25,8 @@ export {mission,route,here,nextEdge,effectiveRisk,eventFor,serialize} from './en
 const copy=x=>JSON.parse(JSON.stringify(x));
 const need=(ok,msg)=>{if(!ok)throw Error(msg);};
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+const COLLECTIBLES=['metro_ticket','bip_card','cueca_tape','feria_token','copper_key','football_pin','usb_marauder','usb_surface','usb_agent'];
+const TACTICS={rocio:[['tactic-aim','Golpe certero'],['tactic-double','Golpe doble'],['tactic-distract','Distraer']],tomas:[['tactic-knock','Noquear'],['tactic-disarm','Quitar arma']],bruno:[['tactic-knock','Noquear'],['tactic-disarm','Quitar arma'],['tactic-double','Golpe doble']]};
 function definition(data,id){return data.crew.find(c=>c.id===id);}
 function has(member,id){return !!member?.skills?.includes(id);}
 function bagCount(member,id){return (member?.bag||[]).filter(x=>x.id===id).reduce((n,x)=>n+x.qty,0);}
@@ -66,7 +68,7 @@ function validatedGate(data,w){
  need(options(data,w).some(o=>o.id===gate.choice&&o.gate==='numeric'),'Desvío de compuerta inválido.');
  gate.session=restoreSession(puzzle,gate.session);return {gate,puzzle};
 }
-function memberBase(data,c){const d=definition(data,c.id);c.skills??=[];c.bag??=copy(d.bag||[]);c.equipment={...(d.equipment||{}),...(c.equipment||{})};return c;}
+function memberBase(data,c){const d=definition(data,c.id);c.skills??=[];c.bleed??=0;c.bag??=copy(d.bag||[]);c.equipment={...(d.equipment||{}),...(c.equipment||{})};return c;}
 function ownedParty(data,r){
  const keep={};for(const [id,n]of Object.entries(r.ownedStock||{}))keep[id]=Math.min(n,r.supplies[id]||0);
  for(const id of Object.keys(r.supplies)){const remove=(r.supplies[id]||0)-(keep[id]||0);if(remove>0)removeFromParty(r.party,id,remove);}
@@ -83,7 +85,7 @@ export function prepare(data){
 }
 export function createWorld(data,{seed=Date.now()}={}){
  const w=Base.createWorld(data,{mode:'laboratory',seed});
- return refreshProgression(data,{...w,encounters:{version:1,resolved:{}},aftermath:{version:1,rescueReturn:null},progression:{version:1,known:[],visited:['heroes']},mode:'production',crew:data.crew.map(c=>memberBase(data,{id:c.id,hp:c.maxHp,maxHp:c.maxHp,xp:0,level:1,skills:[],bag:copy(c.bag||[]),equipment:copy(c.equipment||{})})),stock:{},effects:[],helpSeen:false,location:'heroes',hubVisits:0});
+ return refreshProgression(data,{...w,collection:[],encounters:{version:1,resolved:{}},aftermath:{version:1,rescueReturn:null},progression:{version:1,known:[],visited:['heroes']},mode:'production',crew:data.crew.map(c=>memberBase(data,{id:c.id,hp:c.maxHp,maxHp:c.maxHp,xp:0,level:1,skills:[],bag:copy(c.bag||[]),equipment:copy(c.equipment||{})})),stock:{},effects:[],helpSeen:false,location:'heroes',hubVisits:0});
 }
 export function start(data,source,id){
  need(data.missions[id],'Encargo desconocido.');
@@ -133,6 +135,8 @@ export function options(data,w){
   const actor=r.party[p.combat.actor],c=definition(data,actor.id),gun=weapon(data,actor),opts=[];
   if(gun?.weapon==='firearm')opts.push({id:'fire',label:'Disparar '+gun.name+' · 1 '+data.items[gun.ammo].name,cost:{[gun.ammo]:1}});
   opts.push({id:'melee',label:'Ataque cercano'});
+  if((p.combat.cooldowns?.[actor.id]||0)<=p.combat.round)for(const [id,label] of TACTICS[actor.id])if(has(actor,id))opts.push({id,label:label+' · recuperación 1 ronda',...(id==='tactic-aim'&&gun?.weapon==='firearm'?{cost:{[gun.ammo]:1}}:{})});
+  if(p.combat.synergy===100&&p.combat.round>=(p.combat.synergyReadyRound||0)&&r.party.every(x=>x.hp>0))opts.push({id:'synergy',label:'Activar sinergia · una pasada de los tres aliados'});
   if(actor.id==='tomas')opts.push({id:'listen',label:'Escuchar · prepara el próximo golpe cercano'});
   opts.push({id:'cover',label:'Cubrirse · reduce el próximo daño'},{id:'skill',label:c.id==='rocio'?'Marcar al enemigo':c.id==='tomas'?'Interferir · anula una respuesta':'Proteger a todo el grupo',once:'combat-'+r.combatSerial+'-'+c.id});
   if(r.supplies.medkit)opts.push({id:'heal',label:'Usar botiquín · recuperar hasta '+(has(actor,'aid')?32:24)+' HP',cost:{medkit:1}});
@@ -155,38 +159,83 @@ function lootFor(w,electronic,serial,index){
 }
 function openCombat(data,w){
  const r=w.run,p=r.pending,e=Base.nextEdge(data,w),electronic=!!Base.eventFor(data,w)?.electronic;r.combats++;r.combatSerial++;w.regions[e.region]=Math.min(6,w.regions[e.region]+1);
- const enemy=(id,name,hp,img,index)=>({id,name,hp,maxHp:hp,image:'../../portraits/'+img,stunned:false,loot:lootFor(w,electronic,r.combatSerial,index)});
- p.combat={phase:'combat',actor:r.party.findIndex(x=>x.hp>0),target:0,turn:0,round:1,covered:[],marked:null,enemies:electronic?[enemy('drone','Dron Red UNO',36,'drone.webp',0)]:[enemy('scout','Merodeador',26,'merodeador.webp',0),enemy('guard','Vigía armado',24,'merodeador2.webp',1)]};r.log.push('Contacto armado. La vigilancia del corredor aumenta.');if(p.combat.actor<0){r.status='failed';recordInterruption(w);}
+ const enemy=(id,name,hp,img,index,arm)=>({id,name,hp,maxHp:hp,image:'../../portraits/'+img,weapon:arm||null,ammo:arm==='shotgun12'?2:arm==='pistol9'?3:0,stunned:false,bleed:0,loot:lootFor(w,electronic,r.combatSerial,index)});
+ const enemies=electronic?[enemy('drone','Dron Red UNO',36,'drone.webp',0)]:[enemy('scout','Merodeador',30,'merodeador.webp',0,'knife'),enemy('guard','Vigía armado',32,'merodeador2.webp',1,random(w,'enemy-gun:'+r.combatSerial)<.3?'shotgun12':'pistol9')];
+ for(const foe of enemies)if(foe.weapon==='shotgun12')foe.loot.push({id:'shell12',qty:1});
+ const bodies=enemies.length,body=Math.floor(random(w,'collectible-body:'+r.combatSerial)*bodies),pool=electronic?COLLECTIBLES.slice(-2):COLLECTIBLES.slice(0,-1),missing=pool.filter(id=>!w.collection?.includes(id)),available=missing.length?missing:pool,id=available[Math.floor(random(w,'collectible:'+r.combatSerial)*available.length)];
+ enemies[body].loot.push({id,qty:1,collectible:true});
+ p.combat={phase:'combat',actor:r.party.findIndex(x=>x.hp>0),target:0,turn:0,round:1,covered:[],marked:null,synergy:0,synergyReadyRound:1,cooldowns:{},enemies};r.log.push('Contacto armado. La vigilancia del corredor aumenta.');if(p.combat.actor<0){r.status='failed';recordInterruption(w);}
 }
 export function target(data,source,index){const w=copy(source),c=w.run?.pending?.combat;need(c?.phase==='combat'&&Number.isInteger(index)&&c.enemies[index]?.hp>0,'Objetivo no disponible.');c.target=index;return w;}
 function arrive(data,w){const r=w.run,p=r.pending;rememberEncounter(data,w,p,{});r.history.push({id:p.id,category:p.category,node:p.to});r.index=p.edgeIndex+1;r.pending=null;w.location=Base.here(data,w).id;r.log.push('Llegada a '+Base.here(data,w).name+'.');updateCheckpoint(data,w);}
 function retreat(w,wear=0){const r=w.run;r.condition=Math.max(0,r.condition-wear);r.pending=null;r.withdrawn=true;r.status=r.condition?'active':'failed';r.log.push('Retroceden al andén anterior. Conservan carga, heridas y vigilancia; el paso sigue pendiente.');recordInterruption(w,'retreat');}
 export function hitChance(data,w,id){
- const r=w.run,c=r.pending.combat,a=r.party[c.actor],gear=weapon(data,a);let miss=id==='fire'?.08:.15;
- if(a.id==='tomas')miss=(id==='fire'?.55:.4)+(Base.eventFor(data,w)?.electronic?.15:0)-(id==='melee'&&c.listening?(has(a,'focus')?.3:.2):0);
- if(has(a,'aim'))miss-=.05;if(id==='fire')miss-=gear?.accuracy||0;return clamp(1-miss,.05,.97);
+ const r=w.run,c=r.pending.combat,a=r.party[c.actor],gear=weapon(data,a),fire=id==='fire'||id==='tactic-aim'&&gear?.weapon==='firearm';let miss=fire?.08:.15;
+ if(a.id==='tomas')miss=(fire?.55:.4)+(Base.eventFor(data,w)?.electronic?.15:0)-(!fire&&c.listening?(has(a,'focus')?.3:.2):0);
+ if(has(a,'aim'))miss-=.05;if(fire)miss-=gear?.accuracy||0;if(id==='tactic-aim')miss-=.22;return clamp(1-miss,.05,.97);
 }
 function addCombatXp(r,amount){for(const c of r.party){c.xp+=amount;while(c.xp>=60){c.xp-=60;c.level++;c.maxHp+=5;c.hp=Math.min(c.maxHp,c.hp+5);}}}
+function synergyGain(r,c,n){c.synergy=Math.min(100,(c.synergy||0)+n);if(c.synergy===100&&!c.synergyAnnounced){c.synergyAnnounced=true;r.log.push('Sinergia al 100%. Los tres Mensajeros pueden actuar juntos.');}}
+function strike(data,w,actor,enemy,mode,salt,bonus=0){
+ const r=w.run,c=r.pending.combat,def=definition(data,actor.id),gear=weapon(data,actor),fire=mode==='fire'||mode==='tactic-aim'&&gear?.weapon==='firearm';
+ // Hit chance uses the striking ally even for the three-person coordinated pass.
+ const saved=c.actor;c.actor=r.party.indexOf(actor);const chance=hitChance(data,w,mode);c.actor=saved;
+ const hit=random(w,r.mission+':'+r.index+':'+r.combatSerial+':'+c.turn+':'+salt+':hit')<chance;
+ if(actor.id==='tomas'&&!fire)c.listening=false;
+ const critical=random(w,r.mission+':'+c.turn+':'+salt+':crit')<.12;
+ const power=fire?gear?.damage||0:gear?.weapon==='melee'?gear.damage||0:0;
+ const damage=hit?Math.max(1,def.attack+(actor.level-1)*2+power+(fire?1:-5)+(critical?4:0)+bonus+(c.marked===enemy.id?(c.markBonus||8):0)):0;
+ if(c.marked===enemy.id)c.marked=null;
+ enemy.hp=Math.max(0,enemy.hp-damage);
+ if(hit&&enemy.hp>0&&random(w,c.turn+':'+salt+':bleed')<(fire?.24:gear?.weapon==='melee'?.32:.1))enemy.bleed=Math.max(enemy.bleed||0,fire?3:2);
+ r.log.push(def.name+(hit?' inflige '+damage+(critical?' de daño crítico':' de daño')+' a '+enemy.name+'.':' falla el ataque.'));
+ return hit;
+}
 function combatTurn(data,w,id){
  const r=w.run,c=r.pending.combat,actor=r.party[c.actor],def=definition(data,actor.id),enemy=c.enemies[c.target];
  if(['retreat','smoke-retreat','trap-retreat','guided-retreat'].includes(id)){time(r,id==='retreat'?6:1);retreat(w,id==='retreat'?12:id==='guided-retreat'?(has(r.party.find(x=>x.id==='tomas'),'exit')?2:5)+(Base.eventFor(data,w)?.electronic?4:0):0);return w;}
  c.turn++;time(r,1);
- if(id==='heal'){actor.hp=Math.min(actor.maxHp,actor.hp+(has(actor,'aid')?32:24));r.log.push(def.name+' usa un botiquín.');}
+ if(id==='heal'){actor.hp=Math.min(actor.maxHp,actor.hp+(has(actor,'aid')?32:24));actor.bleed=0;r.log.push(def.name+' usa un botiquín y detiene el sangrado.');synergyGain(r,c,6);}
  else if(id==='listen'){c.listening=true;r.log.push('Tomás escucha los movimientos. Prepara su próximo golpe cercano; el ruido puede confundirlo.');}
- else if(id==='cover'){c.covered.push(actor.id);r.log.push(def.name+' se cubre.');}
+ else if(id==='cover'){c.covered.push(actor.id);r.log.push(def.name+' se cubre.');synergyGain(r,c,6);}
  else if(id==='skill'){
   r.used['combat-'+r.combatSerial+'-'+actor.id]=true;if(actor.id==='rocio'){c.marked=enemy.id;c.markBonus=has(actor,'mark')?12:8;r.log.push('Rocío marca al objetivo.');}if(actor.id==='tomas'){enemy.stunned=true;r.log.push('Tomás interrumpe la respuesta del objetivo.');}if(actor.id==='bruno'){c.covered=r.party.map(x=>x.id);c.coverFactor=has(actor,'guard')?.25:.4;r.log.push('Bruno protege al equipo.');}
+  synergyGain(r,c,8);
+ }else if(id==='synergy'){
+  c.synergy=0;c.synergyAnnounced=false;c.synergyReadyRound=c.round+3;
+  r.log.push('Activar sinergia: Rocío, Tomás y Bruno coordinan una pasada.');
+  for(const [i,member] of r.party.entries()){
+   const victim=c.enemies[c.target]?.hp>0?c.enemies[c.target]:c.enemies.find(e=>e.hp>0);if(!victim)break;
+   strike(data,w,member,victim,'melee','synergy-'+i,2);
+  }
+ }else if(id==='tactic-distract'){
+  enemy.stunned=true;r.log.push(def.name+' distrae a '+enemy.name+' y anula su próxima respuesta.');c.cooldowns[actor.id]=c.round+2;synergyGain(r,c,8);
  }else{
-  const chance=hitChance(data,w,id),hit=random(w,r.mission+':'+r.index+':'+r.combatSerial+':'+c.turn+':hit')<chance;if(actor.id==='tomas'&&id==='melee')c.listening=false;
-  const crit=random(w,c.turn+':'+r.index+':crit')<.12,gear=weapon(data,actor),gearDamage=id==='fire'?(gear?.damage||0):(gear?.weapon==='melee'?gear.damage||0:0),damage=hit?Math.max(1,def.attack+(actor.level-1)*2+gearDamage+(id==='fire'?1:-3)+(crit?5:0)+(c.marked===enemy.id?(c.markBonus||8):0)):0;
-  if(c.marked===enemy.id)c.marked=null;enemy.hp=Math.max(0,enemy.hp-damage);r.log.push(def.name+(hit?' inflige '+damage+(crit?' de daño crítico':' de daño')+' a '+enemy.name+'.':' falla el ataque.'));
+  const tactical=id.startsWith('tactic-');if(tactical)c.cooldowns[actor.id]=c.round+2;
+  if(id==='tactic-double'){
+   for(let i=0;i<2;i++){const victim=enemy.hp>0?enemy:c.enemies.find(e=>e.hp>0);if(victim)synergyGain(r,c,strike(data,w,actor,victim,'melee','double-'+i,-3)?10:4);}
+  }else if(id==='tactic-disarm'){
+   const hit=strike(data,w,actor,enemy,'melee','disarm',-5);synergyGain(r,c,hit?12:4);
+   if(hit&&enemy.hp>0&&enemy.weapon){enemy.loot.push({id:enemy.weapon,qty:1});r.log.push(def.name+' le quita '+data.items[enemy.weapon].name+' a '+enemy.name+'.');enemy.weapon=null;enemy.ammo=0;}
+   else if(!hit){const wound=2+Math.floor(random(w,c.turn+':disarm:wound')*4);actor.hp=Math.max(0,actor.hp-wound);r.log.push('El intento de desarme hiere a '+def.name+' · '+wound+' HP.');}
+  }else{
+   const hit=strike(data,w,actor,enemy,id,id,id==='tactic-knock'?-2:id==='tactic-aim'?2:0);synergyGain(r,c,hit?15:6);
+   if(hit&&id==='tactic-knock'&&enemy.hp>0){enemy.stunned=true;r.log.push(enemy.name+' queda noqueado una respuesta.');}
+  }
  }
  if(c.enemies.every(e=>e.hp===0)){c.phase='loot';c.actor=-1;addCombatXp(r,8*c.enemies.length);r.log.push('Amenazas neutralizadas. Elige quién registra los cuerpos o abandona el saqueo.');return w;}
  if(!c.enemies[c.target].hp)c.target=c.enemies.findIndex(e=>e.hp>0);const next=r.party.findIndex((x,i)=>i>c.actor&&x.hp>0);if(next>=0){c.actor=next;return w;}
  for(const [i,e]of c.enemies.entries()){
-  if(!e.hp)continue;if(e.stunned){e.stunned=false;r.log.push(e.name+' pierde su respuesta.');continue;}const alive=r.party.filter(x=>x.hp>0);if(!alive.length)break;const t=alive[Math.floor(random(w,r.index+':'+c.round+':'+i+':target')*alive.length)];
-  const armor=data.items[t.equipment?.body]?.armor||0;let damage=Math.max(1,7+Math.floor(random(w,c.round+':'+i+':damage')*5)-armor);if(c.covered.includes(t.id))damage=Math.ceil(damage*(c.coverFactor||.4));t.hp=Math.max(0,t.hp-damage);r.log.push(e.name+' hiere a '+definition(data,t.id).name+' · '+damage+' HP.');
+  if(!e.hp)continue;if(e.bleed){e.hp=Math.max(0,e.hp-e.bleed);r.log.push(e.name+' pierde '+e.bleed+' HP por sangrado.');if(!e.hp)continue;}
+  if(e.stunned){e.stunned=false;r.log.push(e.name+' pierde su respuesta.');continue;}const alive=r.party.filter(x=>x.hp>0);if(!alive.length)break;const t=alive[Math.floor(random(w,r.index+':'+c.round+':'+i+':target')*alive.length)];
+  const armor=data.items[t.equipment?.body]?.armor||0,gun=e.weapon&&data.items[e.weapon],fire=gun?.weapon==='firearm'&&e.ammo>0;
+  if(fire)e.ammo--;const base=fire?(gun.id==='shotgun12'?13:9):gun?.weapon==='melee'?6:4;
+  let damage=Math.max(1,base+Math.floor(random(w,c.round+':'+i+':damage')*4)-armor);if(c.covered.includes(t.id))damage=Math.ceil(damage*(c.coverFactor||.4));t.hp=Math.max(0,t.hp-damage);
+  if(t.hp&&random(w,c.round+':'+i+':bleed')<(fire?.3:gun?.weapon==='melee'?.35:.08))t.bleed=Math.max(t.bleed||0,fire?3:2);
+  r.log.push(e.name+(fire?' dispara a ':' hiere a ')+definition(data,t.id).name+' · '+damage+' HP'+(t.bleed?' · sangrado '+t.bleed:'')+'.');
  }
+ for(const member of r.party)if(member.hp>0&&member.bleed){member.hp=Math.max(0,member.hp-member.bleed);r.log.push(definition(data,member.id).name+' pierde '+member.bleed+' HP por sangrado.');}
+ if(c.enemies.every(e=>!e.hp)){c.phase='loot';c.actor=-1;addCombatXp(r,8*c.enemies.length);return w;}
  c.covered=[];c.coverFactor=.4;c.round++;c.actor=r.party.findIndex(x=>x.hp>0);if(c.actor<0){r.status='failed';r.log.push('El equipo cae agotado. El último punto de control permite reorganizarse.');}return recordInterruption(w);
 }
 export function choose(data,source,id){
@@ -231,9 +280,12 @@ export function completeGate(data,source){
  const checked=copy(source),{gate}=validatedGate(data,checked);need(gate.session.phase==='success','La compuerta todavía no está abierta.');return choose(data,checked,gate.choice);
 }
 export function lootRemaining(w){const c=w.run?.pending?.combat;return c?.phase==='loot'?c.enemies.reduce((n,e)=>n+e.loot.reduce((a,x)=>a+x.qty,0),0):0;}
-export function canLoot(data,w,memberId,itemId){const r=w.run,c=r?.pending?.combat,m=r?.party.find(x=>x.id===memberId);return !!(c?.phase==='loot'&&m?.hp>0&&data.items[itemId]&&bagUsed(m)<bagCapacity(data,m));}
+export function canLoot(data,w,memberId,itemId){const r=w.run,c=r?.pending?.combat,m=r?.party.find(x=>x.id===memberId);return !!(c?.phase==='loot'&&m?.hp>0&&(COLLECTIBLES.includes(itemId)||data.items[itemId]&&bagUsed(m)<bagCapacity(data,m)));}
 export function takeLoot(data,source,enemyIndex,memberId,itemId){
- const w=copy(source),r=w.run,c=r?.pending?.combat,e=c?.enemies[enemyIndex],drop=e?.loot.find(x=>x.id===itemId&&x.qty>0),m=r?.party.find(x=>x.id===memberId);need(c?.phase==='loot'&&drop&&m?.hp>0,'Saqueo no disponible.');need(canLoot(data,w,memberId,itemId),'La mochila elegida está llena.');gainOwned(data,r,m,itemId,1);drop.qty--;time(r,1);r.log.push(definition(data,m.id).name+' recupera '+data.items[itemId].name+'.');return w;
+ const w=copy(source),r=w.run,c=r?.pending?.combat,e=c?.enemies[enemyIndex],drop=e?.loot.find(x=>x.id===itemId&&x.qty>0),m=r?.party.find(x=>x.id===memberId);need(c?.phase==='loot'&&drop&&m?.hp>0,'Saqueo no disponible.');need(canLoot(data,w,memberId,itemId),'La mochila elegida está llena.');
+ if(drop.collectible){need(COLLECTIBLES.includes(itemId),'Coleccionable inválido.');w.collection??=[];if(!w.collection.includes(itemId))w.collection.push(itemId);r.log.push(definition(data,m.id).name+' registra un hallazgo en Recolección.');}
+ else{gainOwned(data,r,m,itemId,1);time(r,1);r.log.push(definition(data,m.id).name+' recupera '+data.items[itemId].name+'.');}
+ drop.qty--;return w;
 }
 export function finishLoot(data,source){const w=copy(source),r=w.run,c=r?.pending?.combat;need(c?.phase==='loot','No hay saqueo pendiente.');const left=lootRemaining(w);if(left)r.log.push('Dejan '+left+' unidad'+(left===1?'':'es')+' de loot para no perder más tiempo.');arrive(data,w);return w;}
 export function shelteredPlaza(data,w){return !!(w.effects.includes('guzman-01')&&(w.run?Base.here(data,w)?.id:w.location)==='plaza');}
@@ -250,7 +302,7 @@ export function rest(data,source){
   const at=w.run.log.findLastIndex(line=>line.startsWith('Descanso:'));
   if(at>=0)w.run.log[at]='Descanso bajo la guardia de Plaza: la posta pone agua y ración. Recuperación habitual; 10 minutos.';
  }
- mirrorChanges(data,w.run,before);w.run.party.forEach(c=>c.hp=Math.min(c.maxHp,c.hp+12));updateCheckpoint(data,w);return w;
+ mirrorChanges(data,w.run,before);w.run.party.forEach(c=>{c.hp=Math.min(c.maxHp,c.hp+12);c.bleed=0;});updateCheckpoint(data,w);return w;
 }
 export function toggleJammer(data,w){return Base.toggleJammer(data,w);}
 export function retry(data,w){const next=Base.retry(data,w);next.run.party.forEach(c=>c.hp=Math.max(c.hp,Math.ceil(c.maxHp*.5)));for(const [id,n]of Object.entries(w.run.used))next.run.used[id]=Math.max(Number(next.run.used[id])||0,Number(n)||0);next.run.combatSerial=w.run.combatSerial;next.run.outcomeAttempt=nextOutcomeAttempt(w);next.location=Base.here(data,next).id;return next;}
@@ -337,9 +389,9 @@ export function buy(data,source,id,memberId){
 export function sell(data,source,id,memberId){
  const w=copy(source);need(atHeroes(data,w),'Viaja a Los Héroes para comerciar.');const party=activeParty(w),member=party.find(x=>x.id===(memberId||party[0].id));need(member&&data.items[id]&&data.items[id].kind!=='cargo','Ese objeto no puede venderse.');need(bagCount(member,id)>0,'El objeto no está en esa mochila.');if(w.run?.status==='active')need((w.run.ownedStock[id]||0)>0,'Los suministros prestados no se venden.');removeBag(member,id,1);if(w.run?.status==='active'){w.run.ownedStock[id]--;sync(w.run);updateCheckpoint(data,w);}w.credits+=salePrice(data,id);return w;
 }
-export function recover(data,source){const w=copy(source);need(atHeroes(data,w),'Viaja a Los Héroes para recuperarte.');const party=activeParty(w);need(party.some(c=>c.hp<c.maxHp),'El equipo ya está recuperado.');need(w.credits>=8,'Necesitas 8 créditos.');w.credits-=8;party.forEach(c=>c.hp=c.maxHp);if(w.run?.status==='active')updateCheckpoint(data,w);return w;}
-export function heal(data,source,id){const w=copy(source),r=w.run;need(r?.status==='active'&&!r.pending,'Resuelve el encuentro antes de atender al equipo.');const c=r.party.find(c=>c.id===id);need(c&&c.hp<c.maxHp,'Ese Mensajero no necesita un botiquín.');spend(r,{medkit:1});c.hp=Math.min(c.maxHp,c.hp+24);updateCheckpoint(data,w);return w;}
-export function useItem(data,source,memberId,id){const w=copy(source),party=activeParty(w),m=party.find(x=>x.id===memberId),item=data.items[id];need(!w.run?.pending?.combat,'Usa el inventario de combate durante una batalla.');need(m&&(item?.kind==='medical'||id==='medkit'),'Ese objeto no puede usarse.');need(bagCount(m,id)>0&&m.hp<m.maxHp,'No puedes usarlo ahora.');removeBag(m,id,1);m.hp=Math.min(m.maxHp,m.hp+(item.heal||(id==='medkit'?24:14)));if(w.run?.status==='active'){w.run.ownedStock[id]=Math.max(0,(w.run.ownedStock[id]||0)-1);sync(w.run);updateCheckpoint(data,w);}return w;}
+export function recover(data,source){const w=copy(source);need(atHeroes(data,w),'Viaja a Los Héroes para recuperarte.');const party=activeParty(w);need(party.some(c=>c.hp<c.maxHp||c.bleed),'El equipo ya está recuperado.');need(w.credits>=8,'Necesitas 8 créditos.');w.credits-=8;party.forEach(c=>{c.hp=c.maxHp;c.bleed=0;});if(w.run?.status==='active')updateCheckpoint(data,w);return w;}
+export function heal(data,source,id){const w=copy(source),r=w.run;need(r?.status==='active'&&!r.pending,'Resuelve el encuentro antes de atender al equipo.');const c=r.party.find(c=>c.id===id);need(c&&(c.hp<c.maxHp||c.bleed),'Ese Mensajero no necesita un botiquín.');spend(r,{medkit:1});c.hp=Math.min(c.maxHp,c.hp+24);c.bleed=0;updateCheckpoint(data,w);return w;}
+export function useItem(data,source,memberId,id){const w=copy(source),party=activeParty(w),m=party.find(x=>x.id===memberId),item=data.items[id];need(!w.run?.pending?.combat,'Usa el inventario de combate durante una batalla.');need(m&&(item?.kind==='medical'||id==='medkit'),'Ese objeto no puede usarse.');need(bagCount(m,id)>0&&(m.hp<m.maxHp||m.bleed),'No puedes usarlo ahora.');removeBag(m,id,1);m.hp=Math.min(m.maxHp,m.hp+(item.heal||(id==='medkit'?24:14)));m.bleed=0;if(w.run?.status==='active'){w.run.ownedStock[id]=Math.max(0,(w.run.ownedStock[id]||0)-1);sync(w.run);updateCheckpoint(data,w);}return w;}
 export function transfer(data,source,fromId,toId,id,qty=1){
  const w=copy(source),party=activeParty(w),from=party.find(x=>x.id===fromId),to=party.find(x=>x.id===toId);
  need(!w.run?.pending?.combat,'Termina el combate antes de transferir equipo.');
@@ -362,18 +414,18 @@ export function learn(data,source,memberId,skillId){const w=copy(source);need(!w
 export function rewardForecast(data,w){const r=w.run,m=Base.mission(data,w);if(!r||!m||m.type==='travel')return null;if(r.status==='completed'&&r.receipt?.gross!==undefined){const p=r.receipt;return{gross:p.gross,amount:p.amount,late:p.late,penalty:p.penalty,limit:p.timeLimit,minutes:p.minutes};}const gross=m.reward.base+(r.combats===0?m.reward.stealth_bonus:0),late=Math.max(0,r.minutes-(r.timeLimit??m.time_limit)),penalty=Math.min(Math.floor(gross*.5),Math.ceil(late/m.late_step_minutes)*m.late_penalty);return{gross,amount:gross-penalty,late,penalty,limit:r.timeLimit??m.time_limit,minutes:r.minutes};}
 export function restore(data,text){
  const migrated=restoreTerms(data,restoreCorridors(data,JSON.parse(migrateNetworkSave(data,text))));
- const w=Base.restore(data,JSON.stringify(migrated));if(w.matiasBridge!==undefined)bridge.cargo(w.matiasBridge);if(w.rosaBridge!==undefined)rosaBridge.cargo(w.rosaBridge);need(w.mode==='production'&&Array.isArray(w.crew)&&Array.isArray(w.effects)&&w.stock,'Guardado de encargos inválido.');w.location??=(w.run&&Base.here(data,w)?.id)||'heroes';w.hubVisits??=0;
+ const w=Base.restore(data,JSON.stringify(migrated));if(w.matiasBridge!==undefined)bridge.cargo(w.matiasBridge);if(w.rosaBridge!==undefined)rosaBridge.cargo(w.rosaBridge);need(w.mode==='production'&&Array.isArray(w.crew)&&Array.isArray(w.effects)&&w.stock,'Guardado de encargos inválido.');w.collection??=[];need(Array.isArray(w.collection)&&new Set(w.collection).size===w.collection.length&&w.collection.every(id=>COLLECTIBLES.includes(id)),'Recolección inválida.');w.location??=(w.run&&Base.here(data,w)?.id)||'heroes';w.hubVisits??=0;
  for(const c of w.crew)memberBase(data,c);
  if(w.run){const r=w.run;
   if(r.startIndex!==undefined)need(Number.isInteger(r.startIndex)&&r.startIndex>=0&&r.startIndex<=r.index&&!!data.missions[r.mission]&&(Base.mission(data,w).entry_points||[{index:0}]).some(p=>p.index===r.startIndex),'Punto de incorporación inválido.');
   r.party.forEach(c=>memberBase(data,c));r.ownedStock??=copy(w.stock||{});r.borrowedStock??={};r.flags??=[];r.used??={};r.timeLimit??=(Base.mission(data,w).time_limit??null);r.rewardPenalty??=0;
   if(!r.party.some(c=>c.bag?.length)){for(const [id,n]of Object.entries(r.supplies||{}))distribute(data,r.party,id,n);}sync(r);
-  const combat=r.pending?.combat;if(combat){combat.phase??='combat';combat.enemies.forEach((e,i)=>e.loot??=lootFor(w,e.id==='drone',r.combatSerial||0,i));}
+  const combat=r.pending?.combat;if(combat){combat.phase??='combat';combat.synergy??=0;combat.synergyReadyRound??=1;combat.cooldowns??={};combat.enemies.forEach((e,i)=>{e.loot??=lootFor(w,e.id==='drone',r.combatSerial||0,i);e.bleed??=0;});need(Number.isInteger(combat.synergy)&&combat.synergy>=0&&combat.synergy<=100&&Number.isInteger(combat.synergyReadyRound)&&combat.synergyReadyRound>=1&&combat.cooldowns&&typeof combat.cooldowns==='object'&&!Array.isArray(combat.cooldowns)&&Object.entries(combat.cooldowns).every(([id,round])=>data.crew.some(x=>x.id===id)&&Number.isInteger(round)&&round>=1)&&combat.enemies.every(e=>(!e.weapon||data.items[e.weapon]?.kind==='weapon')&&Number.isInteger(e.bleed)&&e.bleed>=0&&e.bleed<=3&&e.loot.every(x=>Number.isInteger(x.qty)&&x.qty>=0&&(x.collectible?COLLECTIBLES.includes(x.id):!!data.items[x.id]))),'Combate inválido.');}
   if(r.pending?.gate)validatedGate(data,w);
   if(r.checkpoint?.snapshot?.party)r.checkpoint.snapshot.party.forEach(c=>memberBase(data,c));
  }
  for(const party of [w.crew,w.run?.party,w.run?.checkpoint?.snapshot?.party].filter(Boolean)){
-  need(Array.isArray(party)&&party.length===3&&new Set(party.map(x=>x.id)).size===3,'Equipo inválido.');for(const c of party){need(data.crew.some(x=>x.id===c.id)&&Number.isInteger(c.hp)&&c.hp>=0&&c.hp<=c.maxHp&&Number.isInteger(c.level)&&c.level>0&&Number.isInteger(c.xp)&&c.xp>=0,'Estado de Mensajero inválido.');need(Array.isArray(c.bag)&&bagUsed(c)<=bagCapacity(data,c)&&c.bag.every(x=>data.items[x.id]&&Number.isInteger(x.qty)&&x.qty>0),'Mochila inválida.');need(Array.isArray(c.skills)&&new Set(c.skills).size===c.skills.length&&c.skills.length<=c.level&&c.skills.every(id=>{const s=data.skillTrees[c.id]?.find(s=>s.id===id);return s&&(!s.requires||c.skills.includes(s.requires));}),'Habilidades inválidas.');}
+  need(Array.isArray(party)&&party.length===3&&new Set(party.map(x=>x.id)).size===3,'Equipo inválido.');for(const c of party){c.bleed??=0;need(data.crew.some(x=>x.id===c.id)&&Number.isInteger(c.hp)&&c.hp>=0&&c.hp<=c.maxHp&&Number.isInteger(c.level)&&c.level>0&&Number.isInteger(c.xp)&&c.xp>=0&&Number.isInteger(c.bleed)&&c.bleed>=0&&c.bleed<=3,'Estado de Mensajero inválido.');need(Array.isArray(c.bag)&&bagUsed(c)<=bagCapacity(data,c)&&c.bag.every(x=>data.items[x.id]&&Number.isInteger(x.qty)&&x.qty>0),'Mochila inválida.');need(Array.isArray(c.skills)&&new Set(c.skills).size===c.skills.length&&c.skills.length<=c.level&&c.skills.every(id=>{const s=data.skillTrees[c.id]?.find(s=>s.id===id);return s&&(!s.requires||c.skills.includes(s.requires));}),'Habilidades inválidas.');}
  }
  return normalizeOutcomes(refreshJimenez(refreshGuzman(refreshBeatriz(refreshAftermath(restoreProgression(data,restoreEncounters(w)))))));
 }
@@ -395,7 +447,7 @@ export function collectLoot(data,source,enemyIndex,memberId,itemId=null){
  need(source.run?.status==='active'&&c?.phase==='loot'&&e&&p?.hp>0,'Selecciona un saqueador con vida.');
  const drops=e.loot.filter(x=>x.qty>0&&(itemId===null||x.id===itemId));
  need(drops.length,'Ese objeto ya no está disponible.');
- need(drops.reduce((n,x)=>n+x.qty,0)<=bagCapacity(data,p)-bagUsed(p),'No cabe todo el loot seleccionado en la mochila.');
+ need(drops.reduce((n,x)=>n+(x.collectible?0:x.qty),0)<=bagCapacity(data,p)-bagUsed(p),'No cabe todo el loot seleccionado en la mochila.');
  let w=source;
  for(const drop of drops){const qty=drop.qty;for(let i=0;i<qty;i++)w=takeLoot(data,w,enemyIndex,memberId,drop.id);
   const taken=w.run.pending.combat.enemies[enemyIndex].loot.find(x=>x.id===drop.id);taken.originalQty=qty;taken.status='taken';}

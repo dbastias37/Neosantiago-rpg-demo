@@ -22,6 +22,47 @@ test('purchased tools survive delivery without crafting; borrowed loadout is not
 test('returning a failed assignment cannot strand a penniless exhausted team',async()=>{const {E,d,w}=await setup();w.run.status='failed';w.run.party.forEach(c=>c.hp=0);assert.throws(()=>E.start(d,w,'adasme-01'),/interrumpido/);const returned=E.abandon(d,w);assert.throws(()=>E.start(d,returned,'adasme-01'),/Viaja/);const stopped=E.travelToMission(d,returned,'adasme-01');assert.equal(stopped.run.status,'failed');const next=E.retry(d,stopped);assert.ok(next.run.party.every(c=>c.hp>=Math.ceil(c.maxHp*.5)));assert.equal(next.credits,0);});
 test('skill branches enforce costs, prerequisites, persistence and migrate old saves',async()=>{const {E,d,w}=await setup();assert.throws(()=>E.learn(d,w,'tomas','focus'),/anterior/);let n=E.learn(d,w,'tomas','echo');assert.equal(E.skillPoints(n.run.party[1]),0);assert.throws(()=>E.learn(d,n,'tomas','exit'));assert.deepEqual(E.restore(d,E.serialize(n)),n);n.run.status='failed';n=E.retry(d,n);assert.ok(n.run.party[1].skills.includes('echo'));const old=JSON.parse(E.serialize(w));for(const party of [old.crew,old.run.party,old.run.checkpoint.snapshot.party])for(const c of party)delete c.skills;assert.equal(E.skillPoints(E.restore(d,JSON.stringify(old)).run.party[1]),1);});
 async function fightState(){const {E,d}=await setup();for(let seed=0;seed<100;seed++){let w=E.advance(d,E.start(d,atOrigin(d,connectedWorld(E,d,{seed}),'adasme-01'),'adasme-01'));if(w.run.pending.category==='hostile')return {E,d,w:E.choose(d,w,'fight')};}throw Error('No hostile seed');}
+test('each courier battle assigns one collectible to a body and keeps it outside a full bag',async()=>{
+ const {E,d,w:initial}=await fightState(),c=initial.run.pending.combat,drops=c.enemies.flatMap((e,i)=>e.loot.filter(x=>x.collectible).map(x=>({i,...x})));
+ assert.equal(drops.length,1);assert.equal(drops[0].qty,1);
+ let w=structuredClone(initial);w.run.pending.combat.phase='loot';w.run.party[0].bag=[{id:'scrap',qty:E.bagCapacity(d,w.run.party[0])}];
+ const before=w.run.minutes;w=E.collectLoot(d,w,drops[0].i,'rocio',drops[0].id);
+ assert.deepEqual(w.collection,[drops[0].id]);assert.equal(w.run.minutes,before);assert.equal(w.run.pending.combat.enemies[drops[0].i].loot.find(x=>x.id===drops[0].id).status,'taken');
+ assert.deepEqual(E.restore(d,E.serialize(w)).collection,w.collection);
+ const old=structuredClone(initial);delete old.collection;assert.deepEqual(E.restore(d,E.serialize(old)).collection,[]);
+});
+test('courier skills unlock per ally, spend a turn and observe a one-round cooldown',async()=>{
+ const {E,d,w:initial}=await fightState();let w=structuredClone(initial);w.run.party[0].skills.push('tactic-aim');
+ assert.ok(E.options(d,w).some(x=>x.id==='tactic-aim'));const ammo=w.run.supplies.ammo9;
+ w=E.choose(d,w,'tactic-aim');assert.equal(w.run.supplies.ammo9,ammo-1);assert.equal(w.run.pending.combat.actor,1);
+ w.run.pending.combat.actor=0;assert.ok(!E.options(d,w).some(x=>x.id==='tactic-aim'));
+ w.run.pending.combat.round+=2;assert.ok(E.options(d,w).some(x=>x.id==='tactic-aim'));
+ assert.deepEqual(E.restore(d,E.serialize(w)).run.pending.combat.cooldowns,w.run.pending.combat.cooldowns);
+});
+test('synergy requires all three allies and 100%, then attempts one action per ally with cooldown',async()=>{
+ const {E,d,w:initial}=await fightState();let w=structuredClone(initial),c=w.run.pending.combat;
+ assert.ok(!E.options(d,w).some(x=>x.id==='synergy'));
+ c.synergy=100;c.enemies.forEach(e=>{e.hp=200;e.maxHp=200;});
+ const ammo=w.run.supplies.ammo9,before=c.turn;
+ w=E.choose(d,w,'synergy');c=w.run.pending.combat;
+ assert.equal(c.turn,before+1);assert.equal(c.synergy,0);assert.equal(w.run.supplies.ammo9,ammo);
+ assert.equal(w.run.log.filter(x=>/ inflige | falla el ataque/.test(x)).length,3);
+ assert.equal(c.synergyReadyRound,4);c.synergy=100;c.actor=0;
+ assert.ok(!E.options(d,w).some(x=>x.id==='synergy'));c.round=4;
+ assert.ok(E.options(d,w).some(x=>x.id==='synergy'));
+ w.run.party[1].hp=0;assert.ok(!E.options(d,w).some(x=>x.id==='synergy'));
+});
+test('a failed disarm wounds the ally, a successful one removes the real weapon and guarantees loot',async()=>{
+ const {E,d,w:initial}=await fightState();let failure=false,success=false;
+ for(let seed=1;seed<120&&(!failure||!success);seed++){
+  const w=structuredClone(initial);w.seed=seed;w.run.party[2].skills.push('tactic-disarm','tactic-knock');w.run.pending.combat.actor=2;w.run.pending.combat.target=1;
+  const old=w.run.party[2].hp,enemy=w.run.pending.combat.enemies[1],gun=enemy.weapon;
+  const n=E.choose(d,w,'tactic-disarm'),next=n.run.pending.combat.enemies[1];
+  if(!next.weapon){success=true;assert.ok(next.loot.some(x=>x.id===gun&&x.qty===1));}
+  else if(n.run.party[2].hp<old){failure=true;assert.equal(next.weapon,gun);}
+ }
+ assert.ok(success&&failure);
+});
 test('blind courier has lower accuracy; listening costs a turn, persists and improves melee only',async()=>{let {E,d,w}=await fightState();w.run.pending.combat.actor=1;const base=E.hitChance(d,w,'melee'),fire=E.hitChance(d,w,'fire');assert.ok(base<=.6);assert.ok(fire<=.45);const turn=w.run.pending.combat.turn;w=E.choose(d,w,'listen');assert.equal(w.run.pending.combat.turn,turn+1);assert.equal(w.run.pending.combat.actor,2);w=E.restore(d,E.serialize(w));w.run.pending.combat.actor=1;assert.ok(E.hitChance(d,w,'melee')>base);assert.equal(E.hitChance(d,w,'fire'),fire);w=E.choose(d,w,'melee');assert.equal(w.run.pending.combat.listening,false);});
 test('guided retreat preserves passage and alert, reduces wear, and needs conscious Tomas',async()=>{let {E,d,w}=await fightState();const condition=w.run.condition,index=w.run.index,regions={...w.regions};let n=E.choose(d,w,'guided-retreat');assert.equal(n.run.index,index);assert.deepEqual(n.regions,regions);assert.ok(condition-n.run.condition<12);w.run.party[1].hp=0;assert.ok(!E.options(d,w).some(o=>o.id==='guided-retreat'));});
 test('Los Héroes is required for trade, vendor stock goes to a chosen bag, and fabrication is disabled',async()=>{const {E,d,w}=await setup();assert.throws(()=>E.sell(d,w,'water','rocio'),/Los Héroes/);assert.throws(()=>E.travelHeroes(d,w),/Termina/);let n=E.abandon(d,w);n=finish(E,d,E.travelHeroes(d,n));n.credits=30;n=E.buy(d,n,'trap','tomas');assert.ok(n.crew.find(c=>c.id==='tomas').bag.some(x=>x.id==='trap'));const paid=n.credits;n=E.sell(d,n,'trap','tomas');assert.equal(n.credits,paid+4);assert.throws(()=>E.craft(d,n,'trap'),/no pueden fabricar/);assert.equal(d.recipes.length,0);});
