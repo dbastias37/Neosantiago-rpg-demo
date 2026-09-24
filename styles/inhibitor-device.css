@@ -1,0 +1,118 @@
+/* The signal puzzle is an instrument: a map display above a physical input deck. */
+.signal-game{min-width:0}
+.signal-modal:has(.signal-game:not(.hidden)) .signal-actions{display:none}
+
+.signal-map-display{
+  min-width:0;
+  padding:8px 9px 7px;
+  border:1px solid #58605b;
+  background:linear-gradient(150deg,#202721,#111715 45%,#25271f);
+  box-shadow:inset 0 1px rgba(242,202,133,.25),inset 0 -2px #080d0d,0 7px 20px rgba(0,0,0,.38);
+}
+.signal-map-header,.signal-map-footer{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  min-width:0;color:#b8c7ba;font:700 8px/1.3 ui-monospace,SFMono-Regular,Consolas,monospace;
+  letter-spacing:.12em;white-space:nowrap;
+}
+.signal-map-header{padding:1px 3px 7px;color:#ddbb7e}
+.signal-map-header strong{color:var(--cyan);font:inherit;letter-spacing:.04em;flex:none}
+.signal-map-footer{padding:7px 3px 1px;color:#8eaca6;font-size:7px}
+.signal-map-header span,.signal-map-footer span{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.signal-map-screen{
+  position:relative;isolation:isolate;min-width:0;min-height:117px;
+  display:grid;align-items:center;overflow:hidden;padding:30px 12px;
+  border:1px solid #557975;
+  background-color:#091b1c;
+  background-image:radial-gradient(ellipse at 38% 36%,rgba(78,164,157,.16),transparent 50%),
+    repeating-linear-gradient(0deg,transparent 0 21px,rgba(112,180,172,.1) 22px),
+    repeating-linear-gradient(90deg,transparent 0 25px,rgba(112,180,172,.08) 26px);
+  box-shadow:inset 0 0 0 3px rgba(1,7,8,.75),inset 0 0 25px rgba(0,0,0,.8),0 1px rgba(255,255,255,.1);
+}
+.signal-map-screen:before,.signal-map-screen:after{
+  content:"";position:absolute;z-index:0;pointer-events:none;
+}
+.signal-map-screen:before{inset:0;background:linear-gradient(180deg,transparent 48%,rgba(0,0,0,.14) 50%,transparent 52%);background-size:100% 5px;opacity:.38}
+.signal-map-screen:after{left:10px;bottom:9px;width:30px;height:7px;border-left:1px solid var(--cyan);border-bottom:1px solid var(--cyan);opacity:.5}
+.signal-map-trace{position:absolute;inset:0;width:100%;height:100%;z-index:0;fill:none;stroke:#70b9aa;stroke-width:1;opacity:.42;pointer-events:none}
+.signal-map-trace circle{fill:#d9a15c;stroke:none}
+.signal-sequence{
+  position:relative;z-index:1;min-width:0;width:100%;display:grid;
+  grid-template-columns:repeat(var(--signal-count,11),minmax(0,1fr));
+  gap:clamp(2px,.45vw,6px);white-space:nowrap;
+}
+.signal-sequence span{
+  position:relative;display:grid;place-items:center;min-width:0;height:clamp(33px,4.6vw,47px);
+  padding:0 0 4px;border:1px solid rgba(143,206,194,.67);color:#ddf4e9;
+  background:linear-gradient(180deg,rgba(16,52,52,.96),rgba(7,27,28,.96));
+  box-shadow:inset 0 1px rgba(211,243,226,.14),0 1px 6px rgba(0,0,0,.58);
+  font:800 clamp(16px,2vw,24px)/1 ui-monospace,SFMono-Regular,Consolas,monospace;
+  text-shadow:0 0 9px rgba(117,211,215,.48);
+}
+.signal-sequence span:after{
+  content:attr(data-step);position:absolute;right:2px;bottom:2px;color:#97afa8;
+  font:700 6px/1 ui-monospace,SFMono-Regular,Consolas,monospace;
+}
+.signal-sequence span.done{border-color:#ab8651;color:#e9b568;background:linear-gradient(180deg,#473c28,#28271d);text-shadow:0 0 8px rgba(217,161,92,.35)}
+.signal-sequence span.current{border-color:#c4f1de;box-shadow:inset 0 -3px #b5ddd1,0 0 13px rgba(129,224,207,.58)}
+.signal-sequence span.error{border-color:var(--red);color:#f48d81;background:#4a2222;animation:signalShake .25s ease}
+
+.signal-keyboard{
+  position:relative;width:min(100%,262px);margin:13px auto 1px;padding:10px 14px 14px;
+  border:1px solid #5a5343;border-radius:7px;
+  background:linear-gradient(145deg,#444137,#222720 34%,#252b27 75%,#151a17);
+  box-shadow:inset 0 2px rgba(254,226,164,.23),inset 0 -4px #111511,0 6px 0 #070b0a,0 13px 26px rgba(0,0,0,.6);
+}
+.signal-keyboard:before,.signal-keyboard:after{
+  content:"";position:absolute;top:9px;width:4px;height:4px;border-radius:50%;
+  background:#080b0a;box-shadow:inset 1px 1px #a18a64,0 1px rgba(255,255,255,.1);
+}
+.signal-keyboard:before{left:9px}.signal-keyboard:after{right:9px}
+.signal-keyboard-label{display:flex;justify-content:space-between;gap:6px;margin:0 7px 9px;color:#bcab83;font:700 7px/1.3 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.08em}
+.signal-pad{display:grid;grid-template-columns:repeat(3,minmax(47px,59px));grid-template-rows:repeat(2,53px);gap:7px;justify-content:center}
+.signal-pad button{
+  position:relative;display:grid;place-items:center;min-width:0;min-height:44px;padding:2px 0 7px;
+  border:1px solid #988769;border-radius:4px;color:#f0bd76;
+  background:linear-gradient(165deg,#48504a 0%,#323831 23%,#232a27 76%,#161c1b 100%);
+  box-shadow:inset 0 2px rgba(255,242,208,.34),inset 2px 0 rgba(255,255,255,.08),inset 0 -4px #101513,0 4px 0 #0a100f,0 6px 6px rgba(0,0,0,.5);
+  font:900 25px/1 ui-monospace,SFMono-Regular,Consolas,monospace;
+  text-shadow:0 1px #171715,0 0 10px rgba(244,184,103,.26);
+  cursor:pointer;touch-action:manipulation;user-select:none;-webkit-tap-highlight-color:transparent;
+}
+.signal-pad button small{position:absolute;right:5px;bottom:4px;color:#a8b3a4;font:700 7px/1 ui-monospace,SFMono-Regular,Consolas,monospace}
+.signal-pad button:first-child{grid-column:2}
+.signal-pad button:nth-child(2){grid-row:2;grid-column:1}
+.signal-pad button:nth-child(3){grid-row:2;grid-column:2}
+.signal-pad button:nth-child(4){grid-row:2;grid-column:3}
+.signal-pad button:hover{border-color:#ecc68d;color:#ffe0a8}
+.signal-pad button:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
+.signal-pad button:active{transform:translateY(3px);box-shadow:inset 0 3px #0c1110,inset 0 -1px #5c5747,0 1px 0 #0a100f;background:#252c29}
+
+@media(max-width:600px){
+  .signal-map-display{padding:6px}
+  .signal-map-screen{min-height:100px;padding:25px 5px}
+  .signal-sequence{gap:2px}
+  .signal-sequence span{height:33px;font-size:clamp(14px,4.1vw,18px)}
+  .signal-map-header{font-size:7px;letter-spacing:.04em}
+  .signal-map-footer{font-size:6px;letter-spacing:0}
+  .signal-keyboard{margin-top:11px}
+}
+@media(max-height:620px) and (orientation:landscape){
+  .signal-game{
+    display:grid;grid-template-columns:minmax(0,1fr) 198px;
+    grid-template-areas:"read read" "timer timer" "instruction instruction" "map keyboard";
+    gap:4px 12px;
+  }
+  .signal-readouts{grid-area:read}.signal-timer{grid-area:timer;margin:1px 0 2px}
+  .signal-instruction{grid-area:instruction;margin:0}
+  .signal-map-display{grid-area:map;align-self:stretch;padding:6px}
+  .signal-map-screen{min-height:91px;padding:23px 6px}
+  .signal-map-header{font-size:7px;padding-bottom:4px}
+  .signal-map-footer{font-size:6px;padding-top:4px}
+  .signal-sequence{gap:3px}
+  .signal-sequence span{height:34px;font-size:17px}
+  .signal-keyboard{grid-area:keyboard;align-self:stretch;width:100%;margin:0;padding:8px 9px 10px}
+  .signal-keyboard-label{margin:0 8px 6px;font-size:6px}
+  .signal-pad{grid-template-columns:repeat(3,47px);grid-template-rows:repeat(2,45px);gap:5px}
+  .signal-pad button{font-size:20px}
+}
+@media(prefers-reduced-motion:reduce){.signal-sequence span.error{animation:none}}
