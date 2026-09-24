@@ -36,6 +36,10 @@ test('Rosa production: real Ana escort, physical reception, shared refuge, reloa
   for(const arrow of await page.locator('#signalSequence span').allTextContents())await page.keyboard.press(keys[arrow]);
  }
  await expect(page.locator('#signalOutcomeTitle')).toHaveText('Identidad falsa activada');await page.locator('#signalPrimary').click();await expect(page.locator('#signalModal')).toBeHidden();
+ await expect(page.locator('#expeditionOrientation')).toBeVisible();
+ await page.locator('#expeditionOrientation summary').click();
+ await expect(page.locator('#expeditionPurpose')).toContainText('gastando agua');
+ await expect(page.locator('#expeditionPurpose')).toContainText('patrulla permanecerá');
  await expect(page.getByRole('button',{name:/Guiar a los civiles hasta el relevo acordado con Ana/})).toBeVisible();
  await page.getByRole('button',{name:/Guiar a los civiles hasta el relevo acordado con Ana/}).click();expect(await page.evaluate(()=>state.flags.rosaBridgeRouteUsed)).toBe(true);expect(await page.evaluate(()=>!!state.flags.towerCode)).toBe(false);
 });

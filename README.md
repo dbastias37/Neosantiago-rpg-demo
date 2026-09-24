@@ -26,8 +26,10 @@ El libro de referencia de la adaptación está en [Neo Santiago 2130](https://ne
 
 ## Verificación
 
-Instalar las dependencias de desarrollo con `npm install` y ejecutar `npm test`. La comprobación de este bloque V0.3 aprueba 463 pruebas Node. Los límites de esas comprobaciones, incluida la evaluación humana pendiente, están detallados en el informe.
+Instalar las dependencias de desarrollo con `npm install` y ejecutar `npm test`. La comprobación de este bloque V0.3 aprueba 467 pruebas Node. Los límites de esas comprobaciones, incluida la evaluación humana pendiente, están detallados en el informe.
 
 En la rama V0.3: `npm ci`, `npm test` y `npm run validate`. Para la segunda capa, `npx playwright install --with-deps chromium` y `npm run test:e2e`. La [guía QA](docs/v0.3/qa.md) explica la matriz de siete pantallas, los fixtures y sus límites; la [baseline de rendimiento](docs/v0.3/performance.md) permite repetir las mediciones.
 
 Las [conexiones de comunidad](docs/v0.3/community-links-production.md) se juegan desde la campaña: Matías–Adasme tras la primera noche y Rosa–Ana tras la segunda, si las decisiones anteriores conservaron esos vínculos. No requieren entrar al laboratorio.
+
+La [continuidad de escenas y guardados](docs/v0.3/scene-continuity.md) describe los IDs estables, la lectura compatible de partidas V0.2 y los acoplamientos que aún deben migrarse antes de insertar escenas.

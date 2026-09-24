@@ -74,6 +74,19 @@ test('a route already agreed with Noa cannot be replaced by a late medical optio
  const {ctx:c}=campaign();c.acceptMedicalBridge();c.state.matiasBridge={...c.state.matiasBridge,stage:'reviewed',courierId:randomUUID(),source:'direct'};c.state.index=10;
  const choice=c.eventDisplay(c.events[10],10).choices[0];c.recordNoaRouteDecision(choice);assert.equal(c.medicalRoutePassed(),true);assert.equal(c.eventDisplay(c.events[10],10).choices.some(x=>x.flags?.matiasBridgeRouteUsed),false);assert.match(c.medicalText(),/después del paso/);
 });
+
+test('the existing expedition orientation explains the live medical handoff before República',()=>{
+ const a=campaign(),c=a.ctx;c.acceptMedicalBridge();
+ assert.equal(JSON.parse(a.storage.get(c.KEY)).sceneId,'d2-drone-pulse');
+ c.state.refuge.active=false;c.renderExpeditionOrientation(c.events[9]);
+ assert.match(a.nodes.get('expeditionPurpose').textContent,/reserva médica sigue en camino/);
+ assert.equal(a.nodes.get('expeditionOrientation').classList.contains('hidden'),false);
+ c.state.matiasBridge={...c.state.matiasBridge,stage:'reviewed',courierId:randomUUID(),source:'direct'};
+ c.state.index=10;c.renderExpeditionOrientation(c.events[10]);
+ assert.match(a.nodes.get('expeditionPurpose').textContent,/marca baja/);
+ c.state.index=11;c.renderExpeditionOrientation(c.events[11]);
+ assert.equal(a.nodes.get('expeditionOrientation').classList.contains('hidden'),true);
+});
 test('courier UI does not claim collection when persistence fails; retry writes once',async()=>{
  const {E,d}=await setup(),{medicalUI}=await import('../extensions/mensajeros/medical-bridge-ui.mjs');let w=B.join(E.createWorld(d),request(),randomUUID());w.location='vicuna';w=E.restore(d,E.serialize(w));const before=copy(w),messages=[];
  globalThis.NeoBridgeContext={variant:'B',key:x=>x};globalThis.localStorage={setItem(){throw Error('quota')}};
