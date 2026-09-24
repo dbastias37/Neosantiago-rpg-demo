@@ -1,10 +1,10 @@
-#battle .stage-status-card.with-synergy{position:relative;padding-left:22px}
-#battle .stage-status-card .synergy-meter{position:absolute;left:2px;top:0;width:12px;height:calc(100% - 3px);min-height:52px;border:1px solid #72c9b3;background:#0a1717;overflow:hidden;display:flex;align-items:flex-end}
-#battle .synergy-meter>span{display:block;width:100%;background:linear-gradient(0deg,#276c70,#85dfd0,#e4be77);transition:height .65s ease-out}
-#battle .synergy-meter>span.growing{animation:synergyRise .7s ease-out both}
-@keyframes synergyRise{from{height:var(--synergy-from)}to{height:var(--synergy-to)}}
-#battle .stage-status-card .synergy-caption{position:absolute;left:21px;bottom:-13px;font-size:8px;line-height:1;letter-spacing:.04em;color:#85dfd0;white-space:nowrap}
-#battle .stage-status-card .synergy-caption b{color:#efcb87}
+#battle .stage-status-card .synergy-status{grid-template-columns:max-content minmax(0,1fr) 36px;gap:6px}
+#battle .synergy-status>span{color:#85dfd0;white-space:nowrap}
+#battle .synergy-status>b{color:#efcb87;font-variant-numeric:tabular-nums}
+#battle .stage-status-card .synergy-meter{position:relative;height:8px;min-width:0;border:1px solid #72c9b3;background:#0a1717;overflow:hidden}
+#battle .synergy-meter>span{display:block;height:100%;background:linear-gradient(90deg,#276c70,#85dfd0,#e4be77);transition:width .65s ease-out}
+#battle .synergy-meter>span.growing{animation:synergyFill .7s ease-out both}
+@keyframes synergyFill{from{width:var(--synergy-from)}to{width:var(--synergy-to)}}
 #battle .stage-status-card .status-heading{display:flex;justify-content:space-between;align-items:baseline;gap:7px;margin-bottom:4px}
 #battle .combat-console .actions{grid-template-columns:repeat(6,minmax(0,1fr))}
 #battle .combat-console .actions:not(:has(.synergy-action)){grid-template-columns:repeat(5,minmax(0,1fr))}
@@ -15,8 +15,8 @@
 #battle .tactics-tray button{flex:1 0 auto;min-height:30px;padding:5px 9px;border:1px solid #7ba9a4;background:#10201e;color:#c5e8db;font:700 12px Arial,sans-serif;cursor:pointer}
 #battle .tactics-tray button:disabled{opacity:.45;cursor:default}
 #battle .tactics-tray button:not(:disabled):hover,#battle .tactics-tray button:focus-visible{border-color:#f0c98b;color:#fff}
-@media(max-width:600px){#battle .combat-console .actions{grid-template-columns:repeat(3,minmax(0,1fr))}#battle .tactics-tray button{font-size:11px;min-height:28px}#battle .stage-status-card .synergy-caption{font-size:7px}}
-@media(max-height:500px) and (min-aspect-ratio:1/1){#battle .combat-console .actions{grid-template-columns:repeat(6,minmax(0,1fr))}#battle .tactics-tray button{min-height:22px;font-size:10px}#battle .stage-status-card .synergy-caption{display:none}}
+@media(max-width:600px){#battle .combat-console .actions{grid-template-columns:repeat(3,minmax(0,1fr))}#battle .tactics-tray button{font-size:11px;min-height:28px}}
+@media(max-height:500px) and (min-aspect-ratio:1/1){#battle .combat-console .actions{grid-template-columns:repeat(6,minmax(0,1fr))}#battle .tactics-tray button{min-height:22px;font-size:10px}}
 @media(prefers-reduced-motion:reduce){#battle .synergy-meter>span{transition:none;animation:none!important}}
 .collection-intro{color:#b7c5bb;line-height:1.5;margin:0 0 16px}
 .collection-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;padding-bottom:25px}

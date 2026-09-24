@@ -71,7 +71,7 @@ await script('collection-catalog.js?v=1');
 await script('audio-catalog.js?v=1');
 await script('audio-availability.js?v=1');
 await script('combat-common.js?v=2-audio');
-await script('combat-stage.js?v=5-mobile-arrows');
+await script('combat-stage.js?v=6-horizontal-synergy');
 window.loadAudioRoutes();
 window.audioUnlocked=true;
 const tray=document.createElement('div');tray.id='fieldSkillTray';tray.className='hidden';tray.setAttribute('aria-label','Habilidades disponibles');document.querySelector('.combat-console').append(tray);window.fieldSkillTray=tray;

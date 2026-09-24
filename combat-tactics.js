@@ -78,5 +78,5 @@ function renderBattleTactics(){
   tray.classList.toggle("hidden",!nodes.length);tray.querySelectorAll("[data-tactic]").forEach(function(button){button.onclick=function(){combatAction("tactic:"+button.dataset.tactic)}});
   var synergy=$("activateSynergy");synergy.disabled=disabled||b.synergy!==100||b.round<b.synergyReadyRound||state.party.some(function(a){return a.hp<=0});synergy.title="Tres ataques en una acción · requiere 100% y los tres aliados en pie · enfriamiento de 2 rondas";
   synergy.textContent="Activar sinergia"+(b.round<b.synergyReadyRound?" · "+(b.synergyReadyRound-b.round)+" rondas":"");
-  var meter=$("synergyFill");meter.style.height=(b.synergy||0)+"%";$("synergyValue").textContent=(b.synergy||0)+"%";
+  var meter=$("synergyFill");meter.style.width=(b.synergy||0)+"%";$("synergyValue").textContent=(b.synergy||0)+"%";
 }
