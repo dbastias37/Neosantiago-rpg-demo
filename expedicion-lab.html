@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#070a09">
+  <title>NeoSantiago 2130 · Laboratorio de expedición</title>
+  <style>body{margin:0;background:#070a09;color:#e8e5dc;font:18px Arial,sans-serif;display:grid;place-items:center;min-height:100dvh}p{max-width:36em;padding:24px;line-height:1.6}a{color:#75d3d7}</style>
+</head>
+<body>
+  <p id="loading" role="status">Preparando la expedición…</p>
+  <script>
+  // Load the existing game unchanged; only this document gets the lab skin and save key.
+  (async function () {
+    try {
+      const response = await fetch('neosantiago-demo.html', {cache:'no-store'});
+      if (!response.ok) throw new Error('No se pudo cargar el juego (' + response.status + ').');
+      let source = await response.text();
+      const key = 'var KEY="neosantiago2130_demo_v3";';
+      if (source.split(key).length !== 2) throw new Error('La versión del juego cambió. El laboratorio necesita actualizar su guardado independiente.');
+      source = source.replace(key, 'var KEY="neosantiago2130_expedicion_lab_v1";');
+      source = source.replace('</head>', '<link rel="stylesheet" href="expedicion-lab.css?v=1"></head>');
+      source = source.replace('</body>', '<script src="expedicion-lab.js?v=1"><\/script></body>');
+      document.open();
+      document.write(source);
+      document.close();
+    } catch (error) {
+      document.getElementById('loading').textContent = error.message + ' Abre este laboratorio desde el servidor del juego.';
+    }
+  }());
+  </script>
+</body>
+</html>
