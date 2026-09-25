@@ -30,6 +30,7 @@
     "cinematic-intro.js",
     "collection-catalog.js",
     "combat-common.js",
+    "combat-controls.js",
     "combat-field.css",
     "combat-stage.css",
     "combat-stage.js",

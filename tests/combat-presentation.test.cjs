@@ -3,7 +3,9 @@ const {parseHTML}=require('linkedom');
 const {boot,root}=require('./runtime-harness.cjs');
 function session(){
  const {document,window}=parseHTML(fs.readFileSync(root+'/neosantiago-demo.html','utf8'));
- window.HTMLElement.prototype.focus=function(){};
+ Object.defineProperty(document,'activeElement',{configurable:true,writable:true,value:null});
+ window.HTMLElement.prototype.focus=function(){document.activeElement=this};
+ window.HTMLElement.prototype.getBoundingClientRect=function(){return {left:0,top:0,width:0,height:0}};
  window.HTMLElement.prototype.load=function(){};window.HTMLElement.prototype.pause=function(){};
  Object.defineProperty(window.HTMLElement.prototype,'scrollHeight',{configurable:true,get(){return 70}});
  Object.defineProperty(window.HTMLElement.prototype,'clientWidth',{configurable:true,get(){return /Units$/.test(this.id)?400:800}});
@@ -119,4 +121,23 @@ test('mobile selectors cycle living allies for loot and enemies without starting
  a.click(d.querySelector('#enemyUnits .stage-front .portrait'));assert.equal(c.battleState.enemies[2].searching,true);
  assert.equal(next('ally').disabled,true);assert.equal(next('enemy').disabled,true);
  c.stageCycleCard('ally',1);assert.equal(c.battleState.looter,2);
+});
+
+test('battle keys select blinking actions, expand attacks and commit only on confirmation',()=>{
+ const a=session(),c=a.ctx,d=a.document;
+ d.getElementById('titleScreen').classList.add('hidden');c.cinematicRunning=false;
+ function key(value){const event=new d.defaultView.Event('keydown',{bubbles:true,cancelable:true});Object.defineProperty(event,'key',{value});d.dispatchEvent(event);return event}
+ const attack=d.querySelector('[data-action="attack"]');
+ assert.ok(attack.classList.contains('battle-selected'));assert.equal(d.activeElement,attack);
+ key('d');assert.equal(d.activeElement.dataset.action,'skill');assert.ok(d.activeElement.classList.contains('battle-selected'));
+ key('ArrowLeft');assert.equal(d.activeElement,attack);
+ const shots=c.state.stats.shots,actor=c.battleState.actor;
+ key('Enter');assert.equal(attack.getAttribute('aria-expanded'),'true');assert.equal(c.battleState.actor,actor);assert.equal(c.state.stats.shots,shots);
+ assert.equal(d.activeElement.id,'basicAttack');key('Escape');assert.equal(attack.getAttribute('aria-expanded'),'false');assert.equal(d.activeElement,attack);
+ key('Enter');key('Enter');assert.equal(c.battleState.busy,true);assert.equal(d.getElementById('attackTray').classList.contains('hidden'),true);
+ let steps=0;while(c.battleState.busy){assert.ok(++steps<80);timer(a,t=>!t.interval)}
+ assert.ok(attack.classList.contains('battle-selected'));assert.equal(d.activeElement,attack);
+ key('w');assert.ok(d.activeElement.classList.contains('battle-selected'));key('s');assert.equal(d.activeElement,attack);
+ c.battleState.enemies.forEach(e=>e.hp=0);c.beginLootPhase();key('Enter');assert.equal(c.battleState.looter,0);
+ const enemy=d.querySelector('[data-battle-card="enemy:0"]');enemy.focus();key('Enter');assert.equal(c.battleState.enemies[0].searching,true);
 });

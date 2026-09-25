@@ -38,6 +38,7 @@ Object.assign(window, {
   },
   itemArt(id,alt) { return '<span class="item-art">'+image(asset(data.items[id].image),alt,'',256,256)+'</span>'; },
   toast(text) { const b=window.battleState;if(b){b.log.push(text);window.renderBattle();}host.announce(text); },
+  stageBasicAttack() {choose(options().some(o=>o.id==='fire'&&E.optionAvailable(current(),o))?'fire':'melee');},
   endPlayerTurn() { pendingTurn = null;sync(); },
   generateLoot(enemy) {
     transact(E.revealLoot, window.battleState.enemies.indexOf(enemy));
@@ -71,7 +72,8 @@ await script('collection-catalog.js?v=1');
 await script('audio-catalog.js?v=1');
 await script('audio-availability.js?v=1');
 await script('combat-common.js?v=2-audio');
-await script('combat-stage.js?v=6-horizontal-synergy');
+await script('combat-stage.js?v=7-input');
+await script('combat-controls.js?v=1');
 window.loadAudioRoutes();
 window.audioUnlocked=true;
 const tray=document.createElement('div');tray.id='fieldSkillTray';tray.className='hidden';tray.setAttribute('aria-label','Habilidades disponibles');document.querySelector('.combat-console').append(tray);window.fieldSkillTray=tray;
@@ -149,6 +151,7 @@ function choose(id){
 document.querySelectorAll('[data-action]').forEach(button=>button.addEventListener('click',()=>{
   window.unlockAudioAmbience();
   const action=button.dataset.action;
+  if(action==='attack'){window.openBattleAttackMenu();return;}
   if(action==='skill'){skills();return;}
   choose(action==='attack'?(options().some(o=>o.id==='fire'&&E.optionAvailable(current(),o))?'fire':'melee'):action==='defend'?'cover':action==='synergy'?'synergy':'retreat');
 }));

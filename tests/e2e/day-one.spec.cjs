@@ -73,6 +73,7 @@ async function firstDay(page,testInfo,rescue,marks){
    }else{
     await page.locator(`[data-stage-target="${b.target}"]`).click();
     await page.locator('[data-action="attack"]').click();
+    await page.locator('#basicAttack').click();
    }
    continue;
   }

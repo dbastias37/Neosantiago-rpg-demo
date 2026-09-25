@@ -33,3 +33,12 @@
 .collection-card.found:hover,.collection-card.found:focus-visible{min-height:180px}
 .collection-drop .collection-loot-mark{flex:none;margin:0;width:48px;height:48px;font-size:14px}
 @media(hover:none){.collection-card.found p{display:block}}
+
+#battle .attack-tray{position:absolute;z-index:65;bottom:calc(100% + 8px);left:0;right:0;display:grid;gap:8px;max-height:55dvh;overflow-y:auto;padding:12px;background:#0d1b17;border:1px solid #85dfd0;box-shadow:0 -10px 30px #0009}
+#battle .attack-tray.hidden{display:none!important}
+#battle .attack-tray>strong{color:#c5e8db;font-size:14px}
+#battle .attack-tray button{min-height:42px;padding:8px 12px;text-align:left;border:1px solid #648c80;background:#132820;color:#e8ecde;font:700 13px Arial,sans-serif;cursor:pointer}
+#battle .attack-tray .tactics-tray{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));overflow:visible}
+#battle .battle-selected,#lootModal .battle-selected,#disassemblyModal .battle-selected,#itemDetailModal .battle-selected{outline:2px solid #efcb87;outline-offset:2px;animation:battleSelection 1.2s ease-in-out infinite}
+@keyframes battleSelection{0%,100%{box-shadow:0 0 0 1px #efcb8766,0 0 5px #efcb8733}50%{box-shadow:0 0 0 2px #efcb87,0 0 16px #efcb8777}}
+@media(prefers-reduced-motion:reduce){.battle-selected{animation:none!important;outline:2px solid #efcb87!important}}

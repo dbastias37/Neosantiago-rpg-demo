@@ -101,11 +101,11 @@ function advanceNarration(){
 }
 advanceButton.onclick=advanceNarration;
 document.addEventListener('keydown',function(e){
- if(e.key!=='Enter'||!battleState||$('battle').classList.contains('hidden'))return;
+ if(e.key!=='Enter'||!battleState||!battleState.busy||$('battle').classList.contains('hidden'))return;
  if(e.target&&e.target.closest&&e.target.closest('.stage-card-arrow'))return;
  if(e.target&&(e.target.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)))return;
  if(document.querySelector('.overlay[aria-modal="true"]:not(.hidden)')||!$('itemTray').classList.contains('hidden')||(typeof fieldSkillTray!=='undefined'&&!fieldSkillTray.classList.contains('hidden')))return;
- // Consume Enter even at the next decision: never activate a focused attack button.
+ // During an action, Enter advances narration once; the menu handles ready turns.
  e.preventDefault();e.stopImmediatePropagation();if(!e.repeat&&!advanceButton.disabled)advanceNarration();
 },true);
 

@@ -120,8 +120,8 @@ function scheduleCrateSuccess(c){
   clearTimeout(crateSuccessTimer);
   var timer=setTimeout(function(){
     if(crateSuccessTimer!==timer||activeCrate()!==c||c.phase!=="unlocking")return;
-    crateSuccessTimer=null;c.phase="loot";c.message="Cierre liberado. Elige quién recoge los suministros.";save();renderCrate();focusCrateControl();
-  },1500);
+    crateSuccessTimer=null;if(!c.solutionFlashed){c.solutionFlashed=true;save();renderCrate();scheduleCrateSuccess(c);return}c.phase="loot";c.message="Cierre liberado. Elige quién recoge los suministros.";save();renderCrate();focusCrateControl();
+  },c.solutionFlashed?1500:1800);
   crateSuccessTimer=timer;
 }
 function focusCrateControl(){
@@ -139,7 +139,7 @@ function resumeCrate(){
 function resetCrateUI(){
   clearTimeout(crateFlashTimer);crateFlashTimer=null;$("crateModal").classList.add("hidden");
   clearTimeout(crateNoticeTimer);crateNoticeTimer=null;clearTimeout(crateSuccessTimer);crateSuccessTimer=null;
-  $("crateModal").classList.remove("fuse-flash","success-flash");
+  $("crateModal").classList.remove("fuse-flash","success-flash","solution-flash");
 }
 function crateLampRow(bits,count,label){
   var lamps="";for(var i=0;i<count;i++)lamps+='<span class="crate-lamp-cell"><i class="crate-lamp '+(bits&(1<<i)?'on':'off')+'" aria-hidden="true"></i><span>'+(i+1)+'</span><span class="sr-only">'+(bits&(1<<i)?'encendida':'apagada')+'</span></span>';
@@ -150,7 +150,8 @@ function renderCrate(){
   $("crateModal").dataset.phase=phase;$("crateModal").dataset.type=c.type;
   $("crateModal").setAttribute("aria-busy",busy?"true":"false");
   $("crateModal").querySelector(".crate-shell").classList.toggle("hidden",phase==="waiting");
-  $("crateModal").classList.toggle("success-flash",phase==="unlocking");
+  $("crateModal").classList.toggle("solution-flash",phase==="unlocking"&&!c.solutionFlashed);
+  $("crateModal").classList.toggle("success-flash",phase==="unlocking"&&!!c.solutionFlashed);
   $("crateTitle").textContent=def.title;$("crateLocation").textContent=c.location;
   $("crateMark").textContent=def.mark;
   $("crateArt").style.backgroundImage='url("'+assetUrl('crates/'+def.art+'.webp')+'")';

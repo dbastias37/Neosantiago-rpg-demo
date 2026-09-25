@@ -89,3 +89,7 @@
 }
 @media(max-height:700px) and (max-width:680px){#crateModal .crate-scene{grid-template-columns:90px 1fr}#crateModal .crate-art{width:90px}#crateModal h2{font-size:22px}#crateModal .crate-head{padding-top:10px}#crateModal .crate-scroll{gap:8px}}
 @media(prefers-reduced-motion:reduce){#crateModal *{animation:none!important;transition:none!important}}
+
+#crateModal.solution-flash #crateLights .crate-lamps{animation:crateSolution .6s ease-in-out 3}
+@keyframes crateSolution{0%,100%{opacity:1}50%{opacity:.2}}
+@media(prefers-reduced-motion:reduce){#crateModal.solution-flash #crateLights .crate-lamps{animation:none}}

@@ -19,7 +19,8 @@ function encounter(type='electronic',phase='help'){
 }
 function flash(a){const id=a.ctx.crateFlashTimer,t=a.timers.get(id);assert.ok(t);a.timers.delete(id);t.fn()}
 function notice(a){const id=a.ctx.crateNoticeTimer,t=a.timers.get(id);assert.ok(t);assert.equal(t.ms,1000);a.timers.delete(id);t.fn()}
-function unlock(a){const id=a.ctx.crateSuccessTimer,t=a.timers.get(id);assert.ok(t);assert.equal(t.ms,1500);a.timers.delete(id);t.fn()}
+function flashSolution(a){const id=a.ctx.crateSuccessTimer,t=a.timers.get(id);assert.ok(t);assert.equal(t.ms,1800);a.timers.delete(id);t.fn()}
+function unlock(a){if(!a.ctx.activeCrate().solutionFlashed)flashSolution(a);const id=a.ctx.crateSuccessTimer,t=a.timers.get(id);assert.ok(t);assert.equal(t.ms,1500);a.timers.delete(id);t.fn()}
 function solve(c){const b=c.activeCrate().board;for(let bits=0;bits<1<<b.masks.length;bits++){let value=b.initial;b.masks.forEach((m,i)=>{if(bits&(1<<i))value^=m});if(value===b.target){for(let i=0;i<b.masks.length;i++)if(!!(bits&(1<<i))!==!!(b.switches&(1<<i)))c.toggleCrateSwitch(i);return}}throw Error('No solution')}
 function wrong(c){const b=c.activeCrate().board;for(let i=0;i<b.masks.length;i++){if((b.current^b.masks[i])!==b.target){c.toggleCrateSwitch(i);return}}throw Error('Cannot produce wrong move')}
 
@@ -184,10 +185,11 @@ test('the correct tenth move opens automatically on either fuse instead of burni
     assert.equal(a.document.activeElement.id,'crateLeave');
   }
 });
-test('success keeps both light rows visible in green for 1.5 seconds before exposing any loot',()=>{
+test('success flashes the solved pattern three times before green lights and loot',()=>{
   for(const type of ['electronic','ammo','medical']){
     const a=encounter(type),c=a.ctx,d=a.document;c.cratePrimary();const drops=json(c.activeCrate().drops);solve(c);
-    assert.equal(c.activeCrate().phase,'unlocking');assert.equal(d.getElementById('crateModal').classList.contains('success-flash'),true);
+    assert.equal(c.activeCrate().phase,'unlocking');assert.equal(d.getElementById('crateModal').classList.contains('solution-flash'),true);assert.equal(d.getElementById('crateModal').classList.contains('success-flash'),false);
+    assert.equal(c.activeCrate().board.current,c.activeCrate().board.target);flashSolution(a);assert.equal(d.getElementById('crateModal').classList.contains('success-flash'),true);assert.equal(d.getElementById('crateModal').classList.contains('solution-flash'),false);
     assert.equal(d.getElementById('crateScreen-playing').classList.contains('hidden'),false);assert.equal(d.getElementById('crateScreen-loot').classList.contains('hidden'),true);
     assert.equal(d.querySelectorAll('.crate-lamp').length,c.activeCrate().board.count*2);assert.equal(d.getElementById('crateArt').classList.contains('opened'),false);
     assert.ok([...d.querySelectorAll('[data-crate-switch]')].every(button=>button.disabled));assert.equal(d.getElementById('crateLeave').disabled,true);

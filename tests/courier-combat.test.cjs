@@ -19,7 +19,7 @@ async function battle(saved){
  await vm.runInContext('(async()=>{'+code+'})()',ctx);
  function click(selector){const el=document.querySelector(selector);assert.ok(el,selector);if(el.onclick)el.onclick();else el.dispatchEvent(new window.Event('click',{bubbles:true,cancelable:true}));}
  function drain(){let n=0;while(ctx.battleState?.busy){assert.ok(++n<100,'turn finishes');const entry=[...timers].find(([,t])=>!t.interval);assert.ok(entry,'pending callback');timers.delete(entry[0]);entry[1].fn();}}
- return {ctx,document,E,data,world:()=>world,stored:()=>stored,errors,sounds,timers,click,drain,refreshes:()=>refreshes};
+ return {attack(){click('[data-action="attack"]');click('#basicAttack');},ctx,document,E,data,world:()=>world,stored:()=>stored,errors,sounds,timers,click,drain,refreshes:()=>refreshes};
 }
 test('couriers mount the shared Exploration cards and controls, skills, inventory and audio',async()=>{
  const a=await battle(),d=a.document,c=a.ctx;
@@ -35,7 +35,7 @@ test('couriers mount the shared Exploration cards and controls, skills, inventor
 });
 test('attack commits ammunition once, narration blocks double attacks, reload resumes the saved actor',async()=>{
  const a=await battle(),ammo=a.world().run.supplies.ammo9;
- a.click('[data-action="attack"]');a.click('[data-action="attack"]');
+ a.attack();a.attack();
  assert.equal(a.world().run.supplies.ammo9,ammo-1);assert.ok(a.ctx.battleState.busy);
  const reload=await battle(a.E.restore(a.data,a.stored()));assert.equal(reload.ctx.battleState.actor,1);
  a.drain();assert.equal(a.ctx.battleState.actor,1);assert.deepEqual(a.errors,[]);
@@ -45,6 +45,7 @@ test('courier tactical tray and animated synergy meter drive saved engine action
  assert.ok(d.querySelector('.synergy-meter'));assert.equal(d.querySelector('#activateSynergy').disabled,true);
  w.run.party[0].skills.push('tactic-aim');c.NeoCourierCombat.sync();
  assert.match(d.querySelector('#tacticsTray').textContent,/Golpe certero/);
+ assert.equal(d.querySelector('#attackTray').classList.contains('hidden'),true);a.click('[data-action="attack"]');assert.equal(d.querySelector('#attackTray').classList.contains('hidden'),false);
  a.click('[data-courier-choice="tactic-aim"]');a.drain();assert.equal(a.world().run.pending.combat.actor,1);
  const b=await battle();b.world().run.pending.combat.synergy=100;b.world().run.pending.combat.enemies.forEach(e=>{e.hp=200;e.maxHp=200});b.ctx.NeoCourierCombat.sync();
  assert.equal(b.document.querySelector('#activateSynergy').disabled,false);
@@ -55,7 +56,7 @@ test('courier tactical tray and animated synergy meter drive saved engine action
 });
 test('victory searches bodies with the same loot modal, persists collection and discard, and returns to route',async()=>{
  const a=await battle();let turns=0;
- while(a.ctx.battleState.phase==='combat'&&turns++<50){a.click('[data-action="attack"]');a.drain();}
+ while(a.ctx.battleState.phase==='combat'&&turns++<50){a.attack();a.drain();}
  assert.ok(turns<50);assert.equal(a.ctx.battleState.phase,'loot');
  a.ctx.selectLooter(0);a.ctx.beginLoot(0);assert.ok(a.ctx.battleState.busy);a.drain();
  assert.equal(a.document.querySelector('#lootModal').classList.contains('hidden'),false);
@@ -77,7 +78,7 @@ test('full bags reject an atomic take-all without losing loot or charging time; 
 
 test('courier mobile arrows select looter and body through the shared presentation',async()=>{
  const a=await battle();let turns=0;
- while(a.ctx.battleState.phase==='combat'&&turns++<50){a.click('[data-action="attack"]');a.drain();}
+ while(a.ctx.battleState.phase==='combat'&&turns++<50){a.attack();a.drain();}
  assert.equal(a.ctx.battleState.phase,'loot');
  a.click('.stage-card-arrow--ally.next');assert.equal(a.ctx.battleState.looter,0);
  a.click('.stage-card-arrow--ally.next');assert.equal(a.ctx.battleState.looter,1);
