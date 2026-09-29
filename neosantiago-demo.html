@@ -15,7 +15,6 @@
   <link rel="stylesheet" href="theme-tokens.css?v=1">
 <link rel="stylesheet" href="outcomes-v3.css?v=1">
   <link rel="stylesheet" href="game-shell.css?v=1">
-  <link rel="stylesheet" href="scene-voice.css?v=1">
   <link rel="stylesheet" href="decision-v2.css?v=3">
   <link rel="stylesheet" href="combat-stage.css?v=4-mobile-arrows">
   <link rel="stylesheet" href="field-upgrades.css?v=3">
@@ -771,19 +770,6 @@
     </article>
   </section>
 
-  <section class="overlay hidden scene-voice-layer" id="sceneVoiceModal" role="dialog" aria-modal="true" aria-labelledby="sceneVoiceName" aria-describedby="sceneVoiceText sceneVoiceStatus">
-    <article class="modal scene-voice-card">
-      <figure class="scene-voice-portrait"><img id="sceneVoicePortrait" src="" alt="" width="590" height="885"></figure>
-      <div class="scene-voice-content">
-        <header class="scene-voice-header"><div><p class="kicker" id="sceneVoiceKicker">Diálogo · La Voz</p><h2 id="sceneVoiceName">Mara</h2><p id="sceneVoiceRole"></p></div><button class="scene-voice-close" id="sceneVoiceClose" type="button" aria-label="Cerrar diálogo">×</button></header>
-        <p class="scene-voice-text" id="sceneVoiceText"></p>
-        <p class="scene-voice-status" id="sceneVoiceStatus" role="status" aria-live="polite"></p>
-        <footer class="scene-voice-actions"><button class="secondary" id="sceneVoicePlay" type="button">▶ Reproducir</button><span id="sceneVoiceCounter" aria-live="off"></span><button class="primary" id="sceneVoiceNext" type="button">Avanzar</button></footer>
-      </div>
-      <audio id="sceneVoiceAudio" preload="none"></audio>
-    </article>
-  </section>
-
   <section class="overlay hidden npc-dialogue-layer" id="npcDialogueModal" role="dialog" aria-modal="true" aria-labelledby="npcDialogueName">
     <article class="modal npc-dialogue-modal">
       <aside class="npc-dialogue-portrait">
@@ -1180,7 +1166,6 @@
   <script src="outcome-campaign.js?v=1"></script>
   <script src="persistence-v3.js?v=4-community"></script>
   <script src="collection-catalog.js?v=1"></script>
-  <script src="scene-voice.js?v=1"></script>
   <script src="game-v2.js?v=26-input"></script>
   <script src="combat-tactics.js?v=3-horizontal"></script>
   <script src="companion-nights.js?v=4-evidence"></script>
