@@ -32,7 +32,7 @@ var decisionMoodWeights={
 };
 var decisionModeNames={social:"Diálogo",physical:"Coordinación",technical:"Maniobra técnica",composure:"Control del pulso",deception:"Engaño",investigation:"Investigación"};
 var decisionState=null,decisionAnimationTimer=null,decisionFinishTimer=null;
-function decisionScene(choice){return choice&&decisionScenes[choice.decisionId]||null}
+function decisionScene(choice){return choice&&(choice._cisterna&&choice.checkScene||decisionScenes[choice.decisionId])||null}
 function decisionProbability(choice){
   var scene=decisionScene(choice),weights=decisionMoodWeights[scene?scene.mode:"technical"],base=clamp((21-choice.roll.dc+(choice.roll.bonus||0))*5,0,100);
   var members=state.party.map(function(p){var mood=psychState(p),key=Object.keys(psychStateDefs).filter(function(k){return psychStateDefs[k]===mood})[0]||"estable";return{name:p.name,mood:mood.name,bonus:p.hp>0?(weights[key]||0):0,available:p.hp>0}});
@@ -74,7 +74,7 @@ function resolveDecision(){
   var game=decisionState;if(!game||game.phase!=="ready")return;
   if(game.index!==state.index||reason(game.choice)){closeDecision();toast("La acción ya no está disponible");return}
   // The pre-encounter checkpoint includes the seed. Reload cannot reroll or keep rewards.
-  save();encounterSaveLocked=true;game.phase="spinning";drainHunger(4);$("decisionBack").classList.add("hidden");$("decisionConfirm").disabled=true;$("decisionConfirm").textContent="Resolviendo…";$("decisionStatus").textContent=game.scene.waiting;$("decisionSurface").classList.add("resolving");playSfx("ui-click");
+  save();encounterSaveLocked=true;game.phase="spinning";if(!game.choice._cisterna)drainHunger(4);$("decisionBack").classList.add("hidden");$("decisionConfirm").disabled=true;$("decisionConfirm").textContent="Resolviendo…";$("decisionStatus").textContent=game.scene.waiting;$("decisionSurface").classList.add("resolving");playSfx("ui-click");
   var draw=random()*100,cumulative=0,index=game.options.length-1;game.probability.chances.some(function(chance,i){cumulative+=chance;if(draw<cumulative){index=i;return true}return false});game.selected=index;
   var opt=game.options[index],landing=(opt.start+opt.end)/2,target=360*6+360-landing,reduced=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches,duration=reduced?180:3200,start=Date.now();
   game.target=target;

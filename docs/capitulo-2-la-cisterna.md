@@ -25,6 +25,24 @@ La apertura recuerda por separado el destino del archivo de la torre y lo ocurri
 
 `chapter-two-content.js` contiene las escenas, opciones y enlaces. `campaign-chapters.js` define el registro de cinco capítulos, sus transiciones, los hechos de la visita y sus desenlaces. La presentación utiliza la bitácora, los resultados, el refugio y el combate existentes.
 
+`cisterna-actions.js` amplía las alternativas de trabajo y sus consecuencias. Los permisos y acuerdos muestran su resultado en lugar de la etiqueta genérica «Sin consumo». Los costos de energía corresponden al esfuerzo base: la resistencia de cada aliado reduce el gasto, como en el resto de la campaña. Hablar o aceptar una negativa no consume suministros por sí solo.
+
+| Alternativa de trabajo | Costo y resultado |
+| --- | --- |
+| Palanca improvisada en el corredor | Conserva la herramienta. Prueba técnica: éxito gasta 6 de energía y da 6 XP a Elías; fallo gasta 10 de energía, resta 2 de moral y hasta 4 HP a Elías. Un fallo deja disponibles las otras soluciones, sin permitir repetir la maniobra. |
+| Componente para liberar el freno | Gasta 1 componente y 4 de energía; da 2 de moral y 4 XP a Elías. |
+| Recorrer los cultivos o esperar en recepción | El recorrido cuesta 3 de energía. Esperar recupera 6, pero deja pasar el taller y el aprendizaje técnico de esta visita. |
+| Copiar la orden o conservar el testimonio | Cotejar la copia cuesta 3 de energía y concede 1 punto de facción. El testimonio conserva lo escuchado, sin copia documental. |
+| Dejar una consulta por Hernán | Preparar y revisar la descripción cuesta 2 de energía. Abre una búsqueda; no concede una respuesta inventada. |
+| Donar e instalar el componente | Componente −1, energía −4, moral +3, facción +1 y Elías +4 XP. No compra un acuerdo político. |
+| Intercambiar la pieza por comida | Componente −1 y energía −2 a cambio de una ración. |
+| Regular el cierre por una venda | Requiere herramienta y consume una acción de ingeniería. Éxito: energía −6, venda +1 y Elías +8 XP. Fallo: energía −8 y hasta 3 HP de Elías, sin recompensa. |
+| Practicar el procedimiento de Inés | Energía −4 y Elías +6 XP; conserva el procedimiento autorizado y habilita examinar el tablero exterior. |
+| Copiar el plano a escondidas | Energía −4, tensión +1 y el riesgo existente del 55% de ser observado. No vuelve omniscientes a los habitantes. |
+| Proteger las semillas | Una tela evita el esfuerzo adicional de llevarlas protegidas bajo la ropa; esa alternativa cuesta 4 de energía y conserva la tela. Ambas reciben el mismo lote. |
+
+Las dos nuevas pruebas utilizan la ventana y las probabilidades del capítulo 1, incluido el aporte del estado mental del grupo. Abrir o cancelar la ventana no cobra; resolver aplica una sola vez el costo del resultado. No se añade el gasto implícito de energía de las pruebas antiguas encima del costo anunciado. Los permisos de los habitantes y su independencia no dependen de una tirada.
+
 Los datos específicos se guardan en `campaignProgress` y `cisterna`. El cierre del capítulo 1 queda conservado como antecedente. Equipo, heridas, energía, inventario, créditos, documentos y estadísticas continúan con el grupo. Una nueva partida sí reinicia la campaña completa.
 
 Los IDs anteriores permanecen en su posición. Los nuevos IDs son estables y el guardado sigue siendo compatible con el esquema 3. Los días internos 4–6 preservan la contabilidad anterior; la interfaz muestra los días 1–3 de esta expedición.

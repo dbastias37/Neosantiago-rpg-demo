@@ -50,10 +50,10 @@ function cisternaIrene(){
   if(f.ireneLostInEscape)return "Noa anota el último punto donde vieron el soporte de Irene. No saben si UNO la recuperó después. Sara pide que mantengan abierta esa incertidumbre; haberla desconectado de la pared no significa que consiguieran rescatarla.";
   return "Irene quedó en la torre. Sara pide que el consejo conserve una búsqueda pendiente, sin prometer una nueva entrada. El grupo no afirma que murió ni que cumplió su petición.";
 }
-function cisternaChoice(id,label,hint,result,next,more){return Object.assign({id:id,label:label,hint:hint,title:label,result:result,next:next,cost:"Sin consumo",_cisterna:true},more||{})}
+function cisternaChoice(id,label,hint,result,next,more){return Object.assign({id:id,label:label,hint:hint,title:label,result:result,next:next,cost:"",_cisterna:true},more||{})}
 function cisternaEvent(ev){
   var c=cisternaState(),f=c.facts,copy=Object.assign({},ev,{choices:ev.choices.map(function(x){return Object.assign({},x)})}),r=c.receipts[ev.key];
-  if(r&&!r.repeatable){copy.text=r.result;copy.choices=[cisternaChoice("receipt","Continuar desde lo registrado","Conserva lo decidido; no repite gastos ni entregas.",r.result,r.next,{receipt:true,finish:r.finish,incomplete:r.incomplete})];return copy}
+  if(r&&!r.repeatable){copy.text=r.result;copy.choices=[cisternaChoice("receipt","Continuar desde lo registrado","Conserva lo decidido; no repite gastos ni entregas.",r.result,r.next,{cost:"Decisión ya registrada",receipt:true,finish:r.finish,incomplete:r.incomplete})];return copy}
   if(ev.key==="recovery")copy.text+="\n\n"+cisternaIrene();
   if(ev.key==="council"){
     copy.text=cisternaOpening()+"\n\n"+copy.text;
@@ -72,7 +72,7 @@ function cisternaEvent(ev){
     var kind=chapterProgress().completed[1].kind;
     copy.text+="\n\n"+(kind==="pact"?"Elías no lleva el archivo de la torre: su custodia sigue con Vera. La orden local que Teresa muestra es una fuente nueva.":kind==="testimony"?"Sara distingue lo que presenció en la torre de lo que Teresa cuenta ahora. Solo los registros locales permiten comprobar este episodio.":"Elías reconoce procedimientos de aislamiento presentes en las pruebas de Irene. Esa semejanza no le permite completar los nombres ni las órdenes que faltan aquí.");
   }
-  if(ev.key==="letter"&&f.permission!=="reception")copy.choices.forEach(function(x){x.next="night2"});
+  if(ev.key==="letter"&&(f.permission!=="reception"||f.skipWorkshop))copy.choices.forEach(function(x){x.next="night2"});
   if(ev.key==="departure"){
     if(f.breachKnown)copy.text="Tomás acompaña al grupo hasta el límite exterior. Conservaron sus pertenencias, pero el permiso de visita está suspendido. No volverán a recepción para esperar.\n\n"+copy.text;
     else if(!f.exitMap)copy.text="El grupo reconoce desde fuera el corredor por el que llegó.\n\n"+copy.text;
@@ -91,9 +91,13 @@ function cisternaEvent(ev){
     if(f.breachKnown)copy.text+="\n\nNoa explica también por qué se suspendió la visita: "+cisternaBreachText(f.breach)+". Varela no puede presentarlo como una negativa inexplicable.";
   }
   if(ev.key==="conclusion")copy.text=cisternaStory(cisternaOutcome()).lead+"\n\n"+cisternaStory(cisternaOutcome()).refuge+"\n\n"+cisternaStory(cisternaOutcome()).group;
+  if(typeof cisternaCost==="function")copy.choices.forEach(function(x){x.cost=cisternaCost(x)});
   return copy;
 }
 function cisternaBlocked(o){
+  if(o.actor){var actor=state.party.find(function(p){return p.id===o.actor});if(!actor||actor.hp<=0)return "El aliado necesita recuperarse antes de realizar el trabajo";}
+  if(o.profession&&state[o.profession]<=0)return "No quedan acciones de ingeniería hoy";
+  if(o.onceFlag&&cisternaState().facts[o.onceFlag])return "Ya intentaste esta maniobra; elige otra solución";
   if(o.condition==="can-wait"&&cisternaState().facts.permission!=="reception")return "El permiso de recepción no está disponible";
   if(o.condition==="technical"&&!cisternaState().facts.technicalKnowledge)return "No aprendiste el circuito local";
   var f=cisternaState().facts;
@@ -107,6 +111,7 @@ function chooseCisterna(i){
   if(state.finished||state.refuge.active||pending||battleState||decisionState)return;
   if(typeof fieldMaybeOffer==="function"&&fieldMaybeOffer())return;
   var ev=cisternaEvent(events[state.index]),o=ev.choices[i];if(!o||reason(o))return;
+  if(o.roll){openDecision(o,ev);return}
   save();encounterSaveLocked=true;
   if(o.combat){if(o.energy)drainHunger(o.energy);Object.assign(cisternaState().facts,o.combatFacts||{});startCombat(o.combat,o);return}
   completeCisternaChoice(o,o,[]);
@@ -122,6 +127,7 @@ function cisternaRest(key,mode,changes){
   changes.push(["Reservas",(food?1:0)+" ración · "+(water?1:0)+" agua"],["Energía",food?"+24 por persona":"−8 por persona"],["Atención","+"+recovered+" HP entre el grupo"],["Moral",String((food?0:-5)+(water?0:-8))]);
 }
 function completeCisternaChoice(choice,out,extra){
+  if(choice.roll)out=Object.assign({},choice,out,{facts:Object.assign({},choice.facts||{},out.facts||{})});
   var c=cisternaState(),f=c.facts,ev=events[state.index],next=out.next===undefined?choice.next:out.next,changes=(extra||[]).slice(),text=out.result||choice.result;
   if(!choice.receipt){
     Object.keys(out.spend||{}).forEach(function(id){for(var n=0;n<out.spend[id];n++){consumeStock(id);addStatItem("itemsUsed",id,1)}changes.push([resName(id),"−"+out.spend[id]])});
@@ -129,6 +135,12 @@ function completeCisternaChoice(choice,out,extra){
     if(out.credits){state.credits-=out.credits;changes.push(["Créditos","−"+out.credits])}
     if(out.energy&&!choice.combat){drainHunger(out.energy);changes.push(["Esfuerzo","Energía −"+out.energy+" antes de resistencia"])}
     if(out.morale){state.morale=clamp(state.morale+out.morale,0,100);changes.push(["Moral",String(out.morale)])}
+    if(out.recoverEnergy){state.party.forEach(function(p){p.hunger=clamp(p.hunger+out.recoverEnergy,0,100)});changes.push(["Energía","+"+out.recoverEnergy+" por persona, hasta 100"])}
+    if(out.profession){state[out.profession]--;changes.push(["Trabajo profesional","Ingeniería −1"])}
+    if(out.damage)changes=changes.concat(decisionDamage(out.damage));
+    Object.keys(out.xp||{}).forEach(function(id){var i=state.party.findIndex(function(p){return p.id===id});if(i<0)return;var levels=addPersonalXp(i,out.xp[id],"trabajo en La Cisterna");changes.push([state.party[i].name,"+"+out.xp[id]+" XP"]);if(levels.length)changes.push(["Nivel",levels.join(" ")])});
+    if(out.faction)changes=changes.concat(awardFactionPoints(out.faction,"trabajo de la expedición"));
+    if(out.pulse)changes=changes.concat(applyPsychImpulse({psy:out.pulse},out.actor?{npc:out.actor}:null));
     Object.assign(f,out.facts||{});pushUnique(state.docs,out.archive||[]);
     if(out.night)cisternaRest(ev.key,out.night,changes);
     if(out.action==="vera")f.veraConsulted=true;
@@ -192,6 +204,8 @@ function cisternaStory(kind){
   s.group="Sara devuelve la lista. Noa deja el equipo sobre el banco. Elías tarda un momento en guardar los papeles. Cada uno vuelve con lo que pudo hacer y con lo que quedó pendiente.";
   if(f.cultivationLearned)s.group+=" Mara guarda el procedimiento que Inés autorizó compartir para mostrarlo a quienes trabajan en los cultivos.";
   if(f.seeds)s.group+=" El lote de semillas queda reservado para una prueba; no alcanza para abastecer un refugio.";
+  if(f.repairSucceeded)s.group+=" Elías dejó el cierre regulado y recibió la venda acordada por su trabajo.";
+  if(f.skipWorkshop)s.group+=" El grupo recuperó el aliento en recepción y dejó pasar el recorrido técnico; no trae ese aprendizaje.";
   if(f.hernan)s.refuge+=" La búsqueda de Hernán sigue sin respuesta"+(f.hernan==="query-left"?", con una consulta autorizada en La Cisterna.":".");
   if(f.letterDelivered)s.refuge+=f.letter==="opened"?" Sara entregó el sobre reconociendo que lo abrió.":" La carta llegó cerrada a su destinatario.";
   if(f.report==="private-restricted")s.refuge+=" El consejo conserva además datos que no estaban autorizados. La entrega indebida está registrada; la comunidad todavía no sabe de ella.";

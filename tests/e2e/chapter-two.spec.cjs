@@ -31,7 +31,7 @@ async function prepare(page){
  await page.locator('#confirmLogistics').click();
  await expect(page.locator('#refuge')).toBeHidden();
 }
-const path=['recover','recognition','depart','pay','visit','accept','share','observe','terms','listen','copy','leave-query','sealed','keep','learn','respect','share','limited','seeds','detour','home','bounded','finish'];
+const path=['recover','recognition','depart','pay','visit','accept','share','observe','terms','listen','copy','leave-query','sealed','keep','learn','respect','share','limited','carry','detour','home','bounded','finish'];
 test('La Cisterna uses the existing story UI, restores the visit and completes with an independent community',async({page},info)=>{
  await endingFixture(page);await fits(page,'#stage');await capture(page,info,'chapter-two-entry');
  await choose(page,'prepare');await prepare(page);
@@ -67,4 +67,29 @@ test('a pending visit offers a real retry and preserves the paid corridor across
  await choose(page,'outside');await choose(page,'accept');await choose(page,'share');
  await expect(page.locator('#eventTitle')).toHaveText('Lo que pueden llevarse');
  expect(await page.evaluate(()=>state.cisterna.facts.cultivationSeen)).toBeUndefined();
+});
+
+test('Cisterna work uses the existing probability window with visible effort and a single real reward',async({page},info)=>{
+ await endingFixture(page);await choose(page,'prepare');await prepare(page);
+ for(const id of ['recover','recognition','depart'])await choose(page,id);
+ async function work(id,title){
+  const index=await page.evaluate(id=>eventDisplay(events[state.index],state.index).choices.findIndex(o=>o.id===id),id);
+  await page.evaluate(()=>{state.seed=1;});
+  await page.locator(`[data-choice="${index}"]`).click();await expect(page.locator('#decisionModal')).toBeVisible();
+  await expect(page.locator('#decisionTitle')).toHaveText(title);await expect(page.locator('#decisionCost')).toContainText('Energía');
+  await fits(page,'#decisionSurface');await capture(page,info,'cisterna-'+id+'-check');
+  await page.locator('#decisionConfirm').click();await expect(page.locator('#decisionOutcomeModal')).toBeVisible();
+  expect(await page.evaluate(()=>decisionState.selected)).toBe(0);
+  await page.locator('#decisionOutcomeContinue').click();await expect(page.locator('#decisionModal')).toBeHidden();
+ }
+ const tool=await page.evaluate(()=>stockCount('tool'));
+ await work('lever','Improvisar una palanca con Elías');await expect(page.locator('#eventTitle')).toHaveText('La primera respuesta');
+ expect(await page.evaluate(()=>stockCount('tool'))).toBe(tool);
+ for(const id of ['visit','accept','share','observe','terms','listen','copy','leave-query','sealed'])await choose(page,id);
+ const before=await page.evaluate(()=>({bandage:stockCount('bandage'),uses:state.engineeringUses}));
+ await work('repair','Regular el cierre a cambio de una venda');await expect(page.locator('#eventTitle')).toHaveText('Aprender sin llevarse el lugar');
+ expect(await page.evaluate(()=>({bandage:stockCount('bandage'),uses:state.engineeringUses}))).toEqual({bandage:before.bandage+1,uses:before.uses-1});
+ await page.reload();await page.locator('#enterTitle').click();await page.locator('#cinematicSkip').click();await page.locator('#continueGame').click();
+ await expect(page.locator('#eventTitle')).toHaveText('Aprender sin llevarse el lugar');
+ expect(await page.evaluate(()=>({bandage:stockCount('bandage'),uses:state.engineeringUses}))).toEqual({bandage:before.bandage+1,uses:before.uses-1});
 });

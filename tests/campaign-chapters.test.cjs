@@ -13,7 +13,7 @@ function select(c,id){
 }
 function step(c,id){select(c,id);assert.ok(c.pending,id+' has a result');c.advance();}
 function prepared(c){if(c.state.refuge.active){c.restAtRefuge();c.rejoinAtRefuge();assert.equal(c.confirmLeaveRefuge(),true);}}
-const defaults={recovery:'prepare',records:'recover',council:'recognition',packing:'depart',corridor:'pay',gate:'visit',refusal:'accept',insist:'accept',night1:'share',tour:'observe',reception:'terms',occupation:'listen',evidence:'copy',families:'leave-query',letter:'sealed',workshop:'keep',teaching:'learn',plan:'respect',observed:'destroy',night2:'share',proposal:'limited',farewell:'seeds',departure:'long-way',board:'back',return:'home',report:'bounded',disclosure:'restrict',conclusion:'finish',incomplete:'pending'};
+const defaults={recovery:'prepare',records:'recover',council:'recognition',packing:'depart',corridor:'pay',gate:'visit',refusal:'accept',insist:'accept',night1:'share',tour:'observe',reception:'terms',occupation:'listen',evidence:'copy',families:'leave-query',letter:'sealed',workshop:'keep',teaching:'learn',plan:'respect',observed:'destroy',night2:'share',proposal:'limited',farewell:'carry',departure:'long-way',board:'back',return:'home',report:'bounded',disclosure:'restrict',conclusion:'finish',incomplete:'pending'};
 function walk(c,overrides={},until){for(let n=0;n<90&&!c.state.finished;n++){prepared(c);const key=c.events[c.state.index].key;if(key===until)return;step(c,overrides[key]||defaults[key]);}if(until)assert.equal(c.events[c.state.index].key,until);else assert.ok(c.state.finished);}
 
 test('five real chapter-one outcomes unlock the same new records without rewriting the old ending or equipment',()=>{
@@ -95,4 +95,74 @@ test('legacy completed saves are recognized without granting a replacement tower
 });
 test('new game clears both chapters while completed previous chapter records remain unchanged through a visit',()=>{
  const c=start().ctx,old=JSON.stringify(c.chapterProgress().completed[1]);walk(c,{proposal:'none'});assert.equal(JSON.stringify(c.chapterProgress().completed[1]),old);c.newGame();assert.equal(c.inCisterna(),false);assert.equal(c.state.cisterna,undefined);assert.deepEqual(plain(c.chapterProgress().completed),{});
+});
+
+function settleWork(a,id,success){
+ const c=a.ctx;select(c,id);assert.equal(c.decisionState.phase,'ready');c.random=()=>success?0:.99999;
+ c.resolveDecision();const callback=a.timers.get(c.decisionFinishTimer).fn;callback();
+ assert.equal(c.decisionState.selected,success?0:1);assert.ok(c.pending.cisterna);return c.decisionState;
+}
+test('new actions show their real costs while consent choices show the consequence without inventing a charge',()=>{
+ const c=start().ctx;walk(c,{},'corridor');
+ for(const key of ['gate','refusal','evidence','workshop','teaching','proposal','farewell','departure']){
+  c.state.index=c.cisternaIndex(key);const e=c.cisternaEvent(c.events[c.state.index]);
+  assert.ok(e.choices.every(o=>o.cost&&!/Sin consumo/.test(o.cost)),key);
+ }
+ c.state.index=c.cisternaIndex('workshop');const gift=c.cisternaEvent(c.events[c.state.index]).choices.find(o=>o.id==='gift');assert.match(gift.cost,/Energía −4/);assert.match(gift.cost,/Moral \+3/);
+ c.state.index=c.cisternaIndex('refusal');const before=plain(c.state.party);step(c,'accept');assert.deepEqual(plain(c.state.party),before);
+});
+test('the improvised lever uses the shared check, charges its actual outcome once and cannot be retried after slipping',()=>{
+ for(const success of [true,false]){
+  const a=start(),c=a.ctx;walk(c,{},'corridor');c.state.party.forEach(p=>p.hunger=60);c.state.party[1].hp=20;
+  const energy=Array.from(c.state.party,p=>p.hunger),resistance=Array.from(c.state.party,p=>c.energyResist(p)),battery=c.stockCount('battery'),scrap=c.stockCount('scrap');
+  const g=settleWork(a,'lever',success),snapshot=JSON.stringify(c.state);c.revealDecision(g);c.resolveDecision();assert.equal(JSON.stringify(c.state),snapshot);
+  assert.deepEqual(Array.from(c.state.party,p=>p.hunger),energy.map((v,i)=>v-Math.max(1,(success?6:10)-resistance[i])));
+  assert.equal(c.state.party[1].hp,success?20:16);assert.equal(c.stockCount('battery'),battery);assert.equal(c.stockCount('scrap'),scrap);assert.equal(c.hasPartyItem('tool'),true);
+  c.continueDecision();assert.equal(c.events[c.state.index].key,success?'gate':'corridor');
+  if(!success){const lever=c.cisternaEvent(c.events[c.state.index]).choices.find(o=>o.id==='lever');assert.match(c.reason(lever),/Ya intentaste/);step(c,'pay');}
+  walk(c);assert.equal(c.state.cisterna.resolution.kind,'limited');
+ }
+});
+test('a repair consumes one professional action with a distinct reward or nonlethal mishap',()=>{
+ for(const success of [true,false]){
+  const a=start(),c=a.ctx;walk(c,{},'workshop');c.state.party[1].hp=2;
+  const uses=c.state.engineeringUses,bandage=c.stockCount('bandage'),scrap=c.stockCount('scrap'),xp=c.state.party[1].xp;
+  settleWork(a,'repair',success);assert.equal(c.state.engineeringUses,uses-1);assert.equal(c.stockCount('scrap'),scrap);assert.equal(c.stockCount('bandage'),bandage+(success?1:0));assert.equal(c.state.party[1].xp,xp+(success?8:0));assert.equal(c.state.party[1].hp,success?2:1);
+  c.continueDecision();assert.equal(c.events[c.state.index].key,'teaching');assert.equal(c.state.cisterna.facts.repairSucceeded,success?true:undefined);
+ }
+});
+test('work requires a living engineer, a tool, remaining professional actions and room for its possible reward',()=>{
+ const c=start().ctx;walk(c,{},'workshop');const repair=c.cisternaEvent(c.events[c.state.index]).choices.find(o=>o.id==='repair');
+ c.state.party[1].hp=0;assert.match(c.reason(repair),/recuperarse/);c.state.party[1].hp=20;
+ c.state.engineeringUses=0;assert.match(c.reason(repair),/acciones de ingeniería/);c.state.engineeringUses=1;
+ c.removePartyItem('tool',1);assert.match(c.reason(repair),/Falta/);c.placePartyItem('tool',1);
+ c.state.party.forEach(p=>{while(c.bagFree(p)>0)c.addToBag(p,'scrap',1)});assert.match(c.reason(repair),/espacio/);
+ const before=JSON.stringify(c.state);c.choose(c.cisternaEvent(c.events[c.state.index]).choices.findIndex(o=>o.id==='repair'));assert.equal(JSON.stringify(c.state),before);assert.equal(c.decisionState,null);
+ step(c,'keep');assert.equal(c.events[c.state.index].key,'teaching');
+});
+test('shared chapter-two checks preserve their seeded checkpoint and settle the same outcome after reload',()=>{
+ for(const [key,id]of [['corridor','lever'],['workshop','repair']]){
+  const a=start(),c=a.ctx;walk(c,{},key);c.state.seed=789;c.save();const before=plain(c.state.party),uses=c.state.engineeringUses;
+  select(c,id);c.closeDecision();assert.deepEqual(plain(c.state.party),before);assert.equal(c.state.engineeringUses,uses);
+  select(c,id);c.resolveDecision();const selected=c.decisionState.selected,checkpoint=a.storage.get(c.KEY);a.timers.get(c.decisionFinishTimer).fn();c.save();assert.equal(a.storage.get(c.KEY),checkpoint);
+  const b=boot(a.storage),d=b.ctx;d.continueGame();assert.deepEqual(plain(d.state.party),before);assert.equal(d.state.engineeringUses,uses);
+  select(d,id);d.resolveDecision();assert.equal(d.decisionState.selected,selected);b.timers.get(d.decisionFinishTimer).fn();d.continueDecision();const loaded=boot(a.storage).ctx;assert.equal(loaded.load(),true);assert.deepEqual(plain(loaded.state.cisterna),plain(d.state.cisterna));
+ }
+});
+test('the reception pause restores energy once and forgoes workshop rewards and technical access',()=>{
+ const c=start().ctx;walk(c,{},'tour');c.state.party.forEach(p=>p.hunger=50);step(c,'rest');assert.ok(c.state.party.every(p=>p.hunger===56));walk(c);
+ const f=c.state.cisterna.facts;assert.equal(f.skipWorkshop,true);assert.equal(f.history,true);assert.equal(f.cultivationLearned,undefined);assert.equal(f.technicalKnowledge,undefined);assert.equal(f.materials,undefined);assert.equal(c.state.cisterna.resolution.kind,'limited');
+});
+test('wrapping and carrying the seeds exchange cloth for effort without changing the gift or relations',()=>{
+ for(const option of ['seeds','carry','decline']){
+  const c=start().ctx;c.placePartyItem('cloth',1);walk(c,{},'farewell');c.state.party.forEach(p=>p.hunger=50);
+  const cloth=c.stockCount('cloth'),energy=Array.from(c.state.party,p=>p.hunger),resistance=Array.from(c.state.party,p=>c.energyResist(p));step(c,option);
+  assert.equal(c.stockCount('cloth'),cloth-(option==='seeds'?1:0));assert.deepEqual(Array.from(c.state.party,p=>p.hunger),energy.map((v,i)=>v-(option==='carry'?Math.max(1,4-resistance[i]):0)));
+  assert.equal(c.state.cisterna.facts.seeds,option!=='decline');assert.equal(c.state.cisterna.facts.relationship,'limited-pending');walk(c);assert.equal(c.state.cisterna.resolution.kind,'limited');
+ }
+});
+test('a settled work receipt cannot grant experience, faction points or supplies for a second time',()=>{
+ const a=start(),c=a.ctx;c.placePartyItem('scrap',1);walk(c,{},'workshop');step(c,'gift');const party=plain(c.state.party),points=c.state.factionPoints;
+ c.state.index=c.cisternaIndex('workshop');c.save();const d=boot(a.storage).ctx;d.continueGame();assert.equal(d.cisternaEvent(d.events[d.state.index]).choices[0].receipt,true);
+ step(d,'receipt');assert.deepEqual(plain(d.state.party),party);assert.equal(d.state.factionPoints,points);assert.equal(d.events[d.state.index].key,'teaching');
 });

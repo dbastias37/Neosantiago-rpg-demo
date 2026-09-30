@@ -23,7 +23,7 @@ function settle(a,outcome){
   assert.equal(c.decisionState.selected,outcome);
 }
 test('all 13 checks and the conditional Vega check have unique scene identities',()=>{
-  const c=boot().ctx,ids=c.events.flatMap(e=>e.choices.filter(o=>o.roll).map(o=>o.decisionId));
+  const c=boot().ctx,ids=c.events.filter(e=>e.chapter!==2).flatMap(e=>e.choices.filter(o=>o.roll).map(o=>o.decisionId));
   assert.equal(ids.length,13);assert.equal(new Set(ids).size,13);assert.equal(Object.keys(c.decisionScenes).length,14);
   for(const id of Object.keys(c.decisionScenes)){
     const a=prepare(id),scene=c.decisionScenes[id];assert.ok(scene.lead&&scene.quote&&scene.waiting);
