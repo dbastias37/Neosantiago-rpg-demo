@@ -56,6 +56,7 @@ function renderExpeditionPreparation() {
     $("refugeLeaveHint").textContent = "El descanso y las reservas de la noche ya están registrados. Revisa mochilas y equipo; comerciar es opcional y conserva los precios del puesto.";
   }
   $("leaveRefuge").textContent = preparing ? "Preparar salida · día "+day : "Volver a la expedición";
+  if(typeof cisternaRefugeText==="function")cisternaRefugeText();
 }
 
 $("refugeReturnButton").addEventListener("click", function(){openRefugeHelp("return", $("refugeReturnButton"))});

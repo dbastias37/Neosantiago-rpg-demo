@@ -80,7 +80,7 @@ test('drawer and input controls consume no narrative choice through number short
 });
 test('all routes have valid exits and combat victories; completed routes commit once', () => {
   const catalog=boot().ctx;
-  assert.equal(catalog.events.length,27); assert.equal(Object.keys(catalog.routeNarrativeDefs).length,7);
+  assert.equal(catalog.events.filter(e=>e.chapter!==2).length,27); assert.equal(Object.keys(catalog.routeNarrativeDefs).length,7);
   for(const [id,def] of Object.entries(catalog.routeNarrativeDefs)) {
     for(const [index,scene] of def.scenes.entries()) {
       assert.ok(fs.existsSync(root+'/'+scene.image));

@@ -20,6 +20,7 @@ function nightForecast(mode){
   return {food:food?1:0,water:water?1:0,energy:food?24:-8,morale:(food?0:-5)+(water?0:-8)};
 }
 function expeditionReserveText(){
+  if(typeof inCisterna==="function"&&inCisterna())return "Capítulo 2 · La Cisterna. Dos noches con reservas propias: compartir cada noche utiliza 1 ración y 1 agua para el grupo. Llevan "+stockCount("food")+" raciones y "+stockCount("water")+" reservas de agua. Leer no consume tiempo. El gasto de cada recorrido se muestra antes de elegirlo.";
   var day=currentDay(),left=events.slice(state.index).filter(function(e){return e.day===day}).length;
   return "Día "+day+" de 3 · "+left+" situaciones principales por resolver hoy. Los desvíos se añaden a ese recorrido. Las horas acompañan las escenas; leer no adelanta el día. "+(day<3?"Al cerrar la jornada, compartir comida utiliza 1 ración y 1 agua para todo el grupo. Llevan "+stockCount("food")+" raciones y "+stockCount("water")+" reservas de agua. Sin comida: energía −8 y moral −5; sin agua: moral −8. Podrás decidir antes de consumirlas.":"Esta es la última jornada: no hay otro consumo nocturno automático antes del desenlace. Conserva suministros para las heridas, la energía y las decisiones del trayecto.");
 }

@@ -8,6 +8,8 @@ function openActivityMenu(){
  $("courierScreen").classList.add("hidden");$("activityMenu").classList.remove("hidden");$("activityMenu").removeAttribute('inert');lockActivityBackground();
  state.activity=resume?'couriers':'hub';save();
  $("storyActivityStatus").textContent=state.finished?'Expedición terminada · consultar desenlace':state.starterKitGiven?'Partida guardada · día '+currentDay():'Prepara al grupo con Mara en Los Héroes';
+ if(typeof inCisterna==="function"&&inCisterna())$("storyActivityStatus").textContent=state.finished?(cisternaState().resolution.kind==="incomplete"?"La Cisterna · visita pendiente":"La Cisterna · consultar desenlace"):"La Cisterna · día "+(currentDay()-3);
+ else if(state.finished)$("storyActivityStatus").textContent="La Voz terminada · capítulo 2 disponible";
  var report=typeof worldMoralesFact==='function'?worldMoralesFact():null;
  if(report&&!report.read&&!state.finished)$("storyActivityStatus").textContent+=' · Morales dejó un informe';
  $("activityTitle").focus({preventScroll:true});

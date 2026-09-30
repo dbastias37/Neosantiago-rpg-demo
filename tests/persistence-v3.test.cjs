@@ -15,7 +15,7 @@ for (const name of ['campaign-new', 'campaign-retreat']) {
     const a = boot(storage), c = a.ctx;
     assert.equal(c.KEY, key);
     assert.equal(c.load(), true);
-    const upgraded = {...expected,collection:[],armorerStock:{...plain(c.armorerStockForDay(expected.armorerStockDay)),...expected.armorerStock}};
+    const upgraded = {...expected,campaignProgress:{version:1,active:1,completed:{}},collection:[],armorerStock:{...plain(c.armorerStockForDay(expected.armorerStockDay)),...expected.armorerStock}};
     assert.deepEqual(plain(c.state), upgraded);
     assert.equal(storage.get(key), text, 'reading a save must not rewrite it');
     c.gameSessionActive = true;
@@ -43,7 +43,7 @@ test('a continued V0.2 retreat keeps its refuge, earned consequences and next ev
 test('stable scene identifiers migrate both numeric V0.2 saves and newer anchored saves after catalog insertion', () => {
   const c = boot().ctx, scenes = c.NeoCampaignScenes;
   assert.equal(scenes.validate(c.events), true);
-  assert.deepEqual(plain(scenes.legacyIds), plain(c.events.map(e => e.id)));
+  assert.deepEqual(plain(scenes.legacyIds), plain(c.events.filter(e => e.chapter!==2).map(e => e.id)));
   const inserted = [{id:'d1-added-between',day:1,title:'Nueva situación'},...c.events];
   assert.equal(scenes.validate(inserted), true);
   assert.equal(scenes.resolve(inserted,{index:2,campaignRevision:3}),3);
